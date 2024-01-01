@@ -26,6 +26,22 @@ export type Invoice = {
   status: 'pending' | 'paid';
 };
 
+export type Appointment = {
+  id: string;
+  title: string;
+  description: string;
+  provider: string;
+  clinic: string;
+  date: string;
+  amount: number;
+  audio: string;
+  patient_id: string;
+  speakers: number;
+  transcript: string;
+  summary: string;
+  feedback: string;
+}
+
 export type Revenue = {
   month: string;
   revenue: number;

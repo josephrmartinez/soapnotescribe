@@ -6,7 +6,92 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { AuthError } from 'next-auth';
 import { signIn } from '../auth';
- 
+
+
+export type ApptState = {
+  errors?: {
+    title?: string[];
+    description?: string[];
+    provider?: string[];
+    clinic?: string[];
+    date?: string[];
+  };
+  message?: string | null;
+};
+
+const ApptFormSchema = z.object({
+    id: z.string(),
+    title: z.string({
+        invalid_type_error: 'Please provide a title.'
+    }),
+    description: z.string({
+      invalid_type_error: 'Please provide a description.'
+    }),
+    provider: z.string({
+      invalid_type_error: 'Please indicate a provider.'
+    }),
+    clinic: z.string({
+      invalid_type_error: 'Please indicate a clinic.'
+    }),
+    date: z.string(),
+  });
+   
+  // omit?
+const CreateAppointment = ApptFormSchema.omit({ id: true, date: true });
+
+export async function createAppointment(pevState: ApptState, formData: FormData) {
+    // Validate form using Zod 
+    const validatedFields = CreateAppointment.safeParse({
+        title: formData.get('title'),
+        description: formData.get('description'),
+        provider: formData.get('provider'),
+        clinic: formData.get('clinic'),
+        date: formData.get('date'),
+        amount: formData.get('amount'),
+        audio: formData.get('audio'),
+      });
+
+    //   If form validation fails, returrn errors early. Otherwise, continue.
+      if (!validatedFields.success) {
+        return {
+          errors: validatedFields.error.flatten().fieldErrors,
+          message: 'Missing Fields. Failed to Create Appointment.',
+        };
+      }
+
+    //   Prepare data for insertion into database
+      const { customerId, amount, status } = validatedFields.data;
+      const amountInCents = amount * 100;
+      const date = new Date().toISOString().split('T')[0];
+
+    //   Insert data into the database
+      try {
+        await sql`
+        INSERT INTO invoices (customer_id, amount, status, date)
+        VALUES (${customerId}, ${amountInCents}, ${status}, ${date})
+        `;
+      } catch (error) {
+        return {
+            message: 'Database Error: Failed to Create Invoice'
+        }
+      }
+      
+    //   Revalidate the cache for the invoices page and redirect the user
+      revalidatePath('/dashboard/appointments');
+      redirect('/dashboard/appointments');
+}
+
+
+
+export type State = {
+  errors?: {
+    customerId?: string[];
+    amount?: string[];
+    status?: string[];
+  };
+  message?: string | null;
+};
+
 const FormSchema = z.object({
     id: z.string(),
     customerId: z.string({
@@ -108,20 +193,29 @@ export async function updateInvoice(id: string, prevState: State, formData: Form
     }
   }
 
-  export type State = {
-    errors?: {
-      customerId?: string[];
-      amount?: string[];
-      status?: string[];
-    };
-    message?: string | null;
-  };
+
+  export async function deleteAppointment(id: string) {
+    try {
+        await sql`DELETE FROM invoices WHERE id = ${id}`;
+        revalidatePath('/dashboard/invoices');
+        return { message: "Deleted Invoice" }
+    } catch (error) {
+        return {
+            message: 'Failed to Delete Invoice'
+        }
+    }
+  }
+  
+
+  
 
   export async function authenticate(
     prevState: string | undefined,
     formData: FormData,
   ) {
+    let responseRedirectUrl = null;
     try {
+      console.log("form data", formData)
       await signIn('credentials', formData);
     } catch (error) {
       if (error instanceof AuthError) {

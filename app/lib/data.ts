@@ -19,13 +19,12 @@ export async function fetchRevenue() {
   try {
     // Artificially delay a response for demo purposes.
     // Don't do this in production :)
-
-    console.log('Fetching revenue data...');
-    await new Promise((resolve) => setTimeout(resolve, 3000));
+    // console.log('Fetching revenue data...');
+    // await new Promise((resolve) => setTimeout(resolve, 3000));
 
     const data = await sql<Revenue>`SELECT * FROM revenue`;
 
-    console.log('Data fetch completed after 3 seconds.');
+    // console.log('Data fetch completed after 3 seconds.');
 
     return data.rows;
   } catch (error) {
@@ -195,6 +194,27 @@ export async function fetchCustomers() {
     throw new Error('Failed to fetch all customers.');
   }
 }
+
+export async function fetchCustomerById(customerId: string) {
+  try {
+    const data = await sql<CustomerField>`
+      SELECT
+        id,
+        name,
+        email,
+        image_url
+      FROM customers
+      WHERE id = ${customerId}
+    `;
+
+    const customer = data.rows[0];
+    return customer;
+  } catch (err) {
+    console.error('Database Error:', err);
+    throw new Error(`Failed to fetch customer with ID ${customerId}.`);
+  }
+}
+
 
 export async function fetchFilteredCustomers(query: string) {
   noStore();
