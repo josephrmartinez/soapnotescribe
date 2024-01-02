@@ -1,6 +1,6 @@
 'use client'
 
-import { CustomerField } from '@/app/lib/definitions';
+import { ProviderField } from '@/app/lib/definitions';
 import Link from 'next/link';
 import {
   CheckIcon,
@@ -10,12 +10,12 @@ import {
   
 } from '@heroicons/react/24/outline';
 import { Button } from '@/app/ui/button';
-import { createInvoice } from '@/app/lib/actions';
+import { createAppointment } from '@/app/lib/actions';
 import { useFormState } from 'react-dom';
 
-export default function Form({ customers }: { customers: CustomerField[] }) {
+export default function Form({ providers }: { providers: ProviderField[] }) {
   const initialState = { message: null, errors: {} };
-  const [state, dispatch] = useFormState(createInvoice, initialState);
+  const [state, dispatch] = useFormState(createAppointment, initialState);
   
   return (
     <form action={dispatch}>
@@ -39,9 +39,9 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
             </input>
             <PencilSquareIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
           </div>
-          <div id="customer-error" aria-live="polite" aria-atomic="true">
-            {state.errors?.customerId &&
-              state.errors.customerId.map((error: string) => (
+          <div id="title-error" aria-live="polite" aria-atomic="true">
+            {state.errors?.title &&
+              state.errors.title.map((error: string) => (
                 <p className="mt-2 text-sm text-red-500" key={error}>
                   {error}
                 </p>
@@ -68,9 +68,9 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
             </input>
             <PencilSquareIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
           </div>
-          <div id="customer-error" aria-live="polite" aria-atomic="true">
-            {state.errors?.customerId &&
-              state.errors.customerId.map((error: string) => (
+          <div id="description-error" aria-live="polite" aria-atomic="true">
+            {state.errors?.description &&
+              state.errors.description.map((error: string) => (
                 <p className="mt-2 text-sm text-red-500" key={error}>
                   {error}
                 </p>
@@ -97,9 +97,9 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
             </input>
             <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
           </div>
-          <div id="customer-error" aria-live="polite" aria-atomic="true">
-            {state.errors?.customerId &&
-              state.errors.customerId.map((error: string) => (
+          <div id="provider-error" aria-live="polite" aria-atomic="true">
+            {state.errors?.provider &&
+              state.errors.provider.map((error: string) => (
                 <p className="mt-2 text-sm text-red-500" key={error}>
                   {error}
                 </p>
@@ -126,9 +126,9 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
             </input>
             <BuildingOffice2Icon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
           </div>
-          <div id="customer-error" aria-live="polite" aria-atomic="true">
-            {state.errors?.customerId &&
-              state.errors.customerId.map((error: string) => (
+          <div id="clinic-error" aria-live="polite" aria-atomic="true">
+            {state.errors?.clinic &&
+              state.errors.clinic.map((error: string) => (
                 <p className="mt-2 text-sm text-red-500" key={error}>
                   {error}
                 </p>
@@ -155,9 +155,9 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
             </input>
             <CalendarDaysIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
           </div>
-          <div id="customer-error" aria-live="polite" aria-atomic="true">
-            {state.errors?.customerId &&
-              state.errors.customerId.map((error: string) => (
+          <div id="date-error" aria-live="polite" aria-atomic="true">
+            {state.errors?.appointment_date &&
+              state.errors.appointment_date.map((error: string) => (
                 <p className="mt-2 text-sm text-red-500" key={error}>
                   {error}
                 </p>
@@ -221,14 +221,7 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
               
             </div>
           </div>
-          <div id="audio-error" aria-live="polite" aria-atomic="true">
-        {state.errors?.status &&
-          state.errors.status.map((error: string) => (
-            <p className="mt-2 text-sm text-red-500" key={error}>
-              {error}
-            </p>
-          ))}
-        </div>
+          
         </fieldset>
         
 

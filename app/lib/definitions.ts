@@ -32,15 +32,15 @@ export type Appointment = {
   description: string;
   provider: string;
   clinic: string;
-  date: string;
-  amount: number;
-  audio: string;
-  patient_id: string;
-  speakers: number;
-  transcript: string;
-  summary: string;
-  feedback: string;
-}
+  appointment_date: string;
+  amount: number | null;
+  audio_path: string | null;
+  patient_id: string | null;
+  speakers: number | null;
+  transcript?: string | null;
+  summary?: string | null;
+  feedback?: string | null;
+};
 
 export type Revenue = {
   month: string;
@@ -95,6 +95,13 @@ export type CustomerField = {
   id: string;
   name: string;
 };
+
+
+export type ProviderField = {
+  id: string;
+  name: string;
+};
+
 
 export type InvoiceForm = {
   id: string;

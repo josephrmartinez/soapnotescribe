@@ -177,3 +177,21 @@ main().catch((err) => {
     err,
   );
 });
+
+
+`CREATE TABLE IF NOT EXISTS appointments (
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  title VARCHAR(255),
+  description TEXT,
+  provider VARCHAR(255),
+  clinic VARCHAR(255),
+  appointment_date DATE,
+  amount INT,
+  audio_path VARCHAR(255),
+  patient_id UUID,
+  speakers INT,
+  transcript JSONB,
+  summary JSONB,
+  feedback JSONB,
+  FOREIGN KEY (patient_id) REFERENCES users(id)
+);`

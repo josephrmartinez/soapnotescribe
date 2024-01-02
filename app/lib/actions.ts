@@ -14,7 +14,8 @@ export type ApptState = {
     description?: string[];
     provider?: string[];
     clinic?: string[];
-    date?: string[];
+    appointment_date?: string[];
+    amount?: string[];
   };
   message?: string | null;
 };
@@ -33,25 +34,32 @@ const ApptFormSchema = z.object({
     clinic: z.string({
       invalid_type_error: 'Please indicate a clinic.'
     }),
-    date: z.string(),
+    appointment_date: z.string(),
+    amount: z.coerce.number().nullable(),
+    audio_path: z.string().optional(),
+    patient_id: z.string().optional(),
+    speakers: z.coerce.number().nullable(),
+    transcript: z.string().optional(),
+    summary: z.string().optional(),
+    feedback: z.string().optional(),
   });
    
-  // omit?
-const CreateAppointment = ApptFormSchema.omit({ id: true, date: true });
+  
+const CreateAppointment = ApptFormSchema.omit({ id: true, patient_id: true, speakers: true, transcript: true, summary: true, feedback: true  });
 
-export async function createAppointment(pevState: ApptState, formData: FormData) {
+export async function createAppointment(prevState: ApptState, formData: FormData) {
     // Validate form using Zod 
     const validatedFields = CreateAppointment.safeParse({
         title: formData.get('title'),
         description: formData.get('description'),
         provider: formData.get('provider'),
         clinic: formData.get('clinic'),
-        date: formData.get('date'),
+        appointment_date: formData.get('date'),
         amount: formData.get('amount'),
-        audio: formData.get('audio'),
+        audio_path: formData.get('audio'),
       });
 
-    //   If form validation fails, returrn errors early. Otherwise, continue.
+    //   If form validation fails, return errors early. Otherwise, continue.
       if (!validatedFields.success) {
         return {
           errors: validatedFields.error.flatten().fieldErrors,
@@ -60,19 +68,19 @@ export async function createAppointment(pevState: ApptState, formData: FormData)
       }
 
     //   Prepare data for insertion into database
-      const { customerId, amount, status } = validatedFields.data;
+      const { title, description, provider, clinic, appointment_date, amount, audio_path } = validatedFields.data;
       const amountInCents = amount * 100;
-      const date = new Date().toISOString().split('T')[0];
 
     //   Insert data into the database
       try {
         await sql`
-        INSERT INTO invoices (customer_id, amount, status, date)
-        VALUES (${customerId}, ${amountInCents}, ${status}, ${date})
+        INSERT INTO appointments (title, description, provider, clinic, appointment_date, amount, audio_path)
+        VALUES (${title}, ${description}, ${provider}, ${clinic}, ${appointment_date}, ${amountInCents}, ${audio_path})
         `;
       } catch (error) {
+        console.error('Database error:', error)
         return {
-            message: 'Database Error: Failed to Create Invoice'
+            message: 'Database Error: Failed to Create Appointment'
         }
       }
       
