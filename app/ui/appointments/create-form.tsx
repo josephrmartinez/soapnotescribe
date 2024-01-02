@@ -13,7 +13,7 @@ import { Button } from '@/app/ui/button';
 import { createAppointment } from '@/app/lib/actions';
 import { useFormState } from 'react-dom';
 
-export default function Form({ providers }: { providers: ProviderField[] }) {
+export default function Form() {
   const initialState = { message: null, errors: {} };
   const [state, dispatch] = useFormState(createAppointment, initialState);
   
@@ -139,13 +139,13 @@ export default function Form({ providers }: { providers: ProviderField[] }) {
 
         {/* Date */}
         <div className="mb-4">
-          <label htmlFor="date" className="mb-2 block text-sm font-medium">
+          <label htmlFor="appointment_date" className="mb-2 block text-sm font-medium">
             Appointment Date
           </label>
           <div className="relative">
             <input
-              id="date"
-              name="date"
+              id="appointment_date"
+              name="appointment_date"
               type="date"
               className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
               defaultValue=""
@@ -209,9 +209,9 @@ export default function Form({ providers }: { providers: ProviderField[] }) {
               <div className="flex items-center">
               
                 <input
-                  id="audio"
-                  name="audio"
-                  aria-aria-describedby='audio-error'
+                  id="audio_path"
+                  name="audio_path"
+                  aria-describedby='audio-error'
                   type="file"
                   accept="audio/mpeg, audio/mp3"
                   className="cursor-pointer text-sm border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"

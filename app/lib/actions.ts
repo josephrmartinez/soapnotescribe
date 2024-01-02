@@ -34,7 +34,7 @@ const ApptFormSchema = z.object({
     clinic: z.string({
       invalid_type_error: 'Please indicate a clinic.'
     }),
-    appointment_date: z.string(),
+    appointment_date: z.string().optional(),
     amount: z.coerce.number().nullable(),
     audio_path: z.string().optional(),
     patient_id: z.string().optional(),
@@ -45,7 +45,7 @@ const ApptFormSchema = z.object({
   });
    
   
-const CreateAppointment = ApptFormSchema.omit({ id: true, patient_id: true, speakers: true, transcript: true, summary: true, feedback: true  });
+const CreateAppointment = ApptFormSchema.omit({ id: true, patient_id: true, speakers: true, transcript: true, summary: true, feedback: true, audio_path: true  });
 
 export async function createAppointment(prevState: ApptState, formData: FormData) {
     // Validate form using Zod 
@@ -54,28 +54,34 @@ export async function createAppointment(prevState: ApptState, formData: FormData
         description: formData.get('description'),
         provider: formData.get('provider'),
         clinic: formData.get('clinic'),
-        appointment_date: formData.get('date'),
+        appointment_date: formData.get('appointment_date'),
         amount: formData.get('amount'),
-        audio_path: formData.get('audio'),
+        // audio_path: formData.get('audio_path'),
       });
+
+      // console.log("validated fields:", validatedFields)
+
 
     //   If form validation fails, return errors early. Otherwise, continue.
       if (!validatedFields.success) {
+        console.error("Validation errors:", validatedFields.error.errors)
         return {
           errors: validatedFields.error.flatten().fieldErrors,
           message: 'Missing Fields. Failed to Create Appointment.',
         };
       }
 
+      
+
     //   Prepare data for insertion into database
-      const { title, description, provider, clinic, appointment_date, amount, audio_path } = validatedFields.data;
+      const { title, description, provider, clinic, appointment_date, amount } = validatedFields.data;
       const amountInCents = amount * 100;
 
     //   Insert data into the database
       try {
         await sql`
-        INSERT INTO appointments (title, description, provider, clinic, appointment_date, amount, audio_path)
-        VALUES (${title}, ${description}, ${provider}, ${clinic}, ${appointment_date}, ${amountInCents}, ${audio_path})
+        INSERT INTO appointments (title, description, provider, clinic, appointment_date, amount)
+        VALUES (${title}, ${description}, ${provider}, ${clinic}, ${appointment_date}, ${amountInCents})
         `;
       } catch (error) {
         console.error('Database error:', error)
