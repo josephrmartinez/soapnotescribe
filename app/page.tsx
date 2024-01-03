@@ -7,16 +7,16 @@ import Image from 'next/image';
 
 export default function Page() {
   return (
-    <main className="flex min-h-screen flex-col p-6">
-      <div className="flex h-20 shrink-0 items-end rounded-lg bg-gray-100 p-4 md:h-52">
+    <main className="flex min-h-screen flex-col p-2">
+      <div className="flex h-20 shrink-0 items-end rounded-lg bg-gray-100 p-4 md:h-40">
         <AcmeLogo />
       </div>
-      <div className="mt-4 flex grow flex-col gap-4 md:flex-row">
-        <div className="flex flex-col justify-center gap-6 rounded-lg bg-gray-50 px-6 py-10 md:w-1/3 md:px-20">
-          <p className={`text-xl text-gray-600 md:leading-normal`}>
+      <div className="mt-2 flex grow flex-col gap-2 md:flex-row">
+        <div className="flex flex-col justify-center gap-2 rounded-lg bg-gray-50 px-6 py-10 md:w-1/3 md:px-20">
+          <div className={`text-xl text-gray-600 md:leading-normal`}>
             <p className='font-bold md:text-3xl md:py-8'>Record your medical appointments.</p> 
             <p className='md:py-4'>Get clarity, accountability, and better outcomes.</p>
-          </p>
+          </div>
           <Link
             href="/dashboard/appointments"
             className="flex items-center gap-5 self-start rounded-lg bg-blue-500 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-blue-400 md:text-base"
