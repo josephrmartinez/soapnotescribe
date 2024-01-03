@@ -210,12 +210,12 @@ export async function updateInvoice(id: string, prevState: State, formData: Form
 
   export async function deleteAppointment(id: string) {
     try {
-        await sql`DELETE FROM invoices WHERE id = ${id}`;
-        revalidatePath('/dashboard/invoices');
-        return { message: "Deleted Invoice" }
+        await sql`DELETE FROM appointments WHERE id = ${id}`;
+        revalidatePath('/dashboard/appointments');
+        return { message: "Deleted Appointment" }
     } catch (error) {
         return {
-            message: 'Failed to Delete Invoice'
+            message: 'Failed to Delete Appointment'
         }
     }
   }

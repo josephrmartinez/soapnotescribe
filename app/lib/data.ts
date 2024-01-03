@@ -7,7 +7,8 @@ import {
   LatestInvoiceRaw,
   User,
   Revenue,
-  AppointmentTable
+  AppointmentTable,
+  AppointmentForm
 } from './definitions';
 import { formatCurrency } from './utils';
 import { unstable_noStore as noStore } from 'next/cache';
@@ -206,6 +207,37 @@ export async function fetchInvoiceById(id: string) {
   } catch (error) {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch invoice.');
+  }
+}
+
+
+
+export async function fetchAppointmentById(id: string) {
+  noStore();
+
+  try {
+    const data = await sql<AppointmentForm>`
+      SELECT
+        appointments.id,
+        appointments.appointment_date,
+        appointments.clinic,
+        appointments.provider,
+        appointments.title,
+        appointments.amount
+      FROM appointments
+      WHERE appointments.id = ${id};
+    `;
+
+    const appointment = data.rows.map((appointment) => ({
+      ...appointment,
+      // Convert amount from cents to dollars
+      amount: appointment.amount / 100,
+    }));
+
+    return appointment[0];
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch appointment.');
   }
 }
 

@@ -1,4 +1,4 @@
-import { UpdateInvoice, DeleteInvoice } from '@/app/ui/invoices/buttons';
+import { UpdateAppointment, DeleteAppointment } from '@/app/ui/appointments/buttons';
 import { formatDateToLocal, formatCurrency } from '@/app/lib/utils';
 import { fetchFilteredAppointments } from '@/app/lib/data';
 
@@ -34,13 +34,13 @@ export default async function AppointmentsTable({
                 <div className="flex w-full items-center justify-between pt-4">
                   <div>
                     <p className="text-xl font-medium">
-                      {formatCurrency(appointment.amount)}
+                      {appointment.title}
                     </p>
-                    <p>{formatDateToLocal(appointment.appointment_date)}</p>
+                    <p>{appointment.provider}</p>
                   </div>
                   <div className="flex justify-end gap-2">
-                    <UpdateInvoice id={appointment.id} />
-                    <DeleteInvoice id={appointment.id} />
+                    <UpdateAppointment id={appointment.id} />
+                    <DeleteAppointment id={appointment.id} />
                   </div>
                 </div>
               </div>
@@ -76,10 +76,7 @@ export default async function AppointmentsTable({
                   className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
                 >
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
-                    <div className="flex items-center gap-3">
-                      
                       <p>{formatDateToLocal(appointment.appointment_date)}</p>
-                    </div>
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
                     {appointment.clinic}
@@ -95,8 +92,8 @@ export default async function AppointmentsTable({
                   </td>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
-                      <UpdateInvoice id={appointment.id} />
-                      <DeleteInvoice id={appointment.id} />
+                      <UpdateAppointment id={appointment.id} />
+                      <DeleteAppointment id={appointment.id} />
                     </div>
                   </td>
                 </tr>

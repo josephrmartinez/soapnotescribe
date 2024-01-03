@@ -87,6 +87,22 @@ export type AppointmentTable = {
   feedback?: string | null;
 };
 
+export type AppointmentForm = {
+  id: string;
+  title: string;
+  description: string;
+  provider: string;
+  clinic: string;
+  appointment_date: string;
+  amount: number;
+  audio_path: string | null;
+  patient_id: string | null;
+  speakers: number | null;
+  transcript?: string | null;
+  summary?: string | null;
+  feedback?: string | null;
+};
+
 export type CustomersTableType = {
   id: string;
   name: string;
