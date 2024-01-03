@@ -17,6 +17,7 @@
     "autoprefixer": "10.4.15",
     "bcrypt": "^5.1.1",
     "clsx": "^2.0.0",
+    "geist": "^1.2.0",
     "next": "^14.0.4",
     "next-auth": "^5.0.0-beta.4",
     "postcss": "8.4.31",

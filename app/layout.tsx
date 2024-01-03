@@ -1,6 +1,8 @@
 import '@/app/ui/global.css'
 import { inter } from '@/app/ui/fonts';
 import { Metadata } from 'next';
+import { GeistSans } from 'geist/font/sans';
+
 
 export const metadata: Metadata = {
   title: {
