@@ -223,7 +223,8 @@ export async function fetchAppointmentById(id: string) {
         appointments.clinic,
         appointments.provider,
         appointments.title,
-        appointments.amount
+        appointments.amount,
+        appointments.description
       FROM appointments
       WHERE appointments.id = ${id};
     `;

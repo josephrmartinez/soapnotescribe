@@ -10,7 +10,6 @@ export default async function AppointmentsTable({
   currentPage: number;
 }) {
   const appointments = await fetchFilteredAppointments(query, currentPage);
-  console.log("AppointmentsTable:", appointments)
 
   return (
     <div className="mt-6 flow-root">
