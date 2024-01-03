@@ -1,6 +1,6 @@
-import Pagination from '@/app/ui/invoices/pagination';
+import Pagination from '@/app/ui/appointments/pagination';
 import Search from '@/app/ui/search';
-import Table from '@/app/ui/invoices/table';
+import Table from '@/app/ui/appointments/table';
 import { CreateAppointment } from '@/app/ui/appointments/buttons';
 import { lusitana } from '@/app/ui/fonts';
 import { InvoicesTableSkeleton } from '@/app/ui/skeletons';

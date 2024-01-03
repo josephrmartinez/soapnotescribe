@@ -7,6 +7,7 @@ import {
   LatestInvoiceRaw,
   User,
   Revenue,
+  AppointmentTable
 } from './definitions';
 import { formatCurrency } from './utils';
 import { unstable_noStore as noStore } from 'next/cache';
@@ -124,6 +125,37 @@ export async function fetchFilteredInvoices(
   } catch (error) {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch invoices.');
+  }
+}
+
+export async function fetchFilteredAppointments(
+  query: string,
+  currentPage: number,
+) {
+  noStore();
+  const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+
+  try {
+    const appointments = await sql<AppointmentTable>`
+      SELECT
+        appointments.id,
+        appointments.appointment_date,
+        appointments.title,
+        appointments.provider,
+        appointments.clinic,
+        appointments.amount
+      FROM appointments
+      WHERE
+        appointments.title ILIKE ${`%${query}%`} OR
+        appointments.provider ILIKE ${`%${query}%`} OR
+        appointments.clinic ILIKE ${`%${query}%`}
+      ORDER BY appointments.appointment_date DESC
+      LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
+    `;
+    return appointments.rows;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch appointments.');
   }
 }
 

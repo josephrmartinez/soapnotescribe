@@ -33,7 +33,7 @@ export type Appointment = {
   provider: string;
   clinic: string;
   appointment_date: string;
-  amount: number | null;
+  amount: number;
   audio_path: string | null;
   patient_id: string | null;
   speakers: number | null;
@@ -69,6 +69,22 @@ export type InvoicesTable = {
   date: string;
   amount: number;
   status: 'pending' | 'paid';
+};
+
+export type AppointmentTable = {
+  id: string;
+  title: string;
+  description: string;
+  provider: string;
+  clinic: string;
+  appointment_date: string;
+  amount: number;
+  audio_path: string | null;
+  patient_id: string | null;
+  speakers: number | null;
+  transcript?: string | null;
+  summary?: string | null;
+  feedback?: string | null;
 };
 
 export type CustomersTableType = {

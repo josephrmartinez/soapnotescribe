@@ -35,7 +35,7 @@ const ApptFormSchema = z.object({
       invalid_type_error: 'Please indicate a clinic.'
     }),
     appointment_date: z.string().optional(),
-    amount: z.coerce.number().nullable(),
+    amount: z.coerce.number(),
     audio_path: z.string().optional(),
     patient_id: z.string().optional(),
     speakers: z.coerce.number().nullable(),
