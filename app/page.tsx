@@ -1,8 +1,8 @@
 import Logo from '@/app/ui/logo';
-import { ArrowRightIcon } from '@heroicons/react/24/outline';
+import { ArrowRightIcon, PencilSquareIcon, MicrophoneIcon, ArchiveBoxIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
-import FeatureCard from './ui/FeatureCard';
-import FAQ from './ui/FAQ';
+import { FeatureCard } from './ui/FeatureCard';
+import { FAQ } from './ui/FAQ';
 
 import Image from 'next/image';
 
@@ -12,7 +12,7 @@ export default function Page() {
       <div className="flex h-20 py-10 border border-gray-50 shrink-0 items-start rounded-lg p-4 md:h-40">
         <Logo />
       </div>
-      <div className="mt-2 flex grow flex-col gap-2">
+      <div className="my-12 md:mt-2 flex grow flex-col gap-2">
         <div className="flex flex-col items-center gap-2 rounded-lg px-6 md:py-20 md:px-20">
           <p className='font-bold text-gray-600 text-xl md:text-5xl md:pt-8'>Record your medical appointments.</p> 
           <p className='text-gray-500 font-semibold md:text-4xl py-4 md:mb-8'>Get clarity, accountability, and better outcomes.</p>
@@ -30,16 +30,19 @@ export default function Page() {
       <div className="mt-4 flex grow flex-col gap-4 md:px-2 md:flex-row">
         <FeatureCard 
           heading={"prepare"}
+          icon={<PencilSquareIcon/>}
           subheading={"Get support preparing for your medical appointments."}
-          text={"Receive personalized questions to ask your doctors based on your health history and current trends in medical research. Be prepared for your next appointment with insights that help you make the most out of your time with healthcare providers."}/>
+          text={"Be prepared for your next appointment with insights that help you make the most out of your time with healthcare providers. Receive personalized questions to ask your doctors based on your health history and current trends in medical research."}/>
         <FeatureCard 
           heading={"record"}
-          subheading={"Capture your medical appointments with our easy and secure audio recording tool."}
+          icon={<MicrophoneIcon/>}
+          subheading={"You have the right and responsibility to record your medical appointments."}
           text={"Automatic transcriptions of your appointment recordings give you a record of exactly who said exactly what. No more missed details, no more forgotten advice. Recordings and transcripts are stored permanently in a secure, encrypted environment."}/>
           <FeatureCard 
           heading={"review"}
+          icon={<ArchiveBoxIcon/>}
           subheading={"Search, review, and interact with your healthcare provider conversations."}
-          text={"Share your transcribed recordings with family or approved caregivers. Identify potential irregularities. Get recommendations of alternative approaches and recent medical research that may not have been highlighted during your appointments."}/>
+          text={"Share your transcribed recordings with family or approved caregivers. Identify potential irregularities. Get automatic recommendations of alternative approaches and recent medical research that may not have been highlighted during your appointments."}/>
 
         
       </div>

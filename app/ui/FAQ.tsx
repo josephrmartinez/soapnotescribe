@@ -1,4 +1,8 @@
-export default function FAQ({question, answer}) {
+interface FAQProps {
+    question: string;
+    answer: string;
+ }
+const FAQ: React.FC<FAQProps> = ({question, answer}) => {
     return (
         <div className="my-6">       
             <p className="text-gray-700 font-semibold text-2xl mb-2">
@@ -11,3 +15,5 @@ export default function FAQ({question, answer}) {
         </div>
     )
 }
+
+export { FAQ }
