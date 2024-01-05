@@ -9,7 +9,7 @@ import Image from 'next/image';
 export default function Page() {
   return (
     <main className="flex min-h-screen flex-col p-2">
-      <div className="flex h-20 py-10 shrink-0 items-start rounded-lg p-4 md:h-40">
+      <div className="flex h-20 py-10 border border-gray-50 shrink-0 items-start rounded-lg p-4 md:h-40">
         <Logo />
       </div>
       <div className="mt-2 flex grow flex-col gap-2">
