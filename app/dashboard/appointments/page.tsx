@@ -3,6 +3,7 @@ import Search from '@/app/ui/search';
 import Table from '@/app/ui/appointments/table';
 import { CreateAppointment } from '@/app/ui/appointments/buttons';
 import { lusitana } from '@/app/ui/fonts';
+import { GeistSans } from 'geist/font/sans';
 import { InvoicesTableSkeleton } from '@/app/ui/skeletons';
 import { AppointmentsTableSkeleton } from '@/app/ui/skeletons';
 import { Suspense } from 'react';
@@ -29,7 +30,7 @@ export default async function Page({
   return (
     <div className="w-full">
       <div className="flex w-full items-center justify-between">
-        <h1 className={`${lusitana.className} text-2xl`}>Appointments</h1>
+        <h1 className={`${GeistSans.className} text-2xl`}>Appointments</h1>
       </div>
       <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
         <Search placeholder="Search appointments..." />
