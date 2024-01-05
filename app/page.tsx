@@ -18,7 +18,7 @@ export default function Page() {
           <p className='text-gray-500 font-semibold md:text-4xl py-4 md:mb-8'>Get clarity, accountability, and better outcomes.</p>
           <Link
             href="/dashboard/appointments"
-            className="flex items-center gap-5 rounded-lg bg-teal-700 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-teal-500 md:text-base"
+            className="flex items-center gap-5 rounded-lg bg-teal-600 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-teal-500 md:text-base"
           >
             <span>Log in</span> <ArrowRightIcon className="w-5 md:w-6" />
           </Link>
@@ -48,8 +48,8 @@ export default function Page() {
         FAQs 
         </p>
         <FAQ 
-          question={"Does advocate.ai give medical advice?"}
-          answer={"‍advocate.ai does not give medical advice. advocate.ai enables users to record, transcribe, and gain insights from their medical appointments."}
+          question={"Does advocate.ai offer medical advice?"}
+          answer={"advocate.ai is a patient-directed health advocacy tool that is meant to compliment your interactions with medical providers. This tool does not offer medical advice and is not a replacement for trained medical professionals."}
           />
         <FAQ 
           question={"Is my data safe?"}
@@ -61,16 +61,13 @@ export default function Page() {
           />
         <FAQ 
         question={"Is recording legal?"}
-        answer={"You have the right to record your medical appointments. In most states, it is not necessary to request permission from your provider in order to make a recording. You must obtain consent from all parties to record in the following states: California, Connecticut, Florida, Illinois, Maryland, Massachusetts, Montana, New Hampshire, Pennsylvania and Washington."}
+        answer={"You have the right to record your medical appointments. In most states, it is not necessary to request permission from your provider in order to make a recording. You must obtain consent from all parties to record in the following states: California, Connecticut, Florida, Illinois, Maryland, Massachusetts, Montana, New Hampshire, Pennsylvania, and Washington."}
           />
         <FAQ 
           question={"What if there are signs saying recording isn’t allowed?"}
           answer={"Those signs are to keep you from recording other patients. There’s nothing wrong with asking your doctor if it’s okay to record your consultation."}
           />
-        <FAQ 
-        question={"Does advocate.ai offer medical advice?"}
-        answer={"advocate.ai is a patient-directed health advocacy tool that is meant to compliment your interactions with medical providers. This tool does not offer medical advice and is not a replacement for trained medical professionals."}
-          />
+        
       </div>
     </main>
   );
