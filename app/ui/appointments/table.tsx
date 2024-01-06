@@ -1,4 +1,4 @@
-import { UpdateAppointment, DeleteAppointment } from '@/app/ui/appointments/buttons';
+import { UpdateAppointment, ReadAppointment } from '@/app/ui/appointments/buttons';
 import { formatDateToLocal, formatCurrency } from '@/app/lib/utils';
 import { fetchFilteredAppointments } from '@/app/lib/data';
 
@@ -38,8 +38,8 @@ export default async function AppointmentsTable({
                     <p>{appointment.provider}</p>
                   </div>
                   <div className="flex justify-end gap-2">
-                    <UpdateAppointment id={appointment.id} />
-                    <DeleteAppointment id={appointment.id} />
+                    <ReadAppointment id={appointment.id} />
+                    
                   </div>
                 </div>
               </div>
@@ -91,8 +91,8 @@ export default async function AppointmentsTable({
                   </td>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
-                      <UpdateAppointment id={appointment.id} />
-                      <DeleteAppointment id={appointment.id} />
+                      <ReadAppointment id={appointment.id} />
+                      
                     </div>
                   </td>
                 </tr>

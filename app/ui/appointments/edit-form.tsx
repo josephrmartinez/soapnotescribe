@@ -12,6 +12,7 @@ import Link from 'next/link';
 import { Button } from '@/app/ui/button';
 import { updateAppointment } from '@/app/lib/actions';
 import { useFormState } from 'react-dom';
+import { DeleteAppointment } from './buttons';
 
 export default function EditAppointmentForm({
   appointment
@@ -252,6 +253,7 @@ function formatDateForInput(date: string): string {
         >
           Cancel
         </Link>
+        <DeleteAppointment id={appointment.id} />
         <Button type="submit">Update Appointment</Button>
       </div>
     </form>
