@@ -5,6 +5,7 @@ import { UpdateAppointment } from '@/app/ui/appointments/buttons';
 import { notFound } from 'next/navigation';
 import { CalendarDaysIcon, BuildingOffice2Icon } from '@heroicons/react/24/outline';
 import Search from '@/app/ui/search';
+import AIChatInput from '@/app/ui/appointments/aichatinput';
 import IncrementCounter from '@/app/ui/appointments/counter';
 import AIContent from '@/app/ui/appointments/AIcontent';
 
@@ -89,7 +90,7 @@ export default async function Page({ params }: { params: { id: string } }) {
             
             </div>
                 <div className='border rounded-lg h-96 bg-white mb-2'></div>
-                <Search placeholder='Ask question about appointment...'/>
+                <AIChatInput placeholder='Ask question about appointment...'/>
             </div>
         </div>
       

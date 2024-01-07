@@ -13,6 +13,7 @@
     "@heroicons/react": "^2.0.18",
     "@tailwindcss/forms": "^0.5.7",
     "@types/node": "20.5.7",
+    "@vercel/blob": "^0.16.1",
     "@vercel/postgres": "^0.5.1",
     "autoprefixer": "10.4.15",
     "bcrypt": "^5.1.1",
