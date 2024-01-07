@@ -75,16 +75,19 @@ export default async function Page({ params }: { params: { id: string } }) {
 
         <div className='grid grid-cols-2 gap-4'>
             <div>
-            
-      
-        
-      
-      <div className='max-w-prose'>
-      <AIContent />
-      </div>
+                <div className='max-w-prose'>
+                    <AIContent />
+                </div>
             </div>
 
             <div>
+            <div className="grid grid-cols-5 mb-4">
+            
+            
+            <div className={`ml-2 text-lg font-semibold  mt-2 text-gray-700 `}
+                >AI Chat</div>
+            
+            </div>
                 <div className='border rounded-lg h-96 bg-white mb-2'></div>
                 <Search placeholder='Ask question about appointment...'/>
             </div>
