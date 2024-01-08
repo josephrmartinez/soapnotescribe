@@ -1,5 +1,9 @@
 'use client'
 
+import { type PutBlobResult } from '@vercel/blob';
+import { upload } from '@vercel/blob/client';
+import { useState, useRef } from 'react';
+
 import { ProviderField } from '@/app/lib/definitions';
 import Link from 'next/link';
 import {
@@ -16,6 +20,66 @@ import { useFormState } from 'react-dom';
 export default function Form() {
   const initialState = { message: null, errors: {} };
   const [state, dispatch] = useFormState(createAppointment, initialState);
+  const inputFileRef = useRef<HTMLInputElement>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const [blob, setBlob] = useState<PutBlobResult | null>(null);
+  const [uploadPercentage, setUploadPercentage] = useState(0);
+
+  const handleAudioUpload = async (event: React.MouseEvent) => {
+    try {
+      event.preventDefault();
+      setIsUploading(true);
+  
+      const file = inputFileRef.current.files[0];
+  
+      if (!file) {
+        throw new Error("No file selected.");
+      }
+  
+      const newBlob = await upload(file.name, file, {
+        access: 'public',
+        handleUploadUrl: '/api/appointments/upload',
+      });
+  
+      setBlob(newBlob);
+    } catch (error) {
+      console.error("Error uploading file:", error);
+      // You can handle the error further as needed, e.g., show a notification to the user.
+    } finally {
+      setIsUploading(false);
+    }
+  }
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    // Include the audio information in the form data
+    const formData = new FormData(event.target);
+    formData.append('audio_url', blob?.url || '');
+
+    console.log("form data:", formData)
+    // try {
+    //   // Submit the form data (including audio URL) to the server
+    //   const response = await fetch('/api/appointment/create', {
+    //     method: 'POST',
+    //     body: formData,
+    //   });
+
+    //   if (response.ok) {
+    //     const result = await response.json();
+    //     console.log('Form submission successful:', result);
+    //     // Handle success if needed
+    //   } else {
+    //     console.error('Form submission failed');
+    //     // Handle failure if needed
+    //   }
+    // } catch (error) {
+    //   console.error('Form submission error:', error);
+    //   // Handle error if needed
+    // }
+  };
+
+
   
   return (
     <form action={dispatch}>
@@ -136,7 +200,6 @@ export default function Form() {
           </div>
         </div>
 
-
         {/* Date */}
         <div className="mb-4">
           <label htmlFor="appointment_date" className="mb-2 block text-sm font-medium">
@@ -164,9 +227,6 @@ export default function Form() {
               ))}
           </div>
         </div>
-
-
-        
 
         {/* Amount Paid */}
         <div className="mb-4">
@@ -198,7 +258,6 @@ export default function Form() {
         </div>  
         </div>
         
-
         {/* Appointment Recording */}
         <fieldset>
           <legend className="mb-2 block text-sm font-medium">
@@ -211,11 +270,18 @@ export default function Form() {
                 <input
                   id="audio_path"
                   name="audio_path"
+                  ref={inputFileRef}
                   aria-describedby='audio-error'
                   type="file"
                   accept="audio/mpeg, audio/mp3"
                   className="cursor-pointer text-sm border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
                 />
+                <button type="button" className="border p-2 mx-4" onClick={handleAudioUpload}>
+                  Upload Audio
+                </button>
+                {isUploading && 
+                <div>audio uploading</div>
+                }
                 
               </div>
               

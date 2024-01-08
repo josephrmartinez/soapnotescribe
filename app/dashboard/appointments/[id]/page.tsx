@@ -4,9 +4,7 @@ import { fetchAppointmentById } from '@/app/lib/data';
 import { UpdateAppointment } from '@/app/ui/appointments/buttons';
 import { notFound } from 'next/navigation';
 import { CalendarDaysIcon, BuildingOffice2Icon } from '@heroicons/react/24/outline';
-import Search from '@/app/ui/search';
 import AIChatInput from '@/app/ui/appointments/aichatinput';
-import IncrementCounter from '@/app/ui/appointments/counter';
 import AIContent from '@/app/ui/appointments/AIcontent';
 
 
@@ -75,29 +73,22 @@ export default async function Page({ params }: { params: { id: string } }) {
 
 
         <div className='grid grid-cols-2 gap-4'>
-            <div>
-                <div className='max-w-prose'>
-                    <AIContent />
-                </div>
-            </div>
+          <div>
+              <div className='max-w-prose'>
+                  <AIContent />
+              </div>
+          </div>
 
-            <div>
+          <div>
             <div className="grid grid-cols-5 mb-4">
-            
-            
-            <div className={`ml-2 text-lg font-semibold  mt-2 text-gray-700 `}
-                >AI Chat</div>
-            
+              <div className={`ml-2 text-lg font-semibold  mt-2 text-gray-700 `}>
+                AI Chat
+              </div>
             </div>
-                <div className='border rounded-lg h-96 bg-white mb-2'></div>
-                <AIChatInput placeholder='Ask question about appointment...'/>
-            </div>
+            <div className='border rounded-lg h-96 bg-white mb-2'></div>
+            <AIChatInput placeholder='Ask question about appointment...'/>
+          </div>
         </div>
-      
-
-      
-      
-      
     </main>
   );
 }
