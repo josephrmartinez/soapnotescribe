@@ -21,8 +21,7 @@ export default async function Page({ params }: { params: { id: string } }) {
     // Format date obj:
     var inputString = new Date(appointment.appointment_date);
     var dateObject = new Date(inputString);
-    var options = { year: 'numeric', month: 'long', day: 'numeric' };
-    var displayDate = dateObject.toLocaleDateString('en-US', options);
+    var displayDate = dateObject.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
 
   return (
