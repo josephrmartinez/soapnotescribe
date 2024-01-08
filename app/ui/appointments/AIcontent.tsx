@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react';
+import React, { ReactNode, useState } from 'react';
 
 const transcriptContent = (
     <div>
@@ -281,11 +281,11 @@ const summaryContent = (
 const AIContent = () => {
     const [activeTab, setActiveTab] = useState('transcript');
       
-      const handleTabClick = (tab) => {
+      const handleTabClick = (tab: string) => {
         setActiveTab(tab);
       };
       
-      const ContentRenderer = ({ content }) => {
+      const ContentRenderer = ({ content }: {content: ReactNode }) => {
           return <div>{content}</div>;
         };
 
