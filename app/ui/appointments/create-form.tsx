@@ -61,14 +61,14 @@ export default function Form() {
     }
   }
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: React.MouseEvent) => {
     event.preventDefault();
 
     // Include the audio information in the form data
-    const formData = new FormData(event.target);
-    formData.append('audio_url', blob?.url || '');
+    // const formData = new FormData(event.target);
+    // formData.append('audio_url', blob?.url || '');
 
-    console.log("form data:", formData)
+    console.log("blob data", blob)
     // try {
     //   // Submit the form data (including audio URL) to the server
     //   const response = await fetch('/api/appointment/create', {
