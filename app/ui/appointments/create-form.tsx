@@ -28,9 +28,20 @@ export default function Form() {
   const handleAudioUpload = async (event: React.MouseEvent) => {
     try {
       event.preventDefault();
+
+      if (!inputFileRef.current) {
+        throw new Error("inputFileRef is null.");
+      }
+  
+      const fileInput = inputFileRef.current;
+  
+      if (!fileInput.files || fileInput.files.length === 0) {
+        throw new Error("No file selected.");
+      }
+
       setIsUploading(true);
   
-      const file = inputFileRef.current.files[0];
+      const file = fileInput.files[0];
   
       if (!file) {
         throw new Error("No file selected.");
