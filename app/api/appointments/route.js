@@ -19,6 +19,7 @@ export async function POST(request) {
             // optional, sent to your server on upload completion
             // you could pass a user id from auth, or a value from clientPayload
           }),
+          clientToken: "dummyToken"
         };
       },
       onUploadCompleted: async ({ blob, tokenPayload }) => {
