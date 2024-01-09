@@ -3,6 +3,7 @@ import { ArrowRightIcon, PencilSquareIcon, MicrophoneIcon, ArchiveBoxIcon } from
 import Link from 'next/link';
 import { FeatureCard } from './ui/FeatureCard';
 import { FAQ } from './ui/FAQ';
+import AuthForm from './auth-form';
 
 import Image from 'next/image';
 
@@ -12,18 +13,12 @@ export default function Page() {
       <div className="flex h-20 py-10 border border-gray-50 shrink-0 items-start rounded-lg p-4 md:h-40">
         <Logo />
       </div>
-      <div className="my-12 md:mt-2 flex grow flex-col gap-2">
-        <div className="flex flex-col items-center gap-2 rounded-lg px-6 md:py-20 md:px-20">
+      <div className="my-12 md:mt-2 grid grid-cols-3 gap-4 md:px-2">
+        <div className="col-span-2 flex flex-col items-center gap-2 rounded-lg px-6 md:py-20 md:px-20">
           <p className='font-bold text-gray-600 text-xl md:text-5xl md:pt-8'>Record your medical appointments.</p> 
           <p className='text-gray-500 font-semibold md:text-4xl py-4 md:mb-8'>Get clarity, accountability, and better outcomes.</p>
-          <Link
-            href="/dashboard/appointments"
-            className="flex items-center gap-5 rounded-lg bg-teal-600 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-teal-500 md:text-base"
-          >
-            <span>Log in</span> <ArrowRightIcon className="w-5 md:w-6" />
-          </Link>
-          
         </div>
+        <AuthForm />
         
       </div>
       
@@ -46,6 +41,8 @@ export default function Page() {
 
         
       </div>
+
+      
       <div className="flex flex-col w-[40rem] mx-auto md:my-20">
         <p className="mx-auto mb-8  text-gray-600 font-bold text-3xl dark:text-gray-400">
         FAQs 
