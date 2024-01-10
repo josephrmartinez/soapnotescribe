@@ -2,9 +2,11 @@ import { UpdateAppointment, ReadAppointment } from '@/app/ui/appointments/button
 import { formatDateToLocal, formatCurrency } from '@/app/lib/utils';
 import { fetchFilteredAppointments } from '@/app/lib/data';
 
+
+
 export default async function AppointmentsTable({
   query,
-  currentPage,
+  currentPage
 }: {
   query: string;
   currentPage: number;

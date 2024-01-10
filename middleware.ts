@@ -7,6 +7,8 @@ export async function middleware(req: NextRequest) {
   const res = NextResponse.next()
   const supabase = createMiddlewareClient({ req, res })
 
+  console.log("running middleware")
+
   const {
     data: { user },
   } = await supabase.auth.getUser()
@@ -18,6 +20,7 @@ export async function middleware(req: NextRequest) {
 
   // if user is not signed in and the current path is not / redirect the user to /
   if (!user && req.nextUrl.pathname !== '/') {
+    console.log("two")
     return NextResponse.redirect(new URL('/', req.url))
   }
 

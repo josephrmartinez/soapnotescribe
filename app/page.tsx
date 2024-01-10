@@ -18,7 +18,10 @@ export default function Page() {
           <p className='font-bold text-gray-600 text-xl md:text-5xl md:pt-8'>Record your medical appointments.</p> 
           <p className='text-gray-500 font-semibold md:text-4xl py-4 md:mb-8'>Get clarity, accountability, and better outcomes.</p>
         </div>
+        
         <AuthForm />
+        
+        
         
       </div>
       
@@ -31,7 +34,7 @@ export default function Page() {
         <FeatureCard 
           heading={"record"}
           icon={<MicrophoneIcon/>}
-          subheading={"You have the right and responsibility to record your medical appointments."}
+          subheading={"You have the right to record your medical appointments."}
           text={"Automatic transcriptions of your appointment recordings give you a record of exactly who said exactly what. No more missed details, no more forgotten advice. Recordings and transcripts are stored permanently in a secure, encrypted environment."}/>
           <FeatureCard 
           heading={"review"}

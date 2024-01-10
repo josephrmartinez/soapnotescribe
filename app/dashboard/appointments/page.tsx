@@ -8,6 +8,10 @@ import { Suspense } from 'react';
 import { fetchInvoicesPages } from '@/app/lib/data';
 import { Metadata } from 'next';
 
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
+import { cookies } from 'next/headers'
+import { Database } from '@/app/database.types';
+
 export const metadata: Metadata = {
   title: "Appointments",
 }
@@ -24,6 +28,12 @@ export default async function Page({
   const currentPage = Number(searchParams?.page) || 1;
 
   const totalPages = await fetchInvoicesPages(query);
+
+  const supabase = createServerComponentClient<Database>({ cookies })
+
+  const {
+    data: { session },
+  } = await supabase.auth.getSession()
 
   return (
     <div className="w-full">
