@@ -15,12 +15,13 @@ export async function middleware(req: NextRequest) {
 
   // if user is signed in and the current path is / redirect the user to /account
   if (user && req.nextUrl.pathname === '/') {
+    console.log("user signed in. routing to app")
     return NextResponse.redirect(new URL('/dashboard/appointments', req.url))
   }
 
   // if user is not signed in and the current path is not / redirect the user to /
   if (!user && req.nextUrl.pathname !== '/') {
-    console.log("two")
+    console.log("user not signed in. access not allowed")
     return NextResponse.redirect(new URL('/', req.url))
   }
 
@@ -30,14 +31,3 @@ export async function middleware(req: NextRequest) {
 export const config = {
   matcher: ['/', '/dashboard/appointments'],
 }
-
-
-// import NextAuth from 'next-auth';
-// import { authConfig } from './auth.config';
- 
-// export default NextAuth(authConfig).auth;
- 
-// export const config = {
-//   // https://nextjs.org/docs/app/building-your-application/routing/middleware#matcher
-//   matcher: ['/((?!api|_next/static|_next/image|.*\\.png$).*)'],
-// };
