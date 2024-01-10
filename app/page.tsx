@@ -19,7 +19,11 @@ export default function Page() {
           <p className='text-gray-500 font-semibold md:text-4xl py-4 md:mb-8'>Get clarity, accountability, and better outcomes.</p>
         </div>
         
-        <AuthForm />
+        
+      
+          <AuthForm />
+        
+        
         
         
         
