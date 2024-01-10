@@ -15,5 +15,5 @@ export async function GET(req: NextRequest) {
     await supabase.auth.exchangeCodeForSession(code)
   }
 
-  return NextResponse.redirect(new URL('/dashboard/appointments', req.url))
+  return NextResponse.redirect(new URL('/', req.url))
 }
