@@ -35,6 +35,8 @@ export default async function Page({
     data: { session },
   } = await supabase.auth.getSession()
 
+  console.log("session", session)
+
   return (
     <div className="w-full">
       <div className="flex w-full items-center justify-between">

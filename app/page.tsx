@@ -1,11 +1,8 @@
 import Logo from '@/app/ui/logo';
 import { ArrowRightIcon, PencilSquareIcon, MicrophoneIcon, ArchiveBoxIcon } from '@heroicons/react/24/outline';
-import Link from 'next/link';
 import { FeatureCard } from './ui/FeatureCard';
 import { FAQ } from './ui/FAQ';
 import AuthForm from './auth-form';
-
-import Image from 'next/image';
 
 export default function Page() {
   return (
@@ -18,15 +15,7 @@ export default function Page() {
           <p className='font-bold text-gray-600 text-xl md:text-5xl md:pt-8'>Record your medical appointments.</p> 
           <p className='text-gray-500 font-semibold md:text-4xl py-4 md:mb-8'>Get clarity, accountability, and better outcomes.</p>
         </div>
-        
-        
-      
-          <AuthForm />
-        
-        
-        
-        
-        
+        <AuthForm />
       </div>
       
       <div className="mt-4 flex grow flex-col gap-4 md:px-2 md:flex-row">
@@ -45,34 +34,31 @@ export default function Page() {
           icon={<ArchiveBoxIcon/>}
           subheading={"Search, review, and interact with your healthcare provider conversations."}
           text={"Share your transcribed recordings with family or approved caregivers. Identify potential irregularities. Get automatic recommendations of alternative approaches and recent medical research that may not have been highlighted during your appointments."}/>
-
-        
-      </div>
-
-      
+      </div> 
       <div className="flex flex-col w-[40rem] mx-auto md:my-20">
         <p className="mx-auto mb-8  text-gray-600 font-bold text-3xl dark:text-gray-400">
         FAQs 
         </p>
         <FAQ 
           question={"Does advocate.ai offer medical advice?"}
-          answer={"advocate.ai is a patient-directed health advocacy tool that is meant to compliment your interactions with medical providers. This tool does not offer medical advice and is not a replacement for trained medical professionals."}
+          answer={"No. advocate.ai is a patient-directed health advocacy tool that is meant to compliment your interactions with medical providers. This tool does not offer medical advice and is not a replacement for trained medical professionals."}
           />
         <FAQ 
           question={"Is my data safe?"}
-          answer={"‍advocate.ai encrypts and stores all user data in secure storage. No data is sold to third parties."}
+          answer={"‍All user data is encrypted and stored in secure storage. No user data is sold to third parties. No AI models are trained on user data."}
           />
         <FAQ 
+          question={"Why would someone record a medical appointment if they already have electronic health records?"}
+          answer={"Electronic health records are created by the provider. These records are subject to human error and may not contain important details that were discussed during the interaction. We recommend recording the entire appointment as well as any interactions with front office staff. If there is ever a legal issue that arises, having your own audio recording of the entire medical appointment could be of significant importance. These recordings will compliment your electronic health records ad allow you to generate highly personalized pre and post appointment feedback that would not be possible otherwise." 
+        }
+          />       
+          <FAQ 
+          question={"Is recording legal?"}
+          answer={"You have the right to record your medical appointments. In most states, it is not necessary to request permission from your provider in order to make a recording. You must obtain consent from all parties to record in the following states: California, Connecticut, Florida, Illinois, Maryland, Massachusetts, Montana, New Hampshire, Pennsylvania, and Washington."}
+          />
+          <FAQ 
           question={"Is advocate.ai HIPAA compliant?"}
           answer={"‍The app is patient-directed and does not receive electronic medical information from a Covered Provider and is therefore not covered by HIPAA. advocate.ai protects personal health information (PHI) and is fully compliant with FDA and FTC regulations on patient recordings of consults."}
-          />
-        <FAQ 
-        question={"Is recording legal?"}
-        answer={"You have the right to record your medical appointments. In most states, it is not necessary to request permission from your provider in order to make a recording. You must obtain consent from all parties to record in the following states: California, Connecticut, Florida, Illinois, Maryland, Massachusetts, Montana, New Hampshire, Pennsylvania, and Washington."}
-          />
-        <FAQ 
-          question={"What if there are signs saying recording isn’t allowed?"}
-          answer={"Those signs are to keep you from recording other patients. There’s nothing wrong with asking your doctor if it’s okay to record your consultation."}
           />
         
       </div>
