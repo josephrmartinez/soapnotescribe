@@ -41,7 +41,7 @@ export default function Page() {
         </p>
         <FAQ 
           question={"Does advocate.ai offer medical advice?"}
-          answer={"No. advocate.ai is a patient-directed health advocacy tool that is meant to compliment your interactions with medical providers. This tool does not offer medical advice and is not a replacement for trained medical professionals."}
+          answer={"advocate.ai is a patient-directed health advocacy tool that is meant to compliment your interactions with medical providers. This tool does not offer medical advice and is not a replacement for trained medical professionals."}
           />
         <FAQ 
           question={"Is my data safe?"}
