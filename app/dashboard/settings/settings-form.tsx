@@ -2,6 +2,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Database } from '@/app/database.types'
 import { Session, createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import Avatar from './avatar'
 
 export default function SettingsForm({ session }: { session: Session | null }) {
   const supabase = createClientComponentClient<Database>()
@@ -75,6 +76,15 @@ export default function SettingsForm({ session }: { session: Session | null }) {
 
   return (
     <div className="form-widget">
+      <Avatar
+      uid={user.id}
+      url={avatar_url}
+      size={150}
+      onUpload={(url) => {
+        setAvatarUrl(url)
+        updateProfile({ fullname, username, website, avatar_url: url })
+      }}
+    />
       <div>
         <label htmlFor="email">Email</label>
         <input id="email" type="text" value={session?.user.email} disabled />

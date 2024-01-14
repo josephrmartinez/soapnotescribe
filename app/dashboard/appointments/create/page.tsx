@@ -1,9 +1,17 @@
-import Form from '@/app/ui/appointments/create-form';
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
+import { cookies } from 'next/headers'
+import { Database } from '@/app/database.types'
+import CreateAppointment from './create-form';
 import Breadcrumbs from '@/app/ui/appointments/breadcrumbs';
-import { fetchCustomers } from '@/app/lib/data';
- 
+
+
 export default async function Page() {
-  const customers = await fetchCustomers();
+  const supabase = createServerComponentClient<Database>({ cookies })
+
+  const {
+    data: { session },
+  } = await supabase.auth.getSession()
+
  
   return (
     <main>
@@ -17,7 +25,7 @@ export default async function Page() {
           },
         ]}
       />
-      <Form />
+      <CreateAppointment session={session} />
     </main>
   );
 }
