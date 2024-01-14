@@ -14,7 +14,7 @@ import {
 import AudioUpload from './AudioUpload';
 
 export default function CreateAppointment({ session }: { session: Session | null }) {
-  const supabase = createClientComponentClient<Database>()
+  
   const [loading, setLoading] = useState(true)
   const [title, setTitle] = useState<string | null>(null)
   const [description, setDescription] = useState<string | null>(null)
@@ -22,9 +22,11 @@ export default function CreateAppointment({ session }: { session: Session | null
   const [clinic, setClinic] = useState<string | null>(null)
   const [date, setDate] = useState<string | null>(null)
   const [amount, setAmount] = useState<string | null>(null)
-  const [recording_url, setRecordingUrl] = useState<string | null>(null)
+  const [recordingUrl, setRecordingUrl] = useState<string | null>(null)
+  const [tempDownloadUrl, setTempDownloadUrl] = useState<string | null>(null)
   const user = session?.user
 
+  
 
   function createAppointment(){
     return
@@ -34,9 +36,15 @@ export default function CreateAppointment({ session }: { session: Session | null
   return (
     <form action={createAppointment}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
-        
+        {/* Appointment Recording */}
+        {recordingUrl ?
+            <div>{recordingUrl}</div>
+            :
+            <AudioUpload session={session} setRecordingUrl={setRecordingUrl} setTempDownloadUrl={setTempDownloadUrl} />  
+        }
+
         {/* Appointment Title */}
-        <div className="mb-4">
+        <div className="my-4">
           <label htmlFor="title" className="mb-2 block text-sm font-medium">
             Appointment Title
           </label>
@@ -148,8 +156,7 @@ export default function CreateAppointment({ session }: { session: Session | null
 
         
         
-        {/* Appointment Recording */}
-        <AudioUpload session={session} />
+        
         
 
 

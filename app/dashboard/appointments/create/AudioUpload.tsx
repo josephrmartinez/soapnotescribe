@@ -4,12 +4,22 @@ import { Session, createClientComponentClient } from '@supabase/auth-helpers-nex
 import { Database } from '@/app/database.types'
 import * as tus from 'tus-js-client'
 
-export default function AudioUpload({ session }: { session: Session | null }) {
+
+export default function AudioUpload({ 
+    session,
+    setRecordingUrl,
+    setTempDownloadUrl
+}: { 
+    session: Session | null;
+    setRecordingUrl: React.Dispatch<React.SetStateAction<string | null>>;
+    setTempDownloadUrl: React.Dispatch<React.SetStateAction<string | null>>;
+ }) {
     const inputFileRef = useRef<HTMLInputElement>(null);
     const [isUploading, setIsUploading] = useState(false);
-    const supabase = createClientComponentClient<Database>();
+    const [percentageUploaded, setPercentageUploaded] = useState(0)
     const user = session?.user
     const userId = user?.id
+    const supabase = createClientComponentClient<Database>()
 
     async function handleAudioUpload() {
         const fileInput = inputFileRef.current;
@@ -19,8 +29,11 @@ export default function AudioUpload({ session }: { session: Session | null }) {
 
             try {
                 setIsUploading(true);
+                
+                const randomPrefix = Math.floor(Math.random() * 900000) + 100000;
+                const fileNameWithPrefix = `${randomPrefix}_${file.name}`
 
-                await uploadFile('apptrecordings', `${userId}/testuploadfilename`, file);
+                await uploadFile('apptrecordings', `${fileNameWithPrefix}`, file);
 
                 setIsUploading(false);
             } catch (error) {
@@ -30,8 +43,12 @@ export default function AudioUpload({ session }: { session: Session | null }) {
         }
     }
 
-    async function uploadFile(bucketName: string, fileName: string, file: File) {
+    async function getDownloadUrl(fileName: string){
+        const { data, error } = await supabase.storage.from('apptrecordings').createSignedUrl(`${userId}/${fileName}`, 600)
+        return data?.signedUrl
+    }
 
+    async function uploadFile(bucketName: string, fileName: string, file: File) {
         return new Promise((resolve, reject) => {
             const upload = new tus.Upload(file, {
                 endpoint: `https://tmmnudhjtavobvreaink.supabase.co/storage/v1/upload/resumable`,
@@ -44,7 +61,7 @@ export default function AudioUpload({ session }: { session: Session | null }) {
                 removeFingerprintOnSuccess: true,
                 metadata: {
                     bucketName,
-                    objectName: fileName,
+                    objectName: `${userId}/${fileName}`,
                     contentType: file.type,
                     cacheControl: 3600,
                 },
@@ -55,10 +72,27 @@ export default function AudioUpload({ session }: { session: Session | null }) {
                 },
                 onProgress: function (bytesUploaded, bytesTotal) {
                     var percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2);
+                    setPercentageUploaded(parseFloat(percentage))
                     console.log(bytesUploaded, bytesTotal, percentage + '%');
                 },
-                onSuccess: function () {
+                onSuccess: async function () {
                     console.log('Download %s from %s', upload.file.name, upload.url);
+                    try {
+
+                        setRecordingUrl(`${fileName}`)
+
+                        const signedUrl = await getDownloadUrl(fileName);
+                        console.log("signedUrl:", signedUrl);
+                        
+                        // Check if signedUrl is defined before setting the state
+                        if (signedUrl !== undefined) {
+                            setTempDownloadUrl(signedUrl);
+                        } else {
+                            console.error("Error: Signed URL is undefined");
+                        }
+                    } catch (error) {
+                        console.error("Error fetching signed URL:", error);
+                    }
                     resolve();
                 },
             });
@@ -73,7 +107,6 @@ export default function AudioUpload({ session }: { session: Session | null }) {
             });
         });
     }
-
     return (
         <fieldset>
             <legend className="mb-2 block text-sm font-medium">
@@ -96,7 +129,7 @@ export default function AudioUpload({ session }: { session: Session | null }) {
                             Upload Audio
                         </button>
                         {isUploading &&
-                            <div>audio uploading</div>
+                            <div>audio uploading. {`${percentageUploaded}% complete`}</div>
                         }
 
                     </div>
