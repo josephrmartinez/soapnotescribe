@@ -20,28 +20,54 @@ export default function CreateAppointment({ session }: { session: Session | null
   const [description, setDescription] = useState<string | null>(null)
   const [provider, setProvider] = useState<string | null>(null)
   const [clinic, setClinic] = useState<string | null>(null)
-  const [date, setDate] = useState<string | null>(null)
-  const [amount, setAmount] = useState<string | null>(null)
+  const [date, setDate] = useState<string>('')
   const [recordingUrl, setRecordingUrl] = useState<string | null>(null)
   const [tempDownloadUrl, setTempDownloadUrl] = useState<string | null>(null)
+  const [submitOkay, setSubmitOkay] = useState<boolean>(true)
+  const [isUploading, setIsUploading] = useState<boolean>(false);
   const user = session?.user
 
   
 
-  function createAppointment(){
-    return
-  }
+  function submitAppointment(){
+    event?.preventDefault();
+
+    const formData = {
+        title,
+        description,
+        provider,
+        clinic,
+        date,
+        recordingUrl,
+        tempDownloadUrl,
+      };
+    
+      // Perform any additional actions, e.g., submitting the form data to a server
+      console.log('Form Data:', formData);
+    
+      // Reset the form fields if needed
+      // setTitle('');
+      // setDescription('');
+      // setProvider('');
+      // setClinic('');
+      // setDate('');
+      // setAmount('');
+      // setRecordingUrl('');
+      // setTempDownloadUrl('');
+    }
 
 
   return (
-    <form action={createAppointment}>
+    <form onSubmit={submitAppointment}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
         {/* Appointment Recording */}
-        {recordingUrl ?
-            <div>{recordingUrl}</div>
-            :
-            <AudioUpload session={session} setRecordingUrl={setRecordingUrl} setTempDownloadUrl={setTempDownloadUrl} />  
-        }
+        <AudioUpload 
+            session={session} 
+            setRecordingUrl={setRecordingUrl} 
+            setTempDownloadUrl={setTempDownloadUrl}
+            isUploading = {isUploading}
+            setIsUploading={setIsUploading} />  
+        
 
         {/* Appointment Title */}
         <div className="my-4">
@@ -54,6 +80,7 @@ export default function CreateAppointment({ session }: { session: Session | null
               name="title"
               type='text'
               placeholder='Appointment name'
+              required
               className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
               value={title || ''}
               onChange={(e) => setTitle(e.target.value)}
@@ -98,6 +125,7 @@ export default function CreateAppointment({ session }: { session: Session | null
             <input
               id="provider"
               name="provider"
+              required
               placeholder='Doctor or name of provider(s) seen during visit'
               type='text'
               className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
@@ -121,6 +149,7 @@ export default function CreateAppointment({ session }: { session: Session | null
             <input
               id="clinic"
               name="clinic"
+              required
               placeholder='Clinic, facility name'
               type='text'
               className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
@@ -144,7 +173,10 @@ export default function CreateAppointment({ session }: { session: Session | null
             <input
               id="appointment_date"
               name="appointment_date"
+              required
               type="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
               className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
             >
               
@@ -168,7 +200,7 @@ export default function CreateAppointment({ session }: { session: Session | null
         >
           Cancel
         </Link>
-        <Button type="submit">Add Appointment</Button>
+        <Button type="submit" active={!isUploading}>Add Appointment</Button>
       </div>
     </form>
   )

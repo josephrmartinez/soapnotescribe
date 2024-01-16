@@ -2,20 +2,27 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { Session, createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { Database } from '@/app/database.types'
+import { Button } from '@/app/ui/button'
+import { FileInput } from '@/app/ui/fileInput'
 import * as tus from 'tus-js-client'
 
 
 export default function AudioUpload({ 
     session,
     setRecordingUrl,
-    setTempDownloadUrl
+    setTempDownloadUrl,
+    isUploading,
+    setIsUploading,
 }: { 
     session: Session | null;
     setRecordingUrl: React.Dispatch<React.SetStateAction<string | null>>;
     setTempDownloadUrl: React.Dispatch<React.SetStateAction<string | null>>;
+    isUploading: boolean;
+    setIsUploading: React.Dispatch<React.SetStateAction<boolean>>;
  }) {
     const inputFileRef = useRef<HTMLInputElement>(null);
-    const [isUploading, setIsUploading] = useState(false);
+    
+    const [uploadComplete, setUploadComplete] = useState(false)
     const [percentageUploaded, setPercentageUploaded] = useState(0)
     const user = session?.user
     const userId = user?.id
@@ -76,7 +83,7 @@ export default function AudioUpload({
                     console.log(bytesUploaded, bytesTotal, percentage + '%');
                 },
                 onSuccess: async function () {
-                    console.log('Download %s from %s', upload.file.name, upload.url);
+                    setUploadComplete(true)
                     try {
 
                         setRecordingUrl(`${fileName}`)
@@ -112,10 +119,10 @@ export default function AudioUpload({
             <legend className="mb-2 block text-sm font-medium">
                 Appointment Recording
             </legend>
-            <div className="rounded-md border border-gray-200 bg-white px-[14px] py-3">
-                <div className="flex gap-4">
-                    <div className="flex items-center">
-
+            
+            
+            <div className="rounded-md border border-gray-200 bg-white px-[14px] py-3 h-24">
+                <div className="flex items-center gap-4">
                         <input
                             id="audio_path"
                             name="audio_path"
@@ -123,18 +130,16 @@ export default function AudioUpload({
                             aria-describedby='audio-error'
                             type="file"
                             accept="audio/mpeg, audio/mp3"
+                            onChange={handleAudioUpload}
                             className="cursor-pointer text-sm border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
                         />
-                        <button type="button" className="border p-2 mx-4" onClick={handleAudioUpload}>
-                            Upload Audio
-                        </button>
-                        {isUploading &&
-                            <div>audio uploading. {`${percentageUploaded}% complete`}</div>
-                        }
-
-                    </div>
-
                 </div>
+                {isUploading && !uploadComplete &&
+                <div className='mt-4'>Audio uploading: {`${percentageUploaded}% complete`}</div>
+                }
+                {uploadComplete &&
+                <div className='mt-4'>Audio upload complete.</div>
+                }
             </div>
 
         </fieldset>
