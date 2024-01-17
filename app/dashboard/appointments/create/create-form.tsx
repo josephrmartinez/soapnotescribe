@@ -14,7 +14,6 @@ import {
 import AudioUpload from './AudioUpload';
 
 export default function CreateAppointment({ session }: { session: Session | null }) {
-  
   const [loading, setLoading] = useState(true)
   const [title, setTitle] = useState<string | null>(null)
   const [description, setDescription] = useState<string | null>(null)
@@ -26,6 +25,7 @@ export default function CreateAppointment({ session }: { session: Session | null
   const [submitOkay, setSubmitOkay] = useState<boolean>(true)
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const user = session?.user
+  const supabase = createClientComponentClient<Database>()
 
   
 
@@ -44,7 +44,47 @@ export default function CreateAppointment({ session }: { session: Session | null
     
       // Perform any additional actions, e.g., submitting the form data to a server
       console.log('Form Data:', formData);
+
+      insertAppointment(formData)
+
+    }
+
+
+    async function insertAppointment({
+        title,
+        description,
+        provider,
+        clinic,
+        date,
+        recordingUrl,
+        tempDownloadUrl,
+      }: {
+        username: string | null
+        fullname: string | null
+        website: string | null
+        avatar_url: string | null
+      }) {
+        try {
+          setLoading(true)
     
+          const { error } = await supabase.from('appointments').upsert({
+            id: user?.id as string,
+            full_name: fullname,
+            username,
+            website,
+            avatar_url,
+            updated_at: new Date().toISOString(),
+          })
+          if (error) throw error
+          alert('Profile updated!')
+        } catch (error) {
+          alert('Error updating the data!')
+        } finally {
+          setLoading(false)
+        }
+      }
+
+
       // Reset the form fields if needed
       // setTitle('');
       // setDescription('');
@@ -54,7 +94,6 @@ export default function CreateAppointment({ session }: { session: Session | null
       // setAmount('');
       // setRecordingUrl('');
       // setTempDownloadUrl('');
-    }
 
 
   return (

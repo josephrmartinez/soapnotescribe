@@ -9,6 +9,62 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
+      appointments: {
+        Row: {
+          audio_url: string | null
+          clinic: string | null
+          created_at: string
+          date: string | null
+          description: string | null
+          feedback: Json | null
+          id: number
+          patient: string | null
+          provider: string | null
+          summary: Json | null
+          temp_audio_url: string | null
+          title: string | null
+          transcript: Json | null
+        }
+        Insert: {
+          audio_url?: string | null
+          clinic?: string | null
+          created_at?: string
+          date?: string | null
+          description?: string | null
+          feedback?: Json | null
+          id?: number
+          patient?: string | null
+          provider?: string | null
+          summary?: Json | null
+          temp_audio_url?: string | null
+          title?: string | null
+          transcript?: Json | null
+        }
+        Update: {
+          audio_url?: string | null
+          clinic?: string | null
+          created_at?: string
+          date?: string | null
+          description?: string | null
+          feedback?: Json | null
+          id?: number
+          patient?: string | null
+          provider?: string | null
+          summary?: Json | null
+          temp_audio_url?: string | null
+          title?: string | null
+          transcript?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "appointments_patient_fkey"
+            columns: ["patient"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -49,7 +105,19 @@ export interface Database {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      delete_avatar: {
+        Args: {
+          avatar_url: string
+        }
+        Returns: Record<string, unknown>
+      }
+      delete_storage_object: {
+        Args: {
+          bucket: string
+          object: string
+        }
+        Returns: Record<string, unknown>
+      }
     }
     Enums: {
       [_ in never]: never
