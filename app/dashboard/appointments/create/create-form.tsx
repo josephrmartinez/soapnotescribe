@@ -29,71 +29,42 @@ export default function CreateAppointment({ session }: { session: Session | null
 
   
 
-  function submitAppointment(){
-    event?.preventDefault();
+  const submitAppointment = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
 
-    const formData = {
-        title,
-        description,
-        provider,
-        clinic,
-        date,
-        recordingUrl,
-        tempDownloadUrl,
-      };
+
+    try {
+        setLoading(true)
+
+        const { error } = await supabase.from('appointments').insert({
+            patient: user?.id as string,
+            created_at: new Date().toISOString(),
+            title,
+            description,
+            provider,
+            clinic,
+            date,
+            audio_url: recordingUrl,
+            temp_audio_url: tempDownloadUrl,
+          });
     
-      // Perform any additional actions, e.g., submitting the form data to a server
-      console.log('Form Data:', formData);
-
-      insertAppointment(formData)
-
-    }
-
-
-    async function insertAppointment({
-        title,
-        description,
-        provider,
-        clinic,
-        date,
-        recordingUrl,
-        tempDownloadUrl,
-      }: {
-        username: string | null
-        fullname: string | null
-        website: string | null
-        avatar_url: string | null
-      }) {
-        try {
-          setLoading(true)
-    
-          const { error } = await supabase.from('appointments').upsert({
-            id: user?.id as string,
-            full_name: fullname,
-            username,
-            website,
-            avatar_url,
-            updated_at: new Date().toISOString(),
-          })
           if (error) throw error
-          alert('Profile updated!')
+          alert('Appointment created!')
         } catch (error) {
-          alert('Error updating the data!')
+          console.error('Error creating the appointment:', error);
+          alert('Error creating the appointment!');
         } finally {
-          setLoading(false)
+          setLoading(false);
+          // Reset the form fields
+          setTitle('');
+          setDescription('');
+          setProvider('');
+          setClinic('');
+          setDate('');
+          setRecordingUrl('');
+          setTempDownloadUrl('');
         }
-      }
-
-
-      // Reset the form fields if needed
-      // setTitle('');
-      // setDescription('');
-      // setProvider('');
-      // setClinic('');
-      // setDate('');
-      // setAmount('');
-      // setRecordingUrl('');
-      // setTempDownloadUrl('');
+      };
 
 
   return (

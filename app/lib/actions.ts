@@ -161,55 +161,55 @@ export async function updateInvoice(
     });
      
     
-  const CreateAppointment = ApptFormSchema.omit({ id: true, patient_id: true, speakers: true, transcript: true, summary: true, feedback: true, audio_path: true  });
-  const UpdateAppointment = ApptFormSchema.omit({ patient_id: true, speakers: true, transcript: true, summary: true, feedback: true, audio_path: true, id: true });
+  // const CreateAppointment = ApptFormSchema.omit({ id: true, patient_id: true, speakers: true, transcript: true, summary: true, feedback: true, audio_path: true  });
+  // const UpdateAppointment = ApptFormSchema.omit({ patient_id: true, speakers: true, transcript: true, summary: true, feedback: true, audio_path: true, id: true });
 
 
-  export async function createAppointment(prevState: ApptState, formData: FormData) {
-      // Validate form using Zod 
-      const validatedFields = CreateAppointment.safeParse({
-          title: formData.get('title'),
-          description: formData.get('description'),
-          provider: formData.get('provider'),
-          clinic: formData.get('clinic'),
-          appointment_date: formData.get('appointment_date'),
-          amount: formData.get('amount'),
-          // audio_path: formData.get('audio_path'),
-        });
+  // export async function createAppointment(prevState: ApptState, formData: FormData) {
+  //     // Validate form using Zod 
+  //     const validatedFields = CreateAppointment.safeParse({
+  //         title: formData.get('title'),
+  //         description: formData.get('description'),
+  //         provider: formData.get('provider'),
+  //         clinic: formData.get('clinic'),
+  //         appointment_date: formData.get('appointment_date'),
+  //         amount: formData.get('amount'),
+  //         // audio_path: formData.get('audio_path'),
+  //       });
   
-        // console.log("validated fields:", validatedFields)
+  //       // console.log("validated fields:", validatedFields)
   
   
-      //   If form validation fails, return errors early. Otherwise, continue.
-        if (!validatedFields.success) {
-          console.error("Validation errors:", validatedFields.error.errors)
-          return {
-            errors: validatedFields.error.flatten().fieldErrors,
-            message: 'Missing Fields. Failed to Create Appointment.',
-          };
-        }
+  //     //   If form validation fails, return errors early. Otherwise, continue.
+  //       if (!validatedFields.success) {
+  //         console.error("Validation errors:", validatedFields.error.errors)
+  //         return {
+  //           errors: validatedFields.error.flatten().fieldErrors,
+  //           message: 'Missing Fields. Failed to Create Appointment.',
+  //         };
+  //       }
   
-      //   Prepare data for insertion into database
-        const { title, description, provider, clinic, appointment_date, amount } = validatedFields.data;
-        const amountInCents = amount * 100;
+  //     //   Prepare data for insertion into database
+  //       const { title, description, provider, clinic, appointment_date, amount } = validatedFields.data;
+  //       const amountInCents = amount * 100;
   
-      //   Insert data into the database
-        try {
-          await sql`
-          INSERT INTO appointments (title, description, provider, clinic, appointment_date, amount)
-          VALUES (${title}, ${description}, ${provider}, ${clinic}, ${appointment_date}, ${amountInCents})
-          `;
-        } catch (error) {
-          console.error('Database error:', error)
-          return {
-              message: 'Database Error: Failed to Create Appointment'
-          }
-        }
+  //     //   Insert data into the database
+  //       try {
+  //         await sql`
+  //         INSERT INTO appointments (title, description, provider, clinic, appointment_date, amount)
+  //         VALUES (${title}, ${description}, ${provider}, ${clinic}, ${appointment_date}, ${amountInCents})
+  //         `;
+  //       } catch (error) {
+  //         console.error('Database error:', error)
+  //         return {
+  //             message: 'Database Error: Failed to Create Appointment'
+  //         }
+  //       }
         
-      //   Revalidate the cache for the invoices page and redirect the user
-        revalidatePath('/dashboard/appointments');
-        redirect('/dashboard/appointments');
-  }
+  //     //   Revalidate the cache for the invoices page and redirect the user
+  //       revalidatePath('/dashboard/appointments');
+  //       redirect('/dashboard/appointments');
+  // }
   
 
 
