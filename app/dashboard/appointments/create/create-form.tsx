@@ -1,17 +1,19 @@
 'use client'
 import { useCallback, useEffect, useState } from 'react'
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Database } from '@/app/database.types'
 import { Session, createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { Button } from '@/app/ui/button';
 import {
     CheckIcon,
-    CurrencyDollarIcon, BuildingOffice2Icon,
+    BuildingOffice2Icon,
     CalendarDaysIcon,
     UserCircleIcon, PencilSquareIcon
-    
   } from '@heroicons/react/24/outline';
 import AudioUpload from './AudioUpload';
+import getTranscript from '@/app/lib/actions';
+
 
 export default function CreateAppointment({ session }: { session: Session | null }) {
   const [loading, setLoading] = useState(true)
@@ -26,17 +28,18 @@ export default function CreateAppointment({ session }: { session: Session | null
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const user = session?.user
   const supabase = createClientComponentClient<Database>()
+  const router = useRouter()
+  const [prediction, setPrediction] = useState(null)
 
   
 
   const submitAppointment = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-
     try {
         setLoading(true)
 
-        const { error } = await supabase.from('appointments').insert({
+        const { error, data } = await supabase.from('appointments').insert({
             patient: user?.id as string,
             created_at: new Date().toISOString(),
             title,
@@ -46,26 +49,56 @@ export default function CreateAppointment({ session }: { session: Session | null
             date,
             audio_url: recordingUrl,
             temp_audio_url: tempDownloadUrl,
-          });
+          })
+          .select();
     
           if (error) throw error
           alert('Appointment created!')
+          console.log("new row id:", data[0].id)
+          tempDownloadUrl && getTranscript(tempDownloadUrl)
         } catch (error) {
           console.error('Error creating the appointment:', error);
           alert('Error creating the appointment!');
         } finally {
           setLoading(false);
-          // Reset the form fields
-          setTitle('');
-          setDescription('');
-          setProvider('');
-          setClinic('');
-          setDate('');
-          setRecordingUrl('');
-          setTempDownloadUrl('');
+          router.push('/dashboard/appointments');
         }
       };
 
+
+      const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+      const handleSubmit = async () => {
+        const response = await fetch("/api/predictions", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            url: tempDownloadUrl,
+          }),
+        });
+        let prediction = await response.json();
+        if (response.status !== 201) {
+          return;
+        }
+        setPrediction(prediction);
+    
+        while (
+          prediction.status !== "succeeded" &&
+          prediction.status !== "failed"
+        ) {
+          await sleep(1000);
+          const response = await fetch("/api/predictions/" + prediction.id);
+          prediction = await response.json();
+          if (response.status !== 200) {
+            // setError(prediction.detail);
+            return;
+          }
+          console.log({prediction})
+          setPrediction(prediction);
+        }
+      };
 
   return (
     <form onSubmit={submitAppointment}>

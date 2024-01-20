@@ -1,164 +1,216 @@
-'use server';
+'use server'
 
-import { z } from 'zod';
-import { sql } from '@vercel/postgres';
-import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
-import { AuthError } from 'next-auth';
+import Replicate from "replicate";
+import { createClient } from "@supabase/supabase-js";
 
-
-
-export type State = {
-  errors?: {
-    customerId?: string[];
-    amount?: string[];
-    status?: string[];
-  };
-  message?: string | null;
-};
-
-const FormSchema = z.object({
-    id: z.string(),
-    customerId: z.string({
-        invalid_type_error: 'Please select a customer.'
-    }),
-    amount: z.coerce
-        .number()
-        .gt(0, {message: 'Please enter an amount greater than 0'}),
-    status: z.enum(['pending', 'paid'], {
-        invalid_type_error: 'Please select an invoice status'
-    }),
-    date: z.string(),
-  });
-   
-const CreateInvoice = FormSchema.omit({ id: true, date: true });
-const UpdateInvoice = FormSchema.omit({ date: true, id: true });
-
-export async function createInvoice(prevState: State, formData: FormData) {
-    // Validate form using Zod 
-    const validatedFields = CreateInvoice.safeParse({
-        customerId: formData.get('customerId'),
-        amount: formData.get('amount'),
-        status: formData.get('status'),
-      });
-
-    //   If form validation fails, returrn errors early. Otherwise, continue.
-      if (!validatedFields.success) {
-        return {
-          errors: validatedFields.error.flatten().fieldErrors,
-          message: 'Missing Fields. Failed to Create Invoice.',
-        };
-      }
-
-    //   Prepare data for insertion into database
-      const { customerId, amount, status } = validatedFields.data;
-      const amountInCents = amount * 100;
-      const date = new Date().toISOString().split('T')[0];
-
-    //   Insert data into the database
-      try {
-        await sql`
-        INSERT INTO invoices (customer_id, amount, status, date)
-        VALUES (${customerId}, ${amountInCents}, ${status}, ${date})
-        `;
-      } catch (error) {
-        return {
-            message: 'Database Error: Failed to Create Invoice'
-        }
-      }
-      
-    //   Revalidate the cache for the invoices page and redirect the user
-      revalidatePath('/dashboard/invoices');
-      redirect('/dashboard/invoices');
-}
-
-
-export async function updateInvoice(
-  id: string,
-  prevState: State,
-  formData: FormData,
-) {
-  const validatedFields = UpdateInvoice.safeParse({
-    customerId: formData.get('customerId'),
-    amount: formData.get('amount'),
-    status: formData.get('status'),
-  });
-
-  if (!validatedFields.success) {
-    return {
-      errors: validatedFields.error.flatten().fieldErrors,
-      message: 'Missing Fields. Failed to Update Invoice.',
-    };
-  }
-
-  const { customerId, amount, status } = validatedFields.data;
-  const amountInCents = amount * 100;
-
-  try {
-    await sql`
-      UPDATE invoices
-      SET customer_id = ${customerId}, amount = ${amountInCents}, status = ${status}
-      WHERE id = ${id}
-    `;
-  } catch (error) {
-    return { message: 'Database Error: Failed to Update Invoice.' };
-  }
-
-  revalidatePath('/dashboard/invoices');
-  redirect('/dashboard/invoices');
-}
-
-
-
-  export async function deleteInvoice(id: string) {
-    try {
-        await sql`DELETE FROM invoices WHERE id = ${id}`;
-        revalidatePath('/dashboard/invoices');
-        return { message: "Deleted Invoice" }
-    } catch (error) {
-        return {
-            message: 'Failed to Delete Invoice'
-        }
-    }
-  }
-
-
-
-  export type ApptState = {
-    errors?: {
-      title?: string[];
-      description?: string[];
-      provider?: string[];
-      clinic?: string[];
-      appointment_date?: string[];
-      amount?: string[];
-    };
-    message?: string | null;
-  };
+const replicate = new Replicate({
+  auth: process.env.REPLICATE_API_TOKEN,
   
-  const ApptFormSchema = z.object({
-      id: z.string(),
-      title: z.string({
-          invalid_type_error: 'Please provide a title.'
-      }),
-      description: z.string({
-        invalid_type_error: 'Please provide a description.'
-      }),
-      provider: z.string({
-        invalid_type_error: 'Please indicate a provider.'
-      }),
-      clinic: z.string({
-        invalid_type_error: 'Please indicate a clinic.'
-      }),
-      appointment_date: z.string().optional(),
-      amount: z.coerce.number(),
-      audio_path: z.string().optional(),
-      patient_id: z.string().optional(),
-      speakers: z.coerce.number().nullable(),
-      transcript: z.string().optional(),
-      summary: z.string().optional(),
-      feedback: z.string().optional(),
-    });
+});
+
+const supabase = createClient(
+  process.env.SUPABASE_URL ?? "",
+  process.env.SUPABASE_SERVICE_KEY ?? ""
+)
+
+export default async function getTranscript(url: string, apptid: string){
+  console.log("running transcription API")
+
+  const output = await replicate.run(
+    "thomasmol/whisper-diarization:7fa6110280767642cf5a357e4273f27ec10ebb60c107be25d6e15f928fd03147",
+    {
+      input: {
+        file_url: url
+      }
+    }
+  );
+  console.log("output:", output)
+  await addTranscript(apptid, output)
+}
+
+async function addTranscript(apptid: string, output: object){
+  const { data, error } = await supabase
+  .from("appointments")
+  .upsert(
+    [
+      {
+        id: apptid,
+        transcript: output, // Assuming you have a column named 'transcript' in your appointments table
+      },
+    ],
+    { onConflict: "id" }
+  );
+
+if (error) {
+  console.error("Error adding transcript:", error);
+  // Handle error accordingly
+} else {
+  console.log("Transcript added successfully:", data);
+}
+}
+
+
+// 'use server';
+
+// import { z } from 'zod';
+// import { sql } from '@vercel/postgres';
+// import { revalidatePath } from 'next/cache';
+// import { redirect } from 'next/navigation';
+// import { AuthError } from 'next-auth';
+
+
+
+// export type State = {
+//   errors?: {
+//     customerId?: string[];
+//     amount?: string[];
+//     status?: string[];
+//   };
+//   message?: string | null;
+// };
+
+// const FormSchema = z.object({
+//     id: z.string(),
+//     customerId: z.string({
+//         invalid_type_error: 'Please select a customer.'
+//     }),
+//     amount: z.coerce
+//         .number()
+//         .gt(0, {message: 'Please enter an amount greater than 0'}),
+//     status: z.enum(['pending', 'paid'], {
+//         invalid_type_error: 'Please select an invoice status'
+//     }),
+//     date: z.string(),
+//   });
+   
+// const CreateInvoice = FormSchema.omit({ id: true, date: true });
+// const UpdateInvoice = FormSchema.omit({ date: true, id: true });
+
+// export async function createInvoice(prevState: State, formData: FormData) {
+//     // Validate form using Zod 
+//     const validatedFields = CreateInvoice.safeParse({
+//         customerId: formData.get('customerId'),
+//         amount: formData.get('amount'),
+//         status: formData.get('status'),
+//       });
+
+//     //   If form validation fails, returrn errors early. Otherwise, continue.
+//       if (!validatedFields.success) {
+//         return {
+//           errors: validatedFields.error.flatten().fieldErrors,
+//           message: 'Missing Fields. Failed to Create Invoice.',
+//         };
+//       }
+
+//     //   Prepare data for insertion into database
+//       const { customerId, amount, status } = validatedFields.data;
+//       const amountInCents = amount * 100;
+//       const date = new Date().toISOString().split('T')[0];
+
+//     //   Insert data into the database
+//       try {
+//         await sql`
+//         INSERT INTO invoices (customer_id, amount, status, date)
+//         VALUES (${customerId}, ${amountInCents}, ${status}, ${date})
+//         `;
+//       } catch (error) {
+//         return {
+//             message: 'Database Error: Failed to Create Invoice'
+//         }
+//       }
+      
+//     //   Revalidate the cache for the invoices page and redirect the user
+//       revalidatePath('/dashboard/invoices');
+//       redirect('/dashboard/invoices');
+// }
+
+
+// export async function updateInvoice(
+//   id: string,
+//   prevState: State,
+//   formData: FormData,
+// ) {
+//   const validatedFields = UpdateInvoice.safeParse({
+//     customerId: formData.get('customerId'),
+//     amount: formData.get('amount'),
+//     status: formData.get('status'),
+//   });
+
+//   if (!validatedFields.success) {
+//     return {
+//       errors: validatedFields.error.flatten().fieldErrors,
+//       message: 'Missing Fields. Failed to Update Invoice.',
+//     };
+//   }
+
+//   const { customerId, amount, status } = validatedFields.data;
+//   const amountInCents = amount * 100;
+
+//   try {
+//     await sql`
+//       UPDATE invoices
+//       SET customer_id = ${customerId}, amount = ${amountInCents}, status = ${status}
+//       WHERE id = ${id}
+//     `;
+//   } catch (error) {
+//     return { message: 'Database Error: Failed to Update Invoice.' };
+//   }
+
+//   revalidatePath('/dashboard/invoices');
+//   redirect('/dashboard/invoices');
+// }
+
+
+
+//   export async function deleteInvoice(id: string) {
+//     try {
+//         await sql`DELETE FROM invoices WHERE id = ${id}`;
+//         revalidatePath('/dashboard/invoices');
+//         return { message: "Deleted Invoice" }
+//     } catch (error) {
+//         return {
+//             message: 'Failed to Delete Invoice'
+//         }
+//     }
+//   }
+
+
+
+//   export type ApptState = {
+//     errors?: {
+//       title?: string[];
+//       description?: string[];
+//       provider?: string[];
+//       clinic?: string[];
+//       appointment_date?: string[];
+//       amount?: string[];
+//     };
+//     message?: string | null;
+//   };
+  
+//   const ApptFormSchema = z.object({
+//       id: z.string(),
+//       title: z.string({
+//           invalid_type_error: 'Please provide a title.'
+//       }),
+//       description: z.string({
+//         invalid_type_error: 'Please provide a description.'
+//       }),
+//       provider: z.string({
+//         invalid_type_error: 'Please indicate a provider.'
+//       }),
+//       clinic: z.string({
+//         invalid_type_error: 'Please indicate a clinic.'
+//       }),
+//       appointment_date: z.string().optional(),
+//       amount: z.coerce.number(),
+//       audio_path: z.string().optional(),
+//       patient_id: z.string().optional(),
+//       speakers: z.coerce.number().nullable(),
+//       transcript: z.string().optional(),
+//       summary: z.string().optional(),
+//       feedback: z.string().optional(),
+//     });
      
     
   // const CreateAppointment = ApptFormSchema.omit({ id: true, patient_id: true, speakers: true, transcript: true, summary: true, feedback: true, audio_path: true  });
