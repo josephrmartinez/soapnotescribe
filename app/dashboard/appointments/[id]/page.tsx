@@ -64,7 +64,7 @@ export default async function Page({ params }: { params: { id: string } }) {
         <div>${appointment.amount}</div>
       </div>
       <audio className="w-full my-4" controls>
-        <source  type="audio/wav" />
+        <source type="audio/mp3" src='/amols.mp3' />
         Your browser does not support the audio element.
       </audio>
         </div>
@@ -84,7 +84,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                 AI Chat
               </div>
             </div>
-            <div className='border rounded-lg h-96 bg-white mb-2'></div>
+            <div className='border rounded-lg h-80 bg-white mb-4'></div>
             <AIChatInput placeholder='Ask question about appointment...'/>
           </div>
         </div>

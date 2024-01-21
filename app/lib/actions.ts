@@ -35,7 +35,7 @@ async function addTranscript(apptid: string, output: object){
     [
       {
         id: apptid,
-        transcript: output, // Assuming you have a column named 'transcript' in your appointments table
+        transcript: output,
       },
     ],
     { onConflict: "id" }
