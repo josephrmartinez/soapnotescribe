@@ -55,7 +55,7 @@ export default function CreateAppointment({ session }: { session: Session | null
           if (error) throw error
           alert('Appointment created!')
           console.log("new row id:", data[0].id)
-          tempDownloadUrl && getTranscript(tempDownloadUrl)
+          tempDownloadUrl && getTranscript(tempDownloadUrl, data[0].id)
         } catch (error) {
           console.error('Error creating the appointment:', error);
           alert('Error creating the appointment!');

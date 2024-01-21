@@ -13,33 +13,79 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_KEY ?? ""
 )
 
-export default async function getTranscript(url: string, apptid: string){
-  console.log("running transcription API")
+interface Word {
+  end: number;
+  start: number;
+  word: string;
+}
 
+interface Segment {
+  end: string;
+  start: string;
+  text: string;
+  words?: Word[];
+  speaker: string;
+}
+
+interface TranscriptOutput {
+  language: string;
+  segments: Segment[];
+  num_speakers: number;
+}
+
+function reformatTimestamps(transcriptOutput: TranscriptOutput): void {
+  for (const segment of transcriptOutput.segments) {
+    segment.start = secondsToHHMMSS(parseFloat(segment.start));
+    segment.end = secondsToHHMMSS(parseFloat(segment.end));
+  }
+}
+
+function secondsToHHMMSS(seconds: number): string {
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const remainingSeconds = Math.floor(seconds % 60);
+
+  const formattedHours = hours.toString().padStart(2, '0');
+  const formattedMinutes = minutes.toString().padStart(2, '0');
+  const formattedSeconds = remainingSeconds.toString().padStart(2, '0');
+
+  return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
+}
+
+
+export default async function getTranscript(url: string, apptid: string) {
+  console.log("running transcription API");
+
+  try {
   const output = await replicate.run(
     "thomasmol/whisper-diarization:7fa6110280767642cf5a357e4273f27ec10ebb60c107be25d6e15f928fd03147",
     {
       input: {
-        file_url: url
-      }
+        file_url: url,
+      },
     }
-  );
-  console.log("output:", output)
-  await addTranscript(apptid, output)
+  ) as TranscriptOutput;
+
+  output.segments.forEach((segment) => delete segment.words);
+  
+  reformatTimestamps(output)
+
+  console.log("output:", output);
+  await updateApptWithTranscript(apptid, output);
+} catch (error) {
+  console.error("Error in getTranscript:", error);
+  // Handle error appropriately
+}
 }
 
-async function addTranscript(apptid: string, output: object){
+
+async function updateApptWithTranscript(apptid: string, output: object){
+  console.log("updating appointment with transcript")
   const { data, error } = await supabase
   .from("appointments")
-  .upsert(
-    [
-      {
-        id: apptid,
-        transcript: output,
-      },
-    ],
-    { onConflict: "id" }
-  );
+  .update({transcript: output})
+  .eq('id', apptid)
+  .select();
 
 if (error) {
   console.error("Error adding transcript:", error);
@@ -48,6 +94,16 @@ if (error) {
   console.log("Transcript added successfully:", data);
 }
 }
+
+
+
+
+
+
+
+
+
+
 
 
 // 'use server';

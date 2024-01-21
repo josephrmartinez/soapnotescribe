@@ -17,7 +17,7 @@ export interface Database {
           date: string | null
           description: string | null
           feedback: Json | null
-          id: number
+          id: string
           patient: string | null
           provider: string | null
           summary: Json | null
@@ -32,7 +32,7 @@ export interface Database {
           date?: string | null
           description?: string | null
           feedback?: Json | null
-          id?: number
+          id?: string
           patient?: string | null
           provider?: string | null
           summary?: Json | null
@@ -47,7 +47,7 @@ export interface Database {
           date?: string | null
           description?: string | null
           feedback?: Json | null
-          id?: number
+          id?: string
           patient?: string | null
           provider?: string | null
           summary?: Json | null
