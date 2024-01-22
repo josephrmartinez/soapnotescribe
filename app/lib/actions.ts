@@ -2,10 +2,13 @@
 
 import Replicate from "replicate";
 import { createClient } from "@supabase/supabase-js";
+import OpenAi from "openai"
+
+const openai = new OpenAi({apiKey: process.env.OPENAI_API_KEY })
+
 
 const replicate = new Replicate({
   auth: process.env.REPLICATE_API_TOKEN,
-  
 });
 
 const supabase = createClient(
@@ -70,7 +73,7 @@ export default async function getTranscript(url: string, apptid: string) {
   
   reformatTimestamps(output)
 
-  console.log("output:", output);
+  console.log("reformatted output:", output);
   await updateApptWithTranscript(apptid, output);
 } catch (error) {
   console.error("Error in getTranscript:", error);
@@ -79,11 +82,11 @@ export default async function getTranscript(url: string, apptid: string) {
 }
 
 
-async function updateApptWithTranscript(apptid: string, output: object){
+async function updateApptWithTranscript(apptid: string, transcript: object){
   console.log("updating appointment with transcript")
   const { data, error } = await supabase
   .from("appointments")
-  .update({transcript: output})
+  .update({transcript: transcript})
   .eq('id', apptid)
   .select();
 
@@ -92,12 +95,67 @@ if (error) {
   // Handle error accordingly
 } else {
   console.log("Transcript added successfully:", data);
+  await getSummaryAndFeedback(apptid, transcript)
+}
+}
+
+async function updateApptWithSummaryAndFeedback(apptid: string, summary: string, feedback: string){
+  console.log("updating appointment with summary and feedback")
+  const { data, error } = await supabase
+  .from("appointments")
+  .update({summary: summary, feedback: feedback})
+  .eq('id', apptid)
+  .select();
+
+if (error) {
+  console.error("Error adding summary and feedback:", error);
+  // Handle error accordingly
+} else {
+  console.log("Summary and feedback added successfully:", data);
+  
 }
 }
 
 
+async function getSummaryAndFeedback(apptid: string, transcript: object) {
+  try {
+  const transcriptString = JSON.stringify(transcript);
+  const completion = await openai.chat.completions.create({
+    messages: [
+      {
+        role: "system",
+        content: "You are a helpful assistant designed to output a JSON object with a 'summary' of and critical 'feedback' of a medical appointment. This JSON object should contain two keys: 'summary' and 'feedback'. The corresponding values should be strings of at least 400 words.",
+      },
+      { role: "user", content: `TRANSCRIPT: ${transcriptString}` },
+    ],
+    model: "gpt-3.5-turbo-1106",
+    response_format: { type: "json_object" },
+  });
 
-
+  
+  try {
+    const responseContentString = completion.choices[0].message.content as string;
+  
+    if (responseContentString) {
+      const responseContent = JSON.parse(responseContentString);
+  
+      if (typeof responseContent === 'object' && responseContent !== null) {
+        const { summary = "", feedback = "" } = responseContent;
+        await updateApptWithSummaryAndFeedback(apptid, summary, feedback);
+      } else {
+        // Handle the case where responseContent is not an object
+      }
+    } else {
+      // Handle the case where responseContentString is null or empty
+    }
+  } catch (error) {
+    // Handle the case where JSON parsing fails
+    console.error("Error parsing JSON content:", error);
+  }
+  } catch (error){
+    console.log("Error getting summary and feedback:", error)
+  }
+}
 
 
 
@@ -324,81 +382,81 @@ if (error) {
 
  
 
-  export async function updateAppointment(
-    id: string, 
-    prevState: ApptState, 
-    formData: FormData
-    ): Promise<ApptState> {
-      console.log("calling updateAppointment")
-    const validatedFields = UpdateAppointment.safeParse({
-      title: formData.get('title'),
-      description: formData.get('description'),
-      provider: formData.get('provider'),
-      clinic: formData.get('clinic'),
-      appointment_date: formData.get('appointment_date'),
-      amount: formData.get('amount'),
-      // audio_path: formData.get('audio_path'),
-    });
-    if(!validatedFields.success){
-        return {
-            ...prevState,
-            errors: validatedFields.error.flatten().fieldErrors,
-            message: 'Missing Fields. Failed to Update Invoice.',
-        };
-    }
+  // export async function updateAppointment(
+  //   id: string, 
+  //   prevState: ApptState, 
+  //   formData: FormData
+  //   ): Promise<ApptState> {
+  //     console.log("calling updateAppointment")
+  //   const validatedFields = UpdateAppointment.safeParse({
+  //     title: formData.get('title'),
+  //     description: formData.get('description'),
+  //     provider: formData.get('provider'),
+  //     clinic: formData.get('clinic'),
+  //     appointment_date: formData.get('appointment_date'),
+  //     amount: formData.get('amount'),
+  //     // audio_path: formData.get('audio_path'),
+  //   });
+  //   if(!validatedFields.success){
+  //       return {
+  //           ...prevState,
+  //           errors: validatedFields.error.flatten().fieldErrors,
+  //           message: 'Missing Fields. Failed to Update Invoice.',
+  //       };
+  //   }
    
-    //   Prepare data for insertion into database
-    const { title, description, provider, clinic, appointment_date, amount } = validatedFields.data;
-    const amountInCents = amount * 100;
+  //   //   Prepare data for insertion into database
+  //   const { title, description, provider, clinic, appointment_date, amount } = validatedFields.data;
+  //   const amountInCents = amount * 100;
    
-    try {
-      await sql`
-      UPDATE appointments
-      SET title=${title}, description=${description}, provider=${provider}, clinic=${clinic}, appointment_date=${appointment_date}, amount=${amountInCents}
-      WHERE id=${id}
-      `;
-    } catch (error) {
-      console.error('Database error:', error)
-      return {
-          message: 'Database Error: Failed to Create Appointment'
-      }
-    }
-    return prevState;
-  }
+  //   try {
+  //     await sql`
+  //     UPDATE appointments
+  //     SET title=${title}, description=${description}, provider=${provider}, clinic=${clinic}, appointment_date=${appointment_date}, amount=${amountInCents}
+  //     WHERE id=${id}
+  //     `;
+  //   } catch (error) {
+  //     console.error('Database error:', error)
+  //     return {
+  //         message: 'Database Error: Failed to Create Appointment'
+  //     }
+  //   }
+  //   return prevState;
+  // }
 
 
-  export async function deleteAppointment(id: string) {
-    try {
-        await sql`DELETE FROM appointments WHERE id = ${id}`;
-        revalidatePath('/dashboard/appointments');
-        return { message: "Deleted Appointment" }
-    } catch (error) {
-        return {
-            message: 'Failed to Delete Appointment'
-        }
-    }
-  }
+  // export async function deleteAppointment(id: string) {
+  //   try {
+  //       await sql`DELETE FROM appointments WHERE id = ${id}`;
+  //       revalidatePath('/dashboard/appointments');
+  //       return { message: "Deleted Appointment" }
+  //   } catch (error) {
+  //       return {
+  //           message: 'Failed to Delete Appointment'
+  //       }
+  //   }
+  // }
   
 
   
 
-  export async function authenticate(
-    prevState: string | undefined,
-    formData: FormData,
-  ) {
-    let responseRedirectUrl = null;
-    try {
-      console.log("form data", formData)
-      await signIn('credentials', formData);
-    } catch (error) {
-      if (error instanceof AuthError) {
-        switch (error.type) {
-          case 'CredentialsSignin':
-            return 'Invalid credentials.';
-          default:
-            return 'Something went wrong.';
-        }
-      }
-      throw error;
-    }
-  }
+  // export async function authenticate(
+  //   prevState: string | undefined,
+  //   formData: FormData,
+  // ) {
+  //   let responseRedirectUrl = null;
+  //   try {
+  //     console.log("form data", formData)
+  //     await signIn('credentials', formData);
+  //   } catch (error) {
+  //     if (error instanceof AuthError) {
+  //       switch (error.type) {
+  //         case 'CredentialsSignin':
+  //           return 'Invalid credentials.';
+  //         default:
+  //           return 'Something went wrong.';
+  //       }
+  //     }
+  //     throw error;
+  //   }
+  // }
