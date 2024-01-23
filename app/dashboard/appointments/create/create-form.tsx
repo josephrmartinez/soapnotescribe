@@ -53,7 +53,6 @@ export default function CreateAppointment({ session }: { session: Session | null
           .select();
     
           if (error) throw error
-          alert('Appointment created!')
           console.log("new row id:", data[0].id)
           tempDownloadUrl && getTranscript(tempDownloadUrl, data[0].id)
         } catch (error) {

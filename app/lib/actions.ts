@@ -60,7 +60,7 @@ export default async function getTranscript(url: string, apptid: string) {
   console.log("running transcription API");
 
   try {
-  const output = await replicate.run(
+  let output = await replicate.run(
     "thomasmol/whisper-diarization:7fa6110280767642cf5a357e4273f27ec10ebb60c107be25d6e15f928fd03147",
     {
       input: {
@@ -68,6 +68,8 @@ export default async function getTranscript(url: string, apptid: string) {
       },
     }
   ) as TranscriptOutput;
+  
+  console.log("transcription output:", output)
 
   output.segments.forEach((segment) => delete segment.words);
   

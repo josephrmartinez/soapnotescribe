@@ -1,6 +1,6 @@
 import { PencilIcon, PlusIcon, TrashIcon, ArrowRightIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
-import { deleteAppointment } from '@/app/lib/actions';
+// import { deleteAppointment } from '@/app/lib/actions';
 
 export function CreateAppointment() {
   return (
@@ -40,9 +40,9 @@ export function UpdateAppointment({ id }: { id: string }) {
 }
 
 export function DeleteAppointment({ id }: { id: string }) {
-  const deleteAppointmentWithId = deleteAppointment.bind(null, id);
+  // const deleteAppointmentWithId = deleteAppointment.bind(null, id); (<form action={deleteAppointmentWithId}>)
   return (
-    <form action={deleteAppointmentWithId}>
+    <form>
       <button className="rounded-md border p-2 transition-colors hover:bg-red-500 hover:text-white">
         <span className="sr-only">Delete</span>
         <TrashIcon className="w-5" />
