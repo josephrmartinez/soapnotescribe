@@ -53,51 +53,15 @@ export default function CreateAppointment({ session }: { session: Session | null
           .select();
     
           if (error) throw error
-          console.log("new row id:", data[0].id)
           tempDownloadUrl && getTranscript(tempDownloadUrl, data[0].id)
         } catch (error) {
           console.error('Error creating the appointment:', error);
-          alert('Error creating the appointment!');
         } finally {
           setLoading(false);
           router.push('/dashboard/appointments');
         }
       };
 
-
-      const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
-
-      const handleSubmit = async () => {
-        const response = await fetch("/api/predictions", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            url: tempDownloadUrl,
-          }),
-        });
-        let prediction = await response.json();
-        if (response.status !== 201) {
-          return;
-        }
-        setPrediction(prediction);
-    
-        while (
-          prediction.status !== "succeeded" &&
-          prediction.status !== "failed"
-        ) {
-          await sleep(1000);
-          const response = await fetch("/api/predictions/" + prediction.id);
-          prediction = await response.json();
-          if (response.status !== 200) {
-            // setError(prediction.detail);
-            return;
-          }
-          console.log({prediction})
-          setPrediction(prediction);
-        }
-      };
 
   return (
     <form onSubmit={submitAppointment}>
@@ -227,13 +191,7 @@ export default function CreateAppointment({ session }: { session: Session | null
           </div>
           
         </div>
-
         
-        
-        
-        
-
-
       </div>
       <div className="mt-6 flex justify-end gap-4">
         <Link
