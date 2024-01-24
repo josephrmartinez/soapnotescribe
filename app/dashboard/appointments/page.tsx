@@ -12,6 +12,8 @@ import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 import { Database } from '@/app/database.types';
 
+import { fetchAllAppointments } from '@/app/lib/data';
+
 export const metadata: Metadata = {
   title: "Appointments",
 }
@@ -29,13 +31,15 @@ export default async function Page({
 
   const totalPages = await fetchInvoicesPages(query);
 
-  const supabase = createServerComponentClient<Database>({ cookies })
+  // const supabase = createServerComponentClient<Database>({ cookies })
 
-  const {
-    data: { session },
-  } = await supabase.auth.getSession()
+  // const {
+  //   data: { session },
+  // } = await supabase.auth.getSession()
 
-  console.log("session", session)
+  // console.log("session user id:", session?.user.id)
+
+  fetchAllAppointments()
 
   return (
     <div className="w-full">

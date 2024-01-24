@@ -13,8 +13,42 @@ import {
 import { formatCurrency } from './utils';
 import { unstable_noStore as noStore } from 'next/cache';
 
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+import { cookies } from 'next/headers'
+import { Database } from '@/app/database.types';
 
 
+const supabase = createServerComponentClient<Database>({ cookies })
+
+export const fetchUserSession = async () => {
+  try {
+    const { data: { session } } = await supabase.auth.getSession();
+    console.log("session user id:", session?.user.id);
+    return session;
+  } catch (error) {
+    console.error('Supabase Error:', error);
+    throw new Error('Failed to fetch user session.');
+  }
+};
+
+
+export async function fetchAllAppointments() {
+  try {
+    const { data: appointments, error } = await supabase
+      .from('appointments')
+      .select('*');
+
+    if (error) {
+      console.error('Supabase Error:', error);
+      throw new Error('Failed to fetch appointments data.');
+    }
+    console.log("appointments:", appointments)
+    return appointments;
+  } catch (error) {
+    console.error('Supabase Error:', error);
+    throw new Error('Failed to fetch appointments data.');
+  }
+}
 
 export async function fetchRevenue() {
   noStore();
