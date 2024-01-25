@@ -13,6 +13,7 @@ import AIContent from '@/app/ui/appointments/AIcontent';
 export default async function Page({ params }: { params: { id: string } }) {
     const id = params.id;
     const appointment = await fetchAppointmentById(id)
+    console.log("appointment data:", appointment)
 
     if (!appointment) {
       notFound();
@@ -71,7 +72,7 @@ export default async function Page({ params }: { params: { id: string } }) {
         <div className='grid grid-cols-2 gap-4'>
           <div>
               <div className='max-w-prose'>
-                  <AIContent />
+                  <AIContent transcript={appointment.transcript} summary={appointment.summary} feedback={appointment.feedback}/>
               </div>
           </div>
 
