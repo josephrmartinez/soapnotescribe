@@ -19,7 +19,7 @@ export default async function Page({ params }: { params: { id: string } }) {
     }
     
     // Format date obj:
-    var inputString = new Date(appointment.appointment_date);
+    var inputString = new Date(appointment.date);
     var dateObject = new Date(inputString);
     var displayDate = dateObject.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
@@ -59,10 +59,7 @@ export default async function Page({ params }: { params: { id: string } }) {
         <div>{appointment.description}</div>
       </div>
 
-      <div className='flex flex-row items-center'>
-        <div className='font-semibold mr-2'>Amount Paid:</div>
-        <div>${appointment.amount}</div>
-      </div>
+      
       <audio className="w-full my-4" controls>
         <source type="audio/mp3" src='/amols.mp3' />
         Your browser does not support the audio element.

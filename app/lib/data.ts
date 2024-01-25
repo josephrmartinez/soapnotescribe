@@ -63,6 +63,59 @@ export async function fetchFilteredAppointments(query: string, currentPage: numb
   }
 }
 
+export async function fetchAppointmentById(id: string) {
+  try {
+    const { data: appointments, error } = await supabase
+      .from('appointments')
+      .select('*')
+      .eq('id', id);
+
+    if (error) {
+      console.error('Supabase Error:', error);
+      throw new Error('Failed to fetch appointment data.');
+    }
+
+    const appointment = appointments ? appointments[0] : null;
+    return appointment;
+  } catch (error) {
+    console.error('Supabase Error:', error);
+    throw new Error('Failed to fetch appointment data.');
+  }
+}
+
+// export async function fetchAppointmentById(id: string) {
+//   noStore();
+
+//   try {
+//     const data = await sql<AppointmentForm>`
+//       SELECT
+//         appointments.id,
+//         appointments.appointment_date,
+//         appointments.clinic,
+//         appointments.provider,
+//         appointments.title,
+//         appointments.amount,
+//         appointments.description
+//       FROM appointments
+//       WHERE appointments.id = ${id};
+//     `;
+
+//     const appointment = data.rows.map((appointment) => ({
+//       ...appointment,
+//       // Convert amount from cents to dollars
+//       amount: appointment.amount / 100,
+//     }));
+
+//     return appointment[0];
+//   } catch (error) {
+//     console.error('Database Error:', error);
+//     throw new Error('Failed to fetch appointment.');
+//   }
+// }
+
+
+
+
 // export async function fetchFilteredAppointments(
 //   query: string,
 //   currentPage: number,
@@ -263,35 +316,7 @@ export async function fetchInvoiceById(id: string) {
 
 
 
-export async function fetchAppointmentById(id: string) {
-  noStore();
 
-  try {
-    const data = await sql<AppointmentForm>`
-      SELECT
-        appointments.id,
-        appointments.appointment_date,
-        appointments.clinic,
-        appointments.provider,
-        appointments.title,
-        appointments.amount,
-        appointments.description
-      FROM appointments
-      WHERE appointments.id = ${id};
-    `;
-
-    const appointment = data.rows.map((appointment) => ({
-      ...appointment,
-      // Convert amount from cents to dollars
-      amount: appointment.amount / 100,
-    }));
-
-    return appointment[0];
-  } catch (error) {
-    console.error('Database Error:', error);
-    throw new Error('Failed to fetch appointment.');
-  }
-}
 
 export async function fetchCustomers() {
   try {
