@@ -12,7 +12,7 @@ import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 import { Database } from '@/app/database.types';
 
-import { fetchAllAppointments } from '@/app/lib/data';
+// import { fetchAllAppointments } from '@/app/lib/data';
 
 export const metadata: Metadata = {
   title: "Appointments",
@@ -39,7 +39,7 @@ export default async function Page({
 
   // console.log("session user id:", session?.user.id)
 
-  fetchAllAppointments()
+  // fetchAllAppointments()
 
   return (
     <div className="w-full">

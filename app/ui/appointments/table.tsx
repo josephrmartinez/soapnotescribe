@@ -24,7 +24,7 @@ export default async function AppointmentsTable({
                 <div className="flex items-center justify-between border-b pb-4">
                   <div>
                     <div className="mb-2 flex items-center">
-                      <p>{formatDateToLocal(appointment.appointment_date)}</p>
+                      <p>{formatDateToLocal(appointment.date)}</p>
                     </div>
                     <p className="text-sm text-gray-500">{appointment.clinic}</p>
                   </div>
@@ -61,7 +61,7 @@ export default async function AppointmentsTable({
                   Appointment Title
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Amount Paid
+                   
                 </th>
                 <th scope="col" className="relative py-3 pl-6 pr-3">
                   <span className="sr-only">Edit</span>
@@ -75,7 +75,7 @@ export default async function AppointmentsTable({
                   className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
                 >
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
-                      <p>{formatDateToLocal(appointment.appointment_date)}</p>
+                      <p>{formatDateToLocal(appointment.date)}</p>
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
                     {appointment.clinic}
@@ -87,7 +87,7 @@ export default async function AppointmentsTable({
                   {appointment.title}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                  {formatCurrency(appointment.amount)}
+                   
                   </td>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">

@@ -32,23 +32,67 @@ export const fetchUserSession = async () => {
 };
 
 
-export async function fetchAllAppointments() {
+// Not correctly applying query
+export async function fetchFilteredAppointments(query: string, currentPage: number) {
   try {
+    const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+
     const { data: appointments, error } = await supabase
       .from('appointments')
-      .select('*');
+      .select(
+        'id, patient, date, title, description, provider, clinic, summary, feedback'
+      )
+      .ilike('title', `%${query}%`)
+      .ilike('provider', `%${query}%`)
+      .ilike('summary', `%${query}%`)
+      .ilike('description', `%${query}%`)
+      .ilike('clinic', `%${query}%`)
+      .ilike('feedback', `%${query}%`)
+      .order('date', { ascending: false })
+      .range(offset, offset + ITEMS_PER_PAGE - 1);
 
     if (error) {
       console.error('Supabase Error:', error);
       throw new Error('Failed to fetch appointments data.');
     }
-    console.log("appointments:", appointments)
+
     return appointments;
   } catch (error) {
     console.error('Supabase Error:', error);
     throw new Error('Failed to fetch appointments data.');
   }
 }
+
+// export async function fetchFilteredAppointments(
+//   query: string,
+//   currentPage: number,
+// ) {
+//   noStore();
+//   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+
+//   try {
+//     const appointments = await sql<AppointmentTable>`
+//       SELECT
+//         appointments.id,
+//         appointments.appointment_date,
+//         appointments.title,
+//         appointments.provider,
+//         appointments.clinic,
+//       FROM appointments
+//       WHERE
+//         appointments.title ILIKE ${`%${query}%`} OR
+//         appointments.provider ILIKE ${`%${query}%`} OR
+//         appointments.summary ILIKE ${`%${query}%`} OR
+//         appointments.clinic ILIKE ${`%${query}%`}
+//       ORDER BY appointments.appointment_date DESC
+//       LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
+//     `;
+//     return appointments.rows;
+//   } catch (error) {
+//     console.error('Database Error:', error);
+//     throw new Error('Failed to fetch appointments.');
+//   }
+// }
 
 export async function fetchRevenue() {
   noStore();
@@ -165,36 +209,7 @@ export async function fetchFilteredInvoices(
   }
 }
 
-export async function fetchFilteredAppointments(
-  query: string,
-  currentPage: number,
-) {
-  noStore();
-  const offset = (currentPage - 1) * ITEMS_PER_PAGE;
 
-  try {
-    const appointments = await sql<AppointmentTable>`
-      SELECT
-        appointments.id,
-        appointments.appointment_date,
-        appointments.title,
-        appointments.provider,
-        appointments.clinic,
-        appointments.amount
-      FROM appointments
-      WHERE
-        appointments.title ILIKE ${`%${query}%`} OR
-        appointments.provider ILIKE ${`%${query}%`} OR
-        appointments.clinic ILIKE ${`%${query}%`}
-      ORDER BY appointments.appointment_date DESC
-      LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
-    `;
-    return appointments.rows;
-  } catch (error) {
-    console.error('Database Error:', error);
-    throw new Error('Failed to fetch appointments.');
-  }
-}
 
 export async function fetchInvoicesPages(query: string) {
   noStore();
