@@ -1,6 +1,6 @@
 import Form from '@/app/ui/appointments/edit-form';
 import Breadcrumbs from '@/app/ui/appointments/breadcrumbs';
-import { fetchAppointmentById } from '@/app/lib/data';
+import { fetchAppointmentById, getSignedAudioUrl } from '@/app/lib/data';
 import { UpdateAppointment } from '@/app/ui/appointments/buttons';
 import { notFound } from 'next/navigation';
 import { CalendarDaysIcon, BuildingOffice2Icon } from '@heroicons/react/24/outline';
@@ -19,6 +19,10 @@ export default async function Page({ params }: { params: { id: string } }) {
       notFound();
     }
     
+    // Get audio url for media player:
+    const audioUrl = await getSignedAudioUrl(appointment.patient, appointment.audio_url)
+
+
     // Format date obj:
     var inputString = new Date(appointment.date);
     var dateObject = new Date(inputString);
@@ -62,7 +66,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 
       
       <audio className="w-full my-4" controls>
-        <source type="audio/mp3" src='/amols.mp3' />
+        <source type="audio/mp3" src={audioUrl} />
         Your browser does not support the audio element.
       </audio>
         </div>

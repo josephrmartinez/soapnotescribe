@@ -83,6 +83,29 @@ export async function fetchAppointmentById(id: string) {
   }
 }
 
+export async function getSignedAudioUrl(patient, audio_url) {
+  // return (`url path: ${patient}/${audio_url}`)
+  try {
+    const { data, error } = await supabase
+      .storage
+      .from('apptrecordings')
+      .createSignedUrl(`${patient}/${audio_url}`, 60);
+
+    if (error) {
+      console.error('Supabase Storage Error:', error);
+      throw new Error('Failed to get signed audio URL.');
+    }
+
+    // Assuming data is an object containing the signed URL
+    const signedUrl = data?.signedUrl;
+
+    return signedUrl;
+  } catch (error) {
+    console.error('Supabase Error:', error);
+    throw new Error('Failed to get signed audio URL.');
+  }
+}
+
 // export async function fetchAppointmentById(id: string) {
 //   noStore();
 

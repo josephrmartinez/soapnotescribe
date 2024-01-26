@@ -26,7 +26,6 @@ interface TranscriptSegment {
 
 export default function AIContent ({transcript, summary, feedback} : {transcript: JSON, summary: string, feedback: string}) {
     const [activeTab, setActiveTab] = useState('transcript');
-    console.log("transcript segments:", transcript.segments)
       
       const handleTabClick = (tab: string) => {
         setActiveTab(tab);
