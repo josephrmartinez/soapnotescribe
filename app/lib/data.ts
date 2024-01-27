@@ -6,6 +6,8 @@ import { Database } from '@/app/database.types';
 
 const supabase = createServerComponentClient<Database>({ cookies })
 
+const ITEMS_PER_PAGE = 6;
+
 export const fetchUserSession = async () => {
   try {
     const { data: { session } } = await supabase.auth.getSession();
@@ -17,8 +19,8 @@ export const fetchUserSession = async () => {
   }
 };
 
-
-// Not correctly applying query
+// currently performing an ilike search just on title.
+// create computed column that combines several columns; perform search over computer column.
 export async function fetchFilteredAppointments(query: string, currentPage: number) {
   try {
     const offset = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -29,11 +31,6 @@ export async function fetchFilteredAppointments(query: string, currentPage: numb
         'id, patient, date, title, description, provider, clinic, summary, feedback'
       )
       .ilike('title', `%${query}%`)
-      .ilike('provider', `%${query}%`)
-      .ilike('summary', `%${query}%`)
-      .ilike('description', `%${query}%`)
-      .ilike('clinic', `%${query}%`)
-      .ilike('feedback', `%${query}%`)
       .order('date', { ascending: false })
       .range(offset, offset + ITEMS_PER_PAGE - 1);
 
@@ -48,6 +45,61 @@ export async function fetchFilteredAppointments(query: string, currentPage: numb
     throw new Error('Failed to fetch appointments data.');
   }
 }
+
+export async function fetchApptsPages(query: string) {
+  try {
+     const { data: count, error } = await supabase
+       .from('appointments')
+       .select('id', { count: 'exact' })
+       .or(`title:ilike:%${query}%`)
+       .or(`provider:ilike:%${query}%`)
+       .or(`summary:ilike:%${query}%`)
+       .or(`description:ilike:%${query}%`)
+       .or(`clinic:ilike:%${query}%`)
+       .or(`feedback:ilike:%${query}%`);
+ 
+     if (error) {
+       console.error('Supabase Error:', error);
+       throw new Error('Failed to fetch appointments count.');
+     }
+ 
+     const totalPages = Math.ceil(Number(count[0].count) / ITEMS_PER_PAGE);
+    return totalPages;
+  } catch (error) {
+     console.error('Supabase Error:', error);
+     throw new Error('Failed to fetch appointments count.');
+  }
+ }
+
+// export async function fetchApptsPages(query: string) {
+
+//   try {
+
+//     const { data: appointments, error } = await supabase
+//        .from('appointments')
+//        .select(
+//          'id, patient, date, title, description, provider, clinic, summary, feedback'
+//        )
+//        .textSearch('summary', `%${query}%`)
+
+//     const count = await sql`SELECT COUNT(*)
+//     FROM invoices
+//     JOIN customers ON invoices.customer_id = customers.id
+//     WHERE
+//       customers.name ILIKE ${`%${query}%`} OR
+//       customers.email ILIKE ${`%${query}%`} OR
+//       invoices.amount::text ILIKE ${`%${query}%`} OR
+//       invoices.date::text ILIKE ${`%${query}%`} OR
+//       invoices.status ILIKE ${`%${query}%`}
+//   `;
+
+//     const totalPages = Math.ceil(Number(count.rows[0].count) / ITEMS_PER_PAGE);
+//     return totalPages;
+//   } catch (error) {
+//     console.error('Database Error:', error);
+//     throw new Error('Failed to fetch total number of invoices.');
+//   }
+// }
 
 export async function fetchAppointmentById(id: string) {
   try {
@@ -251,7 +303,7 @@ export async function getSignedAudioUrl(patient, audio_url) {
 //   }
 // }
 
-// const ITEMS_PER_PAGE = 6;
+
 // export async function fetchFilteredInvoices(
 //   query: string,
 //   currentPage: number,

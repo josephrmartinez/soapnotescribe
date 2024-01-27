@@ -5,14 +5,13 @@ import { CreateAppointment } from '@/app/ui/appointments/buttons';
 import { GeistSans } from 'geist/font/sans';
 import { AppointmentsTableSkeleton } from '@/app/ui/skeletons';
 import { Suspense } from 'react';
-import { fetchInvoicesPages } from '@/app/lib/data';
+import { fetchApptsPages } from '@/app/lib/data';
 import { Metadata } from 'next';
 
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 import { Database } from '@/app/database.types';
 
-// import { fetchAllAppointments } from '@/app/lib/data';
 
 export const metadata: Metadata = {
   title: "Appointments",
@@ -29,17 +28,12 @@ export default async function Page({
   const query = searchParams?.query || '';
   const currentPage = Number(searchParams?.page) || 1;
 
-  const totalPages = await fetchInvoicesPages(query);
+  // TODO: reactivate fetchApptsPages function
+  const totalPages = 1;
+  // const totalPages = await fetchApptsPages(query);
 
-  // const supabase = createServerComponentClient<Database>({ cookies })
 
-  // const {
-  //   data: { session },
-  // } = await supabase.auth.getSession()
-
-  // console.log("session user id:", session?.user.id)
-
-  // fetchAllAppointments()
+  
 
   return (
     <div className="w-full">

@@ -54,11 +54,12 @@ export default function CreateAppointment({ session }: { session: Session | null
     
           if (error) throw error
           tempDownloadUrl && getTranscript(tempDownloadUrl, data[0].id)
+          router.push('/dashboard/appointments');
         } catch (error) {
           console.error('Error creating the appointment:', error);
         } finally {
           setLoading(false);
-          router.push('/dashboard/appointments');
+          
         }
       };
 
@@ -191,7 +192,7 @@ export default function CreateAppointment({ session }: { session: Session | null
           </div>
           
         </div>
-        
+
       </div>
       <div className="mt-6 flex justify-end gap-4">
         <Link
