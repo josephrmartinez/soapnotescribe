@@ -30,7 +30,7 @@ export async function fetchFilteredAppointments(query: string, currentPage: numb
       .select(
         'id, patient, date, title, description, provider, clinic, summary, feedback'
       )
-      .ilike('title', `%${query}%`)
+      .ilike('combined_text', `%${query}%`)
       .order('date', { ascending: false })
       .range(offset, offset + ITEMS_PER_PAGE - 1);
 
