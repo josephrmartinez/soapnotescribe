@@ -20,7 +20,8 @@ export default async function Page({ params }: { params: { id: string } }) {
     }
     
     // Get audio url for media player:
-    const audioUrl = await getSignedAudioUrl(appointment.patient, appointment.audio_url)
+    
+    const audioUrl = appointment.audio_url ? await getSignedAudioUrl(appointment.patient, appointment.audio_url) : undefined
 
 
     // Format date obj:
@@ -41,8 +42,6 @@ export default async function Page({ params }: { params: { id: string } }) {
           },
         ]}
       />
-      
-      
       
         <div>
         <div className='flex flex-row w-full justify-between'>

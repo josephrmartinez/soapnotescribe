@@ -2,15 +2,21 @@
 
 import React, { ReactNode, useState } from 'react';
 
-interface TranscriptSegment {
-    start: string;
-    end: string;
-    text: string;
-    speaker: string;
-  }
+interface Transcript {
+  language: string;
+  segments: Segment[];
+  num_speakers: number;
+}
+
+interface Segment {
+  end: string;
+  text: string;
+  start: string;
+  speaker: string;
+}
   
-  const formatTranscript = (transcriptSegments: TranscriptSegment[]) => {
-    return transcriptSegments.map((segment) => (
+  const formatTranscript = (transcript: Transcript) => {
+    return transcript.segments.map((segment) => (
       <div key={`${segment.start}-${segment.end}`}>
         <span className='font-bold text-sm text-gray-600'>[{segment.start}]  </span>
         <span className='font-semibold text-sm'>{segment.speaker}:  </span>
@@ -19,21 +25,14 @@ interface TranscriptSegment {
     ));
   };
   
-  interface TranscriptComponentProps {
-    transcriptSegments: TranscriptSegment[];
-  }
-  
 
-export default function AIContent ({transcript, summary, feedback} : {transcript: JSON, summary: string, feedback: string}) {
+export default function AIContent ({transcript, summary, feedback} : {transcript: Transcript, summary: string, feedback: string}) {
     const [activeTab, setActiveTab] = useState('transcript');
       
       const handleTabClick = (tab: string) => {
         setActiveTab(tab);
       };
       
-      const ContentRenderer = ({ content }: {content: ReactNode }) => {
-          return <div>{content}</div>;
-        };
 
         return (
             <>
@@ -48,7 +47,7 @@ export default function AIContent ({transcript, summary, feedback} : {transcript
             </div>
 
             <div className="h-96 overflow-y-scroll border p-2 border-gray-100 bg-white  text-gray-800 rounded-lg">
-            {activeTab === 'transcript' && <div>{formatTranscript(transcript.segments)}</div>}
+            {activeTab === 'transcript' && <div>{formatTranscript(transcript)}</div>}
             {activeTab === 'summary' && <div>{summary}</div>}
             {activeTab === 'feedback' && <div>{feedback}</div>}
             </div>

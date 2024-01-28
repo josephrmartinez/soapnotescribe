@@ -15,16 +15,16 @@ export interface Database {
           clinic: string | null
           combined_text: string | null
           created_at: string
-          date: string | null
+          date: string
           description: string | null
-          feedback: string | null
+          feedback: string
           id: string
-          patient: string | null
+          patient: string
           provider: string | null
-          summary: string | null
+          summary: string
           temp_audio_url: string | null
           title: string | null
-          transcript: Json | null
+          transcript: Json
           appts_search: string | null
         }
         Insert: {
@@ -32,32 +32,32 @@ export interface Database {
           clinic?: string | null
           combined_text?: string | null
           created_at?: string
-          date?: string | null
+          date: string
           description?: string | null
-          feedback?: string | null
+          feedback?: string
           id?: string
-          patient?: string | null
+          patient?: string
           provider?: string | null
-          summary?: string | null
+          summary?: string
           temp_audio_url?: string | null
           title?: string | null
-          transcript?: Json | null
+          transcript?: Json
         }
         Update: {
           audio_url?: string | null
           clinic?: string | null
           combined_text?: string | null
           created_at?: string
-          date?: string | null
+          date?: string
           description?: string | null
-          feedback?: string | null
+          feedback?: string
           id?: string
-          patient?: string | null
+          patient?: string
           provider?: string | null
-          summary?: string | null
+          summary?: string
           temp_audio_url?: string | null
           title?: string | null
-          transcript?: Json | null
+          transcript?: Json
         }
         Relationships: [
           {
