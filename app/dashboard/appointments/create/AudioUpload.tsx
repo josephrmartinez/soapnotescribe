@@ -1,9 +1,9 @@
 'use client'
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useState, useRef } from 'react'
 import { Session, createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { Database } from '@/app/database.types'
-import { Button } from '@/app/ui/button'
-import { FileInput } from '@/app/ui/fileInput'
+// import { Button } from '@/app/ui/button'
+// import { FileInput } from '@/app/ui/fileInput'
 import * as tus from 'tus-js-client'
 
 
@@ -61,7 +61,7 @@ export default function AudioUpload({
                 endpoint: `https://tmmnudhjtavobvreaink.supabase.co/storage/v1/upload/resumable`,
                 retryDelays: [0, 3000, 5000, 10000, 20000],
                 headers: {
-                    authorization: `Bearer ${session.access_token}`,
+                    authorization: `Bearer ${session?.access_token}`,
                     'x-upsert': 'true',
                 },
                 uploadDataDuringCreation: true,
@@ -70,7 +70,7 @@ export default function AudioUpload({
                     bucketName,
                     objectName: `${userId}/${fileName}`,
                     contentType: file.type,
-                    cacheControl: 3600,
+                    cacheControl: '3600',
                 },
                 chunkSize: 6 * 1024 * 1024,
                 onError: function (error) {
@@ -100,7 +100,7 @@ export default function AudioUpload({
                     } catch (error) {
                         console.error("Error fetching signed URL:", error);
                     }
-                    resolve();
+                    resolve(null); // CHECK EFFECT OF NULL
                 },
             });
 
