@@ -19,16 +19,17 @@ import clsx from 'clsx';
 const links = [
   { name: 'Appointments', href: '/dashboard/appointments', icon: ArchiveBoxIcon },
   { name: 'Prepare', href: '/dashboard/prepare', icon: PencilSquareIcon },
-  { name: 'Providers', href: '/dashboard/providers', icon: UserGroupIcon },
-  { name: 'Agents', href: '/dashboard/agents', icon: UserCircleIcon },
+  { name: 'Agents', href: '/dashboard/agents', icon: UserGroupIcon },
   {
     name: 'Resources',
     href: '/dashboard/resources',
     icon: DocumentDuplicateIcon,
   },
-  { name: 'Settings', href: '/dashboard/settings', icon: Cog8ToothIcon },
-  
-  
+  {
+    name: 'Account',
+    href: '/dashboard/settings',
+    icon: Cog8ToothIcon,
+  }
 ];
 
 export default function NavLinks() {
