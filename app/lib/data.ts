@@ -143,7 +143,7 @@ export async function fetchAppointmentById(id: string) {
   }
 }
 
-export async function getSignedAudioUrl(patient, audio_url) {
+export async function getSignedAudioUrl(patient: string, audio_url:string) {
   // return (`url path: ${patient}/${audio_url}`)
   try {
     const { data, error } = await supabase
