@@ -4,11 +4,8 @@ import { fetchAppointmentById, getSignedAudioUrl } from '@/app/lib/data';
 import { UpdateAppointment } from '@/app/ui/appointments/buttons';
 import { notFound } from 'next/navigation';
 import { CalendarDaysIcon, BuildingOffice2Icon } from '@heroicons/react/24/outline';
-import AIChatInput from '@/app/ui/appointments/aichatinput';
 import AIContent from '@/app/ui/appointments/AIcontent';
 import AIChat from '@/app/ui/appointments/aichat';
-
-
 
 
 export default async function Page({ params }: { params: { id: string } }) {

@@ -56,6 +56,8 @@ export async function fetchApptsPages(query: string) {
        console.error('Supabase Error:', error);
        throw new Error('Failed to fetch appointments count.');
      }
+ 
+     
      
      let totalPages = 1
      if (count) {

@@ -13,29 +13,32 @@ export interface Database {
         Row: {
           audio_url: string | null
           clinic: string | null
+          combined_text: string | null
           created_at: string
           date: string | null
           description: string | null
-          feedback: Json | null
+          feedback: string | null
           id: string
           patient: string | null
           provider: string | null
-          summary: Json | null
+          summary: string | null
           temp_audio_url: string | null
           title: string | null
           transcript: Json | null
+          appts_search: string | null
         }
         Insert: {
           audio_url?: string | null
           clinic?: string | null
+          combined_text?: string | null
           created_at?: string
           date?: string | null
           description?: string | null
-          feedback?: Json | null
+          feedback?: string | null
           id?: string
           patient?: string | null
           provider?: string | null
-          summary?: Json | null
+          summary?: string | null
           temp_audio_url?: string | null
           title?: string | null
           transcript?: Json | null
@@ -43,14 +46,15 @@ export interface Database {
         Update: {
           audio_url?: string | null
           clinic?: string | null
+          combined_text?: string | null
           created_at?: string
           date?: string | null
           description?: string | null
-          feedback?: Json | null
+          feedback?: string | null
           id?: string
           patient?: string | null
           provider?: string | null
-          summary?: Json | null
+          summary?: string | null
           temp_audio_url?: string | null
           title?: string | null
           transcript?: Json | null
@@ -100,11 +104,38 @@ export interface Database {
           }
         ]
       }
+      transcripts: {
+        Row: {
+          apptid: string | null
+          created_at: string
+          id: string
+          transcript: Json | null
+        }
+        Insert: {
+          apptid?: string | null
+          created_at?: string
+          id?: string
+          transcript?: Json | null
+        }
+        Update: {
+          apptid?: string | null
+          created_at?: string
+          id?: string
+          transcript?: Json | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
+      appts_search: {
+        Args: {
+          "": unknown
+        }
+        Returns: string
+      }
       delete_avatar: {
         Args: {
           avatar_url: string
