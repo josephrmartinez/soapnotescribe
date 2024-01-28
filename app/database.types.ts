@@ -6,6 +6,20 @@ export type Json =
   | { [key: string]: Json | undefined }
   | Json[]
 
+  interface Transcript {
+    language: string;
+    segments: Segment[];
+    num_speakers: number;
+  }
+  
+  interface Segment {
+    end: string;
+    text: string;
+    start: string;
+    speaker: string;
+  }
+    
+
 export interface Database {
   public: {
     Tables: {
@@ -24,7 +38,7 @@ export interface Database {
           summary: string
           temp_audio_url: string | null
           title: string | null
-          transcript: Json
+          transcript: Transcript
           appts_search: string | null
         }
         Insert: {
