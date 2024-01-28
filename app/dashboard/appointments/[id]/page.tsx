@@ -14,7 +14,9 @@ import AIChat from '@/app/ui/appointments/aichat';
 export default async function Page({ params }: { params: { id: string } }) {
     const id = params.id;
     const appointment = await fetchAppointmentById(id)
-    console.log("appointment data:", appointment)
+    // console.log("appointment data:", appointment)
+
+    const transcriptString = JSON.stringify(appointment?.transcript);
 
     if (!appointment) {
       notFound();
@@ -87,7 +89,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                 AI Chat
               </div>
             </div>
-            <AIChat transcript={["yee"]}/>
+            <AIChat transcript={transcriptString}/>
             {/* <div className='border rounded-lg h-80 bg-white mb-4'></div>
             <AIChatInput placeholder='Ask question about appointment...'/> */}
           </div>

@@ -2,28 +2,39 @@
 import { useState, useEffect } from "react";
 import { PaperAirplaneIcon, ArrowPathIcon } from "@heroicons/react/24/outline";
 
-export default function AIChat() {
-  const [theInput, setTheInput] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [messages, setMessages] = useState([
-    {
-      role: "assistant",
-      content: "Do you have any questions about this appointment?",
-    },
-  ]);
+interface AIChatProps {
+    transcript: string;
+  }
+  
+  const AIChat: React.FC<AIChatProps> = ({ transcript }) => {
+    const [theInput, setTheInput] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
+    const [chatHistory, setChatHistory] = useState([
+      {
+        role: "assistant",
+        content: "Do you have any questions about this appointment?",
+      },
+    ]);
+  
+    const systemMessage = [
+      {
+        role: "system",
+        content: `You are a medical advocate. Provide helpful and direct answers to the user's questions taking into account the following transcript of a medical appointment. If the user asks a question about something covered in the transcript, reference where it was mentioned in the appointment. /// TRANSCRIPT: ${transcript} ///`,
+      },
+    ];
   
   useEffect(() => {
         const chatHistoryContainer = document.getElementById('chatHistoryContainer');
         if (chatHistoryContainer) {
           chatHistoryContainer.scrollTop = chatHistoryContainer.scrollHeight;
         }
-      }, [messages]);
+      }, [chatHistory]);
 
       const callGetResponse = async () => {
         setIsLoading(true);
       
         // Update messages with the user's input
-        setMessages((prevMessages) => [...prevMessages, { role: "user", content: theInput }]);
+        setChatHistory((prevChatHistory) => [...prevChatHistory, { role: "user", content: theInput }]);
         
         // Clear the input field
         setTheInput("");
@@ -34,19 +45,22 @@ export default function AIChat() {
           chatHistoryContainer.scrollTop = chatHistoryContainer.scrollHeight;
         }
       
+        const messages = [...systemMessage, ...chatHistory];
+        console.log("messages", messages)
+
         const response = await fetch("/api/chat", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ messages }),
+          body: JSON.stringify({ messages}), // CHANGE THIS?
         });
       
         const data = await response.json();
         const { output } = data;
       
         // Update messages with AI's response
-        setMessages((prevMessages) => [...prevMessages, output]);
+        setChatHistory((prevChatHistory) => [...prevChatHistory,  output]);
         setIsLoading(false);
       };
 
@@ -63,7 +77,7 @@ export default function AIChat() {
         <div 
             className="h-full flex flex-col gap-2 overflow-y-auto py-3 px-3 w-full"
             id="chatHistoryContainer">
-          {messages.map((msg) => {
+          {chatHistory.map((msg) => {
             return (
               <div
                 key={msg.content}
@@ -115,6 +129,7 @@ export default function AIChat() {
   );
 }
 
+export default AIChat
 
 
 //     <div className='border rounded-lg h-80 bg-white mb-4'>
