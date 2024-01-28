@@ -34,7 +34,7 @@ interface AIChatProps {
         setIsLoading(true);
       
         // Update messages with the user's input
-        setChatHistory((prevChatHistory) => [...prevChatHistory, { role: "user", content: theInput }]);
+        setChatHistory((prevChatHistory) => [...prevChatHistory, { role: "user", content: chatInput }]);
         
         // Clear the input field
         setChatInput("");

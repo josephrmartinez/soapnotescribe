@@ -1,4 +1,4 @@
-import Form from '@/app/ui/appointments/edit-form';
+// import Form from '@/app/ui/appointments/edit-form';
 import Breadcrumbs from '@/app/ui/appointments/breadcrumbs';
 import { fetchAppointmentById } from '@/app/lib/data';
 import { notFound } from 'next/navigation'; 
@@ -29,7 +29,7 @@ export default async function Page({ params }: { params: { id: string } }) {
           },
         ]}
       />
-      <Form appointment={appointment} />
+      {/* <Form appointment={appointment} /> */}
     </main>
   );
 }
