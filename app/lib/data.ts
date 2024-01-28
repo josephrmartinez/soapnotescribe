@@ -19,8 +19,7 @@ export const fetchUserSession = async () => {
   }
 };
 
-// currently performing an ilike search just on title.
-// create computed column that combines several columns; perform search over computer column.
+
 export async function fetchFilteredAppointments(query: string, currentPage: number) {
   try {
     const offset = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -48,28 +47,49 @@ export async function fetchFilteredAppointments(query: string, currentPage: numb
 
 export async function fetchApptsPages(query: string) {
   try {
-     const { data: count, error } = await supabase
+     const { data, count, error } = await supabase
        .from('appointments')
-       .select('id', { count: 'exact' })
-       .or(`title:ilike:%${query}%`)
-       .or(`provider:ilike:%${query}%`)
-       .or(`summary:ilike:%${query}%`)
-       .or(`description:ilike:%${query}%`)
-       .or(`clinic:ilike:%${query}%`)
-       .or(`feedback:ilike:%${query}%`);
+       .select('*', { count: 'exact', head: true })
+       .ilike('combined_text', `%${query}%`)
  
      if (error) {
        console.error('Supabase Error:', error);
        throw new Error('Failed to fetch appointments count.');
      }
- 
-     const totalPages = Math.ceil(Number(count[0].count) / ITEMS_PER_PAGE);
-    return totalPages;
+     
+     let totalPages = 1
+     if (count) {
+      totalPages = Math.ceil(count / ITEMS_PER_PAGE)
+    }
+    
+      return totalPages;
   } catch (error) {
      console.error('Supabase Error:', error);
      throw new Error('Failed to fetch appointments count.');
   }
  }
+
+// export async function fetchApptsPages(query: string) {
+//   try {
+//      const { data, count, error } = await supabase
+//        .from('appointments')
+//        .select('id', { count: 'exact', head: true })
+//        .ilike('combined_text', `%${query}%`)
+       
+ 
+//      if (error) {
+//        console.error('Supabase Error:', error);
+//        throw new Error('Failed to fetch appointments count.');
+//      }
+ 
+//      console.log("number of matching rows:", data.count)
+//     //  const totalPages = Math.ceil(Number(count[0].count) / ITEMS_PER_PAGE);
+//     // return totalPages;
+//   } catch (error) {
+//      console.error('Supabase Error:', error);
+//      throw new Error('Failed to fetch appointments count.');
+//   }
+//  }
 
 // export async function fetchApptsPages(query: string) {
 

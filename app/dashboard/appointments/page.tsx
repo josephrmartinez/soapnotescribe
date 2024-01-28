@@ -27,12 +27,10 @@ export default async function Page({
 }) {
   const query = searchParams?.query || '';
   const currentPage = Number(searchParams?.page) || 1;
+  
+  const totalPages = await fetchApptsPages(query);
 
-  // TODO: reactivate fetchApptsPages function
-  const totalPages = 1;
-  // const totalPages = await fetchApptsPages(query);
-
-
+  
   
 
   return (

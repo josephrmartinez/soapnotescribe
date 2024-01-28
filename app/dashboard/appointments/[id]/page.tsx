@@ -6,6 +6,7 @@ import { notFound } from 'next/navigation';
 import { CalendarDaysIcon, BuildingOffice2Icon } from '@heroicons/react/24/outline';
 import AIChatInput from '@/app/ui/appointments/aichatinput';
 import AIContent from '@/app/ui/appointments/AIcontent';
+import AIChat from '@/app/ui/appointments/aichat';
 
 
 
@@ -86,8 +87,9 @@ export default async function Page({ params }: { params: { id: string } }) {
                 AI Chat
               </div>
             </div>
-            <div className='border rounded-lg h-80 bg-white mb-4'></div>
-            <AIChatInput placeholder='Ask question about appointment...'/>
+            <AIChat transcript={["yee"]}/>
+            {/* <div className='border rounded-lg h-80 bg-white mb-4'></div>
+            <AIChatInput placeholder='Ask question about appointment...'/> */}
           </div>
         </div>
     </main>
