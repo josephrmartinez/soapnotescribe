@@ -19,7 +19,7 @@ interface AIChatProps {
     const systemMessage = [
       {
         role: "system",
-        content: `You are a medical advocate. Provide helpful and direct answers to the user's questions taking into account the following transcript of a medical appointment. If the user asks a question about something covered in the transcript, reference where it was mentioned in the appointment. /// TRANSCRIPT: ${transcript} ///`,
+        content: `You are a medical advocate. Provide helpful and direct answers to the user's questions taking into account the following transcript of a medical appointment. If the user asks a question about something covered in the transcript, reference the exact portion of the transcript that you used to come up with an answer to their question. /// TRANSCRIPT: ${transcript} ///`,
       },
     ];
   
