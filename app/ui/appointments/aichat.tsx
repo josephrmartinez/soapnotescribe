@@ -5,6 +5,11 @@ import { PaperAirplaneIcon, ArrowPathIcon } from "@heroicons/react/24/outline";
 interface AIChatProps {
     transcript: string;
   }
+
+interface Message {
+  role: string;
+  content: string;
+}
   
   const AIChat: React.FC<AIChatProps> = ({ transcript }) => {
     const [chatInput, setChatInput] = useState("");
@@ -30,44 +35,46 @@ interface AIChatProps {
         }
       }, [chatHistory]);
 
-      const callGetResponse = async () => {
-        setIsLoading(true);
-      
+  
+      const updateChatHistory = async () => {
         // Update messages with the user's input
         setChatHistory((prevChatHistory) => [...prevChatHistory, { role: "user", content: chatInput }]);
-        
+       
         // Clear the input field
         setChatInput("");
-      
-        // Scroll to the bottom after updating the messages
-        const chatHistoryContainer = document.getElementById("chatHistoryContainer");
-        if (chatHistoryContainer) {
-          chatHistoryContainer.scrollTop = chatHistoryContainer.scrollHeight;
-        }
-      
-        const messages = [...systemMessage, ...chatHistory];
-        console.log("messages", messages)
-
+       
+        // Create the messages array
+        const messages = [...systemMessage, ...chatHistory, { role: "user", content: chatInput }];
+       
+        // Call callGetResponse with the messages array
+        callGetResponse(messages);
+       };
+  
+       const callGetResponse = async (messages: Message[]) => {
+        setIsLoading(true);
+       
+        console.log("messages in callGetResponse:", messages) // WHY IS THIS NOT LOGGING???
+       
         const response = await fetch("/api/chat", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ messages}), // CHANGE THIS?
+           method: "POST",
+           headers: {
+             "Content-Type": "application/json",
+           },
+           body: JSON.stringify({ messages }),
         });
-      
+       
         const data = await response.json();
         const { output } = data;
-      
+       
         // Update messages with AI's response
-        setChatHistory((prevChatHistory) => [...prevChatHistory,  output]);
+        setChatHistory((prevChatHistory) => [...prevChatHistory, output]);
         setIsLoading(false);
-      };
+       };
 
   const Submit = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
       event.preventDefault();
-      callGetResponse();
+      updateChatHistory();
     }
   };
 
@@ -116,7 +123,7 @@ interface AIChatProps {
       />
       
       <button
-        onClick={callGetResponse}
+        onClick={updateChatHistory}
         className='border w-12 h-12 flex flex-col items-center rounded-lg bg-teal-700 hover:bg-teal-600 active:bg-teal-500 transition-colors ml-2'>
         <PaperAirplaneIcon className="h-[22px] w-[22px]  translate-y-1/2 text-gray-50 " />
       </button>

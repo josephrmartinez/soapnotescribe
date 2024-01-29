@@ -57,7 +57,7 @@ function secondsToHHMMSS(seconds: number): string {
 
 
 export default async function getTranscript(url: string, apptid: string) {
-  console.log("running transcription API");
+  // console.log("running transcription API");
 
   try {
   let output = await replicate.run(
@@ -69,13 +69,13 @@ export default async function getTranscript(url: string, apptid: string) {
     }
   ) as TranscriptOutput;
   
-  console.log("transcription output:", output)
+  // console.log("transcription output:", output)
 
   output.segments.forEach((segment) => delete segment.words);
   
   reformatTimestamps(output)
 
-  console.log("reformatted output:", output);
+  // console.log("reformatted output:", output);
   await updateApptWithTranscript(apptid, output);
 } catch (error) {
   console.error("Error in getTranscript:", error);
@@ -85,7 +85,7 @@ export default async function getTranscript(url: string, apptid: string) {
 
 
 async function updateApptWithTranscript(apptid: string, transcript: object){
-  console.log("updating appointment with transcript")
+  // console.log("updating appointment with transcript")
   const { data, error } = await supabase
   .from("appointments")
   .update({transcript: transcript})
@@ -96,13 +96,13 @@ if (error) {
   console.error("Error adding transcript:", error);
   // Handle error accordingly
 } else {
-  console.log("Transcript added successfully:", data);
+  // console.log("Transcript added successfully:", data);
   await getSummaryAndFeedback(apptid, transcript)
 }
 }
 
 async function updateApptWithSummaryAndFeedback(apptid: string, summary: string, feedback: string){
-  console.log("updating appointment with summary and feedback")
+  // console.log("updating appointment with summary and feedback")
   const { data, error } = await supabase
   .from("appointments")
   .update({summary: summary, feedback: feedback})
@@ -113,8 +113,7 @@ if (error) {
   console.error("Error adding summary and feedback:", error);
   // Handle error accordingly
 } else {
-  console.log("Summary and feedback added successfully:", data);
-  
+  // console.log("Summary and feedback added successfully:", data);
 }
 }
 
@@ -126,7 +125,7 @@ async function getSummaryAndFeedback(apptid: string, transcript: object) {
     messages: [
       {
         role: "system",
-        content: "You are a helpful assistant designed to output a JSON object with a 'summary' of and critical 'feedback' of a medical appointment. This JSON object should contain two keys: 'summary' and 'feedback'. The corresponding values should be strings of at least 400 words.",
+        content: "You are a helpful and highly trained medical assistant designed to output a JSON object with a 'summary' and critical 'feedback' of a medical appointment audio transcript. This JSON object should contain two keys: 'summary' and 'feedback'. The corresponding values should be strings of at least 400 words.",
       },
       { role: "user", content: `TRANSCRIPT: ${transcriptString}` },
     ],

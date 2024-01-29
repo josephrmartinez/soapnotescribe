@@ -7,13 +7,15 @@ const openai = new OpenAI({
 
 export async function POST(req: Request, res: NextResponse) {
   const body = await req.json();
+  console.log("req body:", body);
 
   const completion = await openai.chat.completions.create({
     model: "gpt-3.5-turbo-1106",
     messages: body.messages,
   });
-  console.log(completion.choices[0].message);
+  
   const response = completion.choices[0].message;
+  console.log("openai completion", completion)
 
   return NextResponse.json({ output: response }, { status: 200 });
 }

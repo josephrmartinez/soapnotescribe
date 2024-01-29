@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import NavLinks from '@/app/ui/dashboard/nav-links';
 import AcmeLogo from '@/app/ui/logo';
-import { PowerIcon, ArrowRightOnRectangleIcon } from '@heroicons/react/24/outline';
+import { PowerIcon, ArrowRightStartOnRectangleIcon} from '@heroicons/react/24/outline';
 
 export default function SideNav() {
   return (
@@ -20,8 +20,8 @@ export default function SideNav() {
         <form action="/auth/signout" method="post">
           <button 
             type='submit'
-            className="flex h-[48px] w-full grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3">
-            <ArrowRightOnRectangleIcon className="w-6" />
+            className="flex h-[48px] w-full grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-sky-100 hover:text-teal-600 md:flex-none md:justify-start md:p-2 md:px-3">
+            <ArrowRightStartOnRectangleIcon className="w-6" />
             <div className="hidden md:block">Sign Out</div>
           </button>
         </form>
