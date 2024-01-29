@@ -1,4 +1,4 @@
-import { PencilIcon, PlusIcon, TrashIcon, ArrowRightIcon } from '@heroicons/react/24/outline';
+import { PencilIcon, PlusIcon, TrashIcon, ArrowRightIcon, DocumentPlusIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 // import { deleteAppointment } from '@/app/lib/actions';
 
@@ -18,7 +18,7 @@ export function ReadAppointment({ id }: { id: string }) {
   return (
     <Link
       href={`/dashboard/appointments/${id}`}
-      className="flex flex-row rounded-md text-teal-700 border border-gray-200 p-2 transition-colors hover:bg-gray-100"
+      className="flex flex-row rounded-md text-teal-600 border border-gray-200 p-2 transition-colors hover:bg-gray-100"
     >
       <div className='text-sm '>view appointment</div>
       <ArrowRightIcon className="h-5 md:ml-4 md:mr-1" />
@@ -30,11 +30,24 @@ export function UpdateAppointment({ id }: { id: string }) {
   return (
     <Link
       href={`/dashboard/appointments/${id}/edit`}
-      className="flex flex-row w-20 h-10 rounded-md border p-2 bg-teal-700 text-gray-50 transition-colors hover:bg-teal-600"
+      className="flex flex-row w-20 h-10 rounded-md border p-2 bg-teal-600 text-gray-50 transition-colors hover:bg-teal-500"
     >
       
       <PencilIcon className="w-5" />
       <div className='tracking-wider ml-1'>edit</div>
+    </Link>
+  );
+}
+
+export function AddDocsToAppointment({ id }: { id: string }) {
+  return (
+    <Link
+      href={`/dashboard/appointments/${id}/edit`}
+      className="flex flex-row w-44 h-10 rounded-md border p-2 bg-teal-600 text-gray-50 transition-colors hover:bg-teal-500"
+    >
+      
+      <DocumentPlusIcon className="w-6" />
+      <div className='tracking-wider ml-1'>add documents</div>
     </Link>
   );
 }

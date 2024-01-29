@@ -124,7 +124,7 @@ interface Message {
       
       <button
         onClick={updateChatHistory}
-        className='border w-12 h-12 flex flex-col items-center rounded-lg bg-teal-700 hover:bg-teal-600 active:bg-teal-500 transition-colors ml-2'>
+        className='border w-12 h-12 flex flex-col items-center rounded-lg bg-teal-600 hover:bg-teal-500 active:bg-teal-500 transition-colors ml-2'>
         <PaperAirplaneIcon className="h-[22px] w-[22px]  translate-y-1/2 text-gray-50 " />
       </button>
       
