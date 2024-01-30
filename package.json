@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.0.18",
+    "@phosphor-icons/react": "^2.0.15",
     "@supabase/auth-helpers-nextjs": "^0.8.7",
     "@supabase/auth-ui-react": "^0.4.7",
     "@supabase/auth-ui-shared": "^0.1.8",
