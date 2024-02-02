@@ -6,6 +6,7 @@ import { Database } from '@/app/database.types';
 
 const supabase = createServerComponentClient<Database>({ cookies })
 
+
 const ITEMS_PER_PAGE = 6;
 
 export const fetchUserSession = async () => {
@@ -124,6 +125,7 @@ export async function fetchApptsPages(query: string) {
 // }
 
 export async function fetchAppointmentById(id: string) {
+  
   try {
     const { data: appointments, error } = await supabase
       .from('appointments')
