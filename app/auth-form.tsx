@@ -29,9 +29,10 @@ export default function AuthForm() {
           showLinks={false}
           providers={[]}
           redirectTo="http://advocateai.vercel.app/auth/callback"
-          // redirectTo="http://localhost:3000/auth/callback"
         />
     </div>
     
   )
 }
+
+// redirectTo="http://localhost:3000/auth/callback"
