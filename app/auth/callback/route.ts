@@ -24,6 +24,7 @@ export async function GET(req: NextRequest) {
     // const cookieStore = cookies()
     // const supabase = createRouteHandlerClient({ cookies: () => cookieStore })
 
+    // Updated to this approach due to dynamic server usage error. https://github.com/vercel/next.js/issues/56630
     cookies().getAll()
 
     const supabase = createRouteHandlerClient({ cookies })
