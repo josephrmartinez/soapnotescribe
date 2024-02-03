@@ -9,10 +9,24 @@ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
   const code = searchParams.get('code')
 
+  // async function getCookieData() {
+  //   const cookieData = cookies().getAll()
+  //   return new Promise((resolve) =>
+  //     setTimeout(() => {
+  //       resolve(cookieData)
+  //     }, 1000)
+  //   )
+  // }
+
   
+
   if (code) {
-    const cookieStore = cookies()
-    const supabase = createRouteHandlerClient({ cookies: () => cookieStore })
+    // const cookieStore = cookies()
+    // const supabase = createRouteHandlerClient({ cookies: () => cookieStore })
+
+    cookies().getAll()
+
+    const supabase = createRouteHandlerClient({ cookies })
     await supabase.auth.exchangeCodeForSession(code)
   }
 
