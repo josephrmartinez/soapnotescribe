@@ -4,13 +4,15 @@ import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers'
 import { Database } from '@/app/database.types';
 
-const supabase = createServerComponentClient<Database>({ cookies })
+
+// const supabase = createServerComponentClient<Database>({ cookies })
 
 
 const ITEMS_PER_PAGE = 6;
 
 export const fetchUserSession = async () => {
   try {
+    const supabase = createServerComponentClient<Database>({ cookies })
     const { data: { session } } = await supabase.auth.getSession();
     console.log("session user id:", session?.user.id);
     return session;
@@ -23,8 +25,10 @@ export const fetchUserSession = async () => {
 
 export async function fetchFilteredAppointments(query: string, currentPage: number) {
   try {
+    
     const offset = (currentPage - 1) * ITEMS_PER_PAGE;
 
+    const supabase = createServerComponentClient<Database>({ cookies })
     const { data: appointments, error } = await supabase
       .from('appointments')
       .select(
@@ -48,6 +52,7 @@ export async function fetchFilteredAppointments(query: string, currentPage: numb
 
 export async function fetchApptsPages(query: string) {
   try {
+    const supabase = createServerComponentClient<Database>({ cookies })
      const { data, count, error } = await supabase
        .from('appointments')
        .select('*', { count: 'exact', head: true })
@@ -71,6 +76,53 @@ export async function fetchApptsPages(query: string) {
      throw new Error('Failed to fetch appointments count.');
   }
  }
+
+
+export async function fetchAppointmentById(id: string) {
+  
+  try {
+    const supabase = createServerComponentClient<Database>({ cookies })
+    const { data: appointments, error } = await supabase
+      .from('appointments')
+      .select('*')
+      .eq('id', id);
+
+    if (error) {
+      console.error('Supabase Error:', error);
+      throw new Error('Failed to fetch appointment data.');
+    }
+
+    const appointment = appointments ? appointments[0] : null;
+    return appointment;
+  } catch (error) {
+    console.error('Supabase Error:', error);
+    throw new Error('Failed to fetch appointment data.');
+  }
+}
+
+export async function getSignedAudioUrl(patient: string, audio_url:string) {
+  // return (`url path: ${patient}/${audio_url}`)
+  try {
+    const supabase = createServerComponentClient<Database>({ cookies })
+    const { data, error } = await supabase
+      .storage
+      .from('apptrecordings')
+      .createSignedUrl(`${patient}/${audio_url}`, 3600);
+
+    if (error) {
+      console.error('Supabase Storage Error:', error);
+      throw new Error('Failed to get signed audio URL.');
+    }
+
+    // Assuming data is an object containing the signed URL
+    const signedUrl = data?.signedUrl;
+
+    return signedUrl;
+  } catch (error) {
+    console.error('Supabase Error:', error);
+    throw new Error('Failed to get signed audio URL.');
+  }
+}
 
 // export async function fetchApptsPages(query: string) {
 //   try {
@@ -124,49 +176,6 @@ export async function fetchApptsPages(query: string) {
 //   }
 // }
 
-export async function fetchAppointmentById(id: string) {
-  
-  try {
-    const { data: appointments, error } = await supabase
-      .from('appointments')
-      .select('*')
-      .eq('id', id);
-
-    if (error) {
-      console.error('Supabase Error:', error);
-      throw new Error('Failed to fetch appointment data.');
-    }
-
-    const appointment = appointments ? appointments[0] : null;
-    return appointment;
-  } catch (error) {
-    console.error('Supabase Error:', error);
-    throw new Error('Failed to fetch appointment data.');
-  }
-}
-
-export async function getSignedAudioUrl(patient: string, audio_url:string) {
-  // return (`url path: ${patient}/${audio_url}`)
-  try {
-    const { data, error } = await supabase
-      .storage
-      .from('apptrecordings')
-      .createSignedUrl(`${patient}/${audio_url}`, 3600);
-
-    if (error) {
-      console.error('Supabase Storage Error:', error);
-      throw new Error('Failed to get signed audio URL.');
-    }
-
-    // Assuming data is an object containing the signed URL
-    const signedUrl = data?.signedUrl;
-
-    return signedUrl;
-  } catch (error) {
-    console.error('Supabase Error:', error);
-    throw new Error('Failed to get signed audio URL.');
-  }
-}
 
 
 // import { sql } from '@vercel/postgres';

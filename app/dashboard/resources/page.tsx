@@ -13,7 +13,7 @@ import { useSearchParams } from 'next/navigation';
 // }
 
 
-const exa = new Exa(process.env.EXASEARCH_API_KEY); 
+const exa = new Exa("4ed3c884-65b6-4ecd-bc46-8ec854a15671"); 
 
 interface SearchResult {
   title: string;
