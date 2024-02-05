@@ -21,7 +21,7 @@ export default function Page() {
   const [loading, setLoading] = useState<boolean>(false)
 
 
-   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.preventDefault();
     setLoading(true)
     console.log("Submitting input:", type, situation, concerns, history);
@@ -55,6 +55,17 @@ export default function Page() {
       setLoading(false)
     }
   }
+
+  const handlePrint = () => {
+    const printableWindow = window.open('', '_blank');
+    
+    printableWindow.document.write('<html><head><title>Print</title></head><body>');
+    printableWindow.document.write('<pre>' + questions + '</pre>');
+    printableWindow.document.write('</body></html>');
+    
+    printableWindow.document.close();
+    printableWindow.print();
+  };
 
   return (
     <div className="w-full">
@@ -112,22 +123,22 @@ export default function Page() {
 
             <div className='flex flex-row w-full justify-end'>
               {!loading ? <button
-                type="submit"
+                type="button"
+                onClick={handleSubmit}
                 className="flex h-10 items-center rounded-lg bg-teal-600 px-4 text-sm font-medium text-white transition-colors hover:bg-teal-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
               >
-                <span className="hidden md:block">Generate questions</span>{' '}
-                <ArrowRight className="h-5 md:ml-4" />
+                <span className="">Generate questions</span>{' '}
+                <ArrowRight size={28} className="h-5 md:ml-4" />
               </button>
               :
-              <button
-                type="submit"
-                disabled
-                className="flex h-10 items-center rounded-lg bg-teal-600 px-4 text-sm font-medium text-white transition-colors hover:bg-teal-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+              <div
+                className={`flex h-10 items-center rounded-lg border px-4 text-sm font-medium text-gray-700 transition-colors bg-gray-50 hover:bg-gray-100`}
               >
-                <span className="hidden md:block">Generating questions</span>{' '}
-                <SpinnerGap className="h-5 md:ml-4 animate-spin" />
-              </button>
+                <span>Generating questions</span>{' '}
+                {/* <SpinnerGap className="h-5 md:ml-4" /> */}
+              </div>
               }
+              
 
             </div>
           </div>
@@ -135,10 +146,20 @@ export default function Page() {
           <div>
             <div className='flex flex-row items-center justify-between mb-2'>
               <div className='text-gray-600 font-semibold'>Questions for your upcoming appointment:</div>
-              <div className='cursor-pointer p-2 flex flex-row border rounded-lg'>
+              {questions === "" ? 
+              <div 
+              className='p-2 flex flex-row border rounded-lg transition-all'>
                 <div className='text-sm font-semibold mr-1'>PRINT</div>
                 <Printer size={22}/>
               </div>
+              :
+              <button 
+              className='cursor-pointer p-2 flex flex-row border rounded-lg bg-teal-600 transition-all'
+              onClick={handlePrint}>
+                <div className='text-sm font-semibold mr-1 text-white'>PRINT</div>
+                <Printer size={22} color='white'/>
+              </button>
+            }
             </div>
             <textarea
               id="questions"
