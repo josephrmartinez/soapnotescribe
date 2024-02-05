@@ -1,4 +1,5 @@
-"use client";
+'use client'
+
 import { useState, useEffect } from "react";
 import { PaperAirplaneIcon, ArrowPathIcon } from "@heroicons/react/24/outline";
 
@@ -53,7 +54,7 @@ interface Message {
        const callGetResponse = async (messages: Message[]) => {
         setIsLoading(true);
        
-        console.log("messages in callGetResponse:", messages) // WHY IS THIS NOT LOGGING???
+        console.log("messages in callGetResponse:", messages)
        
         const response = await fetch("/api/chat", {
            method: "POST",
