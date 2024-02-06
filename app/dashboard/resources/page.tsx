@@ -99,32 +99,26 @@ export default function Page() {
         <div className='grid gap-4'>
           <div>Companies</div>
           <SearchSuggestion text="companies working on embryo testing" searchFunction={handleSearch} />
-          <div className='border rounded-lg p-2 cursor-pointer hover:bg-gray-100'>startups focused on longevity</div>
-
+          <SearchSuggestion text="startups focused on longevity" searchFunction={handleSearch} />
         </div>
 
         <div className='grid gap-4'>
           <div>Communities</div>
-          <div className='border rounded-lg p-2 cursor-pointer hover:bg-gray-100'>groups focused on fertility issues</div>
-          <div className='border rounded-lg p-2 cursor-pointer hover:bg-gray-100'>support groups for couples going through IVF</div>
-
+          <SearchSuggestion text="groups focused on fertility issues" searchFunction={handleSearch} />
+          <SearchSuggestion text="support groups for couples going through IVF" searchFunction={handleSearch} />
         </div>
 
         <div className='grid gap-4'>
           <div>Research</div>
-          <div className='border rounded-lg p-2 cursor-pointer hover:bg-gray-100'>latest research on fertility treatments</div>
-          <div className='border rounded-lg p-2 cursor-pointer hover:bg-gray-100'>embryo testing breakthroughs</div>
-
+          <SearchSuggestion text="latest research on fertility treatments" searchFunction={handleSearch} />
+          <SearchSuggestion text="embryo testing breakthroughs" searchFunction={handleSearch} />
         </div>
 
         <div className='grid gap-4'>
           <div>Clinics</div>
-          <div className='border rounded-lg p-2 cursor-pointer hover:bg-gray-100'>clinics offering latest fertility treatments</div>
-          <div className='border rounded-lg p-2 cursor-pointer hover:bg-gray-100'>international fertility clinics</div>
-
+          <SearchSuggestion text="clinics offering latest fertility treatments" searchFunction={handleSearch} />
+          <SearchSuggestion text="international fertility clinics" searchFunction={handleSearch} />
         </div>
-
-
       </div>
       }
 
