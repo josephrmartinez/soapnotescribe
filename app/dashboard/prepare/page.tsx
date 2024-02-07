@@ -38,9 +38,7 @@ export default function Page() {
       const data = await response.json();
   
       console.log("response data:", data)
-      // Set AI response to state HOW DO I MAKE SURE THIS HAPPENS WHEN THE CONTENT IS RETURNED AND NOT SOONER???
       if (data.output && data.output.content) {
-        // Set AI response to state only if content is returned
         setQuestions(data.output.content);
       }
   
@@ -59,12 +57,15 @@ export default function Page() {
   const handlePrint = () => {
     const printableWindow = window.open('', '_blank');
     
-    printableWindow.document.write('<html><head><title>Print</title></head><body>');
-    printableWindow.document.write('<pre>' + questions + '</pre>');
-    printableWindow.document.write('</body></html>');
+    if (printableWindow){
+      printableWindow.document.write('<html><head><title>Print</title></head><body>');
+      printableWindow.document.write('<pre>' + questions + '</pre>');
+      printableWindow.document.write('</body></html>');
+      
+      printableWindow.document.close();
+      printableWindow.print();
+    }
     
-    printableWindow.document.close();
-    printableWindow.print();
   };
 
   return (
