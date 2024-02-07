@@ -3,7 +3,6 @@
 import { Metadata } from 'next';
 import { GeistSans } from 'geist/font/sans';
 import Search from '@/app/ui/search';
-import Exa from 'exa-js';
 import React from 'react';
 import { useState } from 'react';
 import { useSearchParams } from 'next/navigation';
@@ -13,8 +12,6 @@ import { SearchSuggestion } from '@/app/ui/resources/SearchSuggestion';
 //   title: "Resources",
 // }
 
-
-const exa = new Exa("4ed3c884-65b6-4ecd-bc46-8ec854a15671"); 
 
 interface SearchResult {
   title: string;
@@ -41,19 +38,25 @@ export default function Page() {
 
 
   async function exaSearch(){
-    setSuggestionsVisible(false)
     try {
-      const autoPromptedResults = await exa.search(`${searchQuery}`, {
-        useAutoprompt: true,
-        numResults: 5, 
-      }) as SearchResponse
+      const response = await fetch('/api/resources', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ text: searchQuery }),
+      });
 
-      if (autoPromptedResults && autoPromptedResults.results) {
-        setSearchResult(autoPromptedResults);
+      const data = await response.json();
+      const { output } = data;
+      if (output ) {
+        console.log("handleSearch output:", output);
+        setSuggestionsVisible(false)
+        setSearchResult(output)
       }
     } catch (error) {
-      console.error(error);
-    }
+      console.error('Error fetching data:', error);
+    } 
   }
 
   async function handleSearch(text: string){
@@ -70,6 +73,7 @@ export default function Page() {
       const { output } = data;
       if (output ) {
         console.log("handleSearch output:", output);
+        setSuggestionsVisible(false)
         setSearchResult(output)
       }
     } catch (error) {
