@@ -122,7 +122,8 @@ export default function AudioUpload({
             
             
             <div className="rounded-md border border-gray-200 bg-white px-[14px] py-3 h-24">
-                <div className="flex items-center gap-4">
+                <div className="flex flex-col items-left gap-4">
+                        <div>Upload an mp3 recording of your medical appointment. <a href='https://cloudconvert.com/' target='_blank' className='underline underline-offset-4 text-gray-600'>Click here if you need to convert your recording to mp3 format.</a></div>
                         <input
                             id="audio_path"
                             name="audio_path"

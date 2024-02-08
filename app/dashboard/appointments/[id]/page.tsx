@@ -6,7 +6,12 @@ import { notFound } from 'next/navigation';
 import { CalendarDaysIcon, BuildingOffice2Icon } from '@heroicons/react/24/outline';
 import AIContent from '@/app/ui/appointments/AIcontent';
 import AIChat from '@/app/ui/appointments/aichat';
+import { Metadata } from 'next';
 
+export const metadata: Metadata = {
+  title: "Appointment Detail",
+}
+ 
 
 export default async function Page({ params }: { params: { id: string } }) {
     const id = params.id;
