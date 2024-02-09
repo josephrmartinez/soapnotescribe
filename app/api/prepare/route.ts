@@ -30,7 +30,7 @@ export async function POST(req: Request, res: NextResponse) {
   const completion = await openai.chat.completions.create({
     model: "gpt-3.5-turbo-1106",
     messages: [{"role": "system", "content": "You are a helpful medical advocate. A patient is going to share information about an upcoming medical appointment. Please generate a list of five questions that they can ask their doctor to make the most out of their medical appointment."}, 
-    {"role": "user", "content": `${content}`}]
+    {"role": "user", "content": `${content}`}],
   });
   
   const response = completion.choices[0].message;
