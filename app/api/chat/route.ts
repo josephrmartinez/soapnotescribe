@@ -1,21 +1,27 @@
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
+import { OpenAIStream, StreamingTextResponse } from 'ai';
+
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
+export const runtime = 'edge';
+
 export async function POST(req: Request, res: NextResponse) {
   const body = await req.json();
-  console.log("req body:", body);
+  // console.log("req body:", body);
 
-  const completion = await openai.chat.completions.create({
+  const response = await openai.chat.completions.create({
     model: "gpt-3.5-turbo-1106",
     messages: body.messages,
+    stream: true
   });
   
-  const response = completion.choices[0].message;
-  console.log("openai completion", completion)
+  // UPDATE UI TO ACCOMODATE OPENAISTREAM
+  const stream = OpenAIStream(response)
+  return new StreamingTextResponse(stream)
 
-  return NextResponse.json({ output: response }, { status: 200 });
+  // return NextResponse.json({ output: response }, { status: 200 });
 }

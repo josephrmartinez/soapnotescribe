@@ -55,7 +55,7 @@ function secondsToHHMMSS(seconds: number): string {
   return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
 }
 
-
+// Run Replicate model to create diarized transcription from audio url
 export default async function getTranscript(url: string, apptid: string) {
   // console.log("running transcription API");
 
@@ -83,7 +83,7 @@ export default async function getTranscript(url: string, apptid: string) {
 }
 }
 
-
+// Update the appointment table row with the transcript
 async function updateApptWithTranscript(apptid: string, transcript: object){
   // console.log("updating appointment with transcript")
   const { data, error } = await supabase
@@ -101,23 +101,7 @@ if (error) {
 }
 }
 
-async function updateApptWithSummaryAndFeedback(apptid: string, summary: string, feedback: string){
-  // console.log("updating appointment with summary and feedback")
-  const { data, error } = await supabase
-  .from("appointments")
-  .update({summary: summary, feedback: feedback})
-  .eq('id', apptid)
-  .select();
-
-if (error) {
-  console.error("Error adding summary and feedback:", error);
-  // Handle error accordingly
-} else {
-  // console.log("Summary and feedback added successfully:", data);
-}
-}
-
-
+// Send transcript to OpenAI model for summarization and feedback
 async function getSummaryAndFeedback(apptid: string, transcript: object) {
   try {
   const transcriptString = JSON.stringify(transcript);
@@ -159,6 +143,22 @@ async function getSummaryAndFeedback(apptid: string, transcript: object) {
 }
 
 
+// Update the appointment table row with the summary and feedback
+async function updateApptWithSummaryAndFeedback(apptid: string, summary: string, feedback: string){
+  // console.log("updating appointment with summary and feedback")
+  const { data, error } = await supabase
+  .from("appointments")
+  .update({summary: summary, feedback: feedback})
+  .eq('id', apptid)
+  .select();
+
+if (error) {
+  console.error("Error adding summary and feedback:", error);
+  // Handle error accordingly
+} else {
+  // console.log("Summary and feedback added successfully:", data);
+}
+}
 
 
 

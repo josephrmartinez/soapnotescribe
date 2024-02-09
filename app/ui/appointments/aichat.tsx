@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { PaperAirplaneIcon, ArrowPathIcon } from "@heroicons/react/24/outline";
+import { useChat } from 'ai/react';
+
 
 interface AIChatProps {
     transcript: string;
@@ -51,6 +53,7 @@ interface Message {
         callGetResponse(messages);
        };
   
+      //  UPDATE TO ACCOMODATE STREAMING RESPONSE
        const callGetResponse = async (messages: Message[]) => {
         setIsLoading(true);
        

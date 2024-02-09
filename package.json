@@ -18,6 +18,7 @@
     "@types/node": "20.5.7",
     "@vercel/blob": "^0.16.1",
     "@vercel/postgres": "^0.5.1",
+    "ai": "^2.2.33",
     "autoprefixer": "10.4.15",
     "bcrypt": "^5.1.1",
     "clsx": "^2.0.0",
