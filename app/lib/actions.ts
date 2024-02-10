@@ -57,31 +57,37 @@ function secondsToHHMMSS(seconds: number): string {
 
 // Run Replicate model to create diarized transcription from audio url
 export default async function getTranscript(url: string, apptid: string) {
-  // console.log("running transcription API");
+  console.log("running transcription API", new Date());
 
   try {
-  let output = await replicate.run(
-    "thomasmol/whisper-diarization:7fa6110280767642cf5a357e4273f27ec10ebb60c107be25d6e15f928fd03147",
+  const prediction = await replicate.predictions.create(
     {
+      version: "7fa6110280767642cf5a357e4273f27ec10ebb60c107be25d6e15f928fd03147",
       input: {
         file_url: url,
       },
-    }
-  ) as TranscriptOutput;
+      webhook: `https://41da-63-229-78-213.ngrok-free.app/api/replicate-webhook?apptid=${apptid}`,
+      // webhook: "https://advocateai.vercel.app/api/appointments/upload/replicate-webhook"
+      webhook_events_filter: ["completed"]
+    });
   
-  // console.log("transcription output:", output)
+} catch (error) {
+  console.error("Error in getTranscript:", error);
+  // Handle error appropriately
+} finally {
+  console.log("getTranscript function complete:", new Date())
+}
+}
 
+export async function formatReplicateReponse(apptid: string, output: TranscriptOutput) {
   output.segments.forEach((segment) => delete segment.words);
   
   reformatTimestamps(output)
 
-  // console.log("reformatted output:", output);
+  console.log("reformatted output:", output);
   await updateApptWithTranscript(apptid, output);
-} catch (error) {
-  console.error("Error in getTranscript:", error);
-  // Handle error appropriately
 }
-}
+
 
 // Update the appointment table row with the transcript
 async function updateApptWithTranscript(apptid: string, transcript: object){
