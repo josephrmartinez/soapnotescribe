@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from "react";
-import { PaperAirplaneIcon, ArrowPathIcon } from "@heroicons/react/24/outline";
+import { PaperAirplaneIcon, ArrowPathIcon, StopCircleIcon } from "@heroicons/react/24/outline";
 import { useChat } from 'ai/react';
 
 
@@ -16,8 +16,8 @@ interface Message {
   
   const AIChat: React.FC<AIChatProps> = ({ transcript }) => {
     const [chatInput, setChatInput] = useState("");
-    const [isLoading, setIsLoading] = useState(false);
-    const { messages, input, handleInputChange, handleSubmit } = useChat({
+    // const [isLoading, setIsLoading] = useState(false);
+    const { messages, input, handleInputChange, handleSubmit, isLoading, stop } = useChat({
       api: '/api/chat',
       initialMessages: [
         {
@@ -79,11 +79,18 @@ interface Message {
                 placeholder="Ask question about appointment..."
             />
             
-            <button
+            {!isLoading ? <button
               type="submit"
               className='border w-12 h-12 flex flex-col items-center rounded-lg bg-teal-600 hover:bg-teal-500 active:bg-teal-500 transition-colors ml-2'>
               <PaperAirplaneIcon className="h-[22px] w-[22px]  translate-y-1/2 text-gray-50 " />
+            </button> :
+            <button
+              type="button"
+              onClick={stop}
+              className='border w-12 h-12 flex flex-col items-center rounded-lg bg-teal-600 hover:bg-teal-500 active:bg-teal-500 transition-colors ml-2'>
+              <StopCircleIcon className="h-[22px] w-[22px]  translate-y-1/2 text-gray-50 " />
             </button>
+            }
 
           </form>
          
