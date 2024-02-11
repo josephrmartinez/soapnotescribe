@@ -139,39 +139,7 @@ export function TableRowSkeleton() {
   );
 }
 
-export function AppointmentsTableRowSkeleton() {
-  return (
-    <tr className="w-full border-b border-gray-100 last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg">
-      {/* Email */}
-      <td className="relative overflow-hidden whitespace-nowrap py-3 pl-6 pr-3">
-          <div className="h-6 w-24 rounded bg-gray-100"></div>
-      </td>
-      {/* Clinic */}
-      <td className="whitespace-nowrap px-3 py-3">
-        <div className="h-6 w-32 rounded bg-gray-100"></div>
-      </td>
-      {/* Provider */}
-      <td className="whitespace-nowrap px-3 py-3">
-        <div className="h-6 w-16 rounded bg-gray-100"></div>
-      </td>
-      {/* Appointment Title */}
-      <td className="whitespace-nowrap px-3 py-3">
-        <div className="h-6 w-16 rounded bg-gray-100"></div>
-      </td>
-      {/* Amount Paid */}
-      <td className="whitespace-nowrap px-3 py-3">
-        <div className="h-6 w-16 rounded bg-gray-100"></div>
-      </td>
-      {/* Actions */}
-      <td className="whitespace-nowrap py-3 pl-6 pr-3">
-        <div className="flex justify-end gap-3">
-          <div className="h-[38px] w-[38px] rounded bg-gray-100"></div>
-          <div className="h-[38px] w-[38px] rounded bg-gray-100"></div>
-        </div>
-      </td>
-    </tr>
-  );
-}
+
 
 export function InvoicesMobileSkeleton() {
   return (
@@ -251,6 +219,36 @@ export function InvoicesTableSkeleton() {
   );
 }
 
+export function AppointmentsTableRowSkeleton() {
+  return (
+    <tr className="w-full border-b border-gray-100 last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg">
+      {/* Date */}
+      <td className="relative overflow-hidden whitespace-nowrap py-3 pl-6 pr-3">
+          <div className="h-6 w-14 rounded bg-gray-100"></div>
+      </td>
+      {/* Clinic */}
+      <td className="whitespace-nowrap px-3 py-3">
+        <div className="h-6 w-16 rounded bg-gray-100"></div>
+      </td>
+      {/* Provider */}
+      <td className="whitespace-nowrap px-3 py-3">
+        <div className="h-6 w-16 rounded bg-gray-100"></div>
+      </td>
+      {/* Appointment Title */}
+      <td className="whitespace-nowrap px-3 py-3">
+        <div className="h-6 w-16 rounded bg-gray-100"></div>
+      </td>
+      <td className="whitespace-nowrap px-3 py-3">
+        <div className="h-6 w-16 rounded bg-white"></div>
+      </td>
+      
+      {/* Actions */}
+      <td className="whitespace-nowrap py-3 pl-6 pr-3">
+          <div className="h-[38px] w-[72px] rounded bg-gray-100"></div>
+      </td>
+    </tr>
+  );
+}
 
 export function AppointmentsTableSkeleton() {
   return (
@@ -281,11 +279,11 @@ export function AppointmentsTableSkeleton() {
                   Appointment Title
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Amount Paid
+                   
                 </th>
                 <th
                   scope="col"
-                  className="relative pb-4 pl-3 pr-6 pt-2 sm:pr-6"
+                  className="relative py-3 pl-6 pr-3"
                 >
                   <span className="sr-only">Edit</span>
                 </th>
