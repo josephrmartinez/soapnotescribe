@@ -57,7 +57,7 @@ function secondsToHHMMSS(seconds: number): string {
 
 // Run Replicate model to create diarized transcription from audio url
 export default async function getTranscript(url: string, apptid: string) {
-  console.log("running transcription API", new Date());
+  console.log("running getTranscript", new Date());
 
   try {
   const prediction = await replicate.predictions.create(
@@ -67,31 +67,27 @@ export default async function getTranscript(url: string, apptid: string) {
         file_url: url,
       },
       webhook: `https://41da-63-229-78-213.ngrok-free.app/api/replicate-webhook?apptid=${apptid}`,
-      // webhook: "https://advocateai.vercel.app/api/appointments/upload/replicate-webhook"
+      // webhook: `https://advocateai.vercel.app/api/appointments/upload/replicate-webhook?apptid=${apptid}`,
       webhook_events_filter: ["completed"]
     });
   
 } catch (error) {
   console.error("Error in getTranscript:", error);
   // Handle error appropriately
-} finally {
-  console.log("getTranscript function complete:", new Date())
 }
 }
 
 export async function formatReplicateReponse(apptid: string, output: TranscriptOutput) {
+  console.log("Running formatReplicateReponse")
   output.segments.forEach((segment) => delete segment.words);
-  
   reformatTimestamps(output)
-
-  console.log("reformatted output:", output);
   await updateApptWithTranscript(apptid, output);
 }
 
 
 // Update the appointment table row with the transcript
 async function updateApptWithTranscript(apptid: string, transcript: object){
-  // console.log("updating appointment with transcript")
+  console.log("Running updateApptWithTranscript")
   const { data, error } = await supabase
   .from("appointments")
   .update({transcript: transcript})
@@ -109,6 +105,7 @@ if (error) {
 
 // Send transcript to OpenAI model for summarization and feedback
 async function getSummaryAndFeedback(apptid: string, transcript: object) {
+  console.log("Running getSummaryAndFeedback")
   try {
   const transcriptString = JSON.stringify(transcript);
   const completion = await openai.chat.completions.create({
@@ -151,7 +148,7 @@ async function getSummaryAndFeedback(apptid: string, transcript: object) {
 
 // Update the appointment table row with the summary and feedback
 async function updateApptWithSummaryAndFeedback(apptid: string, summary: string, feedback: string){
-  // console.log("updating appointment with summary and feedback")
+  console.log("Running updateApptWithSummaryAndFeedback")
   const { data, error } = await supabase
   .from("appointments")
   .update({summary: summary, feedback: feedback})
