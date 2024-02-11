@@ -66,8 +66,8 @@ export default async function getTranscript(url: string, apptid: string) {
       input: {
         file_url: url,
       },
-      webhook: `https://41da-63-229-78-213.ngrok-free.app/api/replicate-webhook?apptid=${apptid}`,
-      // webhook: `https://advocateai.vercel.app/api/appointments/upload/replicate-webhook?apptid=${apptid}`,
+      // webhook: `https://41da-63-229-78-213.ngrok-free.app/api/replicate-webhook?apptid=${apptid}`,
+      webhook: `https://advocateai.vercel.app/api/appointments/upload/replicate-webhook?apptid=${apptid}`,
       webhook_events_filter: ["completed"]
     });
   
