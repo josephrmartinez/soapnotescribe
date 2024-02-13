@@ -59,6 +59,14 @@ function secondsToHHMMSS(seconds: number): string {
 export default async function getTranscript(url: string, apptid: string) {
   console.log("running getTranscript", new Date());
 
+  let webhookUrl;
+
+  if (process.env.NODE_ENV === 'production') {
+      webhookUrl = process.env.PROD_REPLICATE_WEBHOOK;
+  } else {
+      webhookUrl = process.env.DEV_REPLICATE_WEBHOOK;
+  }
+
   try {
   const prediction = await replicate.predictions.create(
     {
@@ -66,8 +74,7 @@ export default async function getTranscript(url: string, apptid: string) {
       input: {
         file_url: url,
       },
-      // webhook: `https://41da-63-229-78-213.ngrok-free.app/api/replicate-webhook?apptid=${apptid}`,
-      webhook: `https://advocateai.vercel.app/api/appointments/upload/replicate-webhook?apptid=${apptid}`,
+      webhook: `${webhookUrl}?apptid=${apptid}`,
       webhook_events_filter: ["completed"]
     });
   

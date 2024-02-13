@@ -8,6 +8,13 @@ import { useEffect } from 'react'
 export default function AuthForm() {
   const supabase = createClientComponentClient<Database>()
 
+  let redirectUrl;
+
+  if (process.env.NODE_ENV === 'production') {
+      redirectUrl = process.env.NEXT_PUBLIC_REDIRECT_URL;
+  } else {
+      redirectUrl = process.env.NEXT_PUBLIC_DEV_REDIRECT;
+  }
 
   return (
     <div className='mt-20 mx-auto w-10/12'>
@@ -28,12 +35,9 @@ export default function AuthForm() {
           }}
           showLinks={false}
           providers={[]}
-          redirectTo="http://advocateai.vercel.app/auth/callback"
-          // redirectTo="http://localhost:3000/auth/callback"
+          redirectTo={redirectUrl}
         />
     </div>
     
   )
 }
-
-// redirectTo="http://localhost:3000/auth/callback"
