@@ -18,7 +18,6 @@ export function PreparationModule(){
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.preventDefault();
     setLoading(true)
-    console.log("Submitting input:", type, situation, concerns, history);
   
     try {
       const response = await fetch('/api/prepare', {
@@ -28,10 +27,8 @@ export function PreparationModule(){
         },
         body: JSON.stringify({ type, situation, concerns, history }),
       });
-  
       const data = await response.json();
   
-      console.log("response data:", data)
       if (data.output && data.output.content) {
         setQuestions(data.output.content);
       }

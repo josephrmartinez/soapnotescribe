@@ -1,5 +1,10 @@
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
+import { OpenAIStream, StreamingTextResponse } from 'ai';
+
+
+export const runtime = 'edge'
+
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -27,14 +32,14 @@ export async function POST(req: Request, res: NextResponse) {
 
     
 
-  const completion = await openai.chat.completions.create({
-    model: "gpt-3.5-turbo-1106",
-    messages: [{"role": "system", "content": "You are a helpful medical advocate. A patient is going to share information about an upcoming medical appointment. Please generate a list of five questions that they can ask their doctor to make the most out of their medical appointment."}, 
-    {"role": "user", "content": `${content}`}],
-  });
+  // const completion = await openai.chat.completions.create({
+  //   model: "gpt-3.5-turbo-1106",
+  //   messages: [{"role": "system", "content": "You are a helpful medical advocate. A patient is going to share information about an upcoming medical appointment. Please generate a list of five questions that they can ask their doctor to make the most out of their medical appointment."}, 
+  //   {"role": "user", "content": `${content}`}],
+  // });
   
-  const response = completion.choices[0].message;
-  console.log("openai completion", completion)
+  // const response = completion.choices[0].message;
+  // console.log("openai completion", completion)
 
-  return NextResponse.json({ output: response }, { status: 200 });
+  // return NextResponse.json({ output: response }, { status: 200 });
 }
