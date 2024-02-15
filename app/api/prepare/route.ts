@@ -27,19 +27,15 @@ export async function POST(req: Request, res: NextResponse) {
                 + (situation ? `Current health concern or symptoms (this is what prompted me to schedule the appointment): ${situation} /// ` : " /// ")
                 + (concerns ? `Expectations and concerns (specific concerns or questions I want to address with the doctor): ${concerns} /// ` : " /// ")
                 + (history ? `Treatment / Medication History (information on current medications and whether I have tried any treatments or interventions for the current health concern): ${history} /// ` : " /// ");
-   
-    console.log("content:", content)
 
-    
-
-  // const completion = await openai.chat.completions.create({
-  //   model: "gpt-3.5-turbo-1106",
-  //   messages: [{"role": "system", "content": "You are a helpful medical advocate. A patient is going to share information about an upcoming medical appointment. Please generate a list of five questions that they can ask their doctor to make the most out of their medical appointment."}, 
-  //   {"role": "user", "content": `${content}`}],
-  // });
+  const completion = await openai.chat.completions.create({
+    model: "gpt-3.5-turbo-0125",
+    messages: [{"role": "system", "content": "You are a helpful medical advocate. A patient is going to share information about an upcoming medical appointment. Please generate a list of five questions that they can ask their doctor to make the most out of their medical appointment. Just return the five questions, nothing else, no intro sentence."}, 
+    {"role": "user", "content": `${content}`}],
+  });
   
-  // const response = completion.choices[0].message;
-  // console.log("openai completion", completion)
+  const response = completion.choices[0].message;
+  console.log("openai completion", completion)
 
-  // return NextResponse.json({ output: response }, { status: 200 });
+  return NextResponse.json({ output: response }, { status: 200 });
 }

@@ -11,7 +11,7 @@ export function PreparationModule(){
   const [situation, setSituation] = useState<string>("")
   const [concerns, setConcerns] = useState<string>("")
   const [history, setHistory] = useState<string>("")
-  const [questions, setQuestions] = useState<string>("")
+  const [questions, setQuestions] = useState<string[]>([])
   const [loading, setLoading] = useState<boolean>(false)
 
 
