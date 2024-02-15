@@ -30,7 +30,7 @@ export async function POST(req: Request, res: NextResponse) {
 
   const completion = await openai.chat.completions.create({
     model: "gpt-3.5-turbo-0125",
-    messages: [{"role": "system", "content": "You are a helpful medical advocate. A patient is going to share information about an upcoming medical appointment. Please generate a list of five questions that they can ask their doctor to make the most out of their medical appointment. Just return the five questions, nothing else, no intro sentence."}, 
+    messages: [{"role": "system", "content": "You are a helpful medical advocate assisting a patient. A patient is going to share information about an upcoming medical appointment. Please generate a list of five questions that they can ask their doctor to maximize the effectiveness of their appointment. Return only the five questions, without additional text. Add two newline breaks after each question."}, 
     {"role": "user", "content": `${content}`}],
   });
   

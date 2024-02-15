@@ -42,6 +42,7 @@ export function PreparationModule(){
       console.error('Error fetching data:', error);
     } finally {
       setLoading(false)
+      
     }
   }
 
@@ -49,7 +50,12 @@ export function PreparationModule(){
     const printableWindow = window.open('', '_blank');
     
     if (printableWindow){
-      printableWindow.document.write('<html><head><title>Print</title></head><body>');
+      printableWindow.document.write('<html><head><title>Print</title>');
+      printableWindow.document.write('<style>');
+      printableWindow.document.write('body { margin: 20px; font-size: 16px; }');
+      printableWindow.document.write('pre { white-space: pre-wrap; }');
+      printableWindow.document.write('</style>');
+      printableWindow.document.write('</head><body>');
       printableWindow.document.write('<pre>' + questions + '</pre>');
       printableWindow.document.write('</body></html>');
       
