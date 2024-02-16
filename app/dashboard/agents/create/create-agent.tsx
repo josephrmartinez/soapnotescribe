@@ -31,6 +31,7 @@ export default function CreateAgent({ session }: { session: Session | null }) {
   const router = useRouter()
   const [prediction, setPrediction] = useState(null)
 
+  const [agentDescription, setAgentDescription] = useState<string>('')
   const [agentType, setAgentType] = useState<string>('')
   const [reminderType, setReminderType] = useState<string>('')
   const [researchType, setResearchType] = useState<string>('')
@@ -71,8 +72,8 @@ export default function CreateAgent({ session }: { session: Session | null }) {
 
 
   return (
-    <div>
-      <div className="rounded-md bg-gray-50 p-4 md:p-6">
+    <div className="grid grid-cols-3">
+      <div className="">
         
         <div className="my-4">
           <label htmlFor="title" className="mb-2 block text-sm font-medium">
@@ -167,20 +168,18 @@ export default function CreateAgent({ session }: { session: Session | null }) {
         )}
 
 
-
-        
-          
-        
-
       </div>
-      <div className="mt-6 flex justify-start gap-4">
-        <Link
-          href="/dashboard/agents"
-          className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
-        >
-          Cancel
-        </Link>
-        <Button type="submit" active={!isUploading}>Create Agent</Button>
+      <div className="col-span-2 mt-6 flex flex-col gap-4">
+        <div className='text-4xl font-semibold h-32'>Text me a reminder to take 1 tsp of fish oil every Tuesday at 3pm.</div>
+        <div className="mt-6 flex justify-start gap-4">
+            <Link
+            href="/dashboard/agents"
+            className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
+            >
+            Cancel
+            </Link>
+            <Button type="submit" active={!isUploading}>Create Agent</Button>
+        </div>
       </div>
     </div>
   )
