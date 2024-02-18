@@ -15,6 +15,18 @@ interface Segment {
   start: string;
   speaker: string;
 }
+
+interface RenameSpeakersFormProps {
+  speakerNames: string[];
+  onSave: (renamedSpeakers: Record<string, string>) => void;
+}
+
+interface AIContentProps {
+  transcript: Transcript;
+  summary: string;
+  feedback: string;
+  apptid: string;
+}
   
   const formatTranscript = (transcript: Transcript) => {
     return transcript.segments.map((segment) => (
@@ -26,11 +38,11 @@ interface Segment {
     ));
   };
 
-  const RenameSpeakersForm = ({ speakerNames, onSave }) => {
+  const RenameSpeakersForm: React.FC<RenameSpeakersFormProps> = ({ speakerNames, onSave }) => {
     const [viewForm, setViewForm] = useState(false)
-    const [renamedSpeakers, setRenamedSpeakers] = useState({});
+    const [renamedSpeakers, setRenamedSpeakers] = useState<Record<string, string>>({});
   
-    const handleInputChange = (event) => {
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       const { name, value } = event.target;
       setRenamedSpeakers(prevState => ({
         ...prevState,
@@ -38,7 +50,7 @@ interface Segment {
       }));
     };
   
-    const handleSubmit = (event) => {
+    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
       onSave(renamedSpeakers);
       setViewForm(false);
@@ -83,7 +95,7 @@ interface Segment {
 
   
 
-export default function AIContent ({transcript, summary, feedback, apptid} : {transcript: Transcript, summary: string, feedback: string, apptid: string}) {
+  const AIContent: React.FC<AIContentProps> = ({ transcript, summary, feedback, apptid }) => {
     const [activeTab, setActiveTab] = useState('transcript');
     const [displayedTranscript, setDisplayedTranscript] = useState(transcript)
       
@@ -96,7 +108,7 @@ export default function AIContent ({transcript, summary, feedback, apptid} : {tr
       // console.log("speakers:", speakerNames)
 
       // Update speaker names in transcript object
-      const handleSave = async (renamedSpeakers) => {
+      const handleSave = async (renamedSpeakers: Record<string, string>) => {
         const updatedTranscript = {
           ...transcript,
           segments: transcript.segments.map(segment => ({
