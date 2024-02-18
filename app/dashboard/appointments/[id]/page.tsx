@@ -88,7 +88,7 @@ export default async function Page({ params }: { params: { id: string } }) {
         <div className='grid grid-cols-2 gap-4'>
           <div>
               <div className='max-w-prose'>
-                  <AIContent transcript={appointment.transcript} summary={appointment.summary} feedback={appointment.feedback}/>
+                  <AIContent apptid={appointment.id} transcript={appointment.transcript} summary={appointment.summary} feedback={appointment.feedback}/>
               </div>
           </div>
 

@@ -1,6 +1,7 @@
 'use client'
 
 import React, { ReactNode, useState } from 'react';
+import { updateApptTranscript } from '@/app/lib/actions';
 
 interface Transcript {
   language: string;
@@ -65,7 +66,7 @@ interface Segment {
                 name={speaker}
                 value={renamedSpeakers[speaker] || ''}
                 onChange={handleInputChange}
-                className='border-b-2 border-x-0 border-t-0 h-8'
+                className='border-b-2 border-gray-400 border-x-0 border-t-0 h-8'
               />
             </div>
           ))}
@@ -81,7 +82,7 @@ interface Segment {
 
   
 
-export default function AIContent ({transcript, summary, feedback} : {transcript: Transcript, summary: string, feedback: string}) {
+export default function AIContent ({transcript, summary, feedback, apptid} : {transcript: Transcript, summary: string, feedback: string, apptid: string}) {
     const [activeTab, setActiveTab] = useState('transcript');
     const [displayedTranscript, setDisplayedTranscript] = useState(transcript)
       
@@ -91,10 +92,10 @@ export default function AIContent ({transcript, summary, feedback} : {transcript
 
       // Extract speaker names
       const speakerNames = Array.from(new Set(transcript.segments.map(segment => segment.speaker)));
-      console.log("speakers:", speakerNames)
+      // console.log("speakers:", speakerNames)
 
       // Update speaker names in transcript object
-      const handleSave = (renamedSpeakers) => {
+      const handleSave = async (renamedSpeakers) => {
         const updatedTranscript = {
           ...transcript,
           segments: transcript.segments.map(segment => ({
@@ -107,7 +108,7 @@ export default function AIContent ({transcript, summary, feedback} : {transcript
 
     
         // Step 5: Save changes to the database (Implement this part using Supabase SDK)
-        // supabase.updateTranscript(updatedTranscript);
+        await updateApptTranscript(apptid, updatedTranscript)
     
         console.log('Updated transcript:', updatedTranscript);
       }

@@ -3,6 +3,8 @@
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers'
 import { Database } from '@/app/database.types';
+import { unstable_noStore as noStore } from 'next/cache';
+
 
 
 // const supabase = createServerComponentClient<Database>({ cookies })
@@ -79,7 +81,8 @@ export async function fetchApptsPages(query: string) {
 
 
 export async function fetchAppointmentById(id: string) {
-  
+  // EXPERIMENTAL. noStore() allows for immediate re-render of changed appointment data, but may lead to slower load times.
+  noStore()
   try {
     const supabase = createServerComponentClient<Database>({ cookies })
     const { data: appointments, error } = await supabase

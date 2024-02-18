@@ -91,6 +91,22 @@ export async function formatReplicateReponse(apptid: string, output: TranscriptO
   await updateApptWithTranscript(apptid, output);
 }
 
+// UPDATE appointment transcript, no subsequent AI API call
+export async function updateApptTranscript(apptid: string, transcript: object){
+  console.log("Running updateApptTranscript")
+  const { data, error } = await supabase
+  .from("appointments")
+  .update({transcript: transcript})
+  .eq('id', apptid)
+  .select();
+
+if (error) {
+  console.error("Error adding transcript:", error);
+  // Handle error accordingly
+} else {
+  console.log("Transcript added successfully:", data);
+}
+}
 
 // Update the appointment table row with the transcript
 async function updateApptWithTranscript(apptid: string, transcript: object){
