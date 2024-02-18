@@ -19,6 +19,9 @@ export default async function Page({ params }: { params: { id: string } }) {
     // console.log("appointment data:", appointment)
 
     const transcriptString = JSON.stringify(appointment?.transcript);
+    console.log("transcript", transcriptString)
+
+
 
     if (!appointment) {
       notFound();

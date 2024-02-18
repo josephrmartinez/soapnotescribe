@@ -24,14 +24,94 @@ interface Segment {
       </div>
     ));
   };
+
+  const RenameSpeakersForm = ({ speakerNames, onSave }) => {
+    const [viewForm, setViewForm] = useState(false)
+    const [renamedSpeakers, setRenamedSpeakers] = useState({});
+  
+    const handleInputChange = (event) => {
+      const { name, value } = event.target;
+      setRenamedSpeakers(prevState => ({
+        ...prevState,
+        [name]: value
+      }));
+    };
+  
+    const handleSubmit = (event) => {
+      event.preventDefault();
+      onSave(renamedSpeakers);
+      setViewForm(false);
+    };
+  
+    return (
+      <div className='border-b-2 mb-2'>
+
+        {!viewForm ? 
+        <button 
+        className="mb-2 flex h-10 items-center rounded-lg text-teal-600 px-4 text-sm font-medium transition-colors hover:bg-teal-600 hover:text-white"
+        onClick={() => setViewForm(true)}
+        >update speaker names</button>
+        :
+        <form onSubmit={handleSubmit}>
+          {speakerNames.map((speaker, index) => (
+            <div key={index} className='mb-4 ml-2'>
+              <label 
+                htmlFor={`speaker-${index}`}
+                className='text-sm font-semibold'
+                >Rename {speaker} to:</label>
+              <input
+                type="text"
+                id={`speaker-${index}`}
+                name={speaker}
+                value={renamedSpeakers[speaker] || ''}
+                onChange={handleInputChange}
+                className='border-b-2 border-x-0 border-t-0 h-8'
+              />
+            </div>
+          ))}
+          <button type="submit" className='mb-4 flex h-10 items-center rounded-lg bg-teal-600 px-4 text-sm font-medium text-white transition-colors hover:bg-teal-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"'>Save</button>
+        </form>
+        }
+      </div>
+      
+      
+
+    );
+  };
+
   
 
 export default function AIContent ({transcript, summary, feedback} : {transcript: Transcript, summary: string, feedback: string}) {
     const [activeTab, setActiveTab] = useState('transcript');
+    const [displayedTranscript, setDisplayedTranscript] = useState(transcript)
       
       const handleTabClick = (tab: string) => {
         setActiveTab(tab);
       };
+
+      // Extract speaker names
+      const speakerNames = Array.from(new Set(transcript.segments.map(segment => segment.speaker)));
+      console.log("speakers:", speakerNames)
+
+      // Update speaker names in transcript object
+      const handleSave = (renamedSpeakers) => {
+        const updatedTranscript = {
+          ...transcript,
+          segments: transcript.segments.map(segment => ({
+            ...segment,
+            speaker: renamedSpeakers[segment.speaker] || segment.speaker
+          }))
+        };
+
+        setDisplayedTranscript(updatedTranscript); // Update state with the new transcript
+
+    
+        // Step 5: Save changes to the database (Implement this part using Supabase SDK)
+        // supabase.updateTranscript(updatedTranscript);
+    
+        console.log('Updated transcript:', updatedTranscript);
+      }
+
       
 
         return (
@@ -47,7 +127,12 @@ export default function AIContent ({transcript, summary, feedback} : {transcript
             </div>
 
             <div className="h-96 overflow-y-scroll border p-2 border-gray-100 bg-white  text-gray-800 rounded-lg">
-            {activeTab === 'transcript' && <div>{formatTranscript(transcript)}</div>}
+            {activeTab === 'transcript' && 
+              <>
+                <RenameSpeakersForm speakerNames={speakerNames} onSave={handleSave} />
+                <div>{formatTranscript(displayedTranscript)}</div>
+              </>
+              }
             {activeTab === 'summary' && <div>{summary}</div>}
             {activeTab === 'feedback' && <div>{feedback}</div>}
             </div>
