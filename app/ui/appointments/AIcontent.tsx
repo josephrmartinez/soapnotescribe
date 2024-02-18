@@ -58,7 +58,7 @@ interface Segment {
             <div key={index} className='mb-4 ml-2'>
               <label 
                 htmlFor={`speaker-${index}`}
-                className='text-sm font-semibold'
+                className='text-sm font-semibold mr-2'
                 >Rename {speaker} to:</label>
               <input
                 type="text"
@@ -66,7 +66,8 @@ interface Segment {
                 name={speaker}
                 value={renamedSpeakers[speaker] || ''}
                 onChange={handleInputChange}
-                className='border-b-2 border-gray-400 border-x-0 border-t-0 h-8'
+                className='border-b-2 border-gray-400 border-x-0 border-t-0 h-8 pl-1'
+                autoFocus={index === 0}
               />
             </div>
           ))}
