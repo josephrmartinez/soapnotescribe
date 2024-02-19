@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import { GeistSans } from 'geist/font/sans';
 import { PreparationModule } from '@/app/ui/prepare/PreparationModule';
+import ResourceSearch from '@/app/ui/resources/ResourceSearch';
 
 export const metadata: Metadata = {
   title: "Prepare",
@@ -20,6 +21,7 @@ export default function Page() {
         </div>
         
         <PreparationModule />
+        
         
     </div>
   );

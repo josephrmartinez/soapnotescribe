@@ -123,7 +123,7 @@ interface AIContentProps {
         // Step 5: Save changes to the database (Implement this part using Supabase SDK)
         await updateApptTranscript(apptid, updatedTranscript)
     
-        console.log('Updated transcript:', updatedTranscript);
+        // console.log('Updated transcript:', updatedTranscript);
       }
 
       
@@ -154,3 +154,4 @@ interface AIContentProps {
         )
 }
 
+export default AIContent

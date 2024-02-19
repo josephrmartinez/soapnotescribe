@@ -3,15 +3,18 @@
 import React from "react"
 import { ArrowRight, Printer, SpinnerGap } from "@phosphor-icons/react";
 import { useState } from 'react';
+import SearchSuggester from "./SearchSuggester";
 
 
 export function PreparationModule(){
 
-    const [type, setType] = useState<string>("")
+  const [type, setType] = useState<string>("")
   const [situation, setSituation] = useState<string>("")
   const [concerns, setConcerns] = useState<string>("")
   const [history, setHistory] = useState<string>("")
   const [questions, setQuestions] = useState<string>("")
+  const [searches, setSearches] = useState<string[]>([]);
+
   const [loading, setLoading] = useState<boolean>(false)
 
 
@@ -27,19 +30,26 @@ export function PreparationModule(){
         },
         body: JSON.stringify({ type, situation, concerns, history }),
       });
-      const data = await response.json();
-  
-      if (data.output && data.output.content) {
-        setQuestions(data.output.content);
+
+      const data = await response.json(); // Parse response body as JSON
+
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
       }
-  
-      // Clear input fields
-      // setType("");
-      // setSituation("");
-      // setConcerns("");
-      // setHistory("");
+    
+      const output = JSON.parse(data.output);
+
+      console.log("data", data);
+      console.log("output", output);
+
+      const questionsString = output.questions.map((question: string, index: number) => `${index + 1}. ${question}\n\n`).join('');
+
+
+      setQuestions(questionsString)
+      setSearches(output.searches)
     } catch (error) {
-      console.error('Error fetching data:', error);
+      console.error('There was a problem with the fetch operation:', error);
     } finally {
       setLoading(false)
       
@@ -66,9 +76,11 @@ export function PreparationModule(){
   };
 
     return (
-<form onSubmit={handleSubmit}>
+
           <div className='grid grid-cols-2 mt-8 gap-8'>
           <div>
+            {questions === "" ?
+            <form onSubmit={handleSubmit}>
             <div className='text-gray-600 font-semibold'>Type of appointment:</div>
             <input
               type='text'
@@ -130,6 +142,12 @@ export function PreparationModule(){
               
 
             </div>
+            </form>
+            :
+            <div>
+              <SearchSuggester searches={searches}/>
+            </div> 
+            }
           </div>
 
           <div>
@@ -161,6 +179,6 @@ export function PreparationModule(){
           </div>
 
           </div>
-        </form>
+        
     )
 }

@@ -26,9 +26,11 @@ export async function POST(req: Request, res: NextResponse) {
   try {
       const autoPromptedResults = await exa.search(`${body.text}`, {
         useAutoprompt: true,
-        numResults: 5, 
+        numResults: 5,
+        excludeDomains: ["www.amazon.com"] 
       }) as SearchResponse
 
+    
     return NextResponse.json({ output: autoPromptedResults }, { status: 200 });
         
       

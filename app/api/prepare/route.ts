@@ -20,7 +20,7 @@ interface RequestBody {
 
 export async function POST(req: Request, res: NextResponse) {
   const body:RequestBody = await req.json();
-  console.log("req body:", body);
+  // console.log("req body:", body);
   const { type, situation, concerns, history }: RequestBody = body;
 
   const content = (type ? `Appointment type: ${type} /// ` : " /// ") 
@@ -30,12 +30,14 @@ export async function POST(req: Request, res: NextResponse) {
 
   const completion = await openai.chat.completions.create({
     model: "gpt-3.5-turbo-0125",
-    messages: [{"role": "system", "content": "You are a helpful medical advocate assisting a patient. A patient is going to share information about an upcoming medical appointment. Please generate a list of five questions that they can ask their doctor to maximize the effectiveness of their appointment. Return only the five questions, without additional text. Add two newline breaks after each question."}, 
+    messages: [{"role": "system", "content": "You are a supportive medical advocate aiding a patient in preparing for an upcoming medical appointment. The patient will share details about the appointment and their health concerns. Please use this information to respond with a JSON object containing two lists: 'questions' and 'searches'. For the 'questions' list, generate a list of five questions the patient can ask their doctor to maximize the effectiveness of their upcoming appointment. For the 'searches' list, generate an unnumbered list of five very specific search engine queries that the patient could make to access high-quality resources to help them prepare for the medical appointment. Simply return the JSON object containing the 'questions' and 'searches' lists."}, 
+    
     {"role": "user", "content": `${content}`}],
+    response_format: {type: "json_object"}
   });
   
-  const response = completion.choices[0].message;
-  console.log("openai completion", completion)
+  const response = completion.choices[0].message.content;
+  // console.log("response", response)
 
   return NextResponse.json({ output: response }, { status: 200 });
 }
