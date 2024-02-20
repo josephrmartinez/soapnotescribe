@@ -1,7 +1,7 @@
 // import Form from '@/app/ui/appointments/edit-form';
 import Breadcrumbs from '@/app/ui/appointments/breadcrumbs';
 import { fetchAppointmentById, getSignedAudioUrl } from '@/app/lib/data';
-import { UpdateAppointment, AddDocsToAppointment } from '@/app/ui/appointments/buttons';
+import { UpdateAppointment, AddDocsToAppointment, ShareAppointment } from '@/app/ui/appointments/buttons';
 import { notFound } from 'next/navigation';
 import { CalendarDaysIcon, BuildingOffice2Icon } from '@heroicons/react/24/outline';
 import AIContent from '@/app/ui/appointments/AIcontent';
@@ -53,24 +53,23 @@ export default async function Page({ params }: { params: { id: string } }) {
       
         <div>
         <div className='grid grid-cols-3 w-full'>
-        <div>
-          <div className='flex flex-row items-center mb-6'>
-              <CalendarDaysIcon width={28}/>
-              <div className='font-semibold text-gray-700 ml-2'>{displayDate}</div>
+          <div>
+            <div className='flex flex-row items-center mb-6'>
+                <CalendarDaysIcon width={28}/>
+                <div className='font-semibold text-gray-700 ml-2'>{displayDate}</div>
+            </div>
+            <div className='flex flex-row items-center mb-6'>
+                <BuildingOffice2Icon width={28}/>
+                <div className='font-semibold text-gray-700 ml-2'>{appointment.clinic}</div>
+            </div>
           </div>
-          <div className='flex flex-row items-center mb-6'>
-              <BuildingOffice2Icon width={28}/>
-              <div className='font-semibold text-gray-700 ml-2'>{appointment.clinic}</div>
+          <div className='col-start-3 flex flex-row gap-3 justify-end'>
+            <AddDocsToAppointment id={appointment.id}/>
+            <UpdateAppointment id={appointment.id}/>
+            <ShareAppointment id={appointment.id}/>
           </div>
-        </div>
-        <div className='col-start-3 flex flew row gap-3 justify-end'>
-          <AddDocsToAppointment id={appointment.id}/>
-          <UpdateAppointment id={appointment.id}/>
         </div>
         
-      </div>
-            
-
       <div className='flex flex-row items-center'>
         <div className='font-semibold mr-2'>Description:</div>
         <div>{appointment.description}</div>

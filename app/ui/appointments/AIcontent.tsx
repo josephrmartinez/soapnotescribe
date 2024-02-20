@@ -61,7 +61,7 @@ interface AIContentProps {
 
         {!viewForm ? 
         <button 
-        className="mb-2 flex h-10 items-center rounded-lg text-teal-600 px-4 text-sm font-medium transition-colors hover:bg-teal-600 hover:text-white"
+        className="mb-2 flex h-10 items-center rounded-lg text-teal-600 px-4 text-sm font-medium transition-colors hover:bg-teal-500 hover:text-white"
         onClick={() => setViewForm(true)}
         >update speaker names</button>
         :

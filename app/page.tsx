@@ -48,11 +48,11 @@ export default function Page() {
           />
         <FAQ 
           question={"Is my data safe?"}
-          answer={"All user data is encrypted and stored in secure storage. No user data is sold to third parties. No AI models are trained on user data."}
+          answer={"All user data is encrypted and stored in secure storage. No user data is sold to third parties."}
           />
         <FAQ 
           question={"Why would someone record a medical appointment if they already have electronic health records?"}
-          answer={"Electronic health records are created by the provider. These records may contain errors or omit important details that were discussed during the interaction. Having your own full recording of the appointment allows you to review and share exactly what was said. These recordings will compliment your electronic health records and also enable you to generate highly personalized pre and post appointment feedback that would not be possible otherwise." 
+          answer={"Electronic health records are created by the provider. These records may contain errors or omit important details that were discussed during the interaction. Having your own full recording of the appointment allows you to review and share exactly what was said. These recordings compliment your electronic health records; advocate.ai enables you to make further use of this highly personalized information that would otherwise be lost." 
         }
           />       
           <FAQ 
@@ -65,7 +65,7 @@ export default function Page() {
           />
           <FAQ 
           question={"How do I use advocate.ai?"}
-          answer={"Before an appointment, use the 'prepare' section of the site to generate questions that can help you make the most out of your upcoming appointment. During an appointment, use a voice memo app on your phone to capture audio. After the appointment, upload the recording to your dashboard. advocate.ai will save the recording in a secure database and automatically generate a transcription as well as a summary and critical feedback of the appointment. You will receive an immediate notification if there are any serious concerns or it seems like your doctor is neglecting to mention something potentially important. The site includes additional features that allow you to privately search for resources from trusted sources, generate medical advocate agents that provide reminders or perform research, and share your appointment transcriptions with approved caregivers."
+          answer={"Before an appointment, use the site to generate questions to help you make the most out of your time with the medical provider. During an appointment, use a voice memo app on your phone to capture audio. After the appointment, upload the recording to your dashboard. advocate.ai will save the recording in a secure database and automatically generate a transcription as well as a summary and critical feedback of the appointment. You will receive an immediate notification if there are any serious concerns or it seems like your doctor is neglecting to mention something potentially important. The site includes additional features that allow you to privately search for resources from trusted sources, generate medical advocate agents that provide reminders or perform research, and share your appointment transcriptions with approved caregivers."
         }
           />
           <FAQ 

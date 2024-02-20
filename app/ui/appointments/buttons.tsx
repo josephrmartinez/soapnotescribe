@@ -1,4 +1,4 @@
-import { PencilIcon, PlusIcon, TrashIcon, ArrowRightIcon, DocumentPlusIcon } from '@heroicons/react/24/outline';
+import { PencilIcon, PlusIcon, TrashIcon, ArrowRightIcon, DocumentPlusIcon, ShareIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 // import { deleteAppointment } from '@/app/lib/actions';
 
@@ -48,6 +48,19 @@ export function AddDocsToAppointment({ id }: { id: string }) {
       
       <DocumentPlusIcon className="w-6" />
       <div className='tracking-wider ml-1'>add documents</div>
+    </Link>
+  );
+}
+
+export function ShareAppointment({ id }: { id: string }) {
+  return (
+    <Link
+      href={`/dashboard/appointments/${id}/share`}
+      className="flex flex-row w-24 h-10 rounded-md border p-2 bg-teal-600 text-gray-50 transition-colors hover:bg-teal-500"
+    >
+      
+      <ShareIcon className="w-6" />
+      <div className='tracking-wider ml-1'>share</div>
     </Link>
   );
 }
