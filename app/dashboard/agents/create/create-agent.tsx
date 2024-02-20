@@ -170,7 +170,7 @@ export default function CreateAgent({ session }: { session: Session | null }) {
 
       </div>
       <div className="col-span-2 mt-6 flex flex-col gap-4">
-        <div className='text-4xl font-semibold h-32'>Text me a reminder to take 1 tsp of fish oil every Tuesday at 3pm.</div>
+        <div className='text-4xl font-semibold h-80'>Text me a reminder to take 1 tsp of fish oil every Tuesday at 3pm.</div>
         <div className="mt-6 flex justify-start gap-4">
             <Link
             href="/dashboard/agents"

@@ -16,12 +16,12 @@ export default function AgentCard({ underlineText, normalText }: { underlineText
     }
 
     return (
-    <div className={`${active ? 'shadow bg-white' : 'border bg-gray-50'} transition-all rounded-lg p-4 my-4 flex flex-row justify-between`}>
+    <div className={`${active ? 'shadow bg-white' : 'border bg-gray-50'} transition-all h-16 rounded-lg  my-4 flex flex-row justify-between p-4`}>
         
         
         <div className='text-md font-medium text-teal-700'> <span className='underline underline-offset-4'>{underlineText}</span> {normalText}</div>
         
-        <div className="w-48 flex flex-row items-center">
+        <div className="w-48  flex flex-row items-center">
             <div className="flex flex-row items-center" onClick={toggleActive}>
                 <div className="mr-2 w-8 text-sm font-semibold text-gray-700 select-none">{active ? 'ON' : 'OFF'}</div>
                 <div className="cursor-pointer">

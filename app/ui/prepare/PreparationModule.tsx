@@ -152,7 +152,7 @@ export function PreparationModule(){
 
           <div>
             <div className='flex flex-row items-center justify-between mb-2'>
-              <div className='text-gray-600 font-semibold'>Questions for your upcoming appointment:</div>
+              <div className='text-gray-600 font-semibold'>Questions to ask at your upcoming appointment:</div>
               {questions === "" ? 
               <div 
               className='p-2 flex flex-row border rounded-lg transition-all'>
