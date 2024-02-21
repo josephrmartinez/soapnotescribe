@@ -23,19 +23,26 @@ interface Appointment {
     description: string | null;
     feedback: string;
     id: string;
+    title: string;
+    provider: string;
+    transcript: JSON;
+    summary: string;
 }
 
 export default function EditAppointment({ session, appointment }: { session: Session | null, appointment: Appointment }) {
-  const [loading, setLoading] = useState(true)
-  const [title, setTitle] = useState<string | null>( null)
+  
+  const [title, setTitle] = useState<string | null>(appointment.title || null)
   const [description, setDescription] = useState<string | null>(appointment.description || null)
-  const [provider, setProvider] = useState<string | null>(null)
+  const [provider, setProvider] = useState<string | null>(appointment.provider || null)
   const [clinic, setClinic] = useState<string | null>(appointment.clinic || null)
   const [date, setDate] = useState<string | undefined>(appointment.date || undefined)
   const [recordingUrl, setRecordingUrl] = useState<string | null>(appointment.audio_url || null)
   const [tempDownloadUrl, setTempDownloadUrl] = useState<string | null>(appointment.audio_url || null)
+  
+  const [loading, setLoading] = useState(true)
   const [submitOkay, setSubmitOkay] = useState<boolean>(true)
   const [isUploading, setIsUploading] = useState<boolean>(false);
+
   const user = session?.user
   const supabase = createClientComponentClient<Database>()
   const router = useRouter()
@@ -44,7 +51,9 @@ export default function EditAppointment({ session, appointment }: { session: Ses
   
 function submitAppointment(){
     return
+    
 }
+
 
 //   const submitAppointment = async (event: React.FormEvent<HTMLFormElement>) => {
 //     event.preventDefault();
@@ -209,12 +218,12 @@ function submitAppointment(){
       </div>
       <div className="mt-6 flex justify-end gap-4">
         <Link
-          href="/dashboard/appointments"
+          href={`/dashboard/appointments/${appointment.id}`}
           className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
         >
           Cancel
         </Link>
-        <Button type="submit" active={!isUploading}>Add Appointment</Button>
+        <Button type="submit" active={!isUploading}>Update Appointment</Button>
       </div>
     </form>
   )
