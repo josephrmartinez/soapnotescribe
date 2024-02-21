@@ -1,7 +1,11 @@
-// import Form from '@/app/ui/appointments/edit-form';
+import EditAppointment from '@/app/ui/appointments/edit-form';
 import Breadcrumbs from '@/app/ui/appointments/breadcrumbs';
 import { fetchAppointmentById } from '@/app/lib/data';
 import { notFound } from 'next/navigation'; 
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
+import { cookies } from 'next/headers'
+import { Database } from '@/app/database.types'
+
 
 
 export default async function Page({ params }: { params: { id: string } }) {
@@ -11,6 +15,12 @@ export default async function Page({ params }: { params: { id: string } }) {
     if (!appointment) {
       notFound();
     }
+
+    const supabase = createServerComponentClient<Database>({ cookies })
+
+  const {
+    data: { session },
+  } = await supabase.auth.getSession()
 
 
   return (
@@ -29,7 +39,7 @@ export default async function Page({ params }: { params: { id: string } }) {
           },
         ]}
       />
-      {/* <Form appointment={appointment} /> */}
+      <EditAppointment session={session} appointment={appointment}/>
     </main>
   );
 }
