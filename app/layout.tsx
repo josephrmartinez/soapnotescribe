@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     template: '%s | advocate.ai',
     default: 'advocate.ai',
   },
-  description: 'A personalized health advocate that helps you prepare for, record, and review your medical appointments.',
+  description: 'Patient advocate tool that helps users prepare for, record, and review medical appointments.',
   metadataBase: new URL('https://https://advocateai.vercel.app/'),
 };
 
