@@ -26,21 +26,37 @@ export type Invoice = {
   status: 'pending' | 'paid';
 };
 
-export type Appointment = {
+
+export interface Transcript {
+  language: string;
+  segments: Segment[];
+  num_speakers: number;
+}
+
+export interface Segment {
+  end: string;
+  text: string;
+  start: string;
+  speaker: string;
+}
+
+export interface Appointment {
+  audio_url: string | null;
+  clinic: string | null;
+  combined_text: string | null;
+  created_at?: string;
+  date: string | undefined;
+  description: string | null;
+  feedback?: string;
   id: string;
-  title: string;
-  description: string;
-  provider: string;
-  clinic: string;
-  appointment_date: string;
-  amount: number;
-  audio_path: string | null;
-  patient_id: string | null;
-  speakers: number | null;
-  transcript?: string | null;
-  summary?: string | null;
-  feedback?: string | null;
-};
+  patient: string;
+  provider: string | null;
+  summary?: string;
+  temp_audio_url: string | null;
+  title: string | null;
+  transcript?: Transcript;
+  appts_search: string | null;
+}
 
 export type Revenue = {
   month: string;

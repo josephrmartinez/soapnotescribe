@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from 'react'
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Database } from '@/app/database.types'
+import { Appointment } from '@/app/lib/definitions';
 import { Session, createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { Button } from '@/app/ui/button';
 import {
@@ -14,20 +15,21 @@ import {
 import AudioUpload from '@/app/dashboard/appointments/create/AudioUpload';
 import getTranscript from '@/app/lib/actions';
 
-interface Appointment {
-    audio_url: string | null;
-    clinic: string | null;
-    combined_text: string | null;
-    created_at: string;
-    date: string;
-    description: string | null;
-    feedback: string;
-    id: string;
-    title: string;
-    provider: string;
-    transcript: JSON;
-    summary: string;
-}
+
+// interface Appointment {
+//     audio_url: string | null;
+//     clinic: string | null;
+//     combined_text: string | null;
+//     created_at: string;
+//     date: string;
+//     description: string | null;
+//     feedback: string;
+//     id: string;
+//     title: string | null;
+//     provider: string | null;
+//     transcript: JSON;
+//     summary: string;
+// }
 
 export default function EditAppointment({ session, appointment }: { session: Session | null, appointment: Appointment }) {
   
