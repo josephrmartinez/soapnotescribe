@@ -17,7 +17,7 @@ export default function AuthForm() {
   }
 
   return (
-    <div className='mt-20 mx-auto w-10/12'>
+    <div className='mx-auto'>
         <div className='mb-8 text-lg font-semibold'>Easy log in or sign up:</div>
         <Auth
           supabaseClient={supabase}

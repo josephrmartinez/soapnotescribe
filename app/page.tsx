@@ -3,6 +3,7 @@ import { ArrowRightIcon, PencilSquareIcon, MicrophoneIcon, ArchiveBoxIcon } from
 import { FeatureCard } from './ui/FeatureCard';
 import { FAQ } from './ui/FAQ';
 import AuthForm from './auth-form';
+import { Button } from './ui/button';
 
 export default function Page() {
   return (
@@ -10,34 +11,39 @@ export default function Page() {
       <div className="flex h-20 py-10 border border-gray-50 shrink-0 items-start rounded-lg p-4 md:h-40">
         <Logo />
       </div>
-      <div className="my-12 md:mt-2 grid grid-cols-1 md:grid-cols-3 gap-4 md:px-2">
-        <div className="col-span-2 flex flex-col items-center gap-2 rounded-lg px-6 md:py-20 md:px-20">
-          <p className='font-bold text-gray-600 text-2xl md:text-5xl md:pt-8'>Record your medical appointments.</p> 
-          <p className='text-gray-500 font-semibold text-lg md:text-4xl py-4 md:mb-8'>Get clarity, accountability, and better outcomes.</p>
+      <div className="md:h-[400px] my-auto grid mb-16">
+        <div className="flex flex-col items-center gap-2 rounded-lg px-6 md:my-auto md:px-20">
+          <p className='font-bold text-gray-600 text-2xl md:text-5xl'>Record your medical appointments.</p> 
+          <p className='text-gray-500 font-semibold text-lg md:text-4xl py-4'>Get clarity, accountability, and better outcomes.</p>
+          <div className='w-96 mt-12 mx-auto text-center'>
+            <AuthForm />
+          </div>
         </div>
-        <AuthForm />
       </div>
       
-      <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-3">
+      <div className="mt-4 grid grid-cols-1 gap-4 max-w-screen-xl mx-auto lg:grid-cols-3">
         <FeatureCard 
           heading={"prepare"}
           icon={<PencilSquareIcon/>}
-          subheading={"Get support preparing for your medical appointments."}
+          subheading={"Come to appointments prepared."}
           textOne="Be prepared for your next appointment with insights that help you make the most out of your time with healthcare providers."
           textTwo='Receive personalized questions to ask your doctors based on your health history and current trends in medical research.'/>
         <FeatureCard 
           heading={"record"}
           icon={<MicrophoneIcon/>}
-          subheading={"You have the right to record your medical appointments."}
+          subheading={"You have the right to record."}
           textOne={"Retain a permanent record of exactly what was said by medical providers. No more missed details, no more forgotten advice."}
           textTwo='Automatic transcriptions of your appointment recordings give you a record of exactly who said exactly what.'/>
           <FeatureCard 
           heading={"review"}
           icon={<ArchiveBoxIcon/>}
-          subheading={"Search, review, and interact with your healthcare provider conversations."}
+          subheading={"Search, review, and share."}
           textOne={"Share your transcribed recordings with family or approved caregivers."}
           textTwo='Get automatic recommendations of alternative approaches and recent medical research that may not have been highlighted during your appointments.'/>
       </div> 
+
+      
+
       <div className="flex flex-col  max-w-[40rem] px-6 mx-auto my-20">
         <p className="mx-auto mb-8  text-gray-600 font-bold text-3xl dark:text-gray-400">
         FAQs 
