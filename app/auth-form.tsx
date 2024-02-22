@@ -18,7 +18,7 @@ export default function AuthForm() {
 
   return (
     <div className='mx-auto'>
-        <div className='mb-8 text-lg font-semibold'>Easy log in or sign up:</div>
+        <div className='mb-2 text-lg font-semibold text-gray-600'>Easy log in or sign up:</div>
         <Auth
           supabaseClient={supabase}
           view="magic_link"
@@ -31,6 +31,13 @@ export default function AuthForm() {
                   brandAccent: '#0D9488'
                 }
               }
+            }
+          }}
+          localization={{
+            variables: {
+             magic_link: {
+              email_input_label: ''
+             }
             }
           }}
           showLinks={false}

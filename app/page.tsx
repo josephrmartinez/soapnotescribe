@@ -8,14 +8,15 @@ import { Button } from './ui/button';
 export default function Page() {
   return (
     <main className="flex min-h-screen flex-col p-2">
-      <div className="flex h-20 py-10 border border-gray-50 shrink-0 items-start rounded-lg p-4 md:h-40">
+      <div className="flex py-10 border border-gray-50 shrink-0 items-start rounded-lg p-4">
         <Logo />
       </div>
-      <div className="md:h-[400px] my-auto grid mb-16">
+      <div className="my-auto grid py-20 border rounded-lg w-full max-w-screen-xl mx-auto">
+        
         <div className="flex flex-col items-center gap-2 rounded-lg px-6 md:my-auto md:px-20">
           <p className='font-bold text-gray-600 text-2xl md:text-5xl'>Record your medical appointments.</p> 
           <p className='text-gray-500 font-semibold text-lg md:text-4xl py-4'>Get clarity, accountability, and better outcomes.</p>
-          <div className='w-96 mt-12 mx-auto text-center'>
+          <div className='w-80 mt-12 mx-auto text-center'>
             <AuthForm />
           </div>
         </div>
@@ -54,7 +55,7 @@ export default function Page() {
           />
         <FAQ 
           question={"Is my data safe?"}
-          answer={"All user data is encrypted and stored in secure storage. No user data is sold to third parties."}
+          answer={"All user data is encrypted and stored in a secure database. No user data is shared with or sold to third parties."}
           />
         <FAQ 
           question={"Why would someone record a medical appointment if they already have electronic health records?"}
