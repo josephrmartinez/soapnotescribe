@@ -16,7 +16,7 @@ export default function Page() {
         <div className="flex flex-col items-center gap-2 rounded-lg px-6 md:my-auto md:px-20">
           <p className='font-bold text-gray-600 text-2xl md:text-5xl'>Record your medical appointments.</p> 
           <p className='text-gray-500 font-semibold text-lg md:text-4xl py-4'>Get clarity, accountability, and better outcomes.</p>
-          <div className='w-80 mt-12 mx-auto text-center'>
+          <div className='w-80 mt-12 h-48 mx-auto text-center'>
             <AuthForm />
           </div>
         </div>
