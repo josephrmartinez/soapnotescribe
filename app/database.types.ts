@@ -6,21 +6,7 @@ export type Json =
   | { [key: string]: Json | undefined }
   | Json[]
 
-  interface Transcript {
-    language: string;
-    segments: Segment[];
-    num_speakers: number;
-  }
-  
-  interface Segment {
-    end: string;
-    text: string;
-    start: string;
-    speaker: string;
-  }
-    
-
-export interface Database {
+export type Database = {
   public: {
     Tables: {
       appointments: {
@@ -38,7 +24,7 @@ export interface Database {
           summary: string
           temp_audio_url: string | null
           title: string | null
-          transcript: Transcript
+          transcript: Json
           appts_search: string | null
         }
         Insert: {

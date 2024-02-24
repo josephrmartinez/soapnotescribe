@@ -4,7 +4,6 @@
     "build": "next build",
     "dev": "next dev",
     "start": "next start",
-    "seed": "node -r dotenv/config ./scripts/seed.js",
     "update-types": "npx supabase gen types typescript --project-id \"tmmnudhjtavobvreaink\" --schema public > app/database.types.ts"
   },
   "dependencies": {
