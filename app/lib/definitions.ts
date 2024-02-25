@@ -45,7 +45,7 @@ export interface Appointment {
   clinic: string | null;
   combined_text: string | null;
   created_at?: string;
-  date: string | number | Date;
+  date: string;
   description: string | null;
   feedback: string;
   id: string;
