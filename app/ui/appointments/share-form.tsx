@@ -61,12 +61,13 @@ export default function ShareAppointmentForm() {
           Cancel
         </button>
 
-        <div
+        <button
+            onClick={() => router.back()}
             className="cursor-pointer flex flex-row w-24 h-10 rounded-md border p-2 bg-teal-600 text-gray-50 transition-colors hover:bg-teal-500"
         >
             <ShareIcon className="w-6" />
             <div className='tracking-wider ml-1'>share</div>
-        </div>
+        </button>
         
       </div>
     </div>
