@@ -31,7 +31,7 @@ export async function fetchFilteredAppointments(query: string, currentPage: numb
     
     const offset = (currentPage - 1) * ITEMS_PER_PAGE;
 
-    const supabase = createServerComponentClient<Database>({ cookies })
+    const supabase = createServerComponentClient({ cookies })
     const { data: appointments, error } = await supabase
       .from('appointments')
       .select(
