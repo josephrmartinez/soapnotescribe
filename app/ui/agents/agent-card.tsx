@@ -3,7 +3,6 @@
 import React from "react"
 import { useState } from "react"
 import { ToggleLeft, ToggleRight, SlidersHorizontal } from "@phosphor-icons/react";
-import { AdjustmentsHorizontalIcon } from "@heroicons/react/24/outline";
 
 
 
@@ -16,12 +15,12 @@ export default function AgentCard({ underlineText, normalText }: { underlineText
     }
 
     return (
-    <div className={`${active ? 'shadow bg-white' : 'border bg-gray-50'} transition-all h-16 rounded-lg  my-4 flex flex-row justify-between p-4`}>
+    <div className={`${active ? 'shadow bg-white' : 'border bg-gray-50'} transition-all h-28 lg:h-16 rounded-lg  my-4 flex flex-row items-center justify-between p-4`}>
         
         
-        <div className='text-md font-medium text-teal-700'> <span className='underline underline-offset-4'>{underlineText}</span> {normalText}</div>
+        <div className='text-md font-medium text-teal-700 pr-6'> <span className='underline underline-offset-4'>{underlineText}</span> {normalText}</div>
         
-        <div className="w-48  flex flex-row items-center">
+        <div className="w-48 flex flex-row items-center">
             <div className="flex flex-row items-center" onClick={toggleActive}>
                 <div className="mr-2 w-8 text-sm font-semibold text-gray-700 select-none">{active ? 'ON' : 'OFF'}</div>
                 <div className="cursor-pointer">

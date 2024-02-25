@@ -20,11 +20,11 @@ const links = [
   { name: 'Appointments', href: '/dashboard/appointments', icon: ArchiveBoxIcon },
   { name: 'Prepare', href: '/dashboard/prepare', icon: PencilSquareIcon },
   { name: 'Agents', href: '/dashboard/agents', icon: UserGroupIcon },
-  {
-    name: 'Resources',
-    href: '/dashboard/resources',
-    icon: DocumentDuplicateIcon,
-  },
+  // {
+  //   name: 'Resources',
+  //   href: '/dashboard/resources',
+  //   icon: DocumentDuplicateIcon,
+  // },
   {
     name: 'Account',
     href: '/dashboard/settings',

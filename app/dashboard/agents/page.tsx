@@ -17,11 +17,11 @@ export default function Page() {
       <div className="flex w-full items-center justify-between">
         <h1 className={`${GeistSans.className} text-2xl`}>AI Agents</h1>
       </div>
-      <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
+      <div className="h-10 mt-4 flex items-center justify-between gap-2 md:mt-8">
         <div className='text-gray-700'>Create and manage AI-powered agents to send reminders or perform research.</div>
         <Link
       href="/dashboard/agents/create"
-      className="flex h-10 items-center rounded-lg bg-teal-600 px-4 text-sm font-medium text-white transition-colors hover:bg-teal-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+      className="flex h-10 ml-4 items-center rounded-lg bg-teal-600 px-4 text-sm font-medium text-white transition-colors hover:bg-teal-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
       
     >
       <span className="hidden md:block">Create Agent</span>{' '}

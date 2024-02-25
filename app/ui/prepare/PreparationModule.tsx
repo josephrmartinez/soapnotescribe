@@ -77,7 +77,7 @@ export function PreparationModule(){
 
     return (
 
-          <div className='grid grid-cols-2 mt-8 gap-8'>
+          <div className='grid md:grid-cols-2 mt-8 gap-8'>
           <div>
             {questions === "" ?
             <form onSubmit={handleSubmit}>
@@ -153,20 +153,22 @@ export function PreparationModule(){
           <div>
             <div className='flex flex-row items-center justify-between mb-2'>
               <div className='text-gray-600 font-semibold'>Questions to ask at your upcoming appointment:</div>
-              {questions === "" ? 
-              <div 
-              className='p-2 flex flex-row border rounded-lg transition-all'>
-                <div className='text-sm font-semibold mr-1'>PRINT</div>
-                <Printer size={22}/>
+              <div className="hidden lg:block">
+                {questions === "" ? 
+                <div 
+                className='p-2 flex flex-row border rounded-lg transition-all'>
+                  <div className='text-sm font-semibold mr-1'>PRINT</div>
+                  <Printer size={22}/>
+                </div>
+                :
+                <button 
+                className='cursor-pointer p-2 flex flex-row border rounded-lg bg-teal-600 transition-all'
+                onClick={handlePrint}>
+                  <div className='text-sm font-semibold mr-1 text-white'>PRINT</div>
+                  <Printer size={22} color='white'/>
+                </button>
+                }
               </div>
-              :
-              <button 
-              className='cursor-pointer p-2 flex flex-row border rounded-lg bg-teal-600 transition-all'
-              onClick={handlePrint}>
-                <div className='text-sm font-semibold mr-1 text-white'>PRINT</div>
-                <Printer size={22} color='white'/>
-              </button>
-            }
             </div>
             <textarea
               id="questions"
