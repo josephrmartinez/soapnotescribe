@@ -4,6 +4,7 @@ import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers'
 import { Database } from '@/app/database.types';
 import { unstable_noStore as noStore } from 'next/cache';
+import { Appointment } from './definitions';
 
 
 

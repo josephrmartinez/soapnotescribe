@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from 'react'
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Database } from '@/app/database.types'
-import { Appointment } from '@/app/lib/definitions';
+// import { Appointment } from '@/app/lib/definitions';
 import { Session, createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { Button } from '@/app/ui/button';
 import {
@@ -31,7 +31,7 @@ import getTranscript from '@/app/lib/actions';
 //     summary: string;
 // }
 
-export default function EditAppointment({ session, appointment }: { session: Session | null, appointment: Appointment }) {
+export default function EditAppointment({ session, appointment }: { session: Session | null, appointment: Database['public']['Tables']['appointments']['Row'] }) {
   
   const [title, setTitle] = useState<string | null>(appointment.title || null)
   const [description, setDescription] = useState<string | null>(appointment.description || null)
