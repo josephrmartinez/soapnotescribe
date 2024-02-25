@@ -15,7 +15,7 @@ export type Database = {
           clinic: string | null
           combined_text: string | null
           created_at: string
-          date: string
+          date: string | undefined
           description: string | null
           feedback: string
           id: string

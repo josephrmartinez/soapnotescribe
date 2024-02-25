@@ -45,16 +45,16 @@ export interface Appointment {
   clinic: string | null;
   combined_text: string | null;
   created_at?: string;
-  date: string | undefined;
+  date: string | number | Date;
   description: string | null;
-  feedback?: string;
+  feedback: string;
   id: string;
   patient: string;
   provider: string | null;
-  summary?: string;
+  summary: string;
   temp_audio_url: string | null;
   title: string | null;
-  transcript?: Transcript;
+  transcript: Transcript;
   appts_search: string | null;
 }
 

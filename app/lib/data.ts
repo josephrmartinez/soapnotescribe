@@ -85,7 +85,7 @@ export async function fetchAppointmentById(id: string) {
   // EXPERIMENTAL. noStore() allows for immediate re-render of changed appointment data, but may lead to slower load times.
   noStore()
   try {
-    const supabase = createServerComponentClient<Database>({ cookies })
+    const supabase = createServerComponentClient({ cookies })
     const { data: appointments, error } = await supabase
       .from('appointments')
       .select('*')
@@ -97,7 +97,7 @@ export async function fetchAppointmentById(id: string) {
     }
 
     const appointment = appointments ? appointments[0] : null;
-    return appointment;
+    return appointment as Appointment;
   } catch (error) {
     console.error('Supabase Error:', error);
     throw new Error('Failed to fetch appointment data.');
