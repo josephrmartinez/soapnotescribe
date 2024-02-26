@@ -43,7 +43,14 @@ export default function Page() {
           textTwo='Get automatic recommendations of alternative approaches and recent medical research that may not have been highlighted during your appointments.'/>
       </div> 
 
-      
+      <div className="flex flex-col w-full max-w-[60rem] px-6 mx-auto my-20">
+        <p className="mx-auto mb-8  text-gray-600 font-bold text-3xl dark:text-gray-400">
+          Demo Video 
+        </p>
+        <div className='aspect-w-16 aspect-h-9'>
+          <iframe src="https://www.youtube-nocookie.com/embed/8egWnTs9TM8?si=VQ3gBhxQb42Mtzdj" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        </div>
+      </div>
 
       <div className="flex flex-col  max-w-[40rem] px-6 mx-auto my-20">
         <p className="mx-auto mb-8  text-gray-600 font-bold text-3xl dark:text-gray-400">
