@@ -89,15 +89,27 @@ function submitAppointment(){
 
 
   return (
+    <div>
+      <div className='flex flex-row w-full justify-end'>
+        <Link
+            href={`/dashboard/appointments/${appointment.id}`}
+            className="flex h-10 items-center rounded-lg bg-red-600 px-4 text-sm font-medium text-white transition-colors hover:bg-red-500"
+          >
+            Delete Appointment
+          </Link>
+      </div>
+      
+
+    
     <form onSubmit={submitAppointment}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
         {/* Appointment Recording */}
-        <AudioUpload 
+        {/* <AudioUpload 
             session={session} 
             setRecordingUrl={setRecordingUrl} 
             setTempDownloadUrl={setTempDownloadUrl}
             isUploading = {isUploading}
-            setIsUploading={setIsUploading} />  
+            setIsUploading={setIsUploading} />   */}
         
 
         {/* Appointment Title */}
@@ -228,6 +240,8 @@ function submitAppointment(){
         <Button type="submit" active={!isUploading}>Update Appointment</Button>
       </div>
     </form>
+
+    </div>
   )
 }
 
