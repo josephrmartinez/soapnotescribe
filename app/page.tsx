@@ -48,7 +48,7 @@ export default function Page() {
           Demo Video 
         </p>
         <div className='aspect-w-16 aspect-h-9'>
-          <iframe src="https://www.youtube-nocookie.com/embed/8egWnTs9TM8?si=VQ3gBhxQb42Mtzdj" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+          <iframe src="https://www.youtube-nocookie.com/embed/8egWnTs9TM8?si=VQ3gBhxQb42Mtzdj" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen></iframe>
         </div>
       </div>
 
