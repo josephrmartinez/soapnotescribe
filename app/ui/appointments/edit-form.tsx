@@ -14,6 +14,7 @@ import {
   } from '@heroicons/react/24/outline';
 import AudioUpload from '@/app/dashboard/appointments/create/AudioUpload';
 import getTranscript from '@/app/lib/actions';
+import { deleteAppt } from '@/app/lib/actions';
 
 
 // interface Appointment {
@@ -56,6 +57,10 @@ function submitAppointment(){
     
 }
 
+function handleDelete(){
+  console.log("appt id", appointment.id)
+}
+
 
 //   const submitAppointment = async (event: React.FormEvent<HTMLFormElement>) => {
 //     event.preventDefault();
@@ -91,12 +96,13 @@ function submitAppointment(){
   return (
     <div>
       <div className='flex flex-row w-full justify-end'>
-        <Link
-            href={`/dashboard/appointments/${appointment.id}`}
+        {/* Link deleteAppt action */}
+        <button
+            onClick={handleDelete}
             className="flex h-10 items-center rounded-lg bg-red-600 px-4 text-sm font-medium text-white transition-colors hover:bg-red-500"
           >
             Delete Appointment
-          </Link>
+          </button>
       </div>
       
 

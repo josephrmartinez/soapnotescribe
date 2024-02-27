@@ -2,6 +2,8 @@
 
 import Replicate from "replicate";
 import { createClient } from "@supabase/supabase-js";
+import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
 import OpenAi from "openai"
 
 const openai = new OpenAi({apiKey: process.env.OPENAI_API_KEY })
@@ -186,6 +188,22 @@ if (error) {
 }
 }
 
+export async function deleteAppt(apptid: string){
+  console.log("Running delete")
+  const { error } = await supabase
+  .from("appointments")
+  .delete()
+  .eq('id', apptid)
+
+if (error) {
+  console.error("Error deleting appointment:", error);
+  // Handle error accordingly
+} else {
+  console.log("Appointment deleted successfully");
+  revalidatePath('/dashboard/appointments');
+  redirect('/dashboard/appointments');
+}
+}
 
 
 
