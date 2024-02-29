@@ -43,7 +43,7 @@ interface Message {
     
     return (
       <div className="mx-auto mt-8 max-w-5xl">
-        <div className="flex flex-col items-center border rounded-lg h-80 mb-4 bg-white">
+        <div className="flex flex-col items-center border rounded-lg h-96 mb-4 bg-white">
           <div 
               className="h-full flex flex-col gap-2 overflow-y-auto py-3 px-3 w-full"
               id="chatHistoryContainer">

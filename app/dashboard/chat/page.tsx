@@ -14,9 +14,9 @@ export default function Page() {
       <div className="flex w-full items-center justify-between">
         <h1 className={`${GeistSans.className} text-2xl`}>Advocate Chat</h1>
       </div>
-      <div className="h-10 mt-4 flex items-center justify-between gap-2 md:mt-8">
+      {/* <div className="h-10 mt-4 flex items-center justify-between gap-2 md:mt-8">
         <div className='text-gray-700'>Chat with a medical advocate about issues discussed in any of your appointments:</div>
-      </div>
+      </div> */}
 
       <AdvocateChat appointmentHistory='summaries from all appointments' />
 
