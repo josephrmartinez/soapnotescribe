@@ -6,7 +6,8 @@ import {
   DocumentDuplicateIcon,
   ArchiveBoxIcon,
   Cog8ToothIcon,
-  UserCircleIcon
+  UserCircleIcon,
+  ChatBubbleLeftEllipsisIcon
   
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
@@ -19,6 +20,7 @@ import clsx from 'clsx';
 const links = [
   { name: 'Appointments', href: '/dashboard/appointments', icon: ArchiveBoxIcon },
   { name: 'Prepare', href: '/dashboard/prepare', icon: PencilSquareIcon },
+  { name: 'Advocate Chat', href: '/dashboard/chat', icon: ChatBubbleLeftEllipsisIcon },
   { name: 'Agents', href: '/dashboard/agents', icon: UserGroupIcon },
   // {
   //   name: 'Resources',
