@@ -10,7 +10,7 @@ advocate.ai helps people turn audio recordings of their medical appointments in
 
 ### Why I built this: [1-minute founder intro](https://youtu.be/OKYhPXrVUIw)
 
-### gif demo:
+### GIF demo:
 ![advocate.ai gif illustration](public/advocategif.gif)
 
 
