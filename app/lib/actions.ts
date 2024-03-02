@@ -5,6 +5,8 @@ import { createClient } from "@supabase/supabase-js";
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import OpenAi from "openai"
+import { embed } from './embed'
+
 
 const openai = new OpenAi({apiKey: process.env.OPENAI_API_KEY })
 
@@ -17,6 +19,15 @@ const supabase = createClient(
   process.env.SUPABASE_URL ?? "",
   process.env.SUPABASE_SERVICE_KEY ?? ""
 )
+
+export async function createAndStoreEmbedding(content: string){
+  const embedding = embed(content)
+  const { data, error } = await supabase.from('documents').insert({
+    content,
+    embedding,
+  })
+
+} 
 
 interface Word {
   end: number;
@@ -204,6 +215,8 @@ if (error) {
   redirect('/dashboard/appointments');
 }
 }
+
+
 
 
 
