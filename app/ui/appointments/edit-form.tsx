@@ -58,9 +58,8 @@ function submitAppointment(){
 }
 
 function handleDelete(){
-  console.log("appt id", appointment.id)
+  deleteAppt(appointment.id)
 }
-
 
 //   const submitAppointment = async (event: React.FormEvent<HTMLFormElement>) => {
 //     event.preventDefault();

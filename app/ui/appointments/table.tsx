@@ -1,6 +1,7 @@
 import { UpdateAppointment, ReadAppointment } from '@/app/ui/appointments/buttons';
 import { formatDateToLocal, formatCurrency } from '@/app/lib/utils';
 import { fetchFilteredAppointments } from '@/app/lib/data';
+import { embed } from '@/app/lib/embed';
 
 export default async function AppointmentsTable({
   query,
@@ -9,7 +10,11 @@ export default async function AppointmentsTable({
   query: string;
   currentPage: number;
 }) {
+  
   const appointments = await fetchFilteredAppointments(query, currentPage);
+
+  const searchEmbedding = await embed(query)
+  console.log(searchEmbedding)
 
   return (
     <div className="mt-6 flow-root">

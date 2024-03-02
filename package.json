@@ -47,6 +47,7 @@
     "eslint": "^8.52.0",
     "eslint-config-next": "^14.0.0",
     "eslint-config-prettier": "9.0.0",
+    "node-loader": "^2.0.0",
     "prettier": "^3.0.3",
     "prettier-plugin-tailwindcss": "0.5.4",
     "supabase": "^1.145.4"

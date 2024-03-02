@@ -66,11 +66,11 @@ export async function fetchAppointmentsSimilarEmbed(query: string, currentPage: 
     const embedding = await embed(query);
 
     // RUN SUPABASE EDGE FUNCTION 'MATCH_DOCUMENTS' --- NOT YET CREATED
-    const { data: documents } = await supabase.rpc('match_documents', {
-      query_embedding: embedding, // Pass the embedding you want to compare
-      match_threshold: 0.78, // Choose an appropriate threshold for your data
-      match_count: 6, // Choose the max number of matches
-    })
+    // const { data: documents } = await supabase.rpc('match_documents', {
+    //   query_embedding: embedding, // Pass the embedding you want to compare
+    //   match_threshold: 0.78, // Choose an appropriate threshold for your data
+    //   match_count: 6, // Choose the max number of matches
+    // })
 
     // THIS SHOULD NO LONGER BE NEEDED. THE FUNCTION ABOVE SHOULD RETURN THE APPOINTMENTS
     // const { data: appointments, error } = await supabase
@@ -86,8 +86,7 @@ export async function fetchAppointmentsSimilarEmbed(query: string, currentPage: 
     //   console.error('Supabase Error:', error);
     //   throw new Error('Failed to fetch appointments data.');
     // }
-
-    return documents;
+    // return documents;
   } catch (error) {
     console.error('Supabase Error:', error);
     throw new Error('Failed to fetch appointments data.');
