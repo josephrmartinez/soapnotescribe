@@ -13,8 +13,11 @@ export default async function AppointmentsTable({
   
   const appointments = await fetchFilteredAppointments(query, currentPage);
 
-  const searchEmbedding = await embed(query)
-  console.log(searchEmbedding)
+  if (query.trim() !== ''){
+    const searchEmbedding = await embed(query)
+    console.log(searchEmbedding)
+  }
+
 
   return (
     <div className="mt-6 flow-root">

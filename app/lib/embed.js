@@ -4,7 +4,6 @@ import OpenAI from "openai";
 
 const openai = new OpenAI({apiKey: process.env.OPENAI_API_KEY })
 
-
 export async function embed(content) {
     try {
       const response = await openai.embeddings.create({

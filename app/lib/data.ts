@@ -55,7 +55,7 @@ export async function fetchFilteredAppointments(query: string, currentPage: numb
 }
 
 // IN PROGRESS
-export async function fetchAppointmentsSimilarEmbed(query: string, currentPage: number) {
+export async function fetchSimilarApptsWithEmbedding(query: string, currentPage: number) {
   try {
     
     const offset = (currentPage - 1) * ITEMS_PER_PAGE;
