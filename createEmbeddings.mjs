@@ -1,15 +1,17 @@
 // Import necessary modules
 import { createClient } from '@supabase/supabase-js';
 import OpenAI from "openai";
+import 'dotenv/config'
+
 
 // Initialize Supabase client
 const supabase = createClient(
-  import.meta.env.SUPABASE_URL,
-  import.meta.env.SUPABASE_SERVICE_KEY
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_KEY
 );
 
 // Initialize OpenAI client
-const openai = new OpenAI({ apiKey: import.meta.env.OPENAI_API_KEY });
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 // Fetch appointments from the database
 const fetchAppointments = async () => {
