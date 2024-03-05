@@ -8,7 +8,7 @@ export async function embed(content) {
     try {
       const response = await openai.embeddings.create({
         model: "text-embedding-3-small",
-        input: appointment.combined_text,
+        input: content,
         encoding_format: "float",
         dimensions: 512,
     });

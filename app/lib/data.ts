@@ -57,36 +57,26 @@ export async function fetchFilteredAppointments(query: string, currentPage: numb
 // IN PROGRESS
 export async function fetchSimilarApptsWithEmbedding(query: string, currentPage: number) {
   try {
-    
-    const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+    // console.log("query input", query)
+    // const offset = (currentPage - 1) * ITEMS_PER_PAGE;
 
     const supabase = createServerComponentClient({ cookies })
 
-    // CREATE EMBEDDING OF QUERY USING Supabase/gte-small ?
+    // CREATE EMBEDDING OF QUERY USING API CALL TO text-embedding-3-small	
     const embedding = await embed(query);
 
-    // RUN SUPABASE EDGE FUNCTION 'MATCH_DOCUMENTS' --- NOT YET CREATED
-    // const { data: documents } = await supabase.rpc('match_documents', {
-    //   query_embedding: embedding, // Pass the embedding you want to compare
-    //   match_threshold: 0.78, // Choose an appropriate threshold for your data
-    //   match_count: 6, // Choose the max number of matches
-    // })
+    // RUN SUPABASE EDGE FUNCTION 'MATCH_DOCUMENTS'
+    const { data: documents, error } = await supabase.rpc('match_documents', {
+      query_embedding: embedding, // Pass the embedding you want to compare
+      match_threshold: 0.2, // Choose an appropriate threshold for your data
+      match_count: 6, // Choose the max number of matches
+    })
 
-    // THIS SHOULD NO LONGER BE NEEDED. THE FUNCTION ABOVE SHOULD RETURN THE APPOINTMENTS
-    // const { data: appointments, error } = await supabase
-    //   .from('appointments')
-    //   .select(
-    //     'id, patient, date, title, description, provider, clinic, summary, feedback'
-    //   )
-    //   .ilike('combined_text', `%${query}%`)
-    //   .order('date', { ascending: false })
-    //   .range(offset, offset + ITEMS_PER_PAGE - 1);
-
-    // if (error) {
-    //   console.error('Supabase Error:', error);
-    //   throw new Error('Failed to fetch appointments data.');
-    // }
-    // return documents;
+    if (error) {
+      console.error('Supabase Error:', error);
+      throw new Error('Failed to fetch appointments data.');
+    }
+    return documents;
   } catch (error) {
     console.error('Supabase Error:', error);
     throw new Error('Failed to fetch appointments data.');

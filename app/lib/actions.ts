@@ -20,15 +20,6 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_KEY ?? ""
 )
 
-// export async function createAndStoreEmbedding(content: string){
-//   const embedding = embed(content)
-//   const { data, error } = await supabase.from('documents').insert({
-//     content,
-//     embedding,
-//   })
-
-// } 
-
 interface Word {
   end: number;
   start: number;

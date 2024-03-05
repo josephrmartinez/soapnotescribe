@@ -1,6 +1,6 @@
 import { UpdateAppointment, ReadAppointment } from '@/app/ui/appointments/buttons';
 import { formatDateToLocal, formatCurrency } from '@/app/lib/utils';
-import { fetchFilteredAppointments } from '@/app/lib/data';
+import { fetchFilteredAppointments, fetchSimilarApptsWithEmbedding } from '@/app/lib/data';
 import { embed } from '@/app/lib/embed';
 
 export default async function AppointmentsTable({
@@ -11,11 +11,20 @@ export default async function AppointmentsTable({
   currentPage: number;
 }) {
   
+  // FETCH APPTS WITH KEYWORD SEARCH
   const appointments = await fetchFilteredAppointments(query, currentPage);
 
+  // FETCH APPTS WITH SEMANTIC SEARCH
+  // const appointments = await fetchSimilarApptsWithEmbedding(query, currentPage);
+
+  
   if (query.trim() !== ''){
     const searchEmbedding = await embed(query)
     console.log(searchEmbedding)
+
+    const semanticAppointments = await fetchSimilarApptsWithEmbedding(query, currentPage);
+    console.log("semanticAppointment", semanticAppointments)
+
   }
 
 
