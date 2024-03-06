@@ -18,13 +18,8 @@ interface Message {
     const [chatInput, setChatInput] = useState("");
     // const [isLoading, setIsLoading] = useState(false);
     const { messages, input, handleInputChange, handleSubmit, isLoading, stop } = useChat({
-      api: '/api/chat',
+      api: '/api/advocatechat',
       initialMessages: [
-        {
-          role: "system",
-          content: `You are a medical advocate. Provide helpful and direct answers to the user's questions taking into account the information in their appointment history. If the user asks a question about something covered in one of their appointments, reference the appointment that you used to come up with an answer to their question. If the patient asks a question that is not related to a recent appointment, make it clear in your response that the you are not able to answer that question based on their appointment history. /// APPOINTMENT HISTORY: ${appointmentHistory} ///`,
-          id: 'q1w2e3r4'
-        },
         {
           role: "assistant",
           content: "Do you have any questions about something discussed in any of your appointments?",

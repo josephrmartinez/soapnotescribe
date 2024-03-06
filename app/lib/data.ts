@@ -83,6 +83,31 @@ export async function fetchSimilarApptsWithEmbedding(query: string, currentPage:
   }
 }
 
+
+export const getContext = async (
+  message: string,
+): Promise<string> => {
+  // Get the embeddings of the input message
+  const embedding = await embed(message);
+
+  const supabase = createServerComponentClient({ cookies })
+
+
+  // RUN SUPABASE EDGE FUNCTION 'MATCH_DOCUMENTS'
+  const { data: documents, error } = await supabase.rpc('match_appointments_advocatechat', {
+    query_embedding: embedding, // Pass the embedding you want to compare
+    match_threshold: 0.2, // Choose an appropriate threshold for your data
+    match_count: 3, // Choose the max number of matches
+  })
+
+  console.log("returned context documents:", documents)
+  
+  // Join all the chunks of text together, truncate to the maximum number of tokens, and return the result
+  return JSON.stringify(documents);
+};
+
+
+
 export async function fetchApptsPages(query: string) {
   try {
     const supabase = createServerComponentClient<Database>({ cookies })
