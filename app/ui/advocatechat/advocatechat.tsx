@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { PaperAirplaneIcon, ArrowPathIcon, StopCircleIcon } from "@heroicons/react/24/outline";
 import { useChat } from 'ai/react';
+import AdvocateChatAppointmentsTable from "./appointmentstable";
 
 
 interface AIChatProps {
@@ -37,7 +38,10 @@ interface Message {
       }, [messages]);
     
     return (
-      <div className="mx-auto mt-8 max-w-5xl">
+      <div className="grid grid-cols-2  mt-8">
+        <div className="mx-auto">
+
+
         <div className="flex flex-col items-center border rounded-lg h-96 mb-4 bg-white">
           <div 
               className="h-full flex flex-col gap-2 overflow-y-auto py-3 px-3 w-full"
@@ -88,13 +92,20 @@ interface Message {
             }
 
           </form>
-         
         
-        
+
+
+        </div>
+
+
+        </div>
+
+        <div className="border">
+          {/* REFACTOR SERVER COMPONENT AS CLIENT COMPONENT? USECONTEXT? */}
+          {/* <AdvocateChatAppointmentsTable query={"LDL cholesterol"}/> */}
+        </div>
       </div>
-        
-       
-      </div>
+      
     );
   }
   
