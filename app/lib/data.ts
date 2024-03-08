@@ -99,11 +99,9 @@ export const getContext = async (
     match_threshold: 0.2, // Choose an appropriate threshold for your data
     match_count: 3, // Choose the max number of matches
   })
-
-  console.log("returned context documents:", documents)
   
   // Join all the chunks of text together, truncate to the maximum number of tokens, and return the result
-  return JSON.stringify(documents);
+  return documents;
 };
 
 

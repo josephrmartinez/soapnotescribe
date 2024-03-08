@@ -20,7 +20,9 @@ export async function POST(req: Request) {
 
   // Get the context from the last message
   const context = await getContext(lastMessage.content);
-  console.log("context var in API route:", context)
+  console.log("context sent from API route:", context)
+  const stringifiedContext = JSON.stringify(context)
+  
 
   const prompt = [
     {
@@ -28,7 +30,7 @@ export async function POST(req: Request) {
       content: `You are a medical advocate. A user is going to ask a question that may be answered with information from their previous appointments. Information from recent appointments relevant to the user's question will appear in the appointmentcontext below:
       
       START OF APPOINTMENT CONTEXT
-      ${context}
+      ${stringifiedContext}
       END OF APPOINTMENT CONTEXT
       
       If the context does not provide the answer to the question, you must state this in your response. Do not invent anything that is not covered in the context. If the context does help you provide a response, you must refer to the specific appointment. Reference the date of the appointment, the name of the provider, and the name of the clinic in your response.`
