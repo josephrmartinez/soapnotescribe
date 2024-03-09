@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import { GeistSans } from 'geist/font/sans';
 import ResourceSearch from '@/app/ui/resources/ResourceSearch';
 import AdvocateChat from '@/app/ui/advocatechat/advocatechat';
-import AdvocateChatAppointmentsTable from '@/app/ui/advocatechat/appointmentstable';
+import AdvocateChatAppointmentsTable from '@/app/ui/advocatechat/context';
 
 export const metadata: Metadata = {
   title: "Advocate Chat",

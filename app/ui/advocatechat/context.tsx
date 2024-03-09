@@ -1,35 +1,23 @@
 import { UpdateAppointment, ReadAppointment } from '@/app/ui/appointments/buttons';
-import { formatDateToLocal, formatCurrency } from '@/app/lib/utils';
-import { fetchFilteredAppointments, fetchSimilarApptsWithEmbedding } from '@/app/lib/data';
-import { embed } from '@/app/lib/embed';
+import { formatDateToLocal } from '@/app/lib/utils';
+import { Database } from '@/app/database.types';
+import { Appointment } from '@/app/lib/definitions';
 
-export default async function AdvocateChatAppointmentsTable({
-  query
+
+
+export default function ContextTable({
+  appointments
 }: {
-  query: string;
+  appointments: Array<Appointment>;
 }) {
   
-    const currentPage = 1
-
-  // FETCH APPTS WITH SEMANTIC SEARCH
-  const appointments = await fetchSimilarApptsWithEmbedding(query, currentPage);
-
-  
-  if (query.trim() !== ''){
-    const searchEmbedding = await embed(query)
-    console.log(searchEmbedding)
-
-    const semanticAppointments = await fetchSimilarApptsWithEmbedding(query, currentPage);
-    console.log("semanticAppointment", semanticAppointments)
-
-  }
-
-
+   
   return (
-    <div className="mt-6 flow-root">
-      <div className="inline-block min-w-full align-middle">
+    <div className="">
+  
+      <div className="inline-block w-full align-middle">
         <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
-          <div className="md:hidden">
+          <div className="">
             {appointments?.map((appointment) => (
               <div
                 key={appointment.id}
@@ -37,29 +25,33 @@ export default async function AdvocateChatAppointmentsTable({
               >
                 <div className="flex items-center justify-between pb-4">
                   <div>
+                    <p className="text-lg font-medium">
+                      {appointment.title}
+                    </p>
+                    <p>{appointment.provider}</p>
+                  </div>
+                  
+                  
+                  
+                </div>
+                <div className="flex w-full items-center justify-between pt-4">
+                  <div>
                     <div className="mb-2 flex items-center">
                       <p>{formatDateToLocal(appointment.date)}</p>
                     </div>
                     <p className="text-sm text-gray-500">{appointment.clinic}</p>
                   </div>
-                  
-                </div>
-                <div className="flex w-full items-center justify-between pt-4">
-                  <div>
-                    <p className="text-xl font-medium">
-                      {appointment.title}
-                    </p>
-                    <p>{appointment.provider}</p>
-                  </div>
+
+
+
                   <div className="flex justify-end gap-2">
                     <ReadAppointment id={appointment.id} />
-                    
                   </div>
                 </div>
               </div>
             ))}
           </div>
-          <table className="hidden min-w-full text-gray-900 md:table">
+          {/* <table className="hidden min-w-full text-gray-900">
             <thead className="rounded-lg text-left text-sm font-normal">
               <tr>
                 <th scope="col" className="px-4 py-5 font-medium sm:pl-6">
@@ -112,7 +104,7 @@ export default async function AdvocateChatAppointmentsTable({
                 </tr>
               ))}
             </tbody>
-          </table>
+          </table> */}
         </div>
       </div>
     </div>

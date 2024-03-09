@@ -86,7 +86,7 @@ export async function fetchSimilarApptsWithEmbedding(query: string, currentPage:
 
 export const getContext = async (
   message: string,
-): Promise<string> => {
+): Promise<Appointment[]> => {
   // Get the embeddings of the input message
   const embedding = await embed(message);
 

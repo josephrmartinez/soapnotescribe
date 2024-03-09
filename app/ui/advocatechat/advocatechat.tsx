@@ -1,9 +1,11 @@
 'use client'
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, FormEvent } from "react";
 import { PaperAirplaneIcon, ArrowPathIcon, StopCircleIcon } from "@heroicons/react/24/outline";
 import { useChat } from 'ai/react';
-import AdvocateChatAppointmentsTable from "./appointmentstable";
+import { getContext } from "@/app/lib/data";
+import ContextTable from "./context";
+import { Appointment } from "@/app/lib/definitions";
 
 
 interface AIChatProps {
@@ -17,7 +19,7 @@ interface Message {
   
   const AdvocateChat: React.FC<AIChatProps> = ({ appointmentHistory }) => {
     const [chatInput, setChatInput] = useState("");
-    // const [isLoading, setIsLoading] = useState(false);
+    const [context, setContext] = useState<Appointment[]>([])
     const { messages, input, handleInputChange, handleSubmit, isLoading, stop } = useChat({
       api: '/api/advocatechat',
       initialMessages: [
@@ -31,16 +33,39 @@ interface Message {
     });
 
     useEffect(() => {
+        console.log("calling useEffect")
         const chatHistoryContainer = document.getElementById('chatHistoryContainer');
         if (chatHistoryContainer) {
           chatHistoryContainer.scrollTop = chatHistoryContainer.scrollHeight;
         }
+        
+        // getNewContext()
+
       }, [messages]);
     
-    return (
-      <div className="grid grid-cols-2  mt-8">
-        <div className="mx-auto">
+      // CANNOT USE ASYNC IN CLIENT COMPONENT?
+      const handleMessageSubmit = async (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        handleSubmit(e);
+        const lastMessage = messages[messages.length - 1];
+        const newContext = await getContext(lastMessage.content)
+        console.log("newContext", newContext)
+        setContext(newContext)
+      }
 
+      // async function getNewContext(){
+      //   // Get the last message
+      //   const lastMessage = messages[messages.length - 1];
+      //   const newContext = await getContext(lastMessage.content)
+      //   console.log("newContext", newContext)
+      //   setContext(newContext)
+      // }
+
+    return (
+      <div className="grid grid-cols-3 gap-8 mt-8">
+        
+        <div className="mx-auto col-span-2 w-full">
+        <div className='mb-4 font-semibold text-gray-700 tracking-wide text-sm text-center'>CHAT</div>
 
         <div className="flex flex-col items-center border rounded-lg h-96 mb-4 bg-white">
           <div 
@@ -69,7 +94,7 @@ interface Message {
           <label htmlFor="chatinput" className="sr-only">
             chat input
           </label>
-          <form onSubmit={handleSubmit} className="flex flex-row">
+          <form onSubmit={handleMessageSubmit} className="flex flex-row">
             <input
                 value={input}
                 onChange={handleInputChange}
@@ -100,9 +125,13 @@ interface Message {
 
         </div>
 
-        <div className="border">
-          {/* REFACTOR SERVER COMPONENT AS CLIENT COMPONENT? USECONTEXT? */}
-          {/* <AdvocateChatAppointmentsTable query={"LDL cholesterol"}/> */}
+        <div className="col-start-3 flex flex-col">
+        
+        <div className='mb-4 font-semibold text-gray-700 tracking-wide text-sm text-center'>REFERENCED APPOINTMENTS</div>
+        <div className="flex-1 border rounded-lg">
+          <ContextTable appointments={context}/>
+        </div>
+          
         </div>
       </div>
       
