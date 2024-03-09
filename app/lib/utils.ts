@@ -16,6 +16,7 @@ export const formatDateToLocal = (
     day: 'numeric',
     month: 'short',
     year: 'numeric',
+    timeZone: 'UTC'
   };
   const formatter = new Intl.DateTimeFormat(locale, options);
   return formatter.format(date);

@@ -20,9 +20,12 @@ export async function POST(req: Request) {
 
   // Get the context from the last message
   const context = await getContext(lastMessage.content);
-  console.log("context sent from API route:", context)
-  const stringifiedContext = JSON.stringify(context)
-  
+  const filteredContext = context.map(({ id, patient, similarity, ...rest}) => ({ ...rest}))
+  const stringifiedContext = JSON.stringify(filteredContext)
+
+//   TODO: filter out unneeded content for AI model.
+
+  console.log("stringifiedContext embedded into AI call:", stringifiedContext)
 
   const prompt = [
     {
@@ -33,7 +36,7 @@ export async function POST(req: Request) {
       ${stringifiedContext}
       END OF APPOINTMENT CONTEXT
       
-      If the context does not provide the answer to the question, you must state this in your response. Do not invent anything that is not covered in the context. If the context does help you provide a response, you must refer to the specific appointment. Reference the date of the appointment, the name of the provider, and the name of the clinic in your response.`
+      If the context does not provide the answer to the question, you must state this in your response. Do not invent anything that is not covered in the context. If the context does help you provide a response, you must refer to the specific appointment. Reference the date of the appointment, the name of the provider, and the name of the clinic in your response. Do NOT tell the patient to ask follow up questions to or consult with their medical provider for more information, this is already understood. You can be most helpful by analyzing the context provided and helping the patient get insight from their medical appointment recordings.`
     },
   ];
 

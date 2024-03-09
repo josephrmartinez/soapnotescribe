@@ -58,6 +58,19 @@ export interface Appointment {
   appts_search: string | null;
 }
 
+
+export interface Context {
+  id: string;
+  patient: string;
+  date: string;
+  clinic: string;
+  provider: string;
+  title: string;
+  similarity: number;
+}
+
+
+
 export type Revenue = {
   month: string;
   revenue: number;

@@ -4,7 +4,7 @@ import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers'
 import { Database } from '@/app/database.types';
 import { unstable_noStore as noStore } from 'next/cache';
-import { Appointment } from './definitions';
+import { Appointment, Context } from './definitions';
 import { embed } from './embed'
 
 
@@ -13,6 +13,7 @@ import { embed } from './embed'
 
 
 const ITEMS_PER_PAGE = 6;
+
 
 export const fetchUserSession = async () => {
   try {
@@ -86,7 +87,7 @@ export async function fetchSimilarApptsWithEmbedding(query: string, currentPage:
 
 export const getContext = async (
   message: string,
-): Promise<Appointment[]> => {
+): Promise<Context[]> => {
   // Get the embeddings of the input message
   const embedding = await embed(message);
 
@@ -96,11 +97,10 @@ export const getContext = async (
   // RUN SUPABASE EDGE FUNCTION 'MATCH_DOCUMENTS'
   const { data: documents, error } = await supabase.rpc('match_appointments_advocatechat', {
     query_embedding: embedding, // Pass the embedding you want to compare
-    match_threshold: 0.2, // Choose an appropriate threshold for your data
+    match_threshold: 0.36, // Choose an appropriate threshold for your data
     match_count: 3, // Choose the max number of matches
   })
   
-  // Join all the chunks of text together, truncate to the maximum number of tokens, and return the result
   return documents;
 };
 
