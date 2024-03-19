@@ -1,4 +1,4 @@
-## advocate.ai
+## medscribe.ai
 
 [advocate.ai](https://advocateai.vercel.app/) is a health advocate tool that helps patients and caregivers prepare for, record, and review medical appointments.
 
