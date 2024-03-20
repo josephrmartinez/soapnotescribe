@@ -77,15 +77,7 @@ export default function Page() {
           question={"Should doctors be worried about patients recording their appointments?"}
           answer={"No. The purpose of advocate.ai is to enable patients to come prepared, make the most of their medical appointments, and keep their caregivers accurately informed."}
           />
-          <FAQ 
-          question={"How do I use advocate.ai?"}
-          answer={"Before an appointment, use the site to generate questions to help you make the most out of your time with the medical provider. During an appointment, use a voice memo app on your phone to capture audio. After the appointment, upload the recording to your dashboard. advocate.ai will save the recording in a secure database and automatically generate a transcription as well as a summary and critical feedback of the appointment. You will receive an immediate notification if there are any serious concerns or it seems like your doctor is neglecting to mention something potentially important. The site includes additional features that allow you to privately search for resources from trusted sources, generate medical advocate agents that provide reminders or perform research, and share your appointment transcriptions with approved caregivers."
-        }
-          />
-          <FAQ 
-          question={"Is advocate.ai HIPAA compliant?"}
-          answer={"advocate.ai protects personal health information (PHI) and is fully compliant with FDA and FTC regulations on patient recordings of medical consultations."}
-          />
+          
         
       </div>
     </main>
