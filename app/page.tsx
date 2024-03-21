@@ -38,7 +38,7 @@ export default function Page() {
       <p className="mt-20 mx-auto mb-8 text-center text-gray-600 font-bold text-3xl dark:text-gray-400">
       Effortlessly generate structured SOAP notes. 
         </p>
-        <p className='text-gray-600  text-xl max-w-prose mx-auto text-center py-4'>Upload full appointment audio recordings or post-appointment voice memos and soapscribe does the rest - analyzing, structuring, and saving notes securely in a HIPAA compliant database. Streamline your workflow with useful AI.</p>
+        <p className='text-gray-600  text-xl max-w-prose mx-auto text-center py-4'>Upload appointment audio recordings or post-appointment voice memos and soapscribe does the rest - analyzing, structuring, and saving notes securely in a HIPAA compliant database. Streamline your workflow with useful AI.</p>
       <div className="my-20 grid grid-cols-1 gap-4 max-w-screen-xl mx-auto lg:grid-cols-3">
         
         <FeatureCard 
