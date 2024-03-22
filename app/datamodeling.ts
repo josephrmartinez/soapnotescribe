@@ -8,7 +8,7 @@ type appointment = {
     description: string | null
     feedback: string | null
     id: string
-    patient_name: string
+    patient_name: string | null
     provider_name: string | null
     appointment_summary: string | null
     discharge_instructions: string | null

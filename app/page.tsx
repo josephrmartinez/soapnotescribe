@@ -1,88 +1,74 @@
 import Logo from '@/app/ui/logo';
 import { ArrowRightIcon, PencilSquareIcon, MicrophoneIcon, ArchiveBoxIcon } from '@heroicons/react/24/outline';
-import { FeatureCard } from './ui/FeatureCard';
 import { PricingCard } from './ui/PricingCard';
-import { FAQ } from './ui/FAQ';
-import AuthForm from './auth-form';
-import { Button } from './ui/button';
+import { UseStep } from './ui/UseStep';
+import Link from 'next/link';
+
 
 export default function Page() {
   return (
     <main className="flex min-h-screen flex-col p-2">
-      <div className="flex py-6 border border-gray-50 shrink-0 items-start rounded-lg p-4">
+      <div className="flex py-6s shrink-0 items-start rounded-lg p-4">
         <Logo />
       </div>
 
     <div className='max-w-screen-lg mx-auto'>
 
+      <p className="mt-20 mx-auto mb-8 text-center text-gray-900 font-bold text-5xl ">
+      Automate your SOAP notes 
+      </p>
 
-    
+        <p className='text-gray-600  text-xl max-w-prose mx-auto text-center py-4'>Upload appointment audio recordings or post-appointment voice memos and soapscribe does the rest - analyzing, structuring, and saving notes securely in a HIPAA-compliant database.</p>
 
-
-      <div className="my-auto grid py-20 border rounded-lg w-full  mx-auto">
-        
-        <div className="flex flex-col items-center gap-2 rounded-lg px-6 md:my-auto md:px-20">
-          <p className='font-bold text-gray-700 text-2xl md:text-6xl'>Automate your SOAP notes.</p> 
-          <p className='text-gray-600  text-lg md:text-3xl py-4'>Streamline patient intake and appointment documentation.</p>
-
-          <div className='w-80 mt-12 h-48 mx-auto text-center'>
-            <AuthForm />
-          </div>
-          
-
-
-
-
+        <div className='flex flex-row items-center align-middle justify-center mx-auto my-8'>
+        <button className='w-32 bg-teal-600 text-white font-bold rounded-full py-3 mx-2 hover:bg-teal-500 hover:text-white'>get started</button>
+        <Link href='#pricing' className='w-32 font-bold underline underline-offset-8 rounded-full py-4 mx-2 hover:text-teal-600'>see pricing</Link>
         </div>
-      </div>
-      <p className="mt-20 mx-auto mb-8 text-center text-gray-600 font-bold text-3xl dark:text-gray-400">
-      Effortlessly generate structured SOAP notes. 
+
+        <p className="mt-20 mx-auto mb-8 text-center text-gray-600 font-bold text-3xl dark:text-gray-400">
+      Easy to use: 
         </p>
-        <p className='text-gray-600  text-xl max-w-prose mx-auto text-center py-4'>Upload appointment audio recordings or post-appointment voice memos and soapscribe does the rest - analyzing, structuring, and saving notes securely in a HIPAA compliant database. Streamline your workflow with useful AI.</p>
-      <div className="my-20 grid grid-cols-1 gap-4 max-w-screen-xl mx-auto lg:grid-cols-3">
-        
-        <FeatureCard 
-          heading={"record"}
-          icon={<MicrophoneIcon/>}
-          subheading={"Accurate, high-quality transcriptions."}
-          textOne={"Capture full appointments or just post-appointment notes."}
-          textTwo=''/>
-          <FeatureCard 
-          heading={"review"}
-          icon={<PencilSquareIcon/>}
-          subheading={"Structured clinical notes."}
-          textOne="Make quick edits instead of starting each note from scratch."
-          textTwo=''/>
-          <FeatureCard 
-          heading={"save"}
-          icon={<ArchiveBoxIcon/>}
-          subheading={"Simple document storage and review."}
-          textOne={"Securely share your clinical notes with other providers."}
-          textTwo=''/>
+      <div className="my-20 grid grid-cols-2 gap-4 max-w-screen-xl mx-auto">
+        <UseStep icon={<MicrophoneIcon/>}
+        step='1. Upload audio'
+        subtext='Upload post-appointment clinical note voice memos or a recording of the entire appointment. Soapscribe will intelligently extract the relevant information.'
+        />
+        <div className='border rounded-lg'></div>
+        <UseStep icon={<PencilSquareIcon/>}
+        step='2. Edit draft'
+        subtext='A structured SOAP note is available in seconds for easy review and approval. Make quick edits instead of starting each note from scratch.'
+        />
+        <div className='border rounded-lg'></div>
+        <UseStep icon={<ArchiveBoxIcon/>}
+        step='3. Approve and save'
+        subtext='Your notes are saved in a HIPPA-compliant database that is easy to search and review.'
+        />
+        <div className='border rounded-lg'></div>
+      
       </div>
 
-      <p className="mt-20 mx-auto mb-8 text-center text-gray-600 font-bold text-3xl dark:text-gray-400">
+      <p className="mt-20 mx-auto mb-8 text-center text-gray-600 font-bold text-3xl ">
       Simple pricing 
         </p>
-        
-      <div className="my-20 grid grid-cols-1 gap-4 max-w-screen-xl mx-auto lg:grid-cols-2">
-        
+
+        <div id='pricing' className='grid grid-cols-2 gap-4 mx-auto mb-12 items-center'>
         <PricingCard 
         plan='free'
         price='0'
         featureOne='Limited to 10 notes per month'
         featureTwo='30 minute recording limit'
+        featureThree='Standard procedure templatess'
         /> 
         <PricingCard 
         plan='pro'
         price='99'
         featureOne='Unlimited SOAP notes'
         featureTwo='Unlimited recording length'
+        featureThree='Create custom templates'
         />
 
-    
-      </div>
-
+        </div>
+      
       </div>
     </main>
   );
