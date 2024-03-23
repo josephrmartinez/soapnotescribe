@@ -1,7 +1,10 @@
 'use server'
 
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers'
+import { createClient } from '@/utils/supabase/server'
+
+
+// import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+// import { cookies } from 'next/headers'
 import { Database } from '@/app/database.types';
 import { unstable_noStore as noStore } from 'next/cache';
 import { Appointment, Context } from './definitions';
@@ -17,7 +20,7 @@ const ITEMS_PER_PAGE = 6;
 
 export const fetchUserSession = async () => {
   try {
-    const supabase = createServerComponentClient<Database>({ cookies })
+    const supabase = createClient()
     const { data: { session } } = await supabase.auth.getSession();
     console.log("session user id:", session?.user.id);
     return session;
@@ -33,7 +36,7 @@ export async function fetchFilteredAppointments(query: string, currentPage: numb
     
     const offset = (currentPage - 1) * ITEMS_PER_PAGE;
 
-    const supabase = createServerComponentClient({ cookies })
+    const supabase = createClient()
     const { data: appointments, error } = await supabase
       .from('appointments')
       .select(
@@ -61,7 +64,7 @@ export async function fetchSimilarApptsWithEmbedding(query: string, currentPage:
     // console.log("query input", query)
     // const offset = (currentPage - 1) * ITEMS_PER_PAGE;
 
-    const supabase = createServerComponentClient({ cookies })
+    const supabase = createClient()
 
     // CREATE EMBEDDING OF QUERY USING API CALL TO text-embedding-3-small	
     const embedding = await embed(query);
@@ -91,7 +94,7 @@ export const getContext = async (
   // Get the embeddings of the input message
   const embedding = await embed(message);
 
-  const supabase = createServerComponentClient({ cookies })
+  const supabase = createClient()
 
 
   // RUN SUPABASE EDGE FUNCTION 'MATCH_DOCUMENTS'
@@ -108,7 +111,7 @@ export const getContext = async (
 
 export async function fetchApptsPages(query: string) {
   try {
-    const supabase = createServerComponentClient<Database>({ cookies })
+    const supabase = createClient()
      const { data, count, error } = await supabase
        .from('appointments')
        .select('*', { count: 'exact', head: true })
@@ -138,7 +141,7 @@ export async function fetchAppointmentById(id: string) {
   // EXPERIMENTAL. noStore() allows for immediate re-render of changed appointment data, but may lead to slower load times.
   noStore()
   try {
-    const supabase = createServerComponentClient({ cookies })
+    const supabase = createClient()
     const { data: appointments, error } = await supabase
       .from('appointments')
       .select('*')
@@ -160,7 +163,7 @@ export async function fetchAppointmentById(id: string) {
 export async function getSignedAudioUrl(patient: string, audio_url:string) {
   // return (`url path: ${patient}/${audio_url}`)
   try {
-    const supabase = createServerComponentClient<Database>({ cookies })
+    const supabase = createClient()
     const { data, error } = await supabase
       .storage
       .from('apptrecordings')

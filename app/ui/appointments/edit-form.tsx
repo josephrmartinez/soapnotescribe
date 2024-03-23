@@ -12,7 +12,7 @@ import {
     CalendarDaysIcon,
     UserCircleIcon, PencilSquareIcon
   } from '@heroicons/react/24/outline';
-import AudioUpload from '@/app/dashboard/appointments/create/AudioUpload';
+import AudioUpload from '@/app/dashboard/create/AudioUpload';
 import getTranscript from '@/app/lib/actions';
 import { deleteAppt } from '@/app/lib/actions';
 

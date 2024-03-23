@@ -1,7 +1,5 @@
 import { type NextRequest } from 'next/server'
-import { redirect } from 'next/navigation';
 import { updateSession } from '@/utils/supabase/middleware'
-import { createClient } from "@/utils/supabase/server";
 
 
 export async function middleware(request: NextRequest) {

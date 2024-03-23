@@ -1,20 +1,21 @@
 'use client'
 import React, { useState, useRef } from 'react'
-import { Session, createClientComponentClient } from '@supabase/auth-helpers-nextjs'
-import { Database } from '@/app/database.types'
+// import { Session, createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+// import { Database } from '@/app/database.types'
 // import { Button } from '@/app/ui/button'
 // import { FileInput } from '@/app/ui/fileInput'
 import * as tus from 'tus-js-client'
+import { createClient } from '@/utils/supabase/client';
 
 
 export default function AudioUpload({ 
-    session,
+    
     setRecordingUrl,
     setTempDownloadUrl,
     isUploading,
     setIsUploading,
 }: { 
-    session: Session | null;
+    
     setRecordingUrl: React.Dispatch<React.SetStateAction<string | null>>;
     setTempDownloadUrl: React.Dispatch<React.SetStateAction<string | null>>;
     isUploading: boolean;
@@ -24,9 +25,16 @@ export default function AudioUpload({
     
     const [uploadComplete, setUploadComplete] = useState(false)
     const [percentageUploaded, setPercentageUploaded] = useState(0)
-    const user = session?.user
+    
+    // const user = session?.user
+    // const userId = user?.id
+
+    // IN PROGRESS
+    const supabase = createClient()
+    const user = supabase.auth.getUser()
     const userId = user?.id
-    const supabase = createClientComponentClient<Database>()
+
+
 
     async function handleAudioUpload() {
         const fileInput = inputFileRef.current;

@@ -1,5 +1,7 @@
+'use server'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/utils/supabase/server'
+import ClientComponent from './clientComponent'
 
 export default async function PrivatePage() {
   const supabase = createClient()
@@ -10,5 +12,11 @@ export default async function PrivatePage() {
     redirect('/error')
   }
 
-  return <p>Hello {data.user.email}</p>
+  return (
+  <div>
+  <p>Hello {data.user.email} this is your userid from the server: {data.user.id}</p>
+  <ClientComponent/>  
+
+  </div>
+  )
 }

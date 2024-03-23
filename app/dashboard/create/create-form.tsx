@@ -1,5 +1,6 @@
 'use client'
 import { useCallback, useEffect, useState } from 'react'
+import { GeistSans } from 'geist/font/sans';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Database } from '@/app/database.types'
@@ -65,7 +66,11 @@ export default function CreateAppointment({ session }: { session: Session | null
 
 
   return (
+    
     <form onSubmit={submitAppointment}>
+      <div className="flex w-full items-center justify-between">
+        <h1 className={`${GeistSans.className} text-2xl`}>Create SOAP note</h1>
+      </div>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
         {/* Appointment Recording */}
         <AudioUpload 

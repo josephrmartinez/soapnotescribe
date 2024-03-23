@@ -6,7 +6,7 @@ import Breadcrumbs from '@/app/ui/appointments/breadcrumbs';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "Add Appointment",
+  title: "Create SOAP note",
 }
 
 export default async function Page() {
@@ -19,16 +19,6 @@ export default async function Page() {
  
   return (
     <main>
-      <Breadcrumbs
-        breadcrumbs={[
-          { label: 'Appointments', href: '/dashboard/appointments' },
-          {
-            label: 'Add Appointment',
-            href: '/dashboard/appointments/create',
-            active: true,
-          },
-        ]}
-      />
       <CreateAppointment session={session} />
     </main>
   );
