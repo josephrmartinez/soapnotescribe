@@ -3,14 +3,13 @@ import { ArrowRightIcon, PencilSquareIcon, MicrophoneIcon, ArchiveBoxIcon } from
 import { PricingCard } from './ui/PricingCard';
 import { UseStep } from './ui/UseStep';
 import Link from 'next/link';
+import Header from './ui/Header';
 
 
 export default function Page() {
   return (
-    <main className="flex min-h-screen flex-col p-2">
-      <div className="flex py-6s shrink-0 items-start rounded-lg p-4">
-        <Logo />
-      </div>
+    <main className="flex h-full flex-col p-2">
+    <Header />
 
     <div className='max-w-screen-lg mx-auto'>
 
@@ -21,7 +20,7 @@ export default function Page() {
         <p className='text-gray-600  text-xl max-w-prose mx-auto text-center py-4'>Upload appointment audio recordings or post-appointment voice memos and soapscribe does the rest - analyzing, structuring, and saving notes securely in a HIPAA-compliant database.</p>
 
         <div className='flex flex-row items-center align-middle justify-center mx-auto my-8'>
-        <button className='w-32 bg-teal-600 text-white font-bold rounded-full py-3 mx-2 hover:bg-teal-500 hover:text-white'>get started</button>
+        <Link href='/signup' className=' text-center w-32 bg-teal-600 text-white font-bold rounded-full py-3 mx-2 hover:bg-teal-500 hover:text-white'>get started</Link>
         <Link href='#pricing' className='w-32 font-bold underline underline-offset-8 rounded-full py-4 mx-2 hover:text-teal-600'>see pricing</Link>
         </div>
 

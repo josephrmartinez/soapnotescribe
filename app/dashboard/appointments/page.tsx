@@ -8,11 +8,6 @@ import { Suspense } from 'react';
 import { fetchApptsPages } from '@/app/lib/data';
 import { Metadata } from 'next';
 
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
-import { cookies } from 'next/headers'
-import { Database } from '@/app/database.types';
-
-
 export const metadata: Metadata = {
   title: "Appointments",
 }
