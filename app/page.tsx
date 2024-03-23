@@ -4,9 +4,19 @@ import { PricingCard } from './ui/PricingCard';
 import { UseStep } from './ui/UseStep';
 import Link from 'next/link';
 import Header from './ui/Header';
+import { redirect } from 'next/navigation';
+import { createClient } from '@/utils/supabase/server';
 
 
-export default function Page() {
+export default async function Page() {
+  const supabase = createClient()
+
+  const { data, error } = await supabase.auth.getUser()
+  if (data.user) {
+    redirect('/dashboard')
+  }
+
+
   return (
     <main className="flex h-full flex-col p-2">
     <Header />

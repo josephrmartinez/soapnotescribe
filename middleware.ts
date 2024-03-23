@@ -1,8 +1,14 @@
 import { type NextRequest } from 'next/server'
+import { redirect } from 'next/navigation';
 import { updateSession } from '@/utils/supabase/middleware'
+import { createClient } from "@/utils/supabase/server";
+
 
 export async function middleware(request: NextRequest) {
+  console.log("running root middleware")
+
   return await updateSession(request)
+  
 }
 
 export const config = {
