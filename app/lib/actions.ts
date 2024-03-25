@@ -57,19 +57,36 @@ function secondsToHHMMSS(seconds: number): string {
 }
 
 // OpenAI Whisper transcription
-export async function getWhisperTranscript(audioFile: File) {
+export async function getWhisperTranscript(formData: FormData) {
+  const audioFile = formData.get('audio') as File
+  
   try {
     const transcription = await openai.audio.transcriptions.create({
       file: audioFile,
       model: "whisper-1",
       response_format: "text",
     });
-    return transcription.text;
+    return transcription;
   } catch (error) {
     console.error('Error:', error);
     throw new Error('Failed to transcribe audio');
   }
 }
+
+// // OpenAI Whisper transcription
+// export async function getWhisperTranscript(audioFile: File) {
+//   try {
+//     const transcription = await openai.audio.transcriptions.create({
+//       file: audioFile,
+//       model: "whisper-1",
+//       response_format: "text",
+//     });
+//     return transcription.text;
+//   } catch (error) {
+//     console.error('Error:', error);
+//     throw new Error('Failed to transcribe audio');
+//   }
+// }
 // export default async function getWhisperTranscript(url: string, apptid: string) {
 //   console.log("running getWhisperTranscript", new Date());
 

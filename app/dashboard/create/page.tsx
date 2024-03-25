@@ -6,7 +6,6 @@ import Breadcrumbs from '@/app/ui/appointments/breadcrumbs';
 import { Metadata } from 'next';
 import { createClient } from '@/utils/supabase/server';
 import AudioUploadForm from './WhisperAudioUpload';
-import WhisperAudioUpload from './WhisperAudioUpload';
 
 export const metadata: Metadata = {
   title: "Create SOAP note",

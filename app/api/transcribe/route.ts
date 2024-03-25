@@ -1,13 +1,14 @@
 import OpenAI from 'openai';
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextResponse } from "next/server";
 
 const openai = new OpenAI({apiKey: process.env.OPENAI_API_KEY })
 
-export async function POST(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method === 'POST') {
+
+export async function POST(req, res) {
+  
     try {
       // Parse the incoming request body as FormData
-      const formData = req.body;
+      const formData = req.formData();
 
       // Get the base64-encoded audio data from the FormData
       const audioFile = formData.audio
@@ -27,10 +28,11 @@ export async function POST(req: NextApiRequest, res: NextApiResponse) {
       console.error('Error:', error);
       res.status(500).json({ error: 'Failed to transcribe audio' });
     }
-  } else {
-    res.status(405).json({ error: 'Method Not Allowed' });
-  }
 }
+
+
+
+
 // // Import necessary libraries
 // import { Configuration, OpenAIApi } from "openai";
 // import { exec } from 'child_process';

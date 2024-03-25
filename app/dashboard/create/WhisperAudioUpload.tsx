@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react';
-
+import { getWhisperTranscript } from '@/app/lib/actions';
 const AudioUploadForm: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);
 
@@ -11,7 +11,7 @@ const AudioUploadForm: React.FC = () => {
   };
 
   const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault(); // Prevent default form submission behavior
+    event.preventDefault();
   
     if (!file) {
       console.error('No file selected');
@@ -22,27 +22,19 @@ const AudioUploadForm: React.FC = () => {
     formData.append('audio', file);
 
     try {
-      const response = await fetch('/api/transcribe', {
-        method: 'POST',
-        body: formData,
-      });
+      const response = await getWhisperTranscript(formData)
 
-      if (!response.ok) {
-        throw new Error('Failed to transcribe audio');
-      }
-
-      const data = await response.json();
-      console.log('Transcription:', data.transcription);
+      console.log('Transcription:', response);
     } catch (error) {
       console.error('Error:', error);
     }
   };
 
   return (
-    <div>
+    <form onSubmit={handleSubmit} encType='multipart/form-data'>
       <input type="file" accept="audio/*" onChange={handleFileChange} />
-      <button onClick={handleSubmit}>Upload and Transcribe</button>
-    </div>
+      <button type='submit'>Upload and Transcribe</button>
+    </form>
   );
 };
 
