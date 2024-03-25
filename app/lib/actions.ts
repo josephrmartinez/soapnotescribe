@@ -1,7 +1,7 @@
 'use server'
 
 import Replicate from "replicate";
-import { createClient } from "@supabase/supabase-js";
+import { createClient } from "@/utils/supabase/server";
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import OpenAI from "openai"
@@ -15,10 +15,7 @@ const replicate = new Replicate({
   auth: process.env.REPLICATE_API_TOKEN,
 });
 
-const supabase = createClient(
-  process.env.SUPABASE_URL ?? "",
-  process.env.SUPABASE_SERVICE_KEY ?? ""
-)
+const supabase = createClient()
 
 interface Word {
   end: number;
@@ -59,8 +56,42 @@ function secondsToHHMMSS(seconds: number): string {
   return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
 }
 
+// OpenAI Whisper transcription
+export async function getWhisperTranscript(audioFile: File) {
+  try {
+    const transcription = await openai.audio.transcriptions.create({
+      file: audioFile,
+      model: "whisper-1",
+      response_format: "text",
+    });
+    return transcription.text;
+  } catch (error) {
+    console.error('Error:', error);
+    throw new Error('Failed to transcribe audio');
+  }
+}
+// export default async function getWhisperTranscript(url: string, apptid: string) {
+//   console.log("running getWhisperTranscript", new Date());
+
+//   try {
+//   const prediction = await replicate.predictions.create(
+//     {
+//       version: "7fa6110280767642cf5a357e4273f27ec10ebb60c107be25d6e15f928fd03147",
+//       input: {
+//         file_url: url,
+//       },
+//       webhook: `${webhookUrl}?apptid=${apptid}`,
+//       webhook_events_filter: ["completed"]
+//     });
+  
+// } catch (error) {
+//   console.error("Error in getTranscript:", error);
+//   // Handle error appropriately
+// }
+// }
+
 // Run Replicate model to create diarized transcription from audio url
-export default async function getTranscript(url: string, apptid: string) {
+export default async function getReplicateTranscript(url: string, apptid: string) {
   console.log("running getTranscript", new Date());
 
   let webhookUrl;

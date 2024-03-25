@@ -1,40 +1,41 @@
 'use client'
-import React, { useState, useRef } from 'react'
-// import { Session, createClientComponentClient } from '@supabase/auth-helpers-nextjs'
-// import { Database } from '@/app/database.types'
-// import { Button } from '@/app/ui/button'
-// import { FileInput } from '@/app/ui/fileInput'
+import React, { useState, useRef, useEffect } from 'react'
 import * as tus from 'tus-js-client'
 import { createClient } from '@/utils/supabase/client';
 
 
 export default function AudioUpload({ 
-    
     setRecordingUrl,
     setTempDownloadUrl,
     isUploading,
     setIsUploading,
 }: { 
-    
     setRecordingUrl: React.Dispatch<React.SetStateAction<string | null>>;
     setTempDownloadUrl: React.Dispatch<React.SetStateAction<string | null>>;
     isUploading: boolean;
     setIsUploading: React.Dispatch<React.SetStateAction<boolean>>;
  }) {
     const inputFileRef = useRef<HTMLInputElement>(null);
-    
     const [uploadComplete, setUploadComplete] = useState(false)
     const [percentageUploaded, setPercentageUploaded] = useState(0)
+    const [userID, setUserID] = useState<string | undefined>("");
+    const [accessToken, setAccessToken] = useState<string | undefined>("");
     
-    // const user = session?.user
-    // const userId = user?.id
-
-    // IN PROGRESS
-    const supabase = createClient()
-    const user = supabase.auth.getUser()
-    const userId = user?.id
-
-
+    const supabase = createClient();
+    
+    useEffect(() => {
+        const fetchUser = async () => {
+          const { data, error } = await supabase.auth.getSession();
+          if (error) {
+            console.error(error);
+          } else {
+            setUserID(data.session?.user.id);
+            setAccessToken(data.session?.access_token)
+          }
+        };
+    
+        fetchUser();
+     }, []);
 
     async function handleAudioUpload() {
         const fileInput = inputFileRef.current;
@@ -48,7 +49,7 @@ export default function AudioUpload({
                 const randomPrefix = Math.floor(Math.random() * 900000) + 100000;
                 const fileNameWithPrefix = `${randomPrefix}_${file.name}`
 
-                await uploadFile('apptrecordings', `${fileNameWithPrefix}`, file);
+                await uploadFile('audiofiles', `${fileNameWithPrefix}`, file);
 
                 setIsUploading(false);
             } catch (error) {
@@ -59,24 +60,25 @@ export default function AudioUpload({
     }
 
     async function getDownloadUrl(fileName: string){
-        const { data, error } = await supabase.storage.from('apptrecordings').createSignedUrl(`${userId}/${fileName}`, 600)
+        const { data, error } = await supabase.storage.from('audiofiles').createSignedUrl(`${userID}/${fileName}`, 600)
         return data?.signedUrl
     }
 
+    
     async function uploadFile(bucketName: string, fileName: string, file: File) {
         return new Promise((resolve, reject) => {
             const upload = new tus.Upload(file, {
-                endpoint: `https://tmmnudhjtavobvreaink.supabase.co/storage/v1/upload/resumable`,
+                endpoint: `https://grjecfvldxcnvhmjpvmu.supabase.co/storage/v1/upload/resumable`,
                 retryDelays: [0, 3000, 5000, 10000, 20000],
                 headers: {
-                    authorization: `Bearer ${session?.access_token}`,
+                    authorization: `Bearer ${accessToken}`,
                     'x-upsert': 'true',
                 },
                 uploadDataDuringCreation: true,
                 removeFingerprintOnSuccess: true,
                 metadata: {
                     bucketName,
-                    objectName: `${userId}/${fileName}`,
+                    objectName: `${userID}/${fileName}`,
                     contentType: file.type,
                     cacheControl: '3600',
                 },
