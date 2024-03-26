@@ -4,22 +4,30 @@ import * as tus from 'tus-js-client'
 import { createClient } from '@/utils/supabase/client';
 
 
-export default function AudioUpload({ 
-    setRecordingUrl,
-    setTempDownloadUrl,
-    isUploading,
-    setIsUploading,
-}: { 
-    setRecordingUrl: React.Dispatch<React.SetStateAction<string | null>>;
-    setTempDownloadUrl: React.Dispatch<React.SetStateAction<string | null>>;
-    isUploading: boolean;
-    setIsUploading: React.Dispatch<React.SetStateAction<boolean>>;
- }) {
+export default function AudioUpload(
+//     { 
+//     setRecordingUrl,
+//     setTempDownloadUrl,
+//     isUploading,
+//     setIsUploading,
+// }: { 
+//     setRecordingUrl: React.Dispatch<React.SetStateAction<string | null>>;
+//     setTempDownloadUrl: React.Dispatch<React.SetStateAction<string | null>>;
+//     isUploading: boolean;
+//     setIsUploading: React.Dispatch<React.SetStateAction<boolean>>;
+//  }
+ ) {
     const inputFileRef = useRef<HTMLInputElement>(null);
     const [uploadComplete, setUploadComplete] = useState(false)
     const [percentageUploaded, setPercentageUploaded] = useState(0)
     const [userID, setUserID] = useState<string | undefined>("");
     const [accessToken, setAccessToken] = useState<string | undefined>("");
+
+    const [loading, setLoading] = useState(true)
+    const [recordingUrl, setRecordingUrl] = useState<string | null>(null)
+    const [tempDownloadUrl, setTempDownloadUrl] = useState<string | null>(null)
+    const [submitOkay, setSubmitOkay] = useState<boolean>(true)
+    const [isUploading, setIsUploading] = useState<boolean>(false);
     
     const supabase = createClient();
     
@@ -95,15 +103,13 @@ export default function AudioUpload({
                 onSuccess: async function () {
                     setUploadComplete(true)
                     try {
-
-                        setRecordingUrl(`${fileName}`)
-
                         const signedUrl = await getDownloadUrl(fileName);
                         console.log("signedUrl:", signedUrl);
                         
                         // Check if signedUrl is defined before setting the state
                         if (signedUrl !== undefined) {
-                            setTempDownloadUrl(signedUrl);
+                            
+                            uploadToSupabaseTable(fileName, signedUrl)
                         } else {
                             console.error("Error: Signed URL is undefined");
                         }
@@ -124,6 +130,31 @@ export default function AudioUpload({
             });
         });
     }
+
+    async function uploadToSupabaseTable(audio_storage_url: string, temp_audio_url: string){
+        try {
+            const { error, data } = await supabase.from('appointments').insert({
+                user_id: userID as string,
+                created_at: new Date().toISOString(),
+                audio_storage_url,
+                temp_audio_url,
+              })
+              .select();
+              
+              console.log("upload return data:", data)
+
+              if (error) {
+                console.error("Error inserting into Supabase table:", error)
+              }
+        } catch (error) {
+            console.error("Failed to upload to Supabase table:", error)
+        }
+        
+
+        
+    }
+    
+
     return (
         <fieldset>
             <legend className="mb-2 block text-sm font-medium">

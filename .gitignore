@@ -19,6 +19,7 @@
 # misc
 .DS_Store
 *.pem
+replicate.mjs
 
 # debug
 npm-debug.log*

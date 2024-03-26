@@ -6,6 +6,7 @@ import Breadcrumbs from '@/app/ui/appointments/breadcrumbs';
 import { Metadata } from 'next';
 import { createClient } from '@/utils/supabase/server';
 import AudioUploadForm from './WhisperAudioUpload';
+import AudioUpload from './AudioUpload';
 
 export const metadata: Metadata = {
   title: "Create SOAP note",
@@ -23,7 +24,8 @@ export default async function Page() {
   return (
     <main>
       {/* <CreateAppointment /> */}
-      <AudioUploadForm />
+      {/* <AudioUploadForm /> */}
+      <AudioUpload />
     </main>
   );
 }
