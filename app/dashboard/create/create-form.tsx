@@ -15,7 +15,6 @@ import {
 import AudioUpload from './AudioUpload';
 import getTranscript from '@/app/lib/actions';
 import { Session } from '@supabase/supabase-js';
-import WhisperAudioUpload from './WhisperAudioUpload';
 
 
 export default function CreateAppointment() {

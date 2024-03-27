@@ -107,8 +107,43 @@ export async function getWhisperTranscript(formData: FormData) {
 // }
 // }
 
+// IN PROGRESS
+export async function getReplicateMonoTranscript(url: string, apptid: string) {
+  console.log("running getTranscript", new Date());
+
+  let webhookUrl;
+
+  if (process.env.NODE_ENV === 'production') {
+      webhookUrl = process.env.PROD_REPLICATE_WEBHOOK;
+  } else {
+      webhookUrl = process.env.DEV_REPLICATE_WEBHOOK;
+  }
+
+  try {
+  const prediction = await replicate.predictions.create(
+    {
+      version: "3ab86df6c8f54c11309d4d1f930ac292bad43ace52d10c80d87eb258b3c9f79c",
+      input: {
+        task: "transcribe",
+        audio: url,
+        language: "None",
+        timestamp: "chunk",
+        batch_size: 64,
+        diarise_audio: false
+      },
+      webhook: `${webhookUrl}?apptid=${apptid}`,
+      webhook_events_filter: ["completed"]
+    });
+  
+} catch (error) {
+  console.error("Error in getTranscript:", error);
+  // Handle error appropriately
+}
+}
+
+
 // Run Replicate model to create diarized transcription from audio url
-export default async function getReplicateTranscript(url: string, apptid: string) {
+export async function getReplicateTranscript(url: string, apptid: string) {
   console.log("running getTranscript", new Date());
 
   let webhookUrl;
