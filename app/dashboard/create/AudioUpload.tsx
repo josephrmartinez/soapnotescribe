@@ -2,6 +2,8 @@
 import React, { useState, useRef, useEffect } from 'react'
 import * as tus from 'tus-js-client'
 import { createClient } from '@/utils/supabase/client';
+import { useRouter } from 'next/navigation';
+import { getReplicateMonoTranscript } from '@/app/lib/actions';
 
 
 export default function AudioUpload(
@@ -28,6 +30,7 @@ export default function AudioUpload(
     const [tempDownloadUrl, setTempDownloadUrl] = useState<string | null>(null)
     const [submitOkay, setSubmitOkay] = useState<boolean>(true)
     const [isUploading, setIsUploading] = useState<boolean>(false);
+    const router = useRouter()
     
     const supabase = createClient();
     
@@ -146,6 +149,17 @@ export default function AudioUpload(
               if (error) {
                 console.error("Error inserting into Supabase table:", error)
               }
+
+
+    
+            //   Call Replicate prediction with webhook
+              data && getReplicateMonoTranscript(temp_audio_url, data[0].id)
+              
+
+            // Redirect to page for new note
+            //   data && router.push(`/dashboard/appointments/${data[0].id}`);
+
+
         } catch (error) {
             console.error("Failed to upload to Supabase table:", error)
         }

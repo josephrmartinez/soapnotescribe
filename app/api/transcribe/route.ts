@@ -1,14 +1,14 @@
 import OpenAI from 'openai';
-import { NextResponse } from "next/server";
+import { NextApiRequest, NextApiResponse } from 'next';
 
 const openai = new OpenAI({apiKey: process.env.OPENAI_API_KEY })
 
 
-export async function POST(req, res) {
+export async function POST(req: NextApiRequest, res: NextApiResponse) {
   
     try {
-      // Parse the incoming request body as FormData
-      const formData = req.formData();
+      const audioFileBuffer = req.files.audio.file;
+      const audioFileBase64 = Buffer.from(audioFileBuffer).toString('base64');
 
       // Get the base64-encoded audio data from the FormData
       const audioFile = formData.audio

@@ -13,7 +13,8 @@ export async function POST(req, res) {
 
     const prediction = await req.json();
     
-    await formatReplicateReponse(apptid, prediction.output)
+    console.log("prediction from webhook:", prediction)
+    // await formatReplicateReponse(apptid, prediction.output)
 
     return NextResponse.json({ message: "POST" }, { status: 200 });
   }

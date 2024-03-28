@@ -29,6 +29,7 @@
     "next": "^14.0.4",
     "next-auth": "^5.0.0-beta.4",
     "next-connect": "^1.0.0",
+    "ngrok": "^5.0.0-beta.2",
     "openai": "^4.25.0",
     "postcss": "8.4.31",
     "react": "18.2.0",
