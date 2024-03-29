@@ -144,27 +144,19 @@ export default function AudioUpload(
               })
               .select();
               
-              console.log("upload return data:", data)
-
               if (error) {
                 console.error("Error inserting into Supabase table:", error)
               }
-
-
     
             //   Call Replicate prediction with webhook
               data && getReplicateMonoTranscript(temp_audio_url, data[0].id)
-              
 
             // Redirect to page for new note
-            //   data && router.push(`/dashboard/appointments/${data[0].id}`);
-
+              data && router.push(`/dashboard/appointments/${data[0].id}`);
 
         } catch (error) {
             console.error("Failed to upload to Supabase table:", error)
         }
-        
-
         
     }
     

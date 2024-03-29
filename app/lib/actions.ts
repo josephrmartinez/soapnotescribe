@@ -1,10 +1,12 @@
 'use server'
 
 import Replicate from "replicate";
-// import { createClient } from "@/utils/supabase/server";
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import OpenAI from "openai"
+import { createClient } from "@/utils/supabase/server";
+import { createServerClient } from "@supabase/ssr";
+import { createClient as createClientJS } from "@supabase/supabase-js";
 // import { embed } from './embed'
 
 
@@ -108,7 +110,7 @@ export async function getWhisperTranscript(formData: FormData) {
 // }
 // }
 
-// IN PROGRESS
+
 export async function getReplicateMonoTranscript(url: string, apptid: string) {
   const startTime = new Date()
   console.log("running getReplicateMonoTranscript", startTime);
@@ -140,9 +142,8 @@ export async function getReplicateMonoTranscript(url: string, apptid: string) {
 
     const endTime = new Date()
     const runTime = (endTime.getTime() - startTime.getTime())
-    console.log("prediction runtime:", runTime);
-
-    console.log("replicate prediction:", prediction)
+    // console.log("prediction runtime:", runTime);
+    // console.log("replicate prediction:", prediction)
   
 } catch (error) {
   console.error("Error in getTranscript:", error);
@@ -212,83 +213,94 @@ export async function getReplicateTranscript(url: string, apptid: string) {
 // }
 // }
 
-// // Update the appointment table row with the transcript
-// async function updateApptWithTranscript(apptid: string, transcript: object){
-//   console.log("Running updateApptWithTranscript")
-//   const { data, error } = await supabase
-//   .from("appointments")
-//   .update({transcript: transcript})
-//   .eq('id', apptid)
-//   .select();
+// Update the appointment table row with the transcript
+export async function updateApptWithTranscript(apptid: string, transcript: string){
+  console.log("Running updateApptWithTranscript")
 
-// if (error) {
-//   console.error("Error adding transcript:", error);
-//   // Handle error accordingly
-// } else {
-//   // console.log("Transcript added successfully:", data);
-//   await getSummaryAndFeedback(apptid, transcript)
-// }
-// }
+  // Using service key to update appointment row
+  const supabase = createClientJS(process.env.SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_KEY!)
 
-// // Send transcript to OpenAI model for summarization and feedback
-// async function getSummaryAndFeedback(apptid: string, transcript: object) {
-//   console.log("Running getSummaryAndFeedback")
-//   try {
-//   const transcriptString = JSON.stringify(transcript);
-//   const completion = await openai.chat.completions.create({
-//     messages: [
-//       {
-//         role: "system",
-//         content: "You are a helpful and highly trained medical assistant designed to output a JSON object with a 'summary' and critical 'feedback' of a medical appointment audio transcript. This JSON object should contain two keys: 'summary' and 'feedback'. The corresponding values should be strings of at least 400 words.",
-//       },
-//       { role: "user", content: `TRANSCRIPT: ${transcriptString}` },
-//     ],
-//     model: "gpt-3.5-turbo-1106",
-//     response_format: { type: "json_object" },
-//   });
+  try {
+    const { data, error } = await supabase
+      .from('appointments')
+      .update({ audio_transcript: transcript })
+      .eq('id', apptid)
+      .select();
+
+    if (error) {
+      console.error(`Error updating transcript for appointment ID ${apptid}:`, error);
+      throw new Error(`Error updating transcript for appointment ID ${apptid}: ${error.message}`);
+    }
+
+    console.log(`Transcript updated successfully for appointment ID ${apptid}:`, data);
+    // Optionally, call another function here if needed, e.g., getSummaryAndFeedback(apptid, transcript)
+    return data;
+ } catch (error) {
+    console.error(`Failed to update transcript for appointment ID ${apptid}:`, error);
+    throw error; // Rethrow the error to be handled by the caller
+ }
+}
+
+// Send transcript to OpenAI model for summarization and feedback
+async function getSummaryAndFeedback(apptid: string, transcript: object) {
+  console.log("Running getSummaryAndFeedback")
+  try {
+  const transcriptString = JSON.stringify(transcript);
+  const completion = await openai.chat.completions.create({
+    messages: [
+      {
+        role: "system",
+        content: "You are a helpful and highly trained medical assistant designed to output a JSON object with a 'summary' and critical 'feedback' of a medical appointment audio transcript. This JSON object should contain two keys: 'summary' and 'feedback'. The corresponding values should be strings of at least 400 words.",
+      },
+      { role: "user", content: `TRANSCRIPT: ${transcriptString}` },
+    ],
+    model: "gpt-3.5-turbo-1106",
+    response_format: { type: "json_object" },
+  });
 
   
-//   try {
-//     const responseContentString = completion.choices[0].message.content as string;
+  try {
+    const responseContentString = completion.choices[0].message.content as string;
   
-//     if (responseContentString) {
-//       const responseContent = JSON.parse(responseContentString);
+    if (responseContentString) {
+      const responseContent = JSON.parse(responseContentString);
   
-//       if (typeof responseContent === 'object' && responseContent !== null) {
-//         const { summary = "", feedback = "" } = responseContent;
-//         await updateApptWithSummaryAndFeedback(apptid, summary, feedback);
-//       } else {
-//         // Handle the case where responseContent is not an object
-//       }
-//     } else {
-//       // Handle the case where responseContentString is null or empty
-//     }
-//   } catch (error) {
-//     // Handle the case where JSON parsing fails
-//     console.error("Error parsing JSON content:", error);
-//   }
-//   } catch (error){
-//     console.log("Error getting summary and feedback:", error)
-//   }
-// }
+      if (typeof responseContent === 'object' && responseContent !== null) {
+        const { summary = "", feedback = "" } = responseContent;
+        await updateApptWithSummaryAndFeedback(apptid, summary, feedback);
+      } else {
+        // Handle the case where responseContent is not an object
+      }
+    } else {
+      // Handle the case where responseContentString is null or empty
+    }
+  } catch (error) {
+    // Handle the case where JSON parsing fails
+    console.error("Error parsing JSON content:", error);
+  }
+  } catch (error){
+    console.log("Error getting summary and feedback:", error)
+  }
+}
 
 
-// // Update the appointment table row with the summary and feedback
-// async function updateApptWithSummaryAndFeedback(apptid: string, summary: string, feedback: string){
-//   console.log("Running updateApptWithSummaryAndFeedback")
-//   const { data, error } = await supabase
-//   .from("appointments")
-//   .update({summary: summary, feedback: feedback})
-//   .eq('id', apptid)
-//   .select();
+// Update the appointment table row with the summary and feedback
+async function updateApptWithSummaryAndFeedback(apptid: string, summary: string, feedback: string){
+  console.log("Running updateApptWithSummaryAndFeedback")
+  const { data, error } = await supabase
+  .from("appointments")
+  .update({summary: summary, feedback: feedback})
+  .eq('id', apptid)
+  .select();
 
-// if (error) {
-//   console.error("Error adding summary and feedback:", error);
-//   // Handle error accordingly
-// } else {
-//   // console.log("Summary and feedback added successfully:", data);
-// }
-// }
+if (error) {
+  console.error("Error adding summary and feedback:", error);
+  // Handle error accordingly
+} else {
+  // console.log("Summary and feedback added successfully:", data);
+}
+}
 
 // export async function deleteAppt(apptid: string){
 //   console.log("Running delete")

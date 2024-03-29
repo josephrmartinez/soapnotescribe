@@ -41,21 +41,30 @@ export interface Segment {
 }
 
 export interface Appointment {
-  audio_url: string | null;
-  clinic: string | null;
-  combined_text: string | null;
-  created_at?: string;
-  date: string;
-  description: string | null;
-  feedback: string;
   id: string;
-  patient: string;
-  provider: string | null;
-  summary: string;
-  temp_audio_url: string | null;
-  title: string | null;
-  transcript: Transcript;
-  appts_search: string | null;
+  created_at: string;
+  user_id: string;
+  audio_storage_url?: string;
+  temp_audio_url?: string;
+  image_urls?: string[];
+  audio_transcript?: string;
+  patient_name?: string;
+  patient_date_of_birth?: Date;
+  date_seen?: string;
+  time_seen?: string;
+  allergy_type?: string;
+  allergy_description?: string;
+  chief_complaint?: string;
+  soap_subjective?: string;
+  soap_objective?: string;
+  soap_assessment?: string;
+  soap_plan?: string;
+  patient_location?: string;
+  appointment_summary?: string;
+  discharge_instructions?: string;
+  combined_text?: string;
+  feedback?: string;
+  second_opinion?: string;
 }
 
 
