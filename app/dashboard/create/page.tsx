@@ -23,9 +23,9 @@ export default async function Page() {
  
   return (
     <main>
-      {/* <CreateAppointment /> */}
+      <CreateAppointment />
       {/* <AudioUploadForm /> */}
-      <AudioUpload />
+      {/* <AudioUpload /> */}
     </main>
   );
 }

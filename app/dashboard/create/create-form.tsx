@@ -1,9 +1,7 @@
 'use client'
 import { useCallback, useEffect, useState } from 'react'
-import { GeistSans } from 'geist/font/sans';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-// import { Session, createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { createClient } from '@/utils/supabase/client';
 import { Button } from '@/app/ui/button';
 import {
@@ -13,8 +11,7 @@ import {
     UserCircleIcon, PencilSquareIcon
   } from '@heroicons/react/24/outline';
 import AudioUpload from './AudioUpload';
-import getTranscript from '@/app/lib/actions';
-import { Session } from '@supabase/supabase-js';
+// import getTranscript from '@/app/lib/actions';
 
 
 export default function CreateAppointment() {
@@ -64,18 +61,214 @@ export default function CreateAppointment() {
     
     <form onSubmit={submitAppointment}>
       <div className="flex w-full items-center justify-between">
-        <h1 className={`${GeistSans.className} text-2xl`}>Create SOAP note</h1>
+        <h1 className={` text-2xl`}>Add appointment</h1>
       </div>
-      <div className="rounded-md bg-gray-50 p-4 md:p-6">
-        {/* Appointment Recording */}
-        {/* <AudioUpload
 
-            setRecordingUrl={setRecordingUrl} 
-            setTempDownloadUrl={setTempDownloadUrl}
-            isUploading = {isUploading}
-            setIsUploading={setIsUploading} />   */}
-            
+      <div className="rounded-md bg-gray-50 p-4 max-w-prose">
+        
+        <div className='grid grid-cols-2 gap-8'>
+
+{/* Appointment Date */}
+<div className="mb-4">
+          <label htmlFor="appointment_date" className="mb-2 block text-sm font-medium">
+            Appointment Date
+          </label>
+          <div className="relative">
+            <input
+              id="appointment_date"
+              name="appointment_date"
+              required
+              type="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+              className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
+            >
+            </input>
+          </div>
+          </div>
+
+
+        {/* Appointment Time */}
+        <div className="mb-4">
+          <label htmlFor="appointment_time" className="mb-2 block text-sm font-medium">
+            Appointment Time
+          </label>
+          <div className="relative">
+            <input
+              id="appointment_time"
+              name="appointment_time"
+              required
+              type="time"
+              // value={date}
+              // onChange={(e) => setDate(e.target.value)}
+              className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
+            >
+            </input>
+          </div>
       </div>
+
+        </div>
+      
+      <div className='grid grid-cols-2 gap-8'>
+      <div className="mb-4">
+           <label htmlFor="patient" className="mb-2 block text-sm font-medium">
+             Patient Name
+           </label>
+           <div className="relative">
+             <input
+              id="patient"
+              name="patient"
+              required
+              placeholder='Patient seen during visit'
+              type='text'
+              className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
+              value={provider || ''}
+              onChange={(e) => setProvider(e.target.value)}
+              aria-describedby='provider-error'
+            >
+              
+            </input>
+            <UserCircleIcon className="pointer-events-none absolute right-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+          </div>
+          
+        </div>
+        {/* Patient Date of Birth */}
+        <div className="mb-4">
+          <label htmlFor="appointment_date" className="mb-2 block text-sm font-medium">
+            Patient Date of Birth
+          </label>
+          <div className="relative">
+            <input
+              id="patient_dob"
+              name="patient_dob"
+              required
+              type="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+              className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+            >
+            </input>
+            <CalendarDaysIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+          </div>
+        </div>
+      </div>
+
+
+      <div className='grid grid-cols-2 gap-8'>
+      <div className="mb-4">
+           <label htmlFor="allergies" className="mb-2 block text-sm font-medium">
+             Allergies
+           </label>
+           <div className="relative">
+             <input
+              id="allergies"
+              name="allergies"
+              required
+              defaultValue={"NKDA"}
+              type='text'
+              className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
+              // value={provider || ''}
+              // onChange={(e) => setProvider(e.target.value)}
+            >
+              
+            </input>
+          </div>
+          
+        </div>
+        {/* Telemedicine Consent */}
+        <div className="mb-4">
+          <label htmlFor="consent" className="mb-2 block text-sm font-medium">
+            Telemedicine Consent
+          </label>
+          <div className="relative flex flex-row items-center">
+            <input
+              id="consent"
+              name="consent"
+              required
+              type='checkbox'
+              value="true"
+              // onChange={(e) => setDate(e.target.value)}
+              className="peer block cursor-pointer w-6 h-6 mr-4 rounded-md border border-gray-200 text-sm outline-2 "
+            >
+            </input>
+            <div className='text-sm'>Patient is located in Arizona and consents to treatment.</div>
+          </div>
+        </div>
+      </div>
+
+      <div className="mb-4">
+        <label htmlFor="complaint" className="mb-2 block text-sm font-medium">
+          Chief Complaint
+        </label>
+        <div className="relative">
+          <input
+          id="complaint"
+          name="complaint"
+          required
+          type='text'
+          className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
+          // value={provider || ''}
+          // onChange={(e) => setProvider(e.target.value)}
+        >
+        </input>
+      </div>
+      </div>
+
+      <div className="mb-4">
+        <label htmlFor="subjective" className="mb-2 block text-sm font-medium">
+          Subjective
+        </label>
+        <div className="subjective">
+          <textarea
+          id="subjective"
+          name="subjective"
+          className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
+          // value={provider || ''}
+          // onChange={(e) => setProvider(e.target.value)}
+        >
+        </textarea>
+      </div>
+      </div>
+        
+
+            <div>
+              <div className="px-2 mb-2 text-lg font-medium">
+                Subjective:
+              </div>
+              <textarea className='w-full h-48 rounded-lg'>Therese Boshart, a 65-year-old female, presents today with a chief complaint of travel abroad. She is scheduled for a trip to Thailand lasting approximately one month and is concerned about the risk of contracting bacterial illnesses. She requests a travel pack of medications for prophylactic purposes. She reports no current symptoms.</textarea>
+            </div>
+    
+            <div>
+              <div className="px-2 mb-2 text-lg font-medium">
+                Objective:
+              </div>
+              <textarea className='w-full h-48 rounded-lg'>Based on the patient's age and travel destination, a prophylactic travel pack has been prescribed, including:
+    
+              Cipro 500mg, 1 tablet orally twice daily for 10 days, dispense 20 tablets
+              Flagyl 500mg, 1 tablet orally twice daily for 10 days, dispense 20 tablets
+              Z-Pak (dispensed as directed)
+              Zofran 4mg orally disintegrating tablet, to be taken as needed for nausea or vomiting
+              Keflex 500mg, 1 tablet orally three times daily for 10 days, dispense 30 tablets
+              Travalon (over-the-counter supplement), advised for prevention of traveler's diarrhea and parasites</textarea>
+            </div>
+    
+            <div>
+              <div className="px-2 mb-2 text-lg font-medium">
+                Assessment:
+              </div>
+              <textarea className='w-full h-48 rounded-lg'>Therese Boshart is a 65-year-old female planning travel to Thailand. Given her concerns about potential bacterial illnesses, a prophylactic travel pack has been prescribed to address common ailments. Patient is well-informed about the medications provided and their purposes.</textarea>
+            </div>
+    
+            <div>
+              <div className="px-2 mb-2 text-lg font-medium">
+                Plan:
+              </div>
+              <textarea className='w-full h-48 rounded-lg'>Patient has been educated about utilizing the provided medications in case of illness during her trip. She is advised to contact via call, text, or email if symptoms arise, and further guidance will be provided accordingly.</textarea>
+            </div>
+              
+              
+            
+        
 
       <div className="mt-6 flex justify-end gap-4">
         <Link
@@ -86,187 +279,10 @@ export default function CreateAppointment() {
         </Link>
         <Button type="submit" active={!isUploading}>Add Appointment</Button>
       </div>
+      </div>
     </form>
+    
+
+
   )
 }
-
-  
-  
-        // {/* Appointment Title */}
-        // <div className="my-4">
-        //   <label htmlFor="title" className="mb-2 block text-sm font-medium">
-        //     Appointment Title
-        //   </label>
-        //   <div className="relative">
-        //     <input
-        //       id="title"
-        //       name="title"
-        //       type='text'
-        //       placeholder='Appointment name'
-        //       required
-        //       className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-        //       value={title || ''}
-        //       onChange={(e) => setTitle(e.target.value)}
-        //     >
-              
-        //     </input>
-        //     <PencilSquareIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
-        //   </div>
-        // </div>
-        
-        // {/* Description */}
-        // <div className="mb-4">
-        //   <label htmlFor="description" className="mb-2 block text-sm font-medium">
-        //     Appointment Description
-        //   </label>
-        //   <div className="relative">
-        //     <input
-        //       id="description"
-        //       name="description"
-        //       required
-        //       placeholder='Brief description of appointment'
-        //       type='text'
-        //       className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-              
-        //       aria-describedby='description-error'
-        //       value={description || ''}
-        //       onChange={(e) => setDescription(e.target.value)}
-        //     >
-              
-        //     </input>
-        //     <PencilSquareIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
-        //   </div>
-          
-        // </div>
-
-        // {/* Provider */}
-        // <div className="mb-4">
-        //   <label htmlFor="provider" className="mb-2 block text-sm font-medium">
-        //     Provider
-        //   </label>
-        //   <div className="relative">
-        //     <input
-        //       id="provider"
-        //       name="provider"
-        //       required
-        //       placeholder='Doctor or name of provider(s) seen during visit'
-        //       type='text'
-        //       className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-        //       value={provider || ''}
-        //       onChange={(e) => setProvider(e.target.value)}
-        //       aria-describedby='provider-error'
-        //     >
-              
-        //     </input>
-        //     <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
-        //   </div>
-          
-        // </div>
-
-        // {/* Clinic */}
-        // <div className="mb-4">
-        //   <label htmlFor="clinic" className="mb-2 block text-sm font-medium">
-        //     Clinic
-        //   </label>
-        //   <div className="relative">
-        //     <input
-        //       id="clinic"
-        //       name="clinic"
-        //       required
-        //       placeholder='Clinic, facility name'
-        //       type='text'
-        //       className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-        //       value={clinic || ''}
-        //       onChange={(e) => setClinic(e.target.value)}
-        //       aria-describedby='clinic-error'
-        //     >
-              
-        //     </input>
-        //     <BuildingOffice2Icon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
-        //   </div>
-          
-        // </div>
-
-        // {/* Date */}
-        // <div className="mb-4">
-        //   <label htmlFor="appointment_date" className="mb-2 block text-sm font-medium">
-        //     Appointment Date
-        //   </label>
-        //   <div className="relative">
-        //     <input
-        //       id="appointment_date"
-        //       name="appointment_date"
-        //       required
-        //       type="date"
-        //       value={date}
-        //       onChange={(e) => setDate(e.target.value)}
-        //       className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-        //     >
-              
-        //     </input>
-        //     <CalendarDaysIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
-        //   </div>
-          
-        // </div>
-
-
-//   const getProfile = useCallback(async () => {
-//     try {
-//       setLoading(true)
-
-//       const { data, error, status } = await supabase
-//         .from('profiles')
-//         .select(`full_name, username, website, avatar_url`)
-//         .eq('id', user?.id)
-//         .single()
-
-//       if (error && status !== 406) {
-//         throw error
-//       }
-
-//       if (data) {
-//         setFullname(data.full_name)
-//         setUsername(data.username)
-//         setWebsite(data.website)
-//         setAvatarUrl(data.avatar_url)
-//       }
-//     } catch (error) {
-//       alert('Error loading user data!')
-//     } finally {
-//       setLoading(false)
-//     }
-//   }, [user, supabase])
-
-//   useEffect(() => {
-//     getProfile()
-//   }, [user, getProfile])
-
-//   async function updateProfile({
-//     username,
-//     website,
-//     avatar_url,
-//   }: {
-//     username: string | null
-//     fullname: string | null
-//     website: string | null
-//     avatar_url: string | null
-//   }) {
-//     try {
-//       setLoading(true)
-
-//       const { error } = await supabase.from('profiles').upsert({
-//         id: user?.id as string,
-//         full_name: fullname,
-//         username,
-//         website,
-//         avatar_url,
-//         updated_at: new Date().toISOString(),
-//       })
-//       if (error) throw error
-//       alert('Profile updated!')
-//     } catch (error) {
-//       alert('Error updating the data!')
-//     } finally {
-//       setLoading(false)
-//     }
-//   }
