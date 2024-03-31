@@ -266,6 +266,10 @@ async function updateApptWithSOAPData(apptid: string, transcript: string, comple
   console.log("transcript:", transcript)
   console.log("completion string:", completion)
 
+  // TODO: 
+  // - PARSE COMPLETION OBJECT TO PULL OUT RETURNED FIELDS
+  // - UPDATE SUPABASE TABLE ROW WITH TRANSCRIPT AND ALL FIELDS FROM COMPLETION OBJECT
+
   // Using service key to update appointment row
 //   const supabase = createClientJS(process.env.SUPABASE_URL!,
 //     process.env.SUPABASE_SERVICE_KEY!)
