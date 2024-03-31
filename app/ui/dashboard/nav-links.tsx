@@ -18,13 +18,10 @@ import clsx from 'clsx';
 // Map of links to display in the side navigation.
 // Depending on the size of the application, this would be stored in a database.
 const links = [
-  { name: 'Create New Note', href: '/dashboard/prepare', icon: PencilSquareIcon },
+  { name: 'Upload Audio Memo', href: '/dashboard/memo', icon: ChatBubbleLeftEllipsisIcon },
+  { name: 'Create New Note', href: '/dashboard/create', icon: PencilSquareIcon },
   { name: 'Note Archive', href: '/dashboard/appointments', icon: ArchiveBoxIcon },
-  {
-    name: 'Templates',
-    href: '/dashboard/templates',
-    icon: DocumentDuplicateIcon,
-  },
+  { name: 'Templates', href: '/dashboard/templates', icon: DocumentDuplicateIcon },
   {
     name: 'Account',
     href: '/dashboard/settings',

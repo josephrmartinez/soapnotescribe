@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 export default async function Page({ params }: { params: { id: string } }) {
     const id = params.id;
     const appointment = await fetchAppointmentById(id)
-    console.log("appointment data:", appointment)
+    console.log("appointment data from appointments/[id]:", appointment)
 
     // const transcriptString = JSON.stringify(appointment?.transcript);
     // // console.log("transcript", transcriptString)
@@ -122,26 +122,3 @@ export default async function Page({ params }: { params: { id: string } }) {
     </main>
   );
 }
-
-{/* <div className='grid grid-cols-3 w-full'>
-          <div>
-            <div className='flex flex-row items-center mb-6'>
-                <CalendarDaysIcon width={28}/>
-                <div className='font-semibold text-gray-700 ml-2'>{displayDate}</div>
-            </div>
-            <div className='flex flex-row items-center mb-6'>
-                <BuildingOffice2Icon width={28}/>
-                <div className='font-semibold text-gray-700 ml-2'>{appointment.clinic}</div>
-            </div>
-          </div>
-          <div className='col-start-3 flex flex-row gap-3 justify-end'>
-            <AddDocsToAppointment id={appointment.id}/>
-            <UpdateAppointment id={appointment.id}/>
-            <ShareAppointment id={appointment.id}/>
-          </div>
-        </div>
-        
-      <div className='flex flex-row items-center'>
-        <div className='font-semibold mr-2'>Description:</div>
-        <div>{appointment.description}</div>
-      </div> */}

@@ -2,11 +2,11 @@ export type Allergy = "NKDA" | "PCN" | "SULFA" | "Other";
 
 export interface Appointment {
     id: string
-    provider_id?: string;
+    user_id: string;
     audio_storage_url?: string;
     temp_audio_url?: string;
     image_urls?: string[];
-    audio_transcript?: JSON;
+    audio_transcript?: string;
     patient_name: string;
     patient_date_of_birth: string;
     date_seen: string;

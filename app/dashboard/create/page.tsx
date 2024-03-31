@@ -1,31 +1,15 @@
-// import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
-// import { cookies } from 'next/headers'
-// import { Database } from '@/app/database.types'
 import CreateAppointment from './create-form';
-import Breadcrumbs from '@/app/ui/appointments/breadcrumbs';
 import { Metadata } from 'next';
-import { createClient } from '@/utils/supabase/server';
-import AudioUploadForm from './WhisperAudioUpload';
-import AudioUpload from './AudioUpload';
 
 export const metadata: Metadata = {
-  title: "Create SOAP note",
+  title: "Create New Note",
 }
 
-export default async function Page() {
-  const supabase = createClient()
-
-  const {
-    data: { session },
-  } = await supabase.auth.getSession()
-
-  
+export default async function Page() {  
  
   return (
     <main>
       <CreateAppointment />
-      {/* <AudioUploadForm /> */}
-      {/* <AudioUpload /> */}
     </main>
   );
 }

@@ -11,14 +11,17 @@ import {
     UserCircleIcon, PencilSquareIcon
   } from '@heroicons/react/24/outline';
 import { Appointment } from '@/app/database.types';
-import AudioUpload from './AudioUpload';
+import { getSignedAudioUrl } from '@/app/lib/data';
+
+interface CreateAppointmentProps {
+    appointment?: Appointment;
+   }
 
 
-
-export default function CreateAppointment(
+const CreateAppointmentPrefilled: React.FC<CreateAppointmentProps> = ({ appointment }) => {
   // pass in Appointment object data to pre-populate form, or do not pass in an Appointment object to just use a blank form
-) {
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState<boolean>(true)
+  const [audioUrl, setAudioUrl] = useState<string>('')
   const [patientName, setPatientName] = useState<string | null>(null)
   const [chiefComplaint, setChiefComplaint] = useState<string | null>(null)
   const [date, setDate] = useState<string>('')
@@ -29,11 +32,26 @@ export default function CreateAppointment(
   const [objective, setObjective] = useState<string | null>(null)
   const [assessment, setAssessment] = useState<string | null>(null)
   const [plan, setPlan] = useState<string | null>(null)
+  const [submitOkay, setSubmitOkay] = useState<boolean>(true) 
 
+  console.log("appointment data from client CreateAppointmentPrefilled:", appointment)
 
-  const [submitOkay, setSubmitOkay] = useState<boolean>(true)
+  useEffect(() => {
+    const fetchAudioUrl = async () => {
+      if (appointment?.audio_storage_url) {
+        try {
+        const url = await getSignedAudioUrl(appointment.user_id, appointment.audio_storage_url);
+        console.log("signed url:", url)
+        setAudioUrl(url);
+        } catch (error) {
+            console.error("Error fetching audio url:", error);
+        }
+      }
+    };
 
-  
+    fetchAudioUrl();
+  }, []);
+
   
   const supabase = createClient()
   const router = useRouter()
@@ -59,11 +77,31 @@ export default function CreateAppointment(
 
 
   return (
-    <form onSubmit={submitAppointment}>
+    <form onSubmit={submitAppointment} className='max-w-prose'>
       <div className="flex w-full items-center justify-between">
         <h1 className={` text-2xl`}>Add appointment</h1>
       </div>
-      <AudioUpload />
+      {audioUrl ? (
+      <audio className="w-full" controls>
+        <source type="audio/mp3" src={audioUrl} />
+        Your browser does not support the audio element.
+      </audio>
+    ) :
+        <div className="w-full">
+        Loading audio
+      </div>
+    }
+
+        <div tabIndex={0} className="collapse collapse-plus  mb-4">
+        <div className="collapse-title text-lg font-medium">
+          Audio Memo Transcript
+        </div>
+        <div className="collapse-content"> 
+          <p>
+            {appointment?.audio_transcript}
+          </p>
+        </div>
+      </div>
 
       <div className="rounded-md bg-gray-50 p-4 max-w-prose">
         
@@ -164,7 +202,6 @@ export default function CreateAppointment(
               id="allergies"
               name="allergies"
               required
-              defaultValue={"NKDA"}
               type='text'
               className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
               value={allergies || ''}
@@ -296,3 +333,5 @@ export default function CreateAppointment(
 
   )
 }
+
+export default CreateAppointmentPrefilled

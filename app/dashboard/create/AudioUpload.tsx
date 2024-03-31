@@ -152,7 +152,7 @@ export default function AudioUpload(
               data && getReplicateMonoTranscript(temp_audio_url, data[0].id)
 
             // Redirect to page for new note
-              data && router.push(`/dashboard/appointments/${data[0].id}`);
+              data && router.push(`/dashboard/create/${data[0].id}`);
 
         } catch (error) {
             console.error("Failed to upload to Supabase table:", error)
@@ -162,16 +162,16 @@ export default function AudioUpload(
     
 
     return (
-        <fieldset>
+        <fieldset className='max-w-prose mb-6'>
             <legend className="mb-2 block text-sm font-medium">
-                Appointment Recording
+                
             </legend>
             
             
             <div className="rounded-md border border-gray-200 bg-white px-[14px] py-3 h-46">
                 <div className="flex flex-col items-left gap-4">
-                        <div>Upload your appointment memo in mp3 format. Max file size: 50 mb / 1 hour.</div>   
-                        <a href='https://cloudconvert.com/' target='_blank' className='underline underline-offset-4 text-gray-600'>Click here if you need to convert your recording to mp3 format.</a>
+                        <div className='text-sm font-medium'>Automatically generate SOAP note from audio memo:</div>   
+                        
                         <input
                             id="audio_path"
                             name="audio_path"
@@ -180,9 +180,11 @@ export default function AudioUpload(
                             type="file"
                             accept="audio/mpeg, audio/mp3"
                             onChange={handleAudioUpload}
-                            className="cursor-pointer text-sm border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
+                            className="cursor-pointer text-sm bg-gray-50 text-gray-600 focus:ring-2"
                         />
                 </div>
+                {!isUploading && !uploadComplete &&
+                <div className='mt-4'> </div> }
                 {isUploading && !uploadComplete &&
                 <div className='mt-4'>Audio uploading: {`${percentageUploaded}% complete`}</div>
                 }

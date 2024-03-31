@@ -4,7 +4,7 @@
 // import { cookies } from 'next/headers'
 // import { Database } from '@/app/database.types';
 import { unstable_noStore as noStore } from 'next/cache';
-import { Appointment } from './definitions';
+import { Appointment } from '../database.types';
 import { embed } from './embed'
 import { createClient } from '@/utils/supabase/server'
 
