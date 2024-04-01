@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { formatReplicateReponse } from "@/app/lib/actions";
-import { updateApptWithTranscript } from "@/app/lib/actions";
+import { redirect } from "next/navigation";
 import { getSOAPData } from "@/app/lib/actions";
 
 export async function GET(req) {
@@ -15,10 +15,9 @@ export async function POST(req, res) {
 
     const prediction = await req.json();
     const transcript = prediction.output.text
-    
-    // console.log("predictionText from webhook:", transcript)
-    
-    await getSOAPData(apptid, transcript)
+        
+    getSOAPData(apptid, transcript)
 
+    
     return NextResponse.json({ message: "POST" }, { status: 200 });
   }

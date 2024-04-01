@@ -124,7 +124,7 @@ export async function getReplicateMonoTranscript(url: string, apptid: string) {
   }
 
   try {
-  const prediction = await replicate.predictions.create(
+  replicate.predictions.create(
     {
       version: "3ab86df6c8f54c11309d4d1f930ac292bad43ace52d10c80d87eb258b3c9f79c",
       input: {
@@ -138,11 +138,6 @@ export async function getReplicateMonoTranscript(url: string, apptid: string) {
       webhook: `${webhookUrl}?apptid=${apptid}`,
       webhook_events_filter: ["completed"]
     });
-
-    const endTime = new Date()
-    const runTime = (endTime.getTime() - startTime.getTime())
-    // console.log("prediction runtime:", runTime);
-    // console.log("replicate prediction:", prediction)
   
 } catch (error) {
   console.error("Error in getTranscript:", error);
@@ -253,7 +248,7 @@ export async function getSOAPData(apptid: string, transcript: string) {
   await updateApptWithSOAPData(apptid, transcript, completionString);
 
   } catch (error){
-    console.log("Error getting summary and feedback:", error)
+    console.log("Error getting OpenAI completion data:", error)
   }
   
 }
@@ -261,7 +256,7 @@ export async function getSOAPData(apptid: string, transcript: string) {
 
 // Update the appointment table row with the summary and feedback
 async function updateApptWithSOAPData(apptid: string, transcript: string, completion: string){
-  console.log("Running updateApptWithSummaryAndFeedback");
+  console.log("Running updateApptWithSOAPData");
   console.log("transcript:", transcript);
   console.log("completion string:", completion);
   const completionObject = JSON.parse(completion);
@@ -282,7 +277,8 @@ if (error) {
   console.error("Error updating appointment:", error);
   // Handle error accordingly
 } else {
-  console.log("Appointment updated successfully:", data);
+  console.log("Appointment updated successfully.");
+  // redirect(`/dashboard/create/${apptid}`)
 }
 }
 

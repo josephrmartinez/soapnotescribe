@@ -152,7 +152,7 @@ export default function AudioUpload(
               data && getReplicateMonoTranscript(temp_audio_url, data[0].id)
 
             // Redirect to page for new note
-              data && router.push(`/dashboard/create/${data[0].id}`);
+            //   data && router.push(`/dashboard/create/${data[0].id}`);
 
         } catch (error) {
             console.error("Failed to upload to Supabase table:", error)
@@ -184,12 +184,12 @@ export default function AudioUpload(
                         />
                 </div>
                 {!isUploading && !uploadComplete &&
-                <div className='mt-4'> </div> }
+                <div className='mt-4 h-4'> </div> }
                 {isUploading && !uploadComplete &&
-                <div className='mt-4'>Audio uploading: {`${percentageUploaded}% complete`}</div>
+                <div className='mt-4 h-4'>Audio uploading: {`${percentageUploaded}% complete`}</div>
                 }
                 {uploadComplete &&
-                <div className='mt-4'>Audio upload complete.</div>
+                <div className='mt-4 h-4'>Transcribing audio...</div>
                 }
             </div>
 
