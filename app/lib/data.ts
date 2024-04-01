@@ -75,35 +75,34 @@ const ITEMS_PER_PAGE = 6;
 //   }
 // };
 
-
-// export async function fetchFilteredAppointments(query: string, currentPage: number) {
-//   try {
+// UPDATE
+export async function fetchFilteredAppointments(query: string, currentPage: number) {
+  try {
     
-//     const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+    const offset = (currentPage - 1) * ITEMS_PER_PAGE;
 
-//     const supabase = createClient()
-//     const { data: appointments, error } = await supabase
-//       .from('appointments')
-//       .select(
-//         'id, patient, date, title, description, provider, clinic, summary, feedback'
-//       )
-//       .ilike('combined_text', `%${query}%`)
-//       .order('date', { ascending: false })
-//       .range(offset, offset + ITEMS_PER_PAGE - 1);
+    const supabase = createClient()
+    const { data: appointments, error } = await supabase
+      .from('appointments')
+      .select(
+        'id, patient, date, title, description, provider, clinic, summary, feedback'
+      )
+      .ilike('combined_text', `%${query}%`)
+      .order('date', { ascending: false })
+      .range(offset, offset + ITEMS_PER_PAGE - 1);
 
-//     if (error) {
-//       console.error('Supabase Error:', error);
-//       throw new Error('Failed to fetch appointments data.');
-//     }
+    if (error) {
+      console.error('Supabase Error:', error);
+      throw new Error('Failed to fetch appointments data.');
+    }
 
-//     return appointments;
-//   } catch (error) {
-//     console.error('Supabase Error:', error);
-//     throw new Error('Failed to fetch appointments data.');
-//   }
-// }
+    return appointments;
+  } catch (error) {
+    console.error('Supabase Error:', error);
+    throw new Error('Failed to fetch appointments data.');
+  }
+}
 
-// // IN PROGRESS
 // export async function fetchSimilarApptsWithEmbedding(query: string, currentPage: number) {
 //   try {
 //     // console.log("query input", query)

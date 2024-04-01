@@ -9,9 +9,9 @@ export interface Appointment {
     audio_transcript?: string;
     patient_name: string;
     patient_date_of_birth: string;
-    date_seen: string;
-    time_seen: string;
-    allergies: Allergy | { type: "Other"; description: string };
+    appointment_date: string;
+    appointment_time: string;
+    allergies: string;
     chief_complaint?: string;
     soap_subjective?: string;
     soap_objective?: string;

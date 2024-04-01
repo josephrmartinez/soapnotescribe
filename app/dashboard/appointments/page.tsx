@@ -5,7 +5,7 @@ import { CreateAppointment } from '@/app/ui/appointments/buttons';
 import { GeistSans } from 'geist/font/sans';
 import { AppointmentsTableSkeleton } from '@/app/ui/skeletons';
 import { Suspense } from 'react';
-import { fetchApptsPages } from '@/app/lib/data';
+// import { fetchApptsPages } from '@/app/lib/data';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -23,7 +23,8 @@ export default async function Page({
   const query = searchParams?.query || '';
   const currentPage = Number(searchParams?.page) || 1;
   
-  const totalPages = await fetchApptsPages(query);
+  // const totalPages = await fetchApptsPages(query);
+  const totalPages = 3
 
   
   

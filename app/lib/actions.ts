@@ -229,8 +229,8 @@ export async function getSOAPData(apptid: string, transcript: string) {
         {
           patient_name: string;
           patient_date_of_birth: Date;
-          date_seen: Date;
-          time_seen: string;
+          appointment_date: Date;
+          appointment_time: string ("hh:mm");
           allergies: string;
           chief_complaint?: string;
           soap_subjective?: string;
@@ -261,31 +261,29 @@ export async function getSOAPData(apptid: string, transcript: string) {
 
 // Update the appointment table row with the summary and feedback
 async function updateApptWithSOAPData(apptid: string, transcript: string, completion: string){
-  console.log("Running updateApptWithSummaryAndFeedback")
+  console.log("Running updateApptWithSummaryAndFeedback");
+  console.log("transcript:", transcript);
+  console.log("completion string:", completion);
+  const completionObject = JSON.parse(completion);
 
-  console.log("transcript:", transcript)
-  console.log("completion string:", completion)
-
-  // TODO: 
-  // - PARSE COMPLETION OBJECT TO PULL OUT RETURNED FIELDS
-  // - UPDATE SUPABASE TABLE ROW WITH TRANSCRIPT AND ALL FIELDS FROM COMPLETION OBJECT
 
   // Using service key to update appointment row
-//   const supabase = createClientJS(process.env.SUPABASE_URL!,
-//     process.env.SUPABASE_SERVICE_KEY!)
+  const supabase = createClientJS(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_KEY!)
 
-//   const { data, error } = await supabase
-//   .from("appointments")
-//   .update({summary: summary, feedback: feedback})
-//   .eq('id', apptid)
-//   .select();
+  const { data, error } = await supabase
+  .from("appointments")
+  .update({
+    audio_transcript: transcript, 
+    ...completionObject
+  })
+  .eq('id', apptid);
 
-// if (error) {
-//   console.error("Error adding summary and feedback:", error);
-//   // Handle error accordingly
-// } else {
-//   // console.log("Summary and feedback added successfully:", data);
-// }
+if (error) {
+  console.error("Error updating appointment:", error);
+  // Handle error accordingly
+} else {
+  console.log("Appointment updated successfully:", data);
+}
 }
 
 

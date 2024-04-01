@@ -22,16 +22,17 @@ const CreateAppointmentPrefilled: React.FC<CreateAppointmentProps> = ({ appointm
   // pass in Appointment object data to pre-populate form, or do not pass in an Appointment object to just use a blank form
   const [loading, setLoading] = useState<boolean>(true)
   const [audioUrl, setAudioUrl] = useState<string>('')
-  const [patientName, setPatientName] = useState<string | null>(null)
-  const [chiefComplaint, setChiefComplaint] = useState<string | null>(null)
-  const [date, setDate] = useState<string>('')
-  const [patientDateOfBirth, setPatientDateOfBirth] = useState<string>('')
-  const [allergies, setAllergies] = useState<string>('')
+  const [patientName, setPatientName] = useState<string | null>(appointment?.patient_name || null)
+  const [chiefComplaint, setChiefComplaint] = useState<string | null>(appointment?.chief_complaint || null)
+  const [date, setDate] = useState<string>(appointment?.appointment_date || '')
+  const [appointmentTime, setAppointmentTime] = useState<string>(appointment?.appointment_time || '')
+  const [patientDateOfBirth, setPatientDateOfBirth] = useState<string>(appointment?.patient_date_of_birth || '')
+  const [allergies, setAllergies] = useState<string>(appointment?.allergies || '')
   const [consent, setConsent] = useState<string | null>(null)
-  const [subjective, setSubjective] = useState<string | null>(null)
-  const [objective, setObjective] = useState<string | null>(null)
-  const [assessment, setAssessment] = useState<string | null>(null)
-  const [plan, setPlan] = useState<string | null>(null)
+  const [subjective, setSubjective] = useState<string | null>(appointment?.soap_subjective || null)
+  const [objective, setObjective] = useState<string | null>(appointment?.soap_objective || null)
+  const [assessment, setAssessment] = useState<string | null>(appointment?.soap_assessment || null)
+  const [plan, setPlan] = useState<string | null>(appointment?.soap_plan || null)
   const [submitOkay, setSubmitOkay] = useState<boolean>(true) 
 
   console.log("appointment data from client CreateAppointmentPrefilled:", appointment)
@@ -138,8 +139,8 @@ const CreateAppointmentPrefilled: React.FC<CreateAppointmentProps> = ({ appointm
               name="appointment_time"
               required
               type="time"
-              // value={date}
-              // onChange={(e) => setDate(e.target.value)}
+              value={appointmentTime}
+              onChange={(e) => setAppointmentTime(e.target.value)}
               className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
             >
             </input>
