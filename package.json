@@ -4,7 +4,7 @@
     "build": "next build",
     "dev": "next dev",
     "start": "next start",
-    "update-types": "npx supabase gen types typescript --project-id \"tmmnudhjtavobvreaink\" --schema public > app/database.types.ts"
+    "update-types": "npx supabase gen types typescript --project-id \"grjecfvldxcnvhmjpvmu\" --schema public > app/database.types.ts"
   },
   "dependencies": {
     "@heroicons/react": "^2.0.18",

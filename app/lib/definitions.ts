@@ -69,6 +69,33 @@ export interface Appointment {
   status?: string;
 }
 
+// export interface Appointment {
+//   id: string
+//   user_id: string;
+//   audio_storage_url?: string;
+//   temp_audio_url?: string;
+//   image_urls?: string[];
+//   audio_transcript?: string;
+//   patient_name: string;
+//   patient_date_of_birth: string;
+//   appointment_date: string;
+//   appointment_time: string;
+//   allergies: string;
+//   chief_complaint?: string;
+//   soap_subjective?: string;
+//   soap_objective?: string;
+//   soap_assessment?: string;
+//   soap_plan?: string;
+//   patient_location?: string;
+//   appointment_summary?: string;
+//   discharge_instructions?: string;
+//   combined_text?: string;
+//   feedback?: string;
+//   second_opinion?: string;
+//   status?: string;
+// }
+
+
 
 export interface Context {
   id: string;
