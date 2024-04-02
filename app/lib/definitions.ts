@@ -66,6 +66,7 @@ export interface Appointment {
   combined_text?: string;
   feedback?: string;
   second_opinion?: string;
+  status?: string;
 }
 
 

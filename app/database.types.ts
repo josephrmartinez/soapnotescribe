@@ -1,5 +1,3 @@
-export type Allergy = "NKDA" | "PCN" | "SULFA" | "Other";
-
 export interface Appointment {
     id: string
     user_id: string;
@@ -23,6 +21,7 @@ export interface Appointment {
     combined_text?: string;
     feedback?: string;
     second_opinion?: string;
+    status?: string;
   }
 
 
