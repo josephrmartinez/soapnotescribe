@@ -4,7 +4,8 @@
 // import { cookies } from 'next/headers'
 // import { Database } from '@/app/database.types';
 import { unstable_noStore as noStore } from 'next/cache';
-import { Appointment } from '../database.types';
+// import { Appointment } from '../database.types';
+import { Database } from '../database.types';
 import { embed } from './embed'
 import { createClient } from '@/utils/supabase/server'
 
@@ -28,7 +29,7 @@ export async function fetchAppointmentById(id: string) {
     }
 
     const appointment = appointments ? appointments[0] : null;
-    return appointment as Appointment;
+    return appointment
   } catch (error) {
     console.error('Supabase Error:', error);
     throw new Error('Failed to fetch appointment data.');
@@ -85,16 +86,47 @@ export async function fetchFilteredAppointments(query: string, currentPage: numb
     const { data: appointments, error } = await supabase
       .from('appointments')
       .select(
-        'id, patient, date, title, description, provider, clinic, summary, feedback'
+        'id, status, created_at, patient_name, appointment_date, chief_complaint, audio_transcript'
       )
-      .ilike('combined_text', `%${query}%`)
-      .order('date', { ascending: false })
+      .ilike('audio_transcript', `%${query}%`)
+      .order('appointment_date', { ascending: false })
       .range(offset, offset + ITEMS_PER_PAGE - 1);
 
     if (error) {
-      console.error('Supabase Error:', error);
-      throw new Error('Failed to fetch appointments data.');
+      console.error('Error fetching appointments:', error);
+      return
     }
+
+    // Implement custom sorting logic: processing at top, then "awaiting review", then "approved"
+    // TODO: Update table to delineate these groupings?
+    appointments.sort((a, b) => {
+      // Prioritize "processing" status
+      if (a.status === 'processing' && b.status !== 'processing') {
+        return -1;
+      } else if (a.status !== 'processing' && b.status === 'processing') {
+        return 1;
+      }
+
+      // Then prioritize "awaiting review" status
+      if (a.status === 'awaiting review' && b.status !== 'awaiting review') {
+        return -1;
+      } else if (a.status !== 'awaiting review' && b.status === 'awaiting review') {
+        return 1;
+      }
+
+      // Handle rows without an appointment_date
+      if (!a.appointment_date && b.appointment_date) {
+        return 1; // Place rows without an appointment_date after those with one
+      } else if (a.appointment_date && !b.appointment_date) {
+        return -1; // Place rows with an appointment_date before those without
+      } else if (!a.appointment_date && !b.appointment_date) {
+        return 0; // If both rows lack an appointment_date, they are considered equal for sorting purposes
+      }
+
+      // Finally, sort by date
+      // Assuming appointment_date is in a format that can be directly compared as strings
+      return new Date(b.appointment_date).getTime() - new Date(a.appointment_date).getTime();
+    });
 
     return appointments;
   } catch (error) {

@@ -1,7 +1,6 @@
-import { UpdateAppointment, ReadAppointment } from '@/app/ui/appointments/buttons';
+import { UpdateAppointment, ViewSOAPNote, ReviewDraft} from '@/app/ui/appointments/buttons';
 import { formatDateToLocal, formatCurrency } from '@/app/lib/utils';
 import { fetchFilteredAppointments } from '@/app/lib/data';
-import { embed } from '@/app/lib/embed';
 
 export default async function AppointmentsTable({
   query,
@@ -13,18 +12,6 @@ export default async function AppointmentsTable({
   
   // FETCH APPTS WITH KEYWORD SEARCH
   const appointments = await fetchFilteredAppointments(query, currentPage);
-
-  // FETCH APPTS WITH SEMANTIC SEARCH
-  // const appointments = await fetchSimilarApptsWithEmbedding(query, currentPage);
-  
-  // if (query.trim() !== ''){
-  //   const searchEmbedding = await embed(query)
-  //   console.log(searchEmbedding)
-
-  //   const semanticAppointments = await fetchSimilarApptsWithEmbedding(query, currentPage);
-  //   console.log("semanticAppointment", semanticAppointments)
-
-  // }
 
 
   return (
@@ -40,21 +27,21 @@ export default async function AppointmentsTable({
                 <div className="flex items-center justify-between pb-4">
                   <div>
                     <div className="mb-2 flex items-center">
-                      <p>{formatDateToLocal(appointment.date)}</p>
+                      <p>{formatDateToLocal(appointment.appointment_date)}</p>
                     </div>
-                    <p className="text-sm text-gray-500">{appointment.clinic}</p>
+                    <p className="text-sm text-gray-500">{appointment.patient_name}</p>
                   </div>
                   
                 </div>
                 <div className="flex w-full items-center justify-between pt-4">
                   <div>
                     <p className="text-xl font-medium">
-                      {appointment.title}
+                      {appointment.chief_complaint}
                     </p>
-                    <p>{appointment.provider}</p>
+                    <p>{appointment.status}</p>
                   </div>
                   <div className="flex justify-end gap-2">
-                    <ReadAppointment id={appointment.id} />
+                    <ViewSOAPNote id={appointment.id} />
                     
                   </div>
                 </div>
@@ -65,16 +52,16 @@ export default async function AppointmentsTable({
             <thead className="rounded-lg text-left text-sm font-normal">
               <tr>
                 <th scope="col" className="px-4 py-5 font-medium sm:pl-6">
-                  Date
+                  Appointment Date
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Clinic
+                  Patient
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Provider
+                  Chief Complaint
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Appointment Title
+                  Note Status
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
                    
@@ -91,24 +78,25 @@ export default async function AppointmentsTable({
                   className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
                 >
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
-                      <p>{formatDateToLocal(appointment.date)}</p>
+                      <p>{formatDateToLocal(appointment.appointment_date)}</p>
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    {appointment.clinic}
+                    {appointment.patient_name}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    {appointment.provider}
+                    {appointment.chief_complaint}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                  {appointment.title}
+                  {appointment.status}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
                    
                   </td>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
-                      <ReadAppointment id={appointment.id} />
-                      
+                      {appointment.status === "processing" && <div className='h-10'></div>}
+                      {appointment.status === "approved" && <ViewSOAPNote id={appointment.id} />}
+                      {appointment.status === "awaiting review" && <ReviewDraft id={appointment.id} />}
                     </div>
                   </td>
                 </tr>

@@ -14,13 +14,25 @@ export function CreateAppointment() {
   );
 }
 
-export function ReadAppointment({ id }: { id: string }) {
+export function ViewSOAPNote({ id }: { id: string }) {
   return (
     <Link
       href={`/dashboard/appointments/${id}`}
       className="flex flex-row rounded-md text-teal-600 border border-gray-200 p-2 transition-colors hover:bg-gray-100"
     >
-      <div className='text-sm '>view appointment</div>
+      <div className='text-sm '>view SOAP note</div>
+      <ArrowRightIcon className="h-5 md:ml-4 md:mr-1" />
+    </Link>
+  );
+}
+
+export function ReviewDraft({ id }: { id: string }) {
+  return (
+    <Link
+      href={`/dashboard/create/${id}`}
+      className="flex flex-row rounded-md bg-red-300 hover:bg-red-200 text-teal-800 border border-red-600 p-2 transition-colors "
+    >
+      <div className='text-sm font-semibold uppercase text-red-900'>review draft</div>
       <ArrowRightIcon className="h-5 md:ml-4 md:mr-1" />
     </Link>
   );
