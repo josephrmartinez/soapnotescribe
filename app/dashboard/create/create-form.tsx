@@ -10,14 +10,8 @@ import {
     CalendarDaysIcon,
     UserCircleIcon, PencilSquareIcon
   } from '@heroicons/react/24/outline';
-import { Appointment } from '@/app/database.types';
-import AudioUpload from './AudioUpload';
 
-
-
-export default function CreateAppointment(
-  // pass in Appointment object data to pre-populate form, or do not pass in an Appointment object to just use a blank form
-) {
+export default function CreateAppointment() {
   const [loading, setLoading] = useState(true)
   const [patientName, setPatientName] = useState<string | null>(null)
   const [chiefComplaint, setChiefComplaint] = useState<string | null>(null)
@@ -61,9 +55,8 @@ export default function CreateAppointment(
   return (
     <form onSubmit={submitAppointment}>
       <div className="flex w-full items-center justify-between">
-        <h1 className={` text-2xl`}>Add appointment</h1>
+        <h1 className={` text-2xl`}>Create New Note</h1>
       </div>
-      <AudioUpload />
 
       <div className="rounded-md bg-gray-50 p-4 max-w-prose">
         

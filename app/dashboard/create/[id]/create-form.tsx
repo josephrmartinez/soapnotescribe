@@ -10,7 +10,7 @@ import {
     CalendarDaysIcon,
     UserCircleIcon, PencilSquareIcon
   } from '@heroicons/react/24/outline';
-import { Appointment } from '@/app/database.types';
+import { Appointment } from '@/app/lib/definitions';
 import { getSignedAudioUrl } from '@/app/lib/data';
 
 interface CreateAppointmentProps {
@@ -80,7 +80,7 @@ const CreateAppointmentPrefilled: React.FC<CreateAppointmentProps> = ({ appointm
   return (
     <form onSubmit={submitAppointment} className='max-w-prose'>
       <div className="flex w-full items-center justify-between">
-        <h1 className={` text-2xl`}>Add appointment</h1>
+        <h1 className={` text-2xl`}>Review Auto-Drafted Note</h1>
       </div>
       {audioUrl ? (
       <audio className="w-full" controls>

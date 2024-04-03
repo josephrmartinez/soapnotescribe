@@ -268,6 +268,7 @@ async function updateApptWithSOAPData(apptid: string, transcript: string, comple
   const { data, error } = await supabase
   .from("appointments")
   .update({
+    status: "awaiting review",
     audio_transcript: transcript, 
     ...completionObject
   })

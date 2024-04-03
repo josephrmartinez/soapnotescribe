@@ -6,19 +6,7 @@ import { useRouter } from 'next/navigation';
 import { getReplicateMonoTranscript } from '@/app/lib/actions';
 
 
-export default function AudioUpload(
-//     { 
-//     setRecordingUrl,
-//     setTempDownloadUrl,
-//     isUploading,
-//     setIsUploading,
-// }: { 
-//     setRecordingUrl: React.Dispatch<React.SetStateAction<string | null>>;
-//     setTempDownloadUrl: React.Dispatch<React.SetStateAction<string | null>>;
-//     isUploading: boolean;
-//     setIsUploading: React.Dispatch<React.SetStateAction<boolean>>;
-//  }
- ) {
+export default function AudioUpload() {
     const inputFileRef = useRef<HTMLInputElement>(null);
     const [uploadComplete, setUploadComplete] = useState(false)
     const [percentageUploaded, setPercentageUploaded] = useState(0)
@@ -152,7 +140,7 @@ export default function AudioUpload(
               data && getReplicateMonoTranscript(temp_audio_url, data[0].id)
 
             // Redirect to page for new note
-            //   data && router.push(`/dashboard/create/${data[0].id}`);
+              data && router.push(`/dashboard/appointments`);
 
         } catch (error) {
             console.error("Failed to upload to Supabase table:", error)

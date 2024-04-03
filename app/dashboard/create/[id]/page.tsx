@@ -3,7 +3,7 @@ import CreateAppointmentPrefilled from './create-form';
 import { fetchAppointmentById } from '@/app/lib/data';
 
 export const metadata: Metadata = {
-  title: "Create New Note",
+  title: "Review Auto-Drafted Note",
 }
 
 

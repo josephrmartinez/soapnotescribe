@@ -31,10 +31,10 @@ export default async function Page({
 
   return (
     <div className="w-full">
-      <div className="flex w-full items-center justify-between">
+      <div className="flex w-full items-center justify-between mb-4">
         <h1 className={`${GeistSans.className} text-2xl`}>Appointments</h1>
       </div>
-      <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
+      <div className="flex items-center justify-between gap-2 md:mt-8">
         <Search placeholder="Search appointments..." />
         <CreateAppointment />
       </div>

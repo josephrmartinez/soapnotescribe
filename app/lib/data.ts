@@ -4,11 +4,9 @@
 // import { cookies } from 'next/headers'
 // import { Database } from '@/app/database.types';
 import { unstable_noStore as noStore } from 'next/cache';
-// import { Appointment } from '../database.types';
 import { Database } from '../database.types';
 import { embed } from './embed'
 import { createClient } from '@/utils/supabase/server'
-
 
 // const supabase = createServerComponentClient<Database>({ cookies })
 
@@ -113,26 +111,25 @@ export async function fetchFilteredAppointments(query: string, currentPage: numb
       } else if (a.status !== 'awaiting review' && b.status === 'awaiting review') {
         return 1;
       }
-
-      // Handle rows without an appointment_date
-      if (!a.appointment_date && b.appointment_date) {
-        return 1; // Place rows without an appointment_date after those with one
-      } else if (a.appointment_date && !b.appointment_date) {
-        return -1; // Place rows with an appointment_date before those without
-      } else if (!a.appointment_date && !b.appointment_date) {
-        return 0; // If both rows lack an appointment_date, they are considered equal for sorting purposes
+      
+      // Finally, sort by status and then by appointment_date
+      if (a.status === b.status) {
+        // If both appointments have the same status, sort by appointment_date
+        // Handle null appointment_date values by treating them as the earliest possible date
+        const aDate = a.appointment_date ? new Date(a.appointment_date) : new Date(-8640000000000000); // Treat null as the earliest possible date
+        const bDate = b.appointment_date ? new Date(b.appointment_date) : new Date(-8640000000000000); // Treat null as the earliest possible date
+        return bDate.getTime() - aDate.getTime(); // Sort in descending order
       }
 
-      // Finally, sort by date
-      // Assuming appointment_date is in a format that can be directly compared as strings
-      return new Date(b.appointment_date).getTime() - new Date(a.appointment_date).getTime();
+      // Default return value if none of the above conditions are met
+      return 0;
     });
 
     return appointments;
-  } catch (error) {
+ } catch (error) {
     console.error('Supabase Error:', error);
     throw new Error('Failed to fetch appointments data.');
-  }
+ }
 }
 
 // export async function fetchSimilarApptsWithEmbedding(query: string, currentPage: number) {
