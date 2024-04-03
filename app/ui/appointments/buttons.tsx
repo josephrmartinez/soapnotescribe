@@ -30,10 +30,10 @@ export function ReviewDraft({ id }: { id: string }) {
   return (
     <Link
       href={`/dashboard/create/${id}`}
-      className="flex flex-row rounded-md bg-red-300 hover:bg-red-200 text-teal-800 border border-red-600 p-2 transition-colors "
+      className="flex flex-row rounded-md bg-red-500 shadow-md hover:bg-red-400 p-2 transition-all "
     >
-      <div className='text-sm font-semibold uppercase text-red-900'>review draft</div>
-      <ArrowRightIcon className="h-5 md:ml-4 md:mr-1" />
+      <div className='text-sm font-semibold uppercase text-white '>review draft</div>
+      <ArrowRightIcon className="h-5 md:ml-4 md:mr-1 text-white" />
     </Link>
   );
 }

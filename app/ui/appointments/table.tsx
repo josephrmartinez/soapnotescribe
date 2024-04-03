@@ -12,7 +12,7 @@ export default async function AppointmentsTable({
   
   // FETCH APPTS WITH KEYWORD SEARCH
   const appointments = await fetchFilteredAppointments(query, currentPage);
-
+  console.log("fetched appointments:", appointments)
 
   return (
     <div className="mt-6 flow-root">
@@ -94,7 +94,7 @@ export default async function AppointmentsTable({
                   </td>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
-                      {appointment.status === "processing" && <div className='h-10'></div>}
+                      {appointment.status === "processing" && <div className='h-10 w-28 flex flex-row items-center text-teal-600'><div className='loader'></div></div>}
                       {appointment.status === "approved" && <ViewSOAPNote id={appointment.id} />}
                       {appointment.status === "awaiting review" && <ReviewDraft id={appointment.id} />}
                     </div>

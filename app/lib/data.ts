@@ -86,7 +86,7 @@ export async function fetchFilteredAppointments(query: string, currentPage: numb
       .select(
         'id, status, created_at, patient_name, appointment_date, chief_complaint, audio_transcript'
       )
-      .ilike('audio_transcript', `%${query}%`)
+      // .ilike('audio_transcript', `%${query}%`)
       .order('appointment_date', { ascending: false })
       .range(offset, offset + ITEMS_PER_PAGE - 1);
 
@@ -111,15 +111,15 @@ export async function fetchFilteredAppointments(query: string, currentPage: numb
       } else if (a.status !== 'awaiting review' && b.status === 'awaiting review') {
         return 1;
       }
-      
+
       // Finally, sort by status and then by appointment_date
       if (a.status === b.status) {
         // If both appointments have the same status, sort by appointment_date
-        // Handle null appointment_date values by treating them as the earliest possible date
-        const aDate = a.appointment_date ? new Date(a.appointment_date) : new Date(-8640000000000000); // Treat null as the earliest possible date
-        const bDate = b.appointment_date ? new Date(b.appointment_date) : new Date(-8640000000000000); // Treat null as the earliest possible date
+        // Since we know there will be no null appointment_date values, we can directly create Date objects
+        const aDate = new Date(a.appointment_date);
+        const bDate = new Date(b.appointment_date);
         return bDate.getTime() - aDate.getTime(); // Sort in descending order
-      }
+    }
 
       // Default return value if none of the above conditions are met
       return 0;

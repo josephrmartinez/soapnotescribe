@@ -1,5 +1,5 @@
 'use client'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState, useRef } from 'react'
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/utils/supabase/client';
@@ -34,6 +34,38 @@ const CreateAppointmentPrefilled: React.FC<CreateAppointmentProps> = ({ appointm
   const [assessment, setAssessment] = useState<string | null>(appointment?.soap_assessment || null)
   const [plan, setPlan] = useState<string | null>(appointment?.soap_plan || null)
   const [submitOkay, setSubmitOkay] = useState<boolean>(true) 
+
+  // Ref declarations with types
+ const subjectiveRef = useRef<HTMLTextAreaElement | null>(null);
+ const objectiveRef = useRef<HTMLTextAreaElement | null>(null);
+ const assessmentRef = useRef<HTMLTextAreaElement | null>(null);
+ const planRef = useRef<HTMLTextAreaElement | null>(null);
+
+// Refactored autoResizeTextarea function with type
+const autoResizeTextarea = (textareaRef: React.MutableRefObject<HTMLTextAreaElement | null>) => {
+    const textarea = textareaRef.current;
+    if (textarea) {
+      textarea.style.height = 'auto'; // Reset the height
+      textarea.style.height = `${textarea.scrollHeight + 10}px`; // Set the height to scrollHeight
+    }
+ };
+
+ // useEffect hooks for each textarea
+ useEffect(() => {
+    autoResizeTextarea(subjectiveRef);
+ }, [subjective]);
+
+ useEffect(() => {
+    autoResizeTextarea(objectiveRef);
+ }, [objective]);
+
+ useEffect(() => {
+    autoResizeTextarea(assessmentRef);
+ }, [assessment]);
+
+ useEffect(() => {
+    autoResizeTextarea(planRef);
+ }, [plan]);
 
   console.log("appointment data from client CreateAppointmentPrefilled:", appointment)
 
@@ -77,6 +109,7 @@ const CreateAppointmentPrefilled: React.FC<CreateAppointmentProps> = ({ appointm
       };
 
 
+      
   return (
     <form onSubmit={submitAppointment} className='max-w-prose'>
       <div className="flex w-full items-center justify-between">
@@ -261,6 +294,7 @@ const CreateAppointmentPrefilled: React.FC<CreateAppointmentProps> = ({ appointm
           <textarea
           id="subjective"
           name="subjective"
+          ref={subjectiveRef}
           className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
           value={subjective || ''}
           onChange={(e) => setSubjective(e.target.value)}
@@ -277,6 +311,7 @@ const CreateAppointmentPrefilled: React.FC<CreateAppointmentProps> = ({ appointm
           <textarea
           id="objective"
           name="objective"
+          ref={objectiveRef}
           className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
           value={objective || ''}
           onChange={(e) => setObjective(e.target.value)}
@@ -293,6 +328,7 @@ const CreateAppointmentPrefilled: React.FC<CreateAppointmentProps> = ({ appointm
           <textarea
           id="assessment"
           name="assessment"
+          ref={assessmentRef}
           className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
           value={assessment || ''}
           onChange={(e) => setAssessment(e.target.value)}
@@ -309,6 +345,7 @@ const CreateAppointmentPrefilled: React.FC<CreateAppointmentProps> = ({ appointm
           <textarea
           id="plan"
           name="plan"
+          ref={planRef}
           className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
           value={plan || ''}
           onChange={(e) => setPlan(e.target.value)}
