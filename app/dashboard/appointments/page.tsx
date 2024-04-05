@@ -9,7 +9,7 @@ import { Suspense } from 'react';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "Appointments",
+  title: "SOAP Notes",
 }
  
 export default async function Page({
@@ -32,11 +32,11 @@ export default async function Page({
   return (
     <div className="w-full">
       <div className="flex w-full items-center justify-between mb-4">
-        <h1 className={`${GeistSans.className} text-2xl`}>Appointments</h1>
+        <h1 className={`${GeistSans.className} text-2xl`}>SOAP Notes</h1>
       </div>
       <div className="flex items-center justify-between gap-2 md:mt-8">
-        <Search placeholder="Search appointments..." />
-        <CreateAppointment />
+        <Search placeholder="Search notes..." />
+        {/* <CreateAppointment /> */}
       </div>
       <Suspense key={query + currentPage} fallback={<AppointmentsTableSkeleton />}>
         <Table query={query} currentPage={currentPage} />

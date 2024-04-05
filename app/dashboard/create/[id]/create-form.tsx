@@ -19,9 +19,10 @@ interface CreateAppointmentProps {
 
 
 const CreateAppointmentPrefilled: React.FC<CreateAppointmentProps> = ({ appointment }) => {
-  // pass in Appointment object data to pre-populate form, or do not pass in an Appointment object to just use a blank form
+  // pass in Appointment object data to pre-populate form
   const [loading, setLoading] = useState<boolean>(true)
   const [audioUrl, setAudioUrl] = useState<string>('')
+  const [apptid, setApptid] = useState<string | null>(appointment?.id || null)
   const [patientName, setPatientName] = useState<string | null>(appointment?.patient_name || null)
   const [chiefComplaint, setChiefComplaint] = useState<string | null>(appointment?.chief_complaint || null)
   const [date, setDate] = useState<string>(appointment?.appointment_date || '')
@@ -33,13 +34,14 @@ const CreateAppointmentPrefilled: React.FC<CreateAppointmentProps> = ({ appointm
   const [objective, setObjective] = useState<string | null>(appointment?.soap_objective || null)
   const [assessment, setAssessment] = useState<string | null>(appointment?.soap_assessment || null)
   const [plan, setPlan] = useState<string | null>(appointment?.soap_plan || null)
-  const [submitOkay, setSubmitOkay] = useState<boolean>(true) 
+  const [doctorSignature, setDoctorSignature] = useState<string>(appointment?.doctor_signature || '')
 
   // Ref declarations with types
  const subjectiveRef = useRef<HTMLTextAreaElement | null>(null);
  const objectiveRef = useRef<HTMLTextAreaElement | null>(null);
  const assessmentRef = useRef<HTMLTextAreaElement | null>(null);
  const planRef = useRef<HTMLTextAreaElement | null>(null);
+ 
 
 // Refactored autoResizeTextarea function with type
 const autoResizeTextarea = (textareaRef: React.MutableRefObject<HTMLTextAreaElement | null>) => {
@@ -67,7 +69,7 @@ const autoResizeTextarea = (textareaRef: React.MutableRefObject<HTMLTextAreaElem
     autoResizeTextarea(planRef);
  }, [plan]);
 
-  console.log("appointment data from client CreateAppointmentPrefilled:", appointment)
+  
 
   useEffect(() => {
     const fetchAudioUrl = async () => {
@@ -83,27 +85,55 @@ const autoResizeTextarea = (textareaRef: React.MutableRefObject<HTMLTextAreaElem
     };
 
     fetchAudioUrl();
+
+    console.log("appointment data from client CreateAppointmentPrefilled:", appointment)
   }, []);
 
   
-  const supabase = createClient()
+  
   const router = useRouter()
 
+  
   const submitAppointment = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     try {
+        const supabase = createClient()
+        const currentUser = await supabase.auth.getUser()
+        console.log("currentUser", currentUser )
+
         setLoading(true)
-        const { error, data } = await supabase.from('appointments').insert({
-            created_at: new Date().toISOString(),
-            
+        const { error, data } = await supabase.from('appointments')
+        .update({
+            status: "approved",
+            patient_name: patientName,
+            chief_complaint: chiefComplaint,
+            appointment_date: date,
+            patient_date_of_birth: patientDateOfBirth,
+            allergies: allergies,
+            soap_subjective: subjective,
+            soap_objective: objective,
+            soap_assessment: assessment,
+            soap_plan: plan,
+            doctor_signature: doctorSignature
           })
+          .eq('id', apptid)
           .select();
-          if (error) throw error
-          router.push('/dashboard/appointments');
+          if (error) {
+            console.error("Error updating the appointment:", error);
+            setLoading(false)
+            return;
+            }
+            if (data && data.length > 0) {
+                router.prefetch('/dashboard/appointments');
+                router.push('/dashboard/appointments');
+            } else {
+                // Handle the case where the update was successful but the data is not as expected
+                console.error('Update successful, but data is not as expected');
+                setLoading(false);
+            }
         } catch (error) {
-          console.error('Error creating the appointment:', error);
-        } finally {
+          console.error('Error updating the appointment:', error);
           setLoading(false);
         }
       };
@@ -353,6 +383,26 @@ const autoResizeTextarea = (textareaRef: React.MutableRefObject<HTMLTextAreaElem
         </textarea>
       </div>
       </div>
+      <div className="mb-4">
+           <label htmlFor="allergies" className="mb-2 block text-sm font-medium">
+             Doctor Signature
+           </label>
+           <div className="relative">
+             <input
+              id="doctor_signature"
+              name="doctor_signature"
+              required
+              type='text'
+              className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
+              value={doctorSignature || ''}
+              onChange={(e) => setDoctorSignature(e.target.value)}
+            >
+              
+            </input>
+          </div>
+          
+        </div>
+
         
 
       <div className="mt-6 flex justify-end gap-4">
@@ -362,7 +412,7 @@ const autoResizeTextarea = (textareaRef: React.MutableRefObject<HTMLTextAreaElem
         >
           Cancel
         </Link>
-        <Button type="submit" active={submitOkay}>Add Appointment</Button>
+        <Button type="submit" active={doctorSignature !== ''}>Approve Note</Button>
       </div>
       </div>
     </form>
