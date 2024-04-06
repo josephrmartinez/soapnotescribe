@@ -1,34 +1,37 @@
-import OpenAI from 'openai';
-import { NextApiRequest, NextApiResponse } from 'next';
-
-const openai = new OpenAI({apiKey: process.env.OPENAI_API_KEY })
+// Get mono transcription from OpenAI Whisper API endpoint:
 
 
-export async function POST(req: NextApiRequest, res: NextApiResponse) {
+// import OpenAI from 'openai';
+// import { NextApiRequest, NextApiResponse } from 'next';
+
+// const openai = new OpenAI({apiKey: process.env.OPENAI_API_KEY })
+
+
+// export async function POST(req: NextApiRequest, res: NextApiResponse) {
   
-    try {
-      const audioFileBuffer = req.files.audio.file;
-      const audioFileBase64 = Buffer.from(audioFileBuffer).toString('base64');
+//     try {
+//       const audioFileBuffer = req.files.audio.file;
+//       const audioFileBase64 = Buffer.from(audioFileBuffer).toString('base64');
 
-      // Get the base64-encoded audio data from the FormData
-      const audioFile = formData.audio
+//       // Get the base64-encoded audio data from the FormData
+//       const audioFile = formData.audio
 
     
 
-      // Call the OpenAI API for transcription
-      const transcription = await openai.audio.transcriptions.create({
-        file: audioFile,
-        model: 'whisper-1',
-        response_format: 'text',
-      });
+//       // Call the OpenAI API for transcription
+//       const transcription = await openai.audio.transcriptions.create({
+//         file: audioFile,
+//         model: 'whisper-1',
+//         response_format: 'text',
+//       });
 
-      // Send back the transcription
-      res.status(200).json({ transcription: transcription.text });
-    } catch (error) {
-      console.error('Error:', error);
-      res.status(500).json({ error: 'Failed to transcribe audio' });
-    }
-}
+//       // Send back the transcription
+//       res.status(200).json({ transcription: transcription.text });
+//     } catch (error) {
+//       console.error('Error:', error);
+//       res.status(500).json({ error: 'Failed to transcribe audio' });
+//     }
+// }
 
 
 
