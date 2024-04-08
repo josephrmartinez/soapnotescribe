@@ -31,13 +31,10 @@ export default async function Page({
 
   return (
     <div className="w-full">
-      <div className="flex w-full items-center justify-between mb-4">
+      <div className="flex w-full items-center justify-between mb-8">
         <h1 className={`${GeistSans.className} text-2xl`}>SOAP Notes</h1>
       </div>
-      <div className="flex items-center justify-between gap-2 md:mt-8">
-        <Search placeholder="Search notes..." />
-        {/* <CreateAppointment /> */}
-      </div>
+      <Search placeholder="Search notes..." />
       <Suspense key={query + currentPage} fallback={<AppointmentsTableSkeleton />}>
         <Table query={query} currentPage={currentPage} />
       </Suspense>

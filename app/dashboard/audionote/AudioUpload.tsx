@@ -7,19 +7,18 @@ import { getReplicateMonoTranscript } from '@/app/lib/actions';
 
 
 export default function AudioUpload() {
-    const inputFileRef = useRef<HTMLInputElement>(null);
+    const dropAreaRef = useRef<HTMLDivElement>(null);
     const [uploadComplete, setUploadComplete] = useState(false)
     const [percentageUploaded, setPercentageUploaded] = useState(0)
     const [userID, setUserID] = useState<string | undefined>("");
     const [accessToken, setAccessToken] = useState<string | undefined>("");
-
-    const [loading, setLoading] = useState(true)
-    const [recordingUrl, setRecordingUrl] = useState<string | null>(null)
-    const [tempDownloadUrl, setTempDownloadUrl] = useState<string | null>(null)
-    const [submitOkay, setSubmitOkay] = useState<boolean>(true)
     const [isUploading, setIsUploading] = useState<boolean>(false);
+    const [isDragging, setIsDragging] = useState<boolean>(false);
     const router = useRouter()
     
+    // const [loading, setLoading] = useState(true)
+    // const inputFileRef = useRef<HTMLInputElement>(null);
+
     const supabase = createClient();
     
     useEffect(() => {
@@ -36,26 +35,65 @@ export default function AudioUpload() {
         fetchUser();
      }, []);
 
-    async function handleAudioUpload() {
-        const fileInput = inputFileRef.current;
+     useEffect(() => {
+        const dropArea = dropAreaRef.current;
+        if (!dropArea) return;
 
-        if (fileInput && fileInput.files && fileInput.files.length > 0) {
-            const file = fileInput.files[0];
+        const handleDragOver = (e: DragEvent) => {
+            e.preventDefault();
+            setIsDragging(true);
+        };
 
-            try {
-                setIsUploading(true);
-                
-                const randomPrefix = Math.floor(Math.random() * 900000) + 100000;
-                const fileNameWithPrefix = `${randomPrefix}_${file.name}`
+        const handleDragLeave = () => {
+            setIsDragging(false);
+        };
 
-                await uploadFile('audiofiles', `${fileNameWithPrefix}`, file);
-
-                setIsUploading(false);
-            } catch (error) {
-                console.error('Error uploading file:', error);
-                setIsUploading(false);
+        const handleDrop = (e: DragEvent) => {
+            e.preventDefault();
+            setIsDragging(false);
+            
+            if (e.dataTransfer) {
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    handleAudioUpload(files[0]);
+                }
             }
+        };
+
+        dropArea.addEventListener('dragover', handleDragOver);
+        dropArea.addEventListener('dragleave', handleDragLeave);
+        dropArea.addEventListener('drop', handleDrop);
+
+        return () => {
+            dropArea.removeEventListener('dragover', handleDragOver);
+            dropArea.removeEventListener('dragleave', handleDragLeave);
+            dropArea.removeEventListener('drop', handleDrop);
+        };
+    }, []);
+
+
+    async function handleAudioUpload(file: File | null) {
+        if (!file) return;
+
+        if (!file.name.endsWith('.mp3')) {
+            alert('Please upload an mp3 file.');
+            return;
         }
+
+        try {
+            setIsUploading(true);
+            
+            const randomPrefix = Math.floor(Math.random() * 900000) + 100000;
+            const fileNameWithPrefix = `${randomPrefix}_${file.name}`
+
+            await uploadFile('audiofiles', `${fileNameWithPrefix}`, file);
+
+            setIsUploading(false);
+        } catch (error) {
+            console.error('Error uploading file:', error);
+            setIsUploading(false);
+        }
+        
     }
 
     async function getDownloadUrl(fileName: string){
@@ -140,7 +178,7 @@ export default function AudioUpload() {
               data && getReplicateMonoTranscript(temp_audio_url, data[0].id)
 
             // Redirect to page for new note
-              data && router.push(`/dashboard/appointments`);
+              data && router.push(`/dashboard/notes`);
 
         } catch (error) {
             console.error("Failed to upload to Supabase table:", error)
@@ -150,37 +188,41 @@ export default function AudioUpload() {
     
 
     return (
-        <fieldset className='max-w-prose mb-6'>
-            <legend className="mb-2 block text-sm font-medium">
-                
-            </legend>
-            
-            
-            <div className="rounded-md border border-gray-200 bg-white px-[14px] py-3 h-46">
-                <div className="flex flex-col items-left gap-4">
-                        <div className='text-sm font-medium'>Automatically generate SOAP note from audio memo:</div>   
-                        
-                        <input
-                            id="audio_path"
-                            name="audio_path"
-                            ref={inputFileRef}
-                            aria-describedby='audio-error'
-                            type="file"
-                            accept="audio/mpeg, audio/mp3"
-                            onChange={handleAudioUpload}
-                            className="cursor-pointer text-sm bg-gray-50 text-gray-600 focus:ring-2"
-                        />
-                </div>
-                {!isUploading && !uploadComplete &&
-                <div className='mt-4 h-4'> </div> }
-                {isUploading && !uploadComplete &&
-                <div className='mt-4 h-4'>Audio uploading: {`${percentageUploaded}% complete`}</div>
-                }
-                {uploadComplete &&
-                <div className='mt-4 h-4'>Transcribing audio...</div>
-                }
+        
+        <div className="rounded-md border border-gray-200 bg-white px-[14px] py-3 h-96">
+        <div className="flex flex-col items-left gap-4">
+            <div className='text-sm font-medium'>Automatically generate a SOAP note from audio memo:</div>   
+            <div
+                ref={dropAreaRef}
+                className={`cursor-pointer text-sm  h-48 text-center bg-gray-50 text-gray-600 focus:ring-2 border-2 ${isDragging ? 'border-blue-500' : 'border-gray-300'} rounded-md p-4`}
+                onClick={() => document.getElementById('audio_path')?.click()}
+                aria-describedby='audio-error'
+                role="button"
+                tabIndex={0}
+            >
+                Click or drag and drop your audio file here
             </div>
-
-        </fieldset>
+            <input
+                id="audio_path"
+                name="audio_path"
+                type="file"
+                accept="audio/mpeg, audio/mp3"
+                onChange={(e) => {
+                    if (e.target.files && e.target.files.length > 0) {
+                        handleAudioUpload(e.target.files[0]);
+                    }
+                }}
+                className="hidden"
+            />
+        </div>
+        {!isUploading && !uploadComplete &&
+        <div className='mt-4 h-4'> </div> }
+        {isUploading && !uploadComplete &&
+        <div className='mt-4 h-4'>Audio uploading: {`${percentageUploaded}% complete`}</div>
+        }
+        {uploadComplete &&
+        <div className='mt-4 h-4'>Transcribing audio...</div>
+        }
+    </div>
     )
 }

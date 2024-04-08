@@ -75,7 +75,7 @@ const ITEMS_PER_PAGE = 6;
 // };
 
 // UPDATE
-export async function fetchFilteredAppointments(query: string, currentPage: number, onDataChange: (newData: any[]) => void) {
+export async function fetchFilteredAppointments(query: string, currentPage: number) {
   try {
     
     const offset = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -86,7 +86,7 @@ export async function fetchFilteredAppointments(query: string, currentPage: numb
       .select(
         'id, status, created_at, patient_name, appointment_date, chief_complaint, audio_transcript'
       )
-      // .ilike('audio_transcript', `%${query}%`)
+      .ilike('audio_transcript', `%${query}%`)
       .order('appointment_date', { ascending: false })
       .range(offset, offset + ITEMS_PER_PAGE - 1);
 

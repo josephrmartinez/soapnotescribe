@@ -17,7 +17,7 @@ export function CreateAppointment() {
 export function ViewSOAPNote({ id }: { id: string }) {
   return (
     <Link
-      href={`/dashboard/appointments/${id}`}
+      href={`/dashboard/notes/${id}`}
       className="flex flex-row rounded-md text-teal-600 border border-gray-200 p-2 transition-colors hover:bg-gray-100"
     >
       <div className='text-sm '>view SOAP note</div>
@@ -29,7 +29,7 @@ export function ViewSOAPNote({ id }: { id: string }) {
 export function ReviewDraft({ id }: { id: string }) {
   return (
     <Link
-      href={`/dashboard/create/${id}`}
+      href={`/dashboard/createnote/${id}`}
       className="flex flex-row rounded-md bg-red-500 shadow-md hover:bg-red-400 p-2 transition-all "
     >
       <div className='text-sm font-semibold uppercase text-white '>review draft</div>

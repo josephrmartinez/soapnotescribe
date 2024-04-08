@@ -125,8 +125,8 @@ const autoResizeTextarea = (textareaRef: React.MutableRefObject<HTMLTextAreaElem
             return;
             }
             if (data && data.length > 0) {
-                router.prefetch('/dashboard/appointments');
-                router.push('/dashboard/appointments');
+                router.prefetch('/dashboard/notes');
+                router.push('/dashboard/notes');
             } else {
                 // Handle the case where the update was successful but the data is not as expected
                 console.error('Update successful, but data is not as expected');
@@ -407,7 +407,7 @@ const autoResizeTextarea = (textareaRef: React.MutableRefObject<HTMLTextAreaElem
 
       <div className="mt-6 flex justify-end gap-4">
         <Link
-          href="/dashboard/appointments"
+          href="/dashboard/notes"
           className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
         >
           Cancel
