@@ -1,9 +1,8 @@
 import { Metadata } from 'next';
 import { GeistSans } from 'geist/font/sans';
-import ResourceSearch from '@/app/ui/resources/ResourceSearch';
 
 export const metadata: Metadata = {
-  title: "Resources",
+  title: "Templates",
 }
 
 export default function Page() {
@@ -11,10 +10,9 @@ export default function Page() {
   return (
     <div className="w-full">
       <div className="flex w-full items-center justify-between">
-        <h1 className={`${GeistSans.className} text-2xl`}>Resources</h1>
+        <h1 className={`${GeistSans.className} text-2xl`}>Templates</h1>
       </div>
 
-      <ResourceSearch />
 
     </div>
   )

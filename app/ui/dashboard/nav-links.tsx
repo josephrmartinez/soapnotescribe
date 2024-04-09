@@ -18,15 +18,15 @@ import clsx from 'clsx';
 // Map of links to display in the side navigation.
 // Depending on the size of the application, this would be stored in a database.
 const links = [
-  { name: 'Create Note from Audio', href: '/dashboard/audionote', icon: ChatBubbleLeftEllipsisIcon },
-  { name: 'Write New Note', href: '/dashboard/createnote', icon: PencilSquareIcon },
   { name: 'SOAP Notes', href: '/dashboard/notes', icon: ArchiveBoxIcon },
-  { name: 'Templates', href: '/dashboard/templates', icon: DocumentDuplicateIcon },
-  {
-    name: 'Account',
-    href: '/dashboard/settings',
-    icon: Cog8ToothIcon,
-  }
+  { name: 'Write New Note', href: '/dashboard/createnote', icon: PencilSquareIcon },
+  { name: 'Create Note from Audio', href: '/dashboard/audionote', icon: ChatBubbleLeftEllipsisIcon },
+  { name: 'Templates', href: '/dashboard/templates', icon: DocumentDuplicateIcon }
+  // {
+  //   name: 'Account',
+  //   href: '/dashboard/settings',
+  //   icon: Cog8ToothIcon,
+  // }
 ];
 
 export default function NavLinks() {

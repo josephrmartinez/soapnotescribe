@@ -87,15 +87,21 @@ export default async function AppointmentsTable({
                   <td className="whitespace-nowrap px-3 py-3">
                     {appointment.chief_complaint}
                   </td>
-                  <td className="whitespace-nowrap px-3 py-3">
-                  {appointment.status}
+                  <td className="whitespace-nowrap  px-3 ">
+                  <div className={` ${
+                    appointment.status === 'processing' ? 'text-blue-600' :
+                    appointment.status === 'awaiting review' ? 'text-red-600' :
+                    appointment.status === 'approved' ? 'text-gray-800' :
+                    'text-red-600'
+                    }`}>
+                      {appointment.status}</div>
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
                    
                   </td>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
-                      {appointment.status === "processing" && <div className='h-10 w-28 flex flex-row items-center text-teal-600'><div className='loader'></div></div>}
+                      {appointment.status === "processing" && <div className='h-10 w-24 flex flex-row items-center'><div className='loader ml-2'></div></div>}
                       {appointment.status === "approved" && <ViewSOAPNote id={appointment.id} />}
                       {appointment.status === "awaiting review" && <ReviewDraft id={appointment.id} />}
                     </div>

@@ -23,11 +23,10 @@ html {
 
 
 /* HTML: <div class="loader"></div> */
-/* HTML: <div class="loader"></div> */
-.loader {
+/* .loader {
   width: 50px;
   aspect-ratio: 2;
-  --_g: no-repeat radial-gradient(circle closest-side,#29878c 90%,#0000);
+  --_g: no-repeat radial-gradient(circle closest-side,#4276fa 90%,#0000);
   background: 
     var(--_g) 0%   50%,
     var(--_g) 50%  50%,
@@ -40,38 +39,54 @@ html {
     40%{background-position:0% 100%, 50%   0%,100%  50%}
     60%{background-position:0%  50%, 50% 100%,100%   0%}
     80%{background-position:0%  50%, 50%  50%,100% 100%}
-}
-/* 
+} */
+
+
+
+
+/* HTML: <div class="loader"></div> */
 .loader {
-  width: 15px;
-  aspect-ratio: 1;
   position: relative;
-  animation: l9-0 1.5s infinite steps(2);
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  background-color: #373737;
+  color: #373737;
+  animation: loader 1s infinite linear alternate;
+  animation-delay: 0.5s;
 }
-.loader::before,
-.loader::after {
+.loader::before, .loader::after {
   content: "";
+  display: inline-block;
   position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background: #1c8e94;
+  top: 0;
 }
 .loader::before {
-  box-shadow: 26px 0;
-  transform: translateX(-26px);
-  animation: l9-1 .75s infinite linear alternate;
+  left: -15px;
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  background-color: #373737;
+  color: #373737;
+  animation: loader 1s infinite alternate;
+  animation-delay: 0s;
 }
 .loader::after {
-  transform: translateX(13px) rotate(0deg) translateX(13px);
-  animation: l9-2 .75s infinite linear alternate;
+  left: 15px;
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  background-color: #373737;
+  color: #373737;
+  animation: loader 1s infinite alternate;
+  animation-delay: 1s;
 }
-@keyframes l9-0 {
-    0% ,49.9% {transform: scale(1)}
-    50%,100%  {transform: scale(-1)}
+
+@keyframes loader {
+  0% {
+    background-color: #373737;
+  }
+  50%, 100% {
+    background-color: rgba(152, 128, 255, 0.2);
+  }
 }
-@keyframes l9-1 {
-    100%{box-shadow: 52px 0}
-}
-@keyframes l9-2 {
-    100%{transform: translateX(13px) rotate(-180deg) translateX(13px)}
-} */
