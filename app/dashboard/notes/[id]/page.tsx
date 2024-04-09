@@ -25,10 +25,10 @@ export default async function Page({ params }: { params: { id: string } }) {
     <main>
       <Breadcrumbs
         breadcrumbs={[
-          { label: 'SOAP Notes', href: '/dashboard/appointments' },
+          { label: 'SOAP Notes', href: '/dashboard/notes' },
           {
             label: `${appointmentDate} with ${appointment.patient_name}`,
-            href: `/dashboard/appointments/${id}`,
+            href: `/dashboard/notes/${id}`,
             active: true,
           },
         ]}
@@ -212,9 +212,9 @@ export default async function Page({ params }: { params: { id: string } }) {
 
         </div>
 
-        
+        <div className="collapse-title text-lg font-medium">Audio Memo</div>
         {audioUrl ? (
-      <audio className="w-full" controls>
+      <audio className="w-full mb-6" controls>
         <source type="audio/mp3" src={audioUrl} />
         Your browser does not support the audio element.
       </audio>
@@ -223,7 +223,7 @@ export default async function Page({ params }: { params: { id: string } }) {
         Loading audio
       </div>
     }
-    <div tabIndex={0} className="collapse collapse-plus  mb-4">
+    <div tabIndex={0} className="collapse collapse-plus border mb-4">
         <div className="collapse-title text-lg font-medium">
           Audio Memo Transcript
         </div>

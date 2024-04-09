@@ -54,10 +54,6 @@ export default function CreateAppointment() {
 
   return (
     <form onSubmit={submitAppointment}>
-      <div className="flex w-full items-center justify-between mb-8">
-        <h1 className={` text-2xl`}>Create New Note</h1>
-      </div>
-
       <div className="rounded-md bg-gray-50 p-4 max-w-prose">
         
         <div className='grid grid-cols-2 gap-8'>

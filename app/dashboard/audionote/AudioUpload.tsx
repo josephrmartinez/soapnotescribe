@@ -189,18 +189,20 @@ export default function AudioUpload() {
 
     return (
         
-        <div className="rounded-md border border-gray-200 bg-white px-[14px] py-3 h-96">
+        <div className="h-96">
         <div className="flex flex-col items-left gap-4">
-            <div className='text-sm font-medium'>Automatically generate a SOAP note from audio memo:</div>   
+            <div className='font-medium'>- Upload a clinical audio memo or full telehealth appointment recording.</div>   
+            <div className='font-medium'>- soapscribe will automatically draft a structured SOAP note.</div>   
+
             <div
                 ref={dropAreaRef}
-                className={`cursor-pointer text-sm  h-48 text-center bg-gray-50 text-gray-600 focus:ring-2 border-2 ${isDragging ? 'border-blue-500' : 'border-gray-300'} rounded-md p-4`}
+                className={`flex flex-col items-center justify-center cursor-pointer text-sm h-48 max-w-prose text-center bg-gray-50 text-gray-600 focus:ring-2 border ${isDragging ? 'border-blue-500' : 'border-gray-300'} rounded-md p-4`}
                 onClick={() => document.getElementById('audio_path')?.click()}
                 aria-describedby='audio-error'
                 role="button"
                 tabIndex={0}
             >
-                Click or drag and drop your audio file here
+                <div className=''>Click or drag and drop your audio file here</div>
             </div>
             <input
                 id="audio_path"
