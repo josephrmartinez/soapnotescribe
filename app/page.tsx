@@ -13,7 +13,7 @@ export default async function Page() {
 
   const { data, error } = await supabase.auth.getUser()
   if (data.user) {
-    redirect('/dashboard')
+    redirect('/dashboard/notes')
   }
 
 

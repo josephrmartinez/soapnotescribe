@@ -76,6 +76,7 @@ const ITEMS_PER_PAGE = 6;
 
 // UPDATE
 export async function fetchFilteredAppointments(query: string, currentPage: number) {
+  noStore()
   try {
     
     const offset = (currentPage - 1) * ITEMS_PER_PAGE;
