@@ -7,11 +7,13 @@ import { AppointmentsTableSkeleton } from '@/app/ui/skeletons';
 import { Suspense } from 'react';
 // import { fetchApptsPages } from '@/app/lib/data';
 import { Metadata } from 'next';
+import NotesTable from './realtimetable';
+import { createClient } from '@/utils/supabase/server';
 
 export const metadata: Metadata = {
-  title: "SOAP Notes",
-}
- 
+  title: 'SOAP Notes',
+};
+
 export default async function Page({
   searchParams,
 }: {
@@ -22,21 +24,75 @@ export default async function Page({
 }) {
   const query = searchParams?.query || '';
   const currentPage = Number(searchParams?.page) || 1;
-  
-  // const totalPages = await fetchApptsPages(query);
-  const totalPages = 3
 
-  
-  
+  // const totalPages = await fetchApptsPages(query);
+  const totalPages = 3;
+  const ITEMS_PER_PAGE = 6;
+
+  const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+
+  const supabase = createClient();
+
+  const { data: notes, error } = await supabase
+    .from('appointments')
+    .select(
+      'id, status, created_at, patient_name, appointment_date, chief_complaint, audio_transcript',
+    )
+    // .ilike('audio_transcript', `%${query}%`)
+    .order('appointment_date', { ascending: false })
+    .range(offset, offset + ITEMS_PER_PAGE - 1);
+
+  //   if (error) {
+  //     console.error('Error fetching appointments:', error);
+  //     return;
+  //   }
+
+  //   notes.sort((a, b) => {
+  //     // Prioritize "processing" status
+  //     if (a.status === 'processing' && b.status !== 'processing') {
+  //       return -1;
+  //     } else if (a.status !== 'processing' && b.status === 'processing') {
+  //       return 1;
+  //     }
+
+  //     // Then prioritize "awaiting review" status
+  //     if (a.status === 'awaiting review' && b.status !== 'awaiting review') {
+  //       return -1;
+  //     } else if (
+  //       a.status !== 'awaiting review' &&
+  //       b.status === 'awaiting review'
+  //     ) {
+  //       return 1;
+  //     }
+
+  //     // Finally, sort by status and then by appointment_date
+  //     if (a.status === b.status) {
+  //       // If both appointments have the same status, sort by appointment_date
+  //       // Since we know there will be no null appointment_date values, we can directly create Date objects
+  //       const aDate = new Date(a.appointment_date);
+  //       const bDate = new Date(b.appointment_date);
+  //       return bDate.getTime() - aDate.getTime(); // Sort in descending order
+  //     }
+
+  //     // Default return value if none of the above conditions are met
+  //     return 0;
+  //   });
+  // } catch (error) {
+  //   console.error(error)
+  // }
 
   return (
     <div className="w-full">
-      <div className="flex w-full items-center justify-between mb-8">
+      <div className="mb-8 flex w-full items-center justify-between">
         <h1 className={`${GeistSans.className} text-2xl`}>SOAP Notes</h1>
       </div>
       <Search placeholder="Search notes..." />
-      <Suspense key={query + currentPage} fallback={<AppointmentsTableSkeleton />}>
-        <Table query={query} currentPage={currentPage} />
+      <Suspense
+        key={query + currentPage}
+        fallback={<AppointmentsTableSkeleton />}
+      >
+        {/* <Table query={query} currentPage={currentPage} /> */}
+        <NotesTable appointments={notes} />
       </Suspense>
       <div className="mt-5 flex w-full justify-center">
         <Pagination totalPages={totalPages} />
