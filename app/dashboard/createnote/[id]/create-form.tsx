@@ -42,7 +42,9 @@ const CreateAppointmentPrefilled: React.FC<CreateAppointmentProps> = ({
   const [allergies, setAllergies] = useState<string>(
     appointment?.allergies || '',
   );
-  const [consent, setConsent] = useState<string | null>(null);
+  const [consent, setConsent] = useState<boolean | null>(
+    appointment?.consent || null,
+  );
   const [subjective, setSubjective] = useState<string | null>(
     appointment?.soap_subjective || null,
   );
@@ -134,7 +136,7 @@ const CreateAppointmentPrefilled: React.FC<CreateAppointmentProps> = ({
         <div className="w-full">Loading audio</div>
       )}
 
-      <div tabIndex={0} className="collapse collapse-plus  mb-4">
+      <div tabIndex={0} className="collapse-plus collapse  mb-4">
         <div className="collapse-title text-lg font-medium">
           Audio Memo Transcript
         </div>
@@ -258,20 +260,19 @@ const CreateAppointmentPrefilled: React.FC<CreateAppointmentProps> = ({
             <label htmlFor="consent" className="mb-2 block text-sm font-medium">
               Telemedicine Consent
             </label>
-            <div className="relative flex flex-row items-center">
+            <div className="relative flex flex-row items-center pt-2">
               <input
                 id="consent"
                 name="consent"
                 required
                 type="checkbox"
-                value="true"
-                // if checked, value is true. if unchecked, value is false
-                onChange={(e) => setConsent(e.target.value)}
+                checked={consent === true}
+                onChange={(e) => {
+                  setConsent(e.target.checked ? true : null);
+                }}
                 className="peer mr-4 block h-6 w-6 cursor-pointer rounded-md border border-gray-200 text-sm outline-2 "
               ></input>
-              <div className="text-sm">
-                Patient is located in Arizona and consents to treatment.
-              </div>
+              <div className="text-sm">Patient consents to treatment.</div>
             </div>
           </div>
         </div>
@@ -405,48 +406,3 @@ const CreateAppointmentPrefilled: React.FC<CreateAppointmentProps> = ({
 };
 
 export default CreateAppointmentPrefilled;
-
-// const submitAppointment = async (event: React.FormEvent<HTMLFormElement>) => {
-//   event.preventDefault();
-
-//   try {
-//     const supabase = createClient();
-//     const currentUser = await supabase.auth.getUser();
-//     console.log('currentUser', currentUser);
-
-//     setLoading(true);
-//     const { error, data } = await supabase
-//       .from('appointments')
-//       .update({
-//         status: 'approved',
-//         patient_name: patientName,
-//         chief_complaint: chiefComplaint,
-//         appointment_date: date,
-//         patient_date_of_birth: patientDateOfBirth,
-//         allergies: allergies,
-//         soap_subjective: subjective,
-//         soap_objective: objective,
-//         soap_assessment: assessment,
-//         soap_plan: plan,
-//         doctor_signature: doctorSignature,
-//       })
-//       .eq('id', apptid)
-//       .select();
-//     if (error) {
-//       console.error('Error updating the appointment:', error);
-//       setLoading(false);
-//       return;
-//     }
-//     if (data && data.length > 0) {
-//       router.prefetch('/dashboard/notes');
-//       router.push('/dashboard/notes');
-//     } else {
-//       // Handle the case where the update was successful but the data is not as expected
-//       console.error('Update successful, but data is not as expected');
-//       setLoading(false);
-//     }
-//   } catch (error) {
-//     console.error('Error updating the appointment:', error);
-//     setLoading(false);
-//   }
-// };
