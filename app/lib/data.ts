@@ -75,7 +75,7 @@ export async function getSignedAudioUrl(patient: string, audio_url:string) {
 //   }
 // };
 
-// UPDATE
+// UPDATE TO ALWAYS DISPLAY PROCESSING APPOINTMENTS (AUDIO_TRANSCRIPT IS NULL)
 export async function fetchFilteredAppointments(query: string, currentPage: number) {
   noStore()
   try {
