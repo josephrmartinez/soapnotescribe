@@ -1,6 +1,11 @@
 'use client';
 
-import { ViewSOAPNote, ReviewDraft } from '@/app/ui/appointments/buttons';
+import {
+  ViewSOAPNote,
+  ReviewDraft,
+  ProcessingSOAPNote,
+  PatientName,
+} from '@/app/ui/appointments/buttons';
 import { formatDateToLocal } from '@/app/lib/utils';
 import { useEffect } from 'react';
 import { createClient } from '@/utils/supabase/client';
@@ -88,10 +93,6 @@ export default function NotesTable({
                 <th scope="col" className="px-3 py-5 font-medium">
                   Note Status
                 </th>
-                <th scope="col" className="px-3 py-5 font-medium"></th>
-                <th scope="col" className="relative py-3 pl-6 pr-3">
-                  <span className="sr-only">Edit</span>
-                </th>
               </tr>
             </thead>
             <tbody className="bg-white">
@@ -100,37 +101,20 @@ export default function NotesTable({
                   key={appointment.id}
                   className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
                 >
-                  <td className="whitespace-nowrap py-3 pl-6 pr-3">
+                  <td className="whitespace-nowrap py-3 pl-6 pr-3 font-medium">
                     <p>{formatDateToLocal(appointment.appointment_date)}</p>
                   </td>
-                  <td className="whitespace-nowrap px-3 py-3">
-                    {appointment.patient_name}
+                  <td className="whitespace-nowrap px-3 py-3 font-medium">
+                    <PatientName patient_name={appointment.patient_name} />
                   </td>
-                  <td className="whitespace-nowrap px-3 py-3">
+                  <td className="whitespace-nowrap px-3 py-3 font-medium">
                     {appointment.chief_complaint}
                   </td>
-                  <td className="whitespace-nowrap  px-3 ">
-                    <div
-                      className={` ${
-                        appointment.status === 'processing'
-                          ? 'text-blue-600'
-                          : appointment.status === 'awaiting review'
-                            ? 'text-red-600'
-                            : appointment.status === 'approved'
-                              ? 'text-gray-800'
-                              : 'text-red-600'
-                      }`}
-                    >
-                      {appointment.status}
-                    </div>
-                  </td>
-                  <td className="whitespace-nowrap px-3 py-3"></td>
-                  <td className="whitespace-nowrap py-3 pl-6 pr-3">
-                    <div className="flex justify-end gap-3">
+
+                  <td className="whitespace-nowrap px-3 py-3">
+                    <div className="flex justify-start gap-3">
                       {appointment.status === 'processing' && (
-                        <div className="flex h-10 w-24 flex-row items-center">
-                          <div className="loader ml-2"></div>
-                        </div>
+                        <ProcessingSOAPNote id={appointment.id} />
                       )}
                       {appointment.status === 'approved' && (
                         <ViewSOAPNote id={appointment.id} />
