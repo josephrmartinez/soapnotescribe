@@ -7,6 +7,7 @@ import { unstable_noStore as noStore } from 'next/cache';
 import { Database } from '../database.types';
 import { embed } from './embed'
 import { createClient } from '@/utils/supabase/server'
+import { Appointment } from './definitions';
 
 // const supabase = createServerComponentClient<Database>({ cookies })
 
@@ -59,7 +60,7 @@ export async function getSignedAudioUrl(patient: string, audio_url:string) {
 }
 
 
-const ITEMS_PER_PAGE = 6;
+
 
 
 // export const fetchUserSession = async () => {
@@ -78,7 +79,7 @@ const ITEMS_PER_PAGE = 6;
 export async function fetchFilteredAppointments(query: string, currentPage: number) {
   noStore()
   try {
-    
+    const ITEMS_PER_PAGE = 6;
     const offset = (currentPage - 1) * ITEMS_PER_PAGE;
 
     const supabase = createClient()
@@ -95,23 +96,6 @@ export async function fetchFilteredAppointments(query: string, currentPage: numb
       console.error('Error fetching appointments:', error);
       return
     }
-
-    // IMPLEMENT SUPABASE REALTIME UPDATES
-    //   const subscription = supabase.realtime
-    // .from('appointments')
-    // .on('*', async () => {
-    //     const { data: updatedAppointments, error: updateError } = await supabase
-    //       .from('appointments')
-    //       .select(
-    //         'id, status, created_at, patient_name, appointment_date, chief_complaint, audio_transcript'
-    //       )
-    //       .order('appointment_date', { ascending: false })
-    //       .range(offset, offset + ITEMS_PER_PAGE - 1);
-
-    //     if (updateError) {
-    //       console.error('Error updating appointments:', updateError);
-    //       return;
-    //     }
 
     // Implement custom sorting logic: processing at top, then "awaiting review", then "approved"
     // TODO: Update table to delineate these groupings?

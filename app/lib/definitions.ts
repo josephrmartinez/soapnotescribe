@@ -2,7 +2,6 @@ import { Database } from "../database.types";
 
 export type Appointment = Database['public']['Tables']['appointments']['Row'];
 
-
 export type User = {
   id: string;
   name: string;

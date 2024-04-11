@@ -1,17 +1,18 @@
 'use client';
 
-import {
-  UpdateAppointment,
-  ViewSOAPNote,
-  ReviewDraft,
-} from '@/app/ui/appointments/buttons';
-import { formatDateToLocal, formatCurrency } from '@/app/lib/utils';
+import { ViewSOAPNote, ReviewDraft } from '@/app/ui/appointments/buttons';
+import { formatDateToLocal } from '@/app/lib/utils';
 import { useEffect } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import { create } from 'domain';
 import { useRouter } from 'next/navigation';
+import { Appointment } from '@/app/lib/definitions';
 
-export default function NotesTable({ appointments }: { appointments: any }) {
+export default function NotesTable({
+  appointments,
+}: {
+  appointments: Appointment[];
+}) {
   // FETCH APPOINTMENTS WITH REALTIME
 
   const supabase = createClient();

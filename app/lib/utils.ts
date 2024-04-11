@@ -8,7 +8,7 @@ export const formatCurrency = (amount: number) => {
 };
 
 export const formatDateToLocal = (
-  dateStr: string,
+  dateStr: string | null,
   locale: string = 'en-US',
 ) => {
 
