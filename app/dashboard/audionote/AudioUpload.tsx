@@ -14,6 +14,7 @@ export default function AudioUpload() {
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const router = useRouter();
+  const accessTokenRef = useRef<string | undefined>('');
 
   // const [loading, setLoading] = useState(true)
   // const inputFileRef = useRef<HTMLInputElement>(null);
@@ -21,18 +22,24 @@ export default function AudioUpload() {
   const supabase = createClient();
 
   useEffect(() => {
+    console.log('running fetch user useEffect');
     const fetchUser = async () => {
       const { data, error } = await supabase.auth.getSession();
       if (error) {
         console.error(error);
       } else {
         setUserID(data.session?.user.id);
-        setAccessToken(data.session?.access_token);
+        // setAccessToken(data.session?.access_token);
+        accessTokenRef.current = data.session?.access_token;
       }
     };
 
     fetchUser();
   }, []);
+
+  // useEffect(() => {
+  //   console.log('accessToken', accessToken);
+  // }, [accessToken]);
 
   useEffect(() => {
     const dropArea = dropAreaRef.current;
@@ -71,6 +78,7 @@ export default function AudioUpload() {
   }, []);
 
   async function handleAudioUpload(file: File | null) {
+    console.log('calling handleAudioUpload');
     if (!file) return;
 
     if (!file.name.endsWith('.mp3')) {
@@ -80,6 +88,9 @@ export default function AudioUpload() {
 
     try {
       setIsUploading(true);
+
+      // console.log('access token:', accessToken);
+      console.log('access tokenRef:', accessTokenRef.current);
 
       const randomPrefix = Math.floor(Math.random() * 900000) + 100000;
       const fileNameWithPrefix = `${randomPrefix}_${file.name}`;
@@ -106,7 +117,7 @@ export default function AudioUpload() {
         endpoint: `https://grjecfvldxcnvhmjpvmu.supabase.co/storage/v1/upload/resumable`,
         retryDelays: [0, 3000, 5000, 10000, 20000],
         headers: {
-          authorization: `Bearer ${accessToken}`,
+          authorization: `Bearer ${accessTokenRef.current}`,
           'x-upsert': 'true',
         },
         uploadDataDuringCreation: true,
