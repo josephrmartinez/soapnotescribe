@@ -76,40 +76,6 @@ export async function getWhisperTranscript(formData: FormData) {
   }
 }
 
-// // OpenAI Whisper transcription
-// export async function getWhisperTranscript(audioFile: File) {
-//   try {
-//     const transcription = await openai.audio.transcriptions.create({
-//       file: audioFile,
-//       model: "whisper-1",
-//       response_format: "text",
-//     });
-//     return transcription.text;
-//   } catch (error) {
-//     console.error('Error:', error);
-//     throw new Error('Failed to transcribe audio');
-//   }
-// }
-// export default async function getWhisperTranscript(url: string, apptid: string) {
-//   console.log("running getWhisperTranscript", new Date());
-
-//   try {
-//   const prediction = await replicate.predictions.create(
-//     {
-//       version: "7fa6110280767642cf5a357e4273f27ec10ebb60c107be25d6e15f928fd03147",
-//       input: {
-//         file_url: url,
-//       },
-//       webhook: `${webhookUrl}?apptid=${apptid}`,
-//       webhook_events_filter: ["completed"]
-//     });
-  
-// } catch (error) {
-//   console.error("Error in getTranscript:", error);
-//   // Handle error appropriately
-// }
-// }
-
 
 export async function getReplicateMonoTranscript(url: string, apptid: string) {
   const startTime = new Date()
@@ -189,8 +155,10 @@ export async function updateApptWithTranscript(apptid: string, transcript: strin
   console.log("Running updateApptWithTranscript")
 
   // Using service key to update appointment row
-  const supabase = createClientJS(process.env.SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_KEY!)
+  // const supabase = createClientJS(process.env.SUPABASE_URL!,
+  //   process.env.SUPABASE_SERVICE_KEY!)
+
+  const supabase = createClient()
 
   try {
     const { data, error } = await supabase
@@ -220,32 +188,30 @@ export async function getSOAPData(apptid: string, transcript: string) {
     messages: [
       {
         role: "system",
-        content: `You are a helpful and highly trained medical assistant. You will carefully review the following TRANSCRIPT and output a JSON object with the following structure:
+        content: `You are a helpful and highly trained medical assistant. You will carefully review the following TRANSCRIPT and generate a clinical SOAP note as a JSON object with the following structure:
         {
           patient_name: string;
           patient_date_of_birth: Date;
           appointment_date: Date;
           appointment_time: string ("hh:mm");
-          allergies: string;
+          allergies: string ("NKDA" if none);
           chief_complaint?: string;
           soap_subjective?: string;
           soap_objective?: string;
           soap_assessment?: string;
           soap_plan?: string;
-          patient_location?: string;
-          appointment_summary?: string;
-          discharge_instructions?: string;
           second_opinion?: string;
-        } Your answer MUST begin and end with curly brackets. Do not include any leading backticks or other markers. If you do not have the information required to provide a value in one of the fields, just return the JSON object without that field. For the second_opinion field, I want you to analyze the memo and suggest possible alternative treatment options. Your answer MUST begin and end with curly brackets.`
+        } Your answer MUST begin and end with curly brackets. Do not include any leading backticks or other markers. Include as much specific information as possible from the transcript in the SOAP note. Be thorough! If you do not have the information required to provide a value in one of the fields, just return the JSON object with an empty string or null value for that field. For the second_opinion field, analyze the entire transcript and suggest possible alternative treatment options. Your answer MUST begin and end with curly brackets.`
       },
       { role: "user", content: `TRANSCRIPT: ${transcript}` },
     ],
-    model: "gpt-3.5-turbo-1106",
+    // model: "gpt-3.5-turbo-1106",
+    model: "gpt-4-turbo",
     response_format: { type: "json_object" },
   });
 
   const completionString = completion.choices[0].message.content as string
-  await updateApptWithSOAPData(apptid, transcript, completionString);
+  updateApptWithSOAPData(apptid, transcript, completionString);
 
   } catch (error){
     console.log("Error getting OpenAI completion data:", error)
@@ -257,30 +223,42 @@ export async function getSOAPData(apptid: string, transcript: string) {
 // Update the appointment table row with the summary and feedback
 async function updateApptWithSOAPData(apptid: string, transcript: string, completion: string){
   console.log("Running updateApptWithSOAPData");
+  console.log("apptid:", apptid)
   console.log("transcript:", transcript);
   console.log("completion string:", completion);
-  const completionObject = JSON.parse(completion);
 
 
   // Using service key to update appointment row
   const supabase = createClientJS(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_KEY!)
+  
+  // const supabase = createClient()
 
-  const { data, error } = await supabase
-  .from("appointments")
-  .update({
-    status: "awaiting review",
-    audio_transcript: transcript, 
-    ...completionObject
-  })
-  .eq('id', apptid);
+  try {
+    const completionObject = JSON.parse(completion);
 
+
+    const { data, error, status } = await supabase
+      .from("appointments")
+      .update({
+        status: "awaiting review",
+        audio_transcript: transcript,
+        ...completionObject
+      })
+      .eq('id', apptid)
+      .select()
 if (error) {
-  console.error("Error updating appointment:", error);
-  // Handle error accordingly
-} else {
-  console.log("Appointment updated successfully.");
-  // redirect(`/dashboard/create/${apptid}`)
-}
+      throw new Error(`Error updating appointment in Supabase: ${error.message}`);
+    }
+
+    if (data) {
+      console.log('Appointment updated successfully.');
+      console.log('Updated appointment data status:', status);
+    } else {
+      throw new Error('No data returned from the update operation.');
+    }
+ } catch (error) {
+    console.error('Error updating appointment:', error);
+ }
 }
 
 

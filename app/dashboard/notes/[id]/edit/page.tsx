@@ -1,31 +1,29 @@
-import EditAppointment from '@/app/ui/appointments/edit-form';
+// import EditAppointment from '@/app/ui/appointments/edit-form';
 import Breadcrumbs from '@/app/ui/appointments/breadcrumbs';
 import { fetchAppointmentById } from '@/app/lib/data';
-import { notFound } from 'next/navigation'; 
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
-import { cookies } from 'next/headers'
-import { Database } from '@/app/database.types'
-
-
+import { notFound } from 'next/navigation';
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+import { cookies } from 'next/headers';
+import { Database } from '@/app/database.types';
 
 export default async function Page({ params }: { params: { id: string } }) {
-    const id = params.id;
-    const appointment = await fetchAppointmentById(id)
+  //   const id = params.id;
+  //   const appointment = await fetchAppointmentById(id)
 
-    if (!appointment) {
-      notFound();
-    }
+  //   if (!appointment) {
+  //     notFound();
+  //   }
 
-    const supabase = createServerComponentClient<Database>({ cookies })
+  //   const supabase = createServerComponentClient<Database>({ cookies })
 
-  const {
-    data: { session },
-  } = await supabase.auth.getSession()
-
+  // const {
+  //   data: { session },
+  // } = await supabase.auth.getSession()
 
   return (
     <main>
-      <Breadcrumbs
+      Edit Appointment
+      {/* <Breadcrumbs
         breadcrumbs={[
           { label: 'Appointments', href: '/dashboard/appointments' },
           {
@@ -39,7 +37,7 @@ export default async function Page({ params }: { params: { id: string } }) {
           },
         ]}
       />
-      <EditAppointment session={session} appointment={appointment}/>
+      <EditAppointment session={session} appointment={appointment}/> */}
     </main>
   );
 }

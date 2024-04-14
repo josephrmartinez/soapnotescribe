@@ -10,7 +10,7 @@ import { Metadata } from 'next';
 import { formatDateToLocal } from '@/app/lib/utils';
 
 export const metadata: Metadata = {
-  title: 'Appointment Detail',
+  title: 'Approved SOAP Note',
 };
 
 export default async function Page({ params }: { params: { id: string } }) {
