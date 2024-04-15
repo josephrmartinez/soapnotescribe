@@ -57,6 +57,9 @@ const CreateAppointmentPrefilled: React.FC<CreateAppointmentProps> = ({
   const [plan, setPlan] = useState<string | null>(
     appointment?.soap_plan || null,
   );
+  const [secondOpinion, setSecondOpinion] = useState<string | null>(
+    appointment?.second_opinion || null,
+  );
   const [doctorSignature, setDoctorSignature] = useState<string>(
     appointment?.doctor_signature || '',
   );
@@ -66,6 +69,7 @@ const CreateAppointmentPrefilled: React.FC<CreateAppointmentProps> = ({
   const objectiveRef = useRef<HTMLTextAreaElement | null>(null);
   const assessmentRef = useRef<HTMLTextAreaElement | null>(null);
   const planRef = useRef<HTMLTextAreaElement | null>(null);
+  const secondOpinionRef = useRef<HTMLTextAreaElement | null>(null);
 
   // Refactored autoResizeTextarea function with type
   const autoResizeTextarea = (
@@ -96,6 +100,10 @@ const CreateAppointmentPrefilled: React.FC<CreateAppointmentProps> = ({
   }, [plan]);
 
   useEffect(() => {
+    autoResizeTextarea(secondOpinionRef);
+  }, [secondOpinion]);
+
+  useEffect(() => {
     const fetchAudioUrl = async () => {
       if (appointment?.audio_storage_url) {
         try {
@@ -123,7 +131,7 @@ const CreateAppointmentPrefilled: React.FC<CreateAppointmentProps> = ({
 
   return (
     <form className="max-w-prose">
-      <input name="id" hidden value={appointment?.id}></input>
+      <input name="id" hidden defaultValue={appointment?.id}></input>
       <div className="flex w-full items-center justify-between">
         <h1 className={` text-2xl`}>Review Auto-Drafted Note</h1>
       </div>
@@ -133,7 +141,11 @@ const CreateAppointmentPrefilled: React.FC<CreateAppointmentProps> = ({
           Your browser does not support the audio element.
         </audio>
       ) : (
-        <div className="w-full">Loading audio</div>
+        <div
+          className={`flex h-[54px] w-full flex-col justify-center rounded-full bg-gray-100`}
+        >
+          <div className="ml-8"></div>
+        </div>
       )}
 
       <div tabIndex={0} className="collapse-plus collapse  mb-4">
@@ -369,6 +381,26 @@ const CreateAppointmentPrefilled: React.FC<CreateAppointmentProps> = ({
             ></textarea>
           </div>
         </div>
+
+        <div className="mb-4">
+          <label
+            htmlFor="second_opinion"
+            className="mb-2 block text-sm font-medium"
+          >
+            Second Opinion
+          </label>
+          <div className="relative">
+            <textarea
+              id="second_opinion"
+              name="second_opinion"
+              ref={secondOpinionRef}
+              className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
+              value={secondOpinion || ''}
+              onChange={(e) => setSecondOpinion(e.target.value)}
+            ></textarea>
+          </div>
+        </div>
+
         <div className="mb-4">
           <label htmlFor="allergies" className="mb-2 block text-sm font-medium">
             Doctor Signature

@@ -195,7 +195,7 @@ export async function getSOAPData(apptid: string, transcript: string) {
           appointment_date: Date;
           appointment_time: string ("hh:mm");
           allergies: string ("NKDA" if none);
-          chief_complaint?: string;
+          chief_complaint?: string (max 50 characters, capitalize first character);
           soap_subjective?: string;
           soap_objective?: string;
           soap_assessment?: string;
@@ -223,10 +223,6 @@ export async function getSOAPData(apptid: string, transcript: string) {
 // Update the appointment table row with the summary and feedback
 async function updateApptWithSOAPData(apptid: string, transcript: string, completion: string){
   console.log("Running updateApptWithSOAPData");
-  console.log("apptid:", apptid)
-  console.log("transcript:", transcript);
-  console.log("completion string:", completion);
-
 
   // Using service key to update appointment row
   const supabase = createClientJS(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_KEY!)

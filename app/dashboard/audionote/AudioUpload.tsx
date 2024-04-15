@@ -149,12 +149,12 @@ export default function AudioUpload() {
     audio_storage_url: string,
     temp_audio_url: string,
   ) {
+    console.log('calling uploadToSupabaseTable');
     try {
       const { error, data } = await supabase
         .from('appointments')
         .insert({
           user_id: userIDRef.current as string,
-          created_at: new Date().toISOString(),
           audio_storage_url,
           temp_audio_url,
         })
