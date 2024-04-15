@@ -5,7 +5,6 @@
 // import { Database } from '@/app/database.types';
 import { unstable_noStore as noStore } from 'next/cache';
 import { Database } from '../database.types';
-import { embed } from './embed'
 import { createClient } from '@/utils/supabase/server'
 import { Appointment } from './definitions';
 
@@ -98,7 +97,6 @@ export async function fetchFilteredAppointments(query: string, currentPage: numb
     }
 
     // Implement custom sorting logic: processing at top, then "awaiting review", then "approved"
-    // TODO: Update table to delineate these groupings?
     appointments.sort((a, b) => {
       // Prioritize "processing" status
       if (a.status === 'processing' && b.status !== 'processing') {
@@ -127,7 +125,7 @@ export async function fetchFilteredAppointments(query: string, currentPage: numb
       return 0;
     });
 
-    return appointments;
+    return appointments as Appointment[];
  } catch (error) {
     console.error('Supabase Error:', error);
     throw new Error('Failed to fetch appointments data.');

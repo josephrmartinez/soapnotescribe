@@ -25,7 +25,8 @@ export default async function Page({
   // const totalPages = await fetchApptsPages(query);
   const totalPages = 3;
 
-  const appointments = await fetchFilteredAppointments(query, currentPage);
+  const appointments =
+    (await fetchFilteredAppointments(query, currentPage)) || [];
 
   return (
     <div className="w-full">
