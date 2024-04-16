@@ -22,18 +22,18 @@ export default async function Page() {
   }
 
   return (
-    <main className="flex h-full flex-col p-2">
+    <main className="flex h-full flex-col bg-gray-100 p-2">
       <Header />
 
       <div className="mx-auto">
-        <p className="mx-auto mb-8 mt-20 text-center text-5xl font-black text-gray-700 ">
+        <p className="mx-auto mb-8 mt-20 text-center text-5xl font-black text-gray-600 ">
           Automate your clinical charting.
         </p>
-        <p className="mx-auto text-center text-3xl font-semibold text-gray-600">
+        <p className="mx-auto my-12 text-center text-3xl font-semibold text-gray-500">
           Go from audio memo to structured SOAP note in seconds.
         </p>
 
-        <div className="mx-auto my-8 flex flex-row items-center justify-center align-middle">
+        <div className="mx-auto my-8 flex flex-row items-center justify-center pb-8 align-middle">
           <Link
             href="/signup"
             className=" mx-2 w-32 rounded-full bg-teal-600 py-3 text-center font-bold text-white hover:bg-teal-500 hover:text-white"
@@ -47,10 +47,10 @@ export default async function Page() {
             see pricing
           </Link>
         </div>
-        <p className="mx-auto mb-8 mt-20 text-center text-3xl font-bold text-gray-600 dark:text-gray-400">
+        {/* <p className="mx-auto mb-8 mt-20 text-center text-3xl font-bold text-gray-600 dark:text-gray-400">
           Easy to use. No setup required.
-        </p>
-        <div className="flex w-full flex-col items-center bg-gray-200 px-8 py-16">
+        </p> */}
+        <div className="flex w-full flex-col items-center">
           <Image
             alt="soapscribe demo"
             width={1000}
@@ -60,23 +60,23 @@ export default async function Page() {
             className="rounded-lg shadow-lg"
           ></Image>
         </div>
-        <div className="mx-auto my-20 grid max-w-screen-xl grid-cols-3 gap-1">
+        <div className="mx-auto grid max-w-screen-lg md:grid-cols-3">
           <UseStep
             icon={<MicrophoneIcon />}
             step="1. Upload audio"
-            subtext="Upload clinical audio memos or a recording of the entire appointment. Soapscribe will intelligently extract the relevant information."
+            subtext="Upload clinical audio memos or an entire appointment recording. Soapscribe will intelligently extract the relevant information."
           />
 
           <UseStep
             icon={<PencilSquareIcon />}
             step="2. Review draft"
-            subtext="A structured SOAP note is available in seconds for easy review and approval. Make quick edits instead of starting each note from scratch."
+            subtext="A structured SOAP note is available in seconds for easy review. Make quick edits instead of starting notes from scratch."
           />
 
           <UseStep
             icon={<ArchiveBoxIcon />}
-            step="3. Approve and save"
-            subtext="Your notes are saved in a HIPPA-compliant database that is easy to search and review."
+            step="3. Approve note"
+            subtext="Notes are saved in a HIPPA-compliant database that is simple to search. No complex setup or onboarding required."
           />
         </div>
 
