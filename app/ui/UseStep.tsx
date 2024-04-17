@@ -6,7 +6,7 @@ interface UseStepProps {
 
 const UseStep: React.FC<UseStepProps> = ({ step, subtext, icon }) => {
   return (
-    <div className="flex flex-col justify-center gap-6 px-10 py-10">
+    <div className="grid grid-rows-2">
       <div className="flex flex-row items-center">
         <div className="mr-4 w-6 text-teal-700">{icon}</div>
         <p className={`text-2xl font-semibold tracking-wide text-teal-700`}>

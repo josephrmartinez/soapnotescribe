@@ -26,10 +26,10 @@ export default async function Page() {
       <Header />
 
       <div className="mx-auto">
-        <p className="mx-auto mb-8 mt-20 text-center text-5xl font-black text-gray-600 ">
+        <p className="mx-auto mb-8 mt-20 px-6 text-center text-4xl font-black text-gray-600 lg:text-5xl ">
           Automate your clinical charting.
         </p>
-        <p className="mx-auto my-12 text-center text-3xl font-semibold text-gray-500">
+        <p className="mx-auto my-12 text-center  text-2xl font-semibold text-gray-500 md:text-3xl">
           Go from audio memo to structured SOAP note in seconds.
         </p>
 
@@ -60,7 +60,7 @@ export default async function Page() {
             className="rounded-lg shadow-lg"
           ></Image>
         </div>
-        <div className="mx-auto grid max-w-screen-lg md:grid-cols-3">
+        <div className="mx-auto mt-12 grid max-w-screen-lg gap-8 px-8 md:mt-8 md:grid-cols-3">
           <UseStep
             icon={<MicrophoneIcon />}
             step="1. Upload audio"
@@ -80,9 +80,20 @@ export default async function Page() {
           />
         </div>
 
-        <div className="rounded-lg border"></div>
-        <div className="rounded-lg border"></div>
-        <div className="rounded-lg border"></div>
+        <p className="mx-auto mb-12 mt-20 w-7/12 text-center  text-3xl font-bold text-gray-600">
+          A simple charting solution for independent healthcare providers:
+        </p>
+        <div className="mx-auto mb-24 grid w-[34rem] gap-6 text-center">
+          <p className="text-xl  text-gray-500">
+            First ten notes free, then $49 per month.
+          </p>
+          <p className=" text-xl  text-gray-500">
+            No complex setup. No contracts. No lock-in.
+          </p>
+          <p className="text-xl  text-gray-500">
+            Export your notes to another EHR platform as needed.
+          </p>
+        </div>
 
         {/* <p className="mx-auto mb-8 mt-20 text-center text-3xl font-bold text-gray-600 ">
           Simple pricing
