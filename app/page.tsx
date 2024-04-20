@@ -45,7 +45,7 @@ export default async function Page() {
             get started
           </Link>
           <Link
-            href="#pricing"
+            href="#plan"
             className="mx-2 w-32 rounded-full py-4 font-bold underline underline-offset-8 hover:text-teal-600"
           >
             see pricing
@@ -86,7 +86,7 @@ export default async function Page() {
 
         <div className="mb-4 py-6">
           <div
-            id="pricing"
+            id="plan"
             className="mx-auto mb-6 text-center text-xl font-semibold text-gray-600"
           >
             <p>A simple charting solution for</p>

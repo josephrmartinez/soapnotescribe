@@ -11,7 +11,7 @@ export default function Header() {
       <div>
         <Link
           href="/login"
-          className="rounded-full border bg-gray-50 px-3 py-2 font-bold transition-all hover:bg-white"
+          className="rounded-full bg-gray-50 px-3 py-2 font-bold shadow transition-all hover:bg-white"
         >
           log in
         </Link>

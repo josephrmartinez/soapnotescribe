@@ -20,6 +20,7 @@ input[type='number']::-webkit-outer-spin-button {
 html {
   scroll-behavior: smooth;
 }
+
 /* HTML: <div class="loader"></div> */
 .loader {
   width: 20px;

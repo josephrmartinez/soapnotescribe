@@ -1,48 +1,65 @@
-import React from 'react'
-import Logo from '../ui/logo'
-import { login } from './action'
-import Link from 'next/link'
+import React from 'react';
+import Logo from '../ui/logo';
+import { login } from './action';
+import Link from 'next/link';
 
 export default function LoginPage() {
   return (
-    <div className="flex flex-col items-center justify-between p-24">
-      <div className="rounded-md p-6 border  w-[300px]">
-        <div className="flex justify-center mb-6 mt-2"><Logo/></div>
-        
-        <form className='flex flex-col gap-2'>
+    <div className="flex h-screen flex-col items-center justify-between bg-gray-100 p-24">
+      <div className="w-[300px] rounded-md bg-gray-50 p-6 shadow">
+        <div className="mb-6 mt-2 flex justify-center">
+          <Logo />
+        </div>
+
+        <form className="flex flex-col gap-2">
           <Label htmlFor="email">Email:</Label>
           <Input id="email" name="email" type="email" required />
           <Label htmlFor="password">Password:</Label>
-          <Input id="password" name="password" type="password" required/>
+          <Input id="password" name="password" type="password" required />
           <Separator />
           <Button formAction={login}>Log in</Button>
         </form>
-        <div className='flex flex-col items-center mt-6'>
-          <p className='text-gray-500'>Don't yet have an account?</p>
-          <Link href='/signup' className='underline  underline-offset-4 my-1'>sign up for free</Link>
+        <div className="mt-6 flex flex-col items-center">
+          <p className="text-gray-500">Don't yet have an account?</p>
+          <Link href="/signup" className="my-1  underline underline-offset-4">
+            sign up for free
+          </Link>
         </div>
-        
       </div>
     </div>
-  )
+  );
 }
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {}
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {}
 interface LabelProps extends React.LabelHTMLAttributes<HTMLLabelElement> {}
 
-const Button: React.FC<ButtonProps> = ({children, ...rest}) => {
-  return <button className="rounded bg-teal-700 hover:bg-teal-600 text-white font-semibold px-4 py-2 transition duration-100 ease-in-out" {...rest}>
-    {children}
-  </button>
-}
+const Button: React.FC<ButtonProps> = ({ children, ...rest }) => {
+  return (
+    <button
+      className="rounded bg-teal-700 px-4 py-2 font-semibold text-white transition duration-100 ease-in-out hover:bg-teal-600"
+      {...rest}
+    >
+      {children}
+    </button>
+  );
+};
 
-const Input: React.FC<InputProps> = ({...rest}) => {
-  return <input className="rounded px-4 py-2  outline-none bg-gray-100 border border-white/10 focus:bg-white focus:text-black" {...rest}/>
-}
+const Input: React.FC<InputProps> = ({ ...rest }) => {
+  return (
+    <input
+      className="rounded border border-gray-200  bg-gray-100 px-4 py-2 outline-none focus:bg-white focus:text-black"
+      {...rest}
+    />
+  );
+};
 
-const Label: React.FC<LabelProps> = ({children, ...rest}) => {
-  return <label {...rest} className="text-sm ">{children}</label>
-}
+const Label: React.FC<LabelProps> = ({ children, ...rest }) => {
+  return (
+    <label {...rest} className="text-sm ">
+      {children}
+    </label>
+  );
+};
 
-const Separator = () => <hr className="border-white/10 my-2"/>
+const Separator = () => <hr className="my-2 border-white/10" />;
