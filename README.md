@@ -30,5 +30,5 @@ Supabase (auth, storage, vectordb), Vercel (serverless functions)
 **Deployment:**
 Vercel
 
-**APIs:**
+**AI models:**
 Replicate, OpenAI

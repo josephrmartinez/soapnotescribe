@@ -40,7 +40,7 @@ export default async function Page() {
         <div className="mx-auto my-8 flex flex-row items-center justify-center pb-8 align-middle">
           <Link
             href="/signup"
-            className=" mx-2 w-32 rounded-full bg-teal-600 py-3 text-center font-bold text-white hover:bg-teal-500 hover:text-white"
+            className=" mx-2 w-32 rounded-full bg-teal-600 py-3 text-center font-bold text-white shadow-md hover:bg-teal-500 hover:text-white"
           >
             get started
           </Link>
@@ -84,26 +84,27 @@ export default async function Page() {
           />
         </div>
 
-        <div className="mb-4 py-6">
+        <div className=" mx-auto grid w-11/12 items-center gap-8 rounded-md bg-gray-50 py-8 shadow-lg">
           <div
             id="plan"
-            className="mx-auto mb-6 text-center text-xl font-semibold text-gray-600"
+            className="mx-auto text-center text-xl font-semibold text-gray-600"
           >
             <p>A simple charting solution for</p>
             <p>independent healthcare providers:</p>
           </div>
-          <div className="grid w-full gap-4 text-center text-gray-700">
-            <p className="">First ten notes free, then $49 per month.</p>
+          <div className="grid w-full gap-4 px-2 text-center text-gray-700">
+            <p className="">First ten notes free, then $29 per month.</p>
             <p className="">No complex setup. No contracts. No lock-in.</p>
             <p className="">Freely export notes to other EHR platforms.</p>
           </div>
+
+          <Link
+            href="/signup"
+            className="mx-auto w-32 rounded-full bg-teal-600 py-3 text-center font-bold text-white shadow-md hover:bg-teal-500 hover:text-white"
+          >
+            get started
+          </Link>
         </div>
-        <Link
-          href="/signup"
-          className="mx-auto w-32 rounded-full bg-teal-600 py-3 text-center font-bold text-white hover:bg-teal-500 hover:text-white"
-        >
-          get started
-        </Link>
       </div>
 
       {/* Desktop view */}
@@ -118,7 +119,7 @@ export default async function Page() {
         <div className="mx-auto my-8 flex flex-row items-center justify-center pb-8 align-middle">
           <Link
             href="/signup"
-            className=" mx-2 w-32 rounded-full bg-teal-600 py-3 text-center font-bold text-white hover:bg-teal-500 hover:text-white"
+            className="mx-2 w-32 rounded-full bg-teal-600 py-3 text-center font-bold text-white shadow-md hover:bg-teal-500 hover:text-white"
           >
             get started
           </Link>
@@ -170,13 +171,13 @@ export default async function Page() {
           id="pricing"
           className="mx-auto mb-12 grid w-full gap-6 text-center text-xl text-gray-700"
         >
-          <p className="">First ten notes free, then $49 per month.</p>
+          <p className="">First ten notes free, then $29 per month.</p>
           <p className="">No complex setup. No contracts. No lock-in.</p>
           <p className="">Freely export notes to other EHR platforms.</p>
         </div>
         <Link
           href="/signup"
-          className="mx-auto w-32 rounded-full bg-teal-600 py-3 text-center font-bold text-white hover:bg-teal-500 hover:text-white"
+          className="mx-auto w-32 rounded-full bg-teal-600 py-3 text-center font-bold text-white shadow-md hover:bg-teal-500 hover:text-white"
         >
           get started
         </Link>
