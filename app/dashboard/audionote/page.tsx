@@ -1,21 +1,21 @@
-import AudioUpload from './AudioUpload';
+// import AudioUpload from './AudioUpload';
 import { Metadata } from 'next';
 import { GeistSans } from 'geist/font/sans';
+import Loader from './Loader';
 
 export const metadata: Metadata = {
-  title: "Create New Note",
-}
+  title: 'Create New Note',
+};
 
-export default async function Page() {  
- 
+export default async function Page() {
   return (
     <main>
-      
-      <div className="flex items-center justify-between mb-8">
-        <h1 className={`${GeistSans.className} text-2xl`}>Create Note from Audio</h1>
+      <div className="mb-8 flex w-full items-center justify-between">
+        <h1 className={`${GeistSans.className} text-2xl`}>
+          Create Note from Audio
+        </h1>
       </div>
-      <AudioUpload />
-      
+      <Loader />
     </main>
   );
 }
