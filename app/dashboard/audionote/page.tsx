@@ -1,7 +1,7 @@
-// import AudioUpload from './AudioUpload';
+import AudioUpload from './AudioUpload';
 import { Metadata } from 'next';
 import { GeistSans } from 'geist/font/sans';
-import Loader from './Loader';
+import Recorder from './AudioRecorder';
 
 export const metadata: Metadata = {
   title: 'Create New Note',
@@ -15,7 +15,7 @@ export default async function Page() {
           Create Note from Audio
         </h1>
       </div>
-      <Loader />
+      <AudioUpload />
     </main>
   );
 }

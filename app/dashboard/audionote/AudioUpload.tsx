@@ -6,6 +6,8 @@ import { createClient } from '@/utils/supabase/client';
 import { useRouter } from 'next/navigation';
 import { getReplicateMonoTranscript } from '@/app/lib/actions';
 
+import { AudioRecorder } from 'react-audio-voice-recorder';
+
 export default function AudioUpload() {
   const [uploadComplete, setUploadComplete] = useState<boolean>(false);
   const [percentageUploaded, setPercentageUploaded] = useState(0);
@@ -71,10 +73,10 @@ export default function AudioUpload() {
   async function handleAudioUpload(file: File | null) {
     if (!file) return;
 
-    if (!file.name.endsWith('.mp3')) {
-      alert('Please upload an mp3 file.');
-      return;
-    }
+    // if (!file.name.endsWith('.mp3')) {
+    //   alert('Please upload an mp3 file.');
+    //   return;
+    // }
 
     try {
       setIsUploading(true);
@@ -174,6 +176,23 @@ export default function AudioUpload() {
     }
   }
 
+  const handleAudioRecording = (blob: Blob) => {
+    // Update AudioRecording component with clear buttons on record, stop, delete, upload.
+
+    // const url = URL.createObjectURL(blob);
+    // const audio = document.createElement('audio');
+    // audio.src = url;
+    // audio.controls = true;
+    // document.body.appendChild(audio);
+
+    // Create randomized file name for in-browser created recordings
+    let fileNameWithPrefix = 'asdfwarfgrgd34rvdf';
+
+    const file = new File([blob], fileNameWithPrefix);
+
+    uploadFile('audiofiles', fileNameWithPrefix, file);
+  };
+
   return (
     <div className="h-96">
       <div className="items-left flex flex-col">
@@ -205,10 +224,23 @@ export default function AudioUpload() {
         </div>
         <input
           type="file"
-          ref={fileInputRef} // Step 1: Add a hidden file input element
+          ref={fileInputRef}
           onChange={handleFileInputChange}
           style={{ display: 'none' }}
         />
+        <div className="mt-12">
+          <div>Record Audio Memo</div>
+          <AudioRecorder
+            onRecordingComplete={handleAudioRecording}
+            audioTrackConstraints={{
+              noiseSuppression: true,
+              echoCancellation: true,
+            }}
+            downloadOnSavePress={true}
+            showVisualizer={true}
+            downloadFileExtension="webm"
+          />
+        </div>
       </div>
     </div>
   );

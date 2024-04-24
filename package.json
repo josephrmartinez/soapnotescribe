@@ -38,6 +38,7 @@
     "openai": "^4.25.0",
     "postcss": "8.4.31",
     "react": "18.2.0",
+    "react-audio-voice-recorder": "^2.2.0",
     "react-dom": "18.2.0",
     "react-select": "^5.8.0",
     "replicate": "^0.25.2",
@@ -45,6 +46,7 @@
     "tus-js-client": "^4.0.1",
     "typescript": "5.2.2",
     "use-debounce": "^10.0.0",
+    "uuid": "^9.0.1",
     "zod": "^3.22.2"
   },
   "devDependencies": {
@@ -52,6 +54,7 @@
     "@types/bcrypt": "^5.0.1",
     "@types/react": "18.2.21",
     "@types/react-dom": "18.2.14",
+    "@types/uuid": "^9.0.8",
     "@vercel/style-guide": "^5.0.1",
     "daisyui": "^4.7.3",
     "dotenv": "^16.4.5",

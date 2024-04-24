@@ -88,6 +88,7 @@ export async function getReplicateMonoTranscript(url: string, apptid: string) {
   } else {
       webhookUrl = process.env.DEV_REPLICATE_WEBHOOK;
   }
+  console.log("webhook url:", webhookUrl)
 
   try {
   replicate.predictions.create(
