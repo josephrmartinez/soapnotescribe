@@ -176,9 +176,10 @@ export default function AudioUpload() {
     }
   }
 
-  const handleAudioRecording = (blob: Blob) => {
-    // Update AudioRecording component with clear buttons on record, stop, delete, upload.
+  const uploadAudioRecording = async (blob: Blob) => {
+    setIsUploading(true);
 
+    // Create and append audio player to play recorded memo in the browser
     // const url = URL.createObjectURL(blob);
     // const audio = document.createElement('audio');
     // audio.src = url;
@@ -186,11 +187,12 @@ export default function AudioUpload() {
     // document.body.appendChild(audio);
 
     // Create randomized file name for in-browser created recordings
-    let fileNameWithPrefix = 'asdfwarfgrgd34rvdf';
+    let fileName = 'recording-' + self.crypto.randomUUID();
 
-    const file = new File([blob], fileNameWithPrefix);
+    const file = new File([blob], fileName);
 
-    uploadFile('audiofiles', fileNameWithPrefix, file);
+    await uploadFile('audiofiles', fileName, file);
+    setIsUploading(false);
   };
 
   return (
@@ -231,12 +233,12 @@ export default function AudioUpload() {
         <div className="mt-12">
           <div>Record Audio Memo</div>
           <AudioRecorder
-            onRecordingComplete={handleAudioRecording}
+            onRecordingComplete={uploadAudioRecording}
             audioTrackConstraints={{
               noiseSuppression: true,
               echoCancellation: true,
             }}
-            downloadOnSavePress={true}
+            downloadOnSavePress={false}
             showVisualizer={true}
             downloadFileExtension="webm"
           />

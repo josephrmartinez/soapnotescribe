@@ -193,7 +193,7 @@ export async function getSOAPData(apptid: string, transcript: string) {
         {
           patient_name: string;
           patient_date_of_birth: Date;
-          appointment_date: Date;
+          appointment_date: Date ("yyyy-mm-dd");
           appointment_time: string ("hh:mm");
           allergies: string ("NKDA" if none);
           chief_complaint?: string (max 50 characters, capitalize first character);
@@ -211,7 +211,10 @@ export async function getSOAPData(apptid: string, transcript: string) {
     response_format: { type: "json_object" },
   });
 
-  const completionString = completion.choices[0].message.content as string
+    const completionString = completion.choices[0].message.content as string
+    
+    console.log("completionString", completionString)
+
   updateApptWithSOAPData(apptid, transcript, completionString);
 
   } catch (error){
