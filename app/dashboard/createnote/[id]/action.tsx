@@ -7,6 +7,8 @@ import { redirect } from 'next/navigation';
 export async function submitAppointment(formData: FormData) {
   const supabase = createClient();
 
+  console.log('formData consent:', formData.get('consent'));
+
   const { error, data } = await supabase
     .from('appointments')
     .update({
@@ -16,7 +18,7 @@ export async function submitAppointment(formData: FormData) {
       patient_name: formData.get('patient_name') as string,
       patient_date_of_birth: formData.get('patient_date_of_birth') as string,
       allergies: formData.get('allergies') as string,
-      consent: formData.get('consent') === 'true',
+      consent: formData.get('consent') === 'on' ? true : false,
       chief_complaint: formData.get('chief_complaint') as string,
       soap_objective: formData.get('soap_objective') as string,
       soap_subjective: formData.get('soap_subjective') as string,

@@ -155,7 +155,7 @@ const CreateAppointmentPrefilled: React.FC<CreateAppointmentProps> = ({
 
         <div
           tabIndex={0}
-          className="collapse-plus collapse my-4 rounded-md border"
+          className="collapse collapse-plus my-4 rounded-md border"
         >
           <div className="collapse-title text-lg font-medium">
             Audio Memo Transcript
@@ -287,11 +287,11 @@ const CreateAppointmentPrefilled: React.FC<CreateAppointmentProps> = ({
                 <input
                   id="consent"
                   name="consent"
-                  required
                   type="checkbox"
                   checked={consent === true}
+                  required
                   onChange={(e) => {
-                    setConsent(e.target.checked ? true : null);
+                    setConsent(e.target.checked);
                   }}
                   className="peer mr-4 block h-6 w-6 cursor-pointer rounded-md border border-gray-200 text-sm outline-2 "
                 ></input>
