@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import { GeistSans } from 'geist/font/sans';
+import { Button } from '@/app/ui/button';
 
 export const metadata: Metadata = {
   title: 'Patients',
@@ -8,10 +9,11 @@ export const metadata: Metadata = {
 export default function Page() {
   return (
     <div className="w-full">
-      <div className="flex w-full items-center justify-between">
+      <div className="mb-8 flex w-full">
         <h1 className={`${GeistSans.className} text-2xl`}>Patients</h1>
-        <button className="roounded-lg border">Add Patient</button>
       </div>
+
+      <Button>Add Patient</Button>
     </div>
   );
 }
