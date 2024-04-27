@@ -27,6 +27,18 @@ export const formatDateToLocal = (
   return formatter.format(date);
 };
 
+export const formatTime = (timeString: string) => {
+  const timeParts = timeString.split(':');
+  const hours = parseInt(timeParts[0]);
+  const minutes = parseInt(timeParts[1]);
+
+  const date = new Date();
+  date.setHours(hours);
+  date.setMinutes(minutes);
+
+  return date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+}
+
 // export const generateYAxis = (revenue: Revenue[]) => {
 //   // Calculate what labels we need to display on the y-axis
 //   // based on highest record and in 1000s

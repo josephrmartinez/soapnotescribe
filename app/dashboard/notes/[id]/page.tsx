@@ -7,7 +7,8 @@ import {
   BuildingOffice2Icon,
 } from '@heroicons/react/24/outline';
 import { Metadata } from 'next';
-import { formatDateToLocal } from '@/app/lib/utils';
+import { formatDateToLocal, formatTime } from '@/app/lib/utils';
+import { Button } from '@/app/ui/button';
 
 export const metadata: Metadata = {
   title: 'Approved SOAP Note',
@@ -27,6 +28,8 @@ export default async function Page({ params }: { params: { id: string } }) {
     : undefined;
 
   const appointmentDate = formatDateToLocal(appointment.appointment_date);
+  const appointmentTime = formatTime(appointment.appointment_time);
+  const patientDOB = formatDateToLocal(appointment.patient_date_of_birth);
 
   return (
     <main>
@@ -42,11 +45,17 @@ export default async function Page({ params }: { params: { id: string } }) {
       />
 
       <div className="max-w-prose">
-        <div className="flex w-full items-center justify-between">
+        <div className="mb-4 flex w-full items-center justify-between">
           <h1 className={` text-2xl`}>Approved SOAP Note</h1>
+
+          <div className="grid grid-cols-3 gap-4">
+            <Button>edit</Button>
+            <Button>copy</Button>
+            <Button>pdf</Button>
+          </div>
         </div>
 
-        <div className="max-w-prose rounded-md bg-gray-50 p-4">
+        <div className="mb-4 max-w-prose rounded-md bg-gray-50 p-4">
           <div className="grid grid-cols-2 gap-8">
             {/* Appointment Date */}
             <div className="mb-4">
@@ -71,7 +80,7 @@ export default async function Page({ params }: { params: { id: string } }) {
               </label>
               <div className="relative">
                 <div id="appointment_time" className="px-2 py-2 text-sm">
-                  {appointment.appointment_time}
+                  {appointmentTime}
                 </div>
               </div>
             </div>
@@ -102,7 +111,7 @@ export default async function Page({ params }: { params: { id: string } }) {
               </label>
               <div className="relative">
                 <div id="patient_dob" className="px-2 py-2 text-sm">
-                  {appointment.patient_date_of_birth}
+                  {patientDOB}
                 </div>
               </div>
             </div>
@@ -129,7 +138,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                 Telemedicine Consent
               </label>
               <div className="px-2 py-2 text-sm">
-                Patient is located in Arizona and consents to treatment.
+                Patient consents to treatment.
               </div>
             </div>
           </div>
@@ -200,7 +209,7 @@ export default async function Page({ params }: { params: { id: string } }) {
               </div>
             </div>
           </div>
-          <div className="mb-4">
+          <div className="mb-0">
             <label
               htmlFor="doctorsignature"
               className="mb-2 block text-sm font-medium"
@@ -213,23 +222,26 @@ export default async function Page({ params }: { params: { id: string } }) {
               </div>
             </div>
           </div>
+        </div>
 
-          <div className="collapse-title text-lg font-medium">Audio Memo</div>
-          {audioUrl ? (
-            <audio className="mb-6 w-full" controls>
-              <source type="audio/mp3" src={audioUrl} />
-              Your browser does not support the audio element.
-            </audio>
-          ) : (
-            <div className="w-full">Loading audio</div>
-          )}
-          <div tabIndex={0} className="collapse collapse-plus mb-4 border">
-            <div className="collapse-title text-lg font-medium">
-              Audio Memo Transcript
-            </div>
-            <div className="collapse-content">
-              <p>{appointment?.audio_transcript}</p>
-            </div>
+        <div className="collapse-title text-lg font-medium">Audio Memo</div>
+        {audioUrl ? (
+          <audio className="mb-6 w-full" controls>
+            <source type="audio/mp3" src={audioUrl} />
+            Your browser does not support the audio element.
+          </audio>
+        ) : (
+          <div className="w-full">Loading audio</div>
+        )}
+        <div
+          tabIndex={0}
+          className="collapse collapse-plus mb-4 rounded-md border"
+        >
+          <div className="collapse-title text-lg font-medium">
+            Audio Memo Transcript
+          </div>
+          <div className="collapse-content">
+            <p>{appointment?.audio_transcript}</p>
           </div>
         </div>
       </div>

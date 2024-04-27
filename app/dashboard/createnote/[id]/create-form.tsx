@@ -15,7 +15,7 @@ import { GeistSans } from 'geist/font/sans';
 
 import { Appointment } from '@/app/lib/definitions';
 import { getSignedAudioUrl } from '@/app/lib/data';
-import { submitAppointment } from './action';
+import { submitAppointment, submitAppointmentDraft } from './action';
 
 interface CreateAppointmentProps {
   appointment?: Appointment;
@@ -134,9 +134,7 @@ const CreateAppointmentPrefilled: React.FC<CreateAppointmentProps> = ({
   return (
     <div className="w-full">
       <div className="mb-8 flex w-full">
-        <h1 className={`${GeistSans.className} text-2xl`}>
-          Review Auto-Drafted Note
-        </h1>
+        <h1 className={`${GeistSans.className} text-2xl`}>Review Draft</h1>
       </div>
       <form className="max-w-prose">
         <input name="id" hidden defaultValue={appointment?.id}></input>
@@ -447,7 +445,6 @@ const CreateAppointmentPrefilled: React.FC<CreateAppointmentProps> = ({
               <input
                 id="doctor_signature"
                 name="doctor_signature"
-                required
                 type="text"
                 className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
                 value={doctorSignature || ''}
@@ -463,6 +460,9 @@ const CreateAppointmentPrefilled: React.FC<CreateAppointmentProps> = ({
             >
               Cancel
             </Link>
+            <Button formAction={submitAppointmentDraft} secondary>
+              Save Draft
+            </Button>
             <Button
               formAction={submitAppointment}
               active={doctorSignature !== ''}

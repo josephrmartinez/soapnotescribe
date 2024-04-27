@@ -3,7 +3,7 @@ import CreateAppointmentPrefilled from './create-form';
 import { fetchAppointmentById } from '@/app/lib/data';
 
 export const metadata: Metadata = {
-  title: 'Review Note',
+  title: 'Review Draft',
 };
 
 export default async function Page({ params }: { params: { id: string } }) {
