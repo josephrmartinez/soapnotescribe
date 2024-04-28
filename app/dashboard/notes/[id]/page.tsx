@@ -2,6 +2,7 @@
 import Breadcrumbs from '@/app/ui/appointments/breadcrumbs';
 import { fetchAppointmentById, getSignedAudioUrl } from '@/app/lib/data';
 import { notFound } from 'next/navigation';
+import Link from 'next/link';
 import {
   CalendarDaysIcon,
   BuildingOffice2Icon,
@@ -49,7 +50,12 @@ export default async function Page({ params }: { params: { id: string } }) {
           <h1 className={` text-2xl`}>Approved SOAP Note</h1>
 
           <div className="grid grid-cols-3 gap-4">
-            <Button>edit</Button>
+            <Link
+              href={`/dashboard/createnote/${appointment.id}`}
+              className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
+            >
+              Edit
+            </Link>
             <Button>copy</Button>
             <Button>pdf</Button>
           </div>

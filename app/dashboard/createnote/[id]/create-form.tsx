@@ -265,7 +265,6 @@ const CreateAppointmentPrefilled: React.FC<CreateAppointmentProps> = ({
                 <input
                   id="allergies"
                   name="allergies"
-                  required
                   type="text"
                   className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
                   value={allergies || ''}
