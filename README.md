@@ -2,12 +2,14 @@
 
 [soapscribe.app](https://soapscribe.vercel.app/) automatically generates structured SOAP notes from telehealth appointment recordings or clinical audio memos.
 
-A SOAP note is a structured method for healthcare professionals to document patient care. SOAP is an acronym for a systematic way of organizing notes about patient encounters:
+A SOAP note is a structured method for healthcare professionals to document patient care. SOAP is an acronym for a systematic approach to documenting patient encounters:
 
 **Subjective:** Patient's own words about symptoms and concerns.  
 **Objective:** Measurable data from exams and tests.  
 **Assessment:** Healthcare provider's diagnosis or analysis.  
 **Plan:** Treatment and follow-up recommendations.
+
+Healthcare providers complete a SOAP note for each patient encounter. By automatically generating a draft note immediately after each encounter, soapscribe reduces administrative burden and improves accuracy and consistency of clinical documentation.
 
 ### GIF demo:
 
