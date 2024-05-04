@@ -6,6 +6,10 @@ import Link from 'next/link';
 import {
   CalendarDaysIcon,
   BuildingOffice2Icon,
+  PencilSquareIcon,
+  DocumentDuplicateIcon,
+  TrashIcon,
+  DocumentIcon,
 } from '@heroicons/react/24/outline';
 import { Metadata } from 'next';
 import { formatDateToLocal, formatTime } from '@/app/lib/utils';
@@ -49,15 +53,36 @@ export default async function Page({ params }: { params: { id: string } }) {
         <div className="mb-4 flex w-full items-center justify-between">
           <h1 className={` text-2xl`}>Approved SOAP Note</h1>
 
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-4 gap-2">
+            <Link
+              href={`/dashboard/notes/${appointment.id}/delete`}
+              className="flex h-10  items-center justify-center rounded-lg bg-inherit px-2 text-sm font-medium text-gray-600 transition-colors hover:bg-red-500/90 hover:text-white"
+            >
+              <TrashIcon width={20} height={20} className="mr-2" />
+              Delete
+            </Link>
             <Link
               href={`/dashboard/createnote/${appointment.id}`}
-              className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
+              className="flex h-10 items-center justify-center rounded-lg bg-inherit px-2  text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 "
             >
+              <PencilSquareIcon width={20} height={20} className="mr-2" />
               Edit
             </Link>
-            <Button>copy</Button>
-            <Button>pdf</Button>
+            <Link
+              href={`/dashboard/createnote/${appointment.id}`}
+              className="flex h-10 items-center justify-center rounded-lg bg-inherit px-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 "
+            >
+              <DocumentDuplicateIcon width={20} height={20} className="mr-2" />
+              copy
+            </Link>
+
+            <Link
+              href={`/dashboard/createnote/${appointment.id}`}
+              className="flex h-10 items-center justify-center rounded-lg bg-inherit px-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 "
+            >
+              <DocumentIcon width={20} height={20} className="mr-2" />
+              pdf
+            </Link>
           </div>
         </div>
 

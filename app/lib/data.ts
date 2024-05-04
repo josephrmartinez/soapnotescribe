@@ -3,10 +3,11 @@
 // import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 // import { cookies } from 'next/headers'
 // import { Database } from '@/app/database.types';
-import { unstable_noStore as noStore } from 'next/cache';
+import { unstable_noStore as noStore, revalidatePath,  } from 'next/cache';
 import { Database } from '../database.types';
 import { createClient } from '@/utils/supabase/server'
 import { Appointment } from './definitions';
+import { redirect } from 'next/navigation';
 
 // const supabase = createServerComponentClient<Database>({ cookies })
 
@@ -32,6 +33,25 @@ export async function fetchAppointmentById(id: string) {
     console.error('Supabase Error:', error);
     throw new Error('Failed to fetch appointment data.');
   }
+}
+
+
+export async function deleteAppointment(id: string) {
+
+  try {
+    const supabase = createClient()
+    const { error } = await supabase
+      .from('appointments')
+      .delete()
+      .eq('id', id);
+
+  } catch (error) {
+    console.error('Supabase Error:', error);
+    throw new Error('Failed to fetch appointment data.');
+  }
+  console.log("Appointment deleted successfully");
+  revalidatePath('/dashboard/notes');
+  redirect('/dashboard/notes')
 }
 
 export async function getSignedAudioUrl(patient: string, audio_url:string) {
