@@ -182,6 +182,26 @@ export async function updateApptWithTranscript(apptid: string, transcript: strin
  }
 }
 
+
+
+export async function deleteNote(id: string) {
+
+  try {
+    const supabase = createClient()
+    const { error } = await supabase
+      .from('appointments')
+      .delete()
+      .eq('id', id);
+
+  } catch (error) {
+    console.error('Supabase Error:', error);
+    throw new Error('Failed to fetch note data.');
+  }
+  console.log("Note deleted successfully");
+  revalidatePath('/dashboard/notes');
+  redirect('/dashboard/notes')
+}
+
 export async function getSOAPData(apptid: string, transcript: string) {
   console.log("Running getSOAPData")
   try {

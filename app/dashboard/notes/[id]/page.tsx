@@ -14,6 +14,7 @@ import {
 import { Metadata } from 'next';
 import { formatDateToLocal, formatTime } from '@/app/lib/utils';
 import { Button } from '@/app/ui/button';
+import { DeleteNoteFirstStep } from '@/app/ui/appointments/buttons';
 
 export const metadata: Metadata = {
   title: 'Approved SOAP Note',
@@ -51,16 +52,10 @@ export default async function Page({ params }: { params: { id: string } }) {
 
       <div className="max-w-prose">
         <div className="mb-4 flex w-full items-center justify-between">
-          <h1 className={` text-2xl`}>Approved SOAP Note</h1>
+          <h1 className={`text-2xl`}>Approved SOAP Note</h1>
 
           <div className="grid grid-cols-4 gap-2">
-            <Link
-              href={`/dashboard/notes/${appointment.id}/delete`}
-              className="flex h-10  items-center justify-center rounded-lg bg-inherit px-2 text-sm font-medium text-gray-600 transition-colors hover:bg-red-500/90 hover:text-white"
-            >
-              <TrashIcon width={20} height={20} className="mr-2" />
-              Delete
-            </Link>
+            <DeleteNoteFirstStep id={appointment.id} />
             <Link
               href={`/dashboard/createnote/${appointment.id}`}
               className="flex h-10 items-center justify-center rounded-lg bg-inherit px-2  text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 "

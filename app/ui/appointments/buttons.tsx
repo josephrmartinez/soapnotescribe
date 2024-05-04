@@ -7,7 +7,7 @@ import {
   ShareIcon,
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
-// import { deleteAppointment } from '@/app/lib/actions';
+import { deleteNote } from '@/app/lib/actions';
 
 export function CreateAppointment() {
   return (
@@ -112,13 +112,25 @@ export function ShareAppointment({ id }: { id: string }) {
   );
 }
 
-export function DeleteAppointment({ id }: { id: string }) {
-  // const deleteAppointmentWithId = deleteAppointment.bind(null, id); (<form action={deleteAppointmentWithId}>)
+export function DeleteNoteFirstStep({ id }: { id: string }) {
   return (
-    <form>
-      <button className="rounded-md border p-2 transition-colors hover:bg-red-500 hover:text-white">
-        <span className="sr-only">Delete</span>
-        <TrashIcon className="w-5" />
+    <Link
+      href={`/dashboard/deletenote/${id}`}
+      className="flex h-10  items-center justify-center rounded-lg bg-inherit px-2 text-sm font-medium text-gray-600 transition-colors hover:bg-red-500/90 hover:text-white"
+    >
+      <TrashIcon width={20} height={20} className="mr-2" />
+      Delete
+    </Link>
+  );
+}
+
+export function DeleteNoteConfirm({ id }: { id: string }) {
+  const deleteNoteWithId = deleteNote.bind(null, id);
+  return (
+    <form action={deleteNoteWithId}>
+      <button className="flex h-10 flex-row items-center rounded-md bg-red-500/90 p-2 text-sm font-semibold text-white shadow-md transition-all hover:bg-red-500">
+        <TrashIcon width={20} height={20} className="mr-2" />
+        Delete
       </button>
     </form>
   );

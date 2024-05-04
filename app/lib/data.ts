@@ -36,23 +36,6 @@ export async function fetchAppointmentById(id: string) {
 }
 
 
-export async function deleteAppointment(id: string) {
-
-  try {
-    const supabase = createClient()
-    const { error } = await supabase
-      .from('appointments')
-      .delete()
-      .eq('id', id);
-
-  } catch (error) {
-    console.error('Supabase Error:', error);
-    throw new Error('Failed to fetch appointment data.');
-  }
-  console.log("Appointment deleted successfully");
-  revalidatePath('/dashboard/notes');
-  redirect('/dashboard/notes')
-}
 
 export async function getSignedAudioUrl(patient: string, audio_url:string) {
   // return (`url path: ${patient}/${audio_url}`)

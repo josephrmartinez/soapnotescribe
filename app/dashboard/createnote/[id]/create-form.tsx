@@ -16,9 +16,10 @@ import { GeistSans } from 'geist/font/sans';
 import { Appointment } from '@/app/lib/definitions';
 import { getSignedAudioUrl } from '@/app/lib/data';
 import { submitAppointment, submitAppointmentDraft } from './action';
+import { DeleteNoteFirstStep } from '@/app/ui/appointments/buttons';
 
 interface CreateAppointmentProps {
-  appointment?: Appointment;
+  appointment: Appointment;
 }
 
 const CreateAppointmentPrefilled: React.FC<CreateAppointmentProps> = ({
@@ -27,7 +28,7 @@ const CreateAppointmentPrefilled: React.FC<CreateAppointmentProps> = ({
   // pass in Appointment object data to pre-populate form
   const [loading, setLoading] = useState<boolean>(true);
   const [audioUrl, setAudioUrl] = useState<string>('');
-  const [apptid, setApptid] = useState<string | null>(appointment?.id || null);
+  const [apptid, setApptid] = useState<string>(appointment.id);
   const [patientName, setPatientName] = useState<string | null>(
     appointment?.patient_name || null,
   );
@@ -459,6 +460,7 @@ const CreateAppointmentPrefilled: React.FC<CreateAppointmentProps> = ({
             >
               Cancel
             </Link>
+            <DeleteNoteFirstStep id={appointment.id} />
             <Button formAction={submitAppointmentDraft} secondary>
               Save Draft
             </Button>
