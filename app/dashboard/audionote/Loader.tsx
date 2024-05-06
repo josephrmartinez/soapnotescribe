@@ -28,8 +28,7 @@ export default function Loader({
   accessToken: string;
   userID: string;
 }) {
-  const [isUploadComplete, setIsUploadComplete] = useState(false);
-  const [fileName, setFileName] = useState<string>('');
+  // const [fileName, setFileName] = useState<string>('');
   const router = useRouter();
 
   const supabase = createClient();
@@ -45,7 +44,7 @@ export default function Loader({
       ...currentFile,
       name: generateFileName(),
     };
-    setFileName(modifiedFile.name);
+    // setFileName(modifiedFile.name);
     return modifiedFile;
   };
 
@@ -54,7 +53,12 @@ export default function Loader({
       const { data, error } = await supabase.storage
         .from('audiofiles')
         .createSignedUrl(`${userID}/${fileName}`, 600);
-      return data?.signedUrl;
+
+      if (error) {
+        console.log('Error getting signed URL:', error);
+      } else {
+        return data?.signedUrl;
+      }
     } catch (error) {
       console.error('Error generating signedUrl:', error);
     }
@@ -69,14 +73,14 @@ export default function Loader({
       // setIsUploadComplete(true);
 
       try {
-        const signedUrl = await getDownloadUrl(result.successful.);
-        console.log('signedUrl:', signedUrl);
+        const signedUrl = await getDownloadUrl(result.successful[0].name);
 
         // Check if signedUrl is defined before setting the state
         if (signedUrl !== undefined) {
-          updateSupabaseTable(fileName, signedUrl);
-        } else {
-          console.error('Error: Signed URL is undefined');
+          console.log('signedUrl:', signedUrl);
+          updateSupabaseTable(result.successful[0].name, signedUrl);
+          // } else {
+          //   console.error('Error: Signed URL is undefined');
         }
       } catch (error) {
         console.error('Error fetching signed URL:', error);
