@@ -58,14 +58,14 @@ export default async function Page({ params }: { params: { id: string } }) {
             <DeleteNoteFirstStep id={appointment.id} />
             <Link
               href={`/dashboard/createnote/${appointment.id}`}
-              className="flex h-10 items-center justify-center rounded-lg bg-inherit px-2  text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 "
+              className="flex h-10 items-center justify-center rounded-lg bg-gray-100 px-2  text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200 "
             >
               <PencilSquareIcon width={20} height={20} className="mr-2" />
               Edit
             </Link>
             <Link
               href={`/dashboard/createnote/${appointment.id}`}
-              className="flex h-10 items-center justify-center rounded-lg bg-inherit px-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 "
+              className="flex h-10 items-center justify-center rounded-lg bg-gray-100 px-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200 "
             >
               <DocumentDuplicateIcon width={20} height={20} className="mr-2" />
               copy
@@ -73,7 +73,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 
             <Link
               href={`/dashboard/createnote/${appointment.id}`}
-              className="flex h-10 items-center justify-center rounded-lg bg-inherit px-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 "
+              className="flex h-10 items-center justify-center rounded-lg bg-gray-100 px-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200 "
             >
               <DocumentIcon width={20} height={20} className="mr-2" />
               pdf

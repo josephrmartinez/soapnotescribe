@@ -226,6 +226,7 @@ export default function AudioUpload() {
         </div>
         <input
           type="file"
+          accept="audio/*"
           ref={fileInputRef}
           onChange={handleFileInputChange}
           style={{ display: 'none' }}

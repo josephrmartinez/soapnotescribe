@@ -116,7 +116,7 @@ export function DeleteNoteFirstStep({ id }: { id: string }) {
   return (
     <Link
       href={`/dashboard/deletenote/${id}`}
-      className="flex h-10  items-center justify-center rounded-lg bg-inherit px-2 text-sm font-medium text-gray-600 transition-colors hover:bg-red-500/90 hover:text-white"
+      className="flex h-10  items-center justify-center rounded-lg bg-gray-100 px-2 text-sm font-medium text-gray-600 transition-colors hover:bg-red-500/90 hover:text-white"
     >
       <TrashIcon width={20} height={20} className="mr-2" />
       Delete

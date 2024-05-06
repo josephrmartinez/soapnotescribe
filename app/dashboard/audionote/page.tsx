@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import { GeistSans } from 'geist/font/sans';
 import Loader from './Loader';
 import { fetchUserSession } from '@/app/lib/data';
+import AudioUpload from './AudioUpload';
 
 export const metadata: Metadata = {
   title: 'Create New Note',
@@ -19,7 +20,8 @@ export default async function Page() {
           Create Note from Audio
         </h1>
       </div>
-      <Loader accessToken={accessToken} userID={userID} />
+      {/* <Loader accessToken={accessToken} userID={userID} /> */}
+      <AudioUpload />
     </main>
   );
 }

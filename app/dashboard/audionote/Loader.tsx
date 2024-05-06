@@ -4,8 +4,8 @@ import { useRouter } from 'next/navigation';
 import { createClient } from '@/utils/supabase/client';
 import Uppy, { PluginOptions, UploadResult, UppyFile } from '@uppy/core';
 import Tus from '@uppy/tus';
-import Dashboard from '@uppy/react/lib/Dashboard';
-// import { Dashboard } from '@uppy/react';
+// import Dashboard from '@uppy/react/lib/Dashboard';
+import { Dashboard } from '@uppy/react';
 import Audio from '@uppy/audio';
 import { v4 as uuidv4 } from 'uuid';
 import { getReplicateMonoTranscript } from '@/app/lib/actions';
@@ -21,16 +21,14 @@ const STORAGE_BUCKET = 'audiofiles'; // your storage bucket name
 
 const supabaseStorageURL = `https://${NEXT_PUBLIC_SUPABASE_PROJECT_ID}.supabase.co/storage/v1/upload/resumable`;
 
-export default function Loader({
+function Loader({
   accessToken,
   userID,
 }: {
   accessToken: string;
   userID: string;
 }) {
-  // const [fileName, setFileName] = useState<string>('');
   const router = useRouter();
-
   const supabase = createClient();
 
   const generateFileName = () => {
@@ -70,17 +68,12 @@ export default function Loader({
       console.log('Upload failed', result.failed);
       return;
     } else if (result.successful.length > 0) {
-      // setIsUploadComplete(true);
-
       try {
         const signedUrl = await getDownloadUrl(result.successful[0].name);
 
-        // Check if signedUrl is defined before setting the state
         if (signedUrl !== undefined) {
           console.log('signedUrl:', signedUrl);
           updateSupabaseTable(result.successful[0].name, signedUrl);
-          // } else {
-          //   console.error('Error: Signed URL is undefined');
         }
       } catch (error) {
         console.error('Error fetching signed URL:', error);
@@ -144,7 +137,7 @@ export default function Loader({
           'contentType',
           'cacheControl',
         ],
-        // removeFingerprintOnSuccess: true,
+        removeFingerprintOnSuccess: true,
       })
       .use(Audio),
   );
@@ -176,3 +169,5 @@ export default function Loader({
     </>
   );
 }
+
+export default React.memo(Loader);

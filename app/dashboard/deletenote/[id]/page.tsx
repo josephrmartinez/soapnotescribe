@@ -26,25 +26,25 @@ export default function Page({ params }: { params: { id: string } }) {
   //   router.back();
   // };
 
-  const [appointment, setAppointment] = useState<Appointment | null>(null);
+  // const [appointment, setAppointment] = useState<Appointment | null>(null);
 
-  useEffect(() => {
-    const fetchAppointment = async () => {
-      try {
-        const appointment = await fetchAppointmentById(id);
-        setAppointment(appointment);
-      } catch (error) {
-        console.error('Failed to fetch appointment:', error);
-        // Handle error appropriately
-      }
-    };
+  // useEffect(() => {
+  //   const fetchAppointment = async () => {
+  //     try {
+  //       const appointment = await fetchAppointmentById(id);
+  //       setAppointment(appointment);
+  //     } catch (error) {
+  //       console.error('Failed to fetch appointment:', error);
+  //       // Handle error appropriately
+  //     }
+  //   };
 
-    fetchAppointment();
-  }, [id]); // Fetch appointment when id changes
+  //   fetchAppointment();
+  // }, [id]); // Fetch appointment when id changes
 
-  const appointmentDate = appointment
-    ? formatDateToLocal(appointment.appointment_date)
-    : '';
+  // const appointmentDate = appointment
+  //   ? formatDateToLocal(appointment.appointment_date)
+  //   : '';
 
   const router = useRouter();
 
@@ -52,22 +52,22 @@ export default function Page({ params }: { params: { id: string } }) {
     router.back();
   };
 
-  let label = '';
+  // let label = '';
 
-  if (appointmentDate && appointment?.patient_name) {
-    label = `${appointmentDate} with ${appointment?.patient_name}`;
-  }
+  // if (appointmentDate && appointment?.patient_name) {
+  //   label = `${appointmentDate} with ${appointment?.patient_name}`;
+  // }
 
   return (
     <main>
       <Breadcrumbs
         breadcrumbs={[
           { label: 'SOAP Notes', href: '/dashboard/notes' },
-          {
-            label: label,
-            href: `/dashboard/notes/${id}`,
-            active: true,
-          },
+          // {
+          //   label: label,
+          //   href: `/dashboard/notes/${id}`,
+          //   active: true,
+          // },
         ]}
       />
 
