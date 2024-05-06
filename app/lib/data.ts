@@ -65,17 +65,16 @@ export async function getSignedAudioUrl(patient: string, audio_url:string) {
 
 
 
-// export const fetchUserSession = async () => {
-//   try {
-//     const supabase = createClient()
-//     const { data: { session } } = await supabase.auth.getSession();
-//     console.log("session user id:", session?.user.id);
-//     return session;
-//   } catch (error) {
-//     console.error('Supabase Error:', error);
-//     throw new Error('Failed to fetch user session.');
-//   }
-// };
+export const fetchUserSession = async () => {
+  try {
+    const supabase = createClient()
+    const { data: { session } } = await supabase.auth.getSession();
+    return session;
+  } catch (error) {
+    console.error('Supabase Error:', error);
+    throw new Error('Failed to fetch user session.');
+  }
+};
 
 // UPDATE TO ALWAYS DISPLAY PROCESSING APPOINTMENTS (AUDIO_TRANSCRIPT IS NULL)
 export async function fetchFilteredAppointments(query: string, currentPage: number) {

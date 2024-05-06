@@ -286,10 +286,6 @@ if (error) {
 
 
 
-
-
-
-
 // export async function formatReplicateReponse(apptid: string, output: TranscriptOutput) {
 //   console.log("Running formatReplicateReponse")
 //   output.segments.forEach((segment) => delete segment.words);

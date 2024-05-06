@@ -1,13 +1,17 @@
-import AudioUpload from './AudioUpload';
 import { Metadata } from 'next';
 import { GeistSans } from 'geist/font/sans';
-import Recorder from './AudioRecorder';
+import Loader from './Loader';
+import { fetchUserSession } from '@/app/lib/data';
 
 export const metadata: Metadata = {
   title: 'Create New Note',
 };
 
 export default async function Page() {
+  const session = await fetchUserSession();
+  const accessToken = session?.access_token || '';
+  const userID = session?.user.id || '';
+
   return (
     <main>
       <div className="mb-8 flex w-full items-center justify-between">
@@ -15,7 +19,7 @@ export default async function Page() {
           Create Note from Audio
         </h1>
       </div>
-      <AudioUpload />
+      <Loader accessToken={accessToken} userID={userID} />
     </main>
   );
 }
