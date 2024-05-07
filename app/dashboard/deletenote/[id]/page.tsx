@@ -76,12 +76,14 @@ export default function Page({ params }: { params: { id: string } }) {
           <h1 className={` text-2xl`}>Delete Note</h1>
         </div>
 
-        <div className="mb-4 flex max-w-prose flex-col items-center rounded-md bg-gray-50 p-4">
-          <div>Are you sure you want to delete this SOAP note?</div>
+        <div className="mb-4 flex max-w-prose flex-col items-center rounded-md  p-4">
+          <div className="mt-8 text-lg font-semibold">
+            Are you sure you want to permanently delete this SOAP note?
+          </div>
           <div className="my-12 grid grid-cols-2 gap-4">
             <button
               onClick={handleCancel}
-              className="flex h-10 items-center justify-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 shadow-md transition-colors hover:bg-gray-200"
+              className="flex h-10 items-center justify-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
             >
               Cancel
             </button>

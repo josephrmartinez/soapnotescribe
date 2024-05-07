@@ -71,13 +71,14 @@ export default async function Page({ params }: { params: { id: string } }) {
               copy
             </Link>
 
-            <Link
-              href={`/dashboard/createnote/${appointment.id}`}
+            <div
+              // href={`/dashboard/notes/${appointment.id}/pdf`}
+              // onClick={open new tab with appointment data displayed on pdf}
               className="flex h-10 items-center justify-center rounded-lg bg-gray-100 px-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200 "
             >
               <DocumentIcon width={20} height={20} className="mr-2" />
               pdf
-            </Link>
+            </div>
           </div>
         </div>
 

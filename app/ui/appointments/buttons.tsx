@@ -68,7 +68,7 @@ export function ReviewDraft({ id }: { id: string }) {
   return (
     <Link
       href={`/dashboard/createnote/${id}`}
-      className="flex flex-row rounded-md bg-red-500/90 p-2 shadow-md transition-all hover:bg-red-500 "
+      className="flex flex-row rounded-md bg-red-600 p-2 shadow-md transition-all hover:bg-red-500 "
     >
       <div className="text-sm font-semibold text-white ">review draft</div>
       <ArrowRightIcon className="h-5 text-white md:ml-4 md:mr-1" />
@@ -128,7 +128,7 @@ export function DeleteNoteConfirm({ id }: { id: string }) {
   const deleteNoteWithId = deleteNote.bind(null, id);
   return (
     <form action={deleteNoteWithId}>
-      <button className="flex h-10 flex-row items-center rounded-md bg-red-500/90 p-2 text-sm font-semibold text-white shadow-md transition-all hover:bg-red-500">
+      <button className="flex h-10 flex-row items-center rounded-md bg-red-600 p-2 text-sm font-semibold text-white transition-all hover:bg-red-500">
         <TrashIcon width={20} height={20} className="mr-2" />
         Delete
       </button>

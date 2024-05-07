@@ -28,6 +28,6 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "app/lib/placeholder-data.js",
-    "scripts/seed.js", "app/api/transcribe/route.js", "app/api/transcribe/route.js"  ],
+    "scripts/seed.js", "app/api/transcribe/route.js", "app/api/transcribe/route.js", "app/dashboard/notes/[id]/NotePDF.jsx"  ],
   "exclude": ["node_modules"]
 }

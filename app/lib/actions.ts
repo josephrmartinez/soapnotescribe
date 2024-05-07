@@ -8,6 +8,9 @@ import { createClient } from "@/utils/supabase/server";
 import { createServerClient } from "@supabase/ssr";
 import { createClient as createClientJS } from "@supabase/supabase-js";
 // import { embed } from './embed'
+import PDFDocument from 'pdfkit';
+import fs from 'fs';
+
 
 
 const openai = new OpenAI({apiKey: process.env.OPENAI_API_KEY })
