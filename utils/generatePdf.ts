@@ -10,9 +10,18 @@ export async function generateAndSavePdf(appointmentData: any) {
 
   // Generate PDF
     const doc = new PDFDocument({font: 'public/fonts/Inter-Regular.ttf'});
-  doc.text(`Patient name: ${appointmentData.patient_name}`);
-  doc.text(`Date: ${appointmentData.appointment_date}`);
-  doc.text(`Time: ${appointmentData.appointment_time}`);
+    doc.text(`Patient name: ${appointmentData.patient_name}`);
+    doc.text(`Patient name: ${appointmentData.patient_date_of_birth}`);
+  doc.text(`Appointment Date: ${appointmentData.appointment_date}`);
+    doc.text(`Appointment Time: ${appointmentData.appointment_time}`);
+    doc.text(`Consent: Patient consents to treatment`);
+    doc.text(`Allergies: ${appointmentData.allergies}`);
+    doc.text(`Chief Complaint: ${appointmentData.chief_complaint}`);
+    doc.text(`Subjective: ${appointmentData.soap_subjective}`);
+    doc.text(`Objective: ${appointmentData.soap_objective}`);
+    doc.text(`Assessment: ${appointmentData.soap_assessment}`);
+    doc.text(`Plan: ${appointmentData.soap_plan}`);
+    doc.text(`Doctor Signature: ${appointmentData.doctor_signature}`);
 
     // create a buffer to store the PDF
     const pdfBuffer: Buffer[] = []
@@ -40,19 +49,3 @@ export async function generateAndSavePdf(appointmentData: any) {
   // Finalize the PDF
   doc.end();
 }
-
-
-
-//   // Define the path where the PDF will be stored in Supabase Storage
-//   const filePath = `${userId}/${appointmentData.patient_name}/${appointmentData.appointment_date}.pdf`;
-
-  
-//   // Upload the PDF to Supabase Storage
-//   const { error } = await supabase.storage.from('pdfs').upload(filePath, pdfBuffer, { upsert: true });
-//   if (error) {
-//     console.error('Error uploading PDF to Supabase Storage:', error);
-//     return;
-//   }
-
-//   console.log('PDF uploaded successfully');
-// }
