@@ -3,16 +3,10 @@
 import { createClient } from '@/utils/supabase/server';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-import PDFDocument from 'pdfkit';
-import fs from 'fs';
-import { promisify } from 'util';
 import { generateAndSavePdf } from '@/utils/generatePdf';
-const readFile = promisify(fs.readFile);
 
 export async function submitAppointment(formData: FormData) {
   const supabase = createClient();
-
-  const userId = await supabase.auth.getUser();
 
   const { error, data } = await supabase
     .from('appointments')
@@ -41,6 +35,12 @@ export async function submitAppointment(formData: FormData) {
   if (data && data.length > 0) {
     // Generate and save pdf to Supabase storage
     await generateAndSavePdf(data[0]);
+
+    // const filePath = `${userId}/${appointmentData.patient_name}/${appointmentData.appointment_date}.pdf`;
+
+    // const { data, error } = await supabase.storage
+    //   .from('avatars')
+    //   .download('folder/avatar1.png');
 
     revalidatePath('/dashboard/notes', 'page');
     redirect('/dashboard/notes');

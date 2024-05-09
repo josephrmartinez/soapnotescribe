@@ -6,7 +6,7 @@ export async function generateAndSavePdf(appointmentData: any) {
     const supabase = createClient();
     const userId = appointmentData.user_id;
 
-    console.log("calling generateAndSavePdf with following user and data:", appointmentData)
+    console.log("calling generateAndSavePdf with following data:", appointmentData)
 
   // Generate PDF
     const doc = new PDFDocument({font: 'public/fonts/Inter-Regular.ttf'});
@@ -36,7 +36,7 @@ export async function generateAndSavePdf(appointmentData: any) {
     const filePath = `${userId}/${appointmentData.patient_name}/${appointmentData.appointment_date}.pdf`;
 
     // Upload the PDF to Supabase Storage
-    const { error } = await supabase.storage.from('pdfs').upload(filePath, pdfData, { upsert: true });
+    const { error } = await supabase.storage.from('pdfs').upload(filePath, pdfData, { upsert: true, contentType: "application/pdf" });
 
     if (error) {
       console.error('Error uploading PDF to Supabase Storage:', error);

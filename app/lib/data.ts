@@ -36,15 +36,40 @@ export async function fetchAppointmentById(id: string) {
 }
 
 
+export async function getSignedPdfUrl(userId: string, patientName: string, appointmentDate: string) {
+  try {
+    const supabase = createClient();
+    const filePath = `${userId}/${patientName}/${appointmentDate}.pdf`;
+    console.log("file path:", filePath)
 
-export async function getSignedAudioUrl(patient: string, audio_url:string) {
+    const { data, error } = await supabase.storage
+      .from('pdfs')
+      .createSignedUrl(filePath, 60);
+    if (error) {
+      console.error('Error getting pdf:', error);
+    }
+
+    const signedPdfUrl = data?.signedUrl;
+
+    return signedPdfUrl
+
+  } catch (error) {
+    console.error('Supabase Error:', error);
+    throw new Error('Failed to get signed PDF URL.');
+  }
+}
+    
+
+   
+
+export async function getSignedAudioUrl(userId: string, audio_url:string) {
   // return (`url path: ${patient}/${audio_url}`)
   try {
     const supabase = createClient()
     const { data, error } = await supabase
       .storage
       .from('audiofiles')
-      .createSignedUrl(`${patient}/${audio_url}`, 3600);
+      .createSignedUrl(`${userId}/${audio_url}`, 3600);
 
     if (error) {
       console.error('Supabase Storage Error:', error);

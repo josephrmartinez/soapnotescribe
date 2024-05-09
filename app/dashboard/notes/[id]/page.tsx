@@ -1,6 +1,10 @@
 // import Form from '@/app/ui/appointments/edit-form';
 import Breadcrumbs from '@/app/ui/appointments/breadcrumbs';
-import { fetchAppointmentById, getSignedAudioUrl } from '@/app/lib/data';
+import {
+  fetchAppointmentById,
+  getSignedAudioUrl,
+  getSignedPdfUrl,
+} from '@/app/lib/data';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import {
@@ -15,6 +19,8 @@ import { Metadata } from 'next';
 import { formatDateToLocal, formatTime } from '@/app/lib/utils';
 import { Button } from '@/app/ui/button';
 import { DeleteNoteFirstStep } from '@/app/ui/appointments/buttons';
+import { createClient } from '@/utils/supabase/server';
+import ViewPdfButton from '@/app/ui/notes/ViewPdfButton';
 
 export const metadata: Metadata = {
   title: 'Approved SOAP Note',
@@ -32,6 +38,12 @@ export default async function Page({ params }: { params: { id: string } }) {
         appointment.audio_storage_url,
       )
     : undefined;
+
+  const pdfUrl = await getSignedPdfUrl(
+    appointment.user_id,
+    appointment.patient_name,
+    appointment.appointment_date,
+  );
 
   const appointmentDate = formatDateToLocal(appointment.appointment_date);
   const appointmentTime = formatTime(appointment.appointment_time);
@@ -71,14 +83,15 @@ export default async function Page({ params }: { params: { id: string } }) {
               copy
             </Link>
 
-            <div
-              // href={`/dashboard/notes/${appointment.id}/pdf`}
-              // onClick={open new tab with appointment data displayed on pdf}
-              className="flex h-10 items-center justify-center rounded-lg bg-gray-100 px-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200 "
+            <Link
+              href={pdfUrl ? pdfUrl : ''}
+              className="flex h-10 cursor-pointer items-center justify-center rounded-lg bg-gray-100 px-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200 "
             >
               <DocumentIcon width={20} height={20} className="mr-2" />
               pdf
-            </div>
+            </Link>
+
+            {/* <ViewPdfButton viewPdf={downloadPdf} /> */}
           </div>
         </div>
 
