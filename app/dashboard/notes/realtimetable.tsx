@@ -9,7 +9,6 @@ import {
 import { formatDateToLocal } from '@/app/lib/utils';
 import { useEffect } from 'react';
 import { createClient } from '@/utils/supabase/client';
-import { create } from 'domain';
 import { useRouter } from 'next/navigation';
 import { Appointment } from '@/app/lib/definitions';
 
