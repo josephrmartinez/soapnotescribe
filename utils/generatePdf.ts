@@ -1,6 +1,7 @@
 import { createClient } from '@/utils/supabase/server';
 import PDFDocument from 'pdfkit';
 
+
 export async function generateAndSavePdf(appointmentData: any) {
   // Initialize Supabase client
     const supabase = createClient();
@@ -9,21 +10,54 @@ export async function generateAndSavePdf(appointmentData: any) {
     console.log("calling generateAndSavePdf with following data:", appointmentData)
 
   // Generate PDF
-    const doc = new PDFDocument({font: 'public/fonts/Inter-Regular.ttf'});
-    doc.text(`Patient name: ${appointmentData.patient_name}`);
-    doc.text(`Patient name: ${appointmentData.patient_date_of_birth}`);
-  doc.text(`Appointment Date: ${appointmentData.appointment_date}`);
-    doc.text(`Appointment Time: ${appointmentData.appointment_time}`);
-    doc.text(`Consent: Patient consents to treatment`);
-    doc.text(`Allergies: ${appointmentData.allergies}`);
-    doc.text(`Chief Complaint: ${appointmentData.chief_complaint}`);
-    doc.text(`Subjective: ${appointmentData.soap_subjective}`);
-    doc.text(`Objective: ${appointmentData.soap_objective}`);
-    doc.text(`Assessment: ${appointmentData.soap_assessment}`);
-    doc.text(`Plan: ${appointmentData.soap_plan}`);
-    doc.text(`Doctor Signature: ${appointmentData.doctor_signature}`);
+  const doc = new PDFDocument({ font: 'public/fonts/Inter-Regular.ttf' });
+  
+  doc.registerFont('bold', 'public/fonts/Inter-Bold.ttf');
+  doc.registerFont('regular', 'public/fonts/Inter-Regular.ttf');
 
-    // create a buffer to store the PDF
+  doc.font('bold').text(`Patient name: `, {continued: true});
+  doc.font('regular').text(`${appointmentData.patient_name}`)
+  doc.moveDown();
+  doc.font('bold').text(`Patient date of birth: `, {continued: true});
+  doc.font('regular').text(`${appointmentData.patient_date_of_birth}`);
+  doc.moveDown();
+doc.font('bold').text(`Allergies: `, {continued: true});
+  doc.font('regular').text(`${appointmentData.allergies}`);
+  doc.moveDown();
+  doc.font('bold').text(`Appointment Date: `, {continued: true});
+  doc.font('regular').text(`${appointmentData.appointment_date}`);
+  doc.moveDown();
+  doc.font('bold').text(`Appointment Time: `, {continued: true});
+  doc.font('regular').text(`${appointmentData.appointment_time}`);
+  doc.moveDown();
+  doc.font('bold').text(`Consent: `, {continued: true});
+  doc.font('regular').text(`Patient consents to treatment`);
+  doc.moveDown();
+  doc.moveDown();
+  doc.moveTo(0 + 50, doc.y)
+    .lineTo(doc.page.width - 50, doc.y)
+    .stroke();
+  doc.moveDown();
+  doc.moveDown();
+  doc.font('bold').text(`Chief Complaint: `);
+  doc.font('regular').text(`${appointmentData.chief_complaint}`);
+  doc.moveDown();
+  doc.font('bold').text(`Subjective: `);
+  doc.font('regular').text(`${appointmentData.soap_subjective}`);
+  doc.moveDown();
+  doc.font('bold').text(`Objective: `);
+  doc.font('regular').text(`${appointmentData.soap_objective}`);
+  doc.moveDown();
+  doc.font('bold').text(`Assessment: `);
+  doc.font('regular').text(`${appointmentData.soap_assessment}`);
+  doc.moveDown();
+  doc.font('bold').text(`Plan: `);
+  doc.font('regular').text(`${appointmentData.soap_plan}`);
+  doc.moveDown();
+  doc.moveDown();
+  doc.font('bold').text(`Doctor Signature:`);
+  doc.font('regular').text(`${appointmentData.doctor_signature}`); 
+
     const pdfBuffer: Buffer[] = []
     
      // Pipe the PDF document to the buffer

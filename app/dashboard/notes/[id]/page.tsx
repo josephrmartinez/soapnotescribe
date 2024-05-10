@@ -85,13 +85,13 @@ export default async function Page({ params }: { params: { id: string } }) {
 
             <Link
               href={pdfUrl ? pdfUrl : ''}
+              rel="noopener noreferrer"
+              target="_blank"
               className="flex h-10 cursor-pointer items-center justify-center rounded-lg bg-gray-100 px-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200 "
             >
               <DocumentIcon width={20} height={20} className="mr-2" />
               pdf
             </Link>
-
-            {/* <ViewPdfButton viewPdf={downloadPdf} /> */}
           </div>
         </div>
 
