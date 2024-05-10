@@ -1,13 +1,17 @@
 import { createClient } from '@/utils/supabase/server';
 import PDFDocument from 'pdfkit';
+import { formatDateToLocal, formatTime } from '@/app/lib/utils';
 
 
 export async function generateAndSavePdf(appointmentData: any) {
   // Initialize Supabase client
     const supabase = createClient();
-    const userId = appointmentData.user_id;
+  const userId = appointmentData.user_id;
+  
+  const appointmentDate = formatDateToLocal(appointmentData.appointment_date);
+  const patientDOB = formatDateToLocal(appointmentData.patient_date_of_birth);
+  const appointmentTime = formatTime(appointmentData.appointment_time);
 
-    console.log("calling generateAndSavePdf with following data:", appointmentData)
 
   // Generate PDF
   const doc = new PDFDocument({ font: 'public/fonts/Inter-Regular.ttf' });
@@ -19,16 +23,16 @@ export async function generateAndSavePdf(appointmentData: any) {
   doc.font('regular').text(`${appointmentData.patient_name}`)
   doc.moveDown();
   doc.font('bold').text(`Patient date of birth: `, {continued: true});
-  doc.font('regular').text(`${appointmentData.patient_date_of_birth}`);
+  doc.font('regular').text(`${patientDOB}`);
   doc.moveDown();
 doc.font('bold').text(`Allergies: `, {continued: true});
   doc.font('regular').text(`${appointmentData.allergies}`);
   doc.moveDown();
   doc.font('bold').text(`Appointment Date: `, {continued: true});
-  doc.font('regular').text(`${appointmentData.appointment_date}`);
+  doc.font('regular').text(`${appointmentDate}`);
   doc.moveDown();
   doc.font('bold').text(`Appointment Time: `, {continued: true});
-  doc.font('regular').text(`${appointmentData.appointment_time}`);
+  doc.font('regular').text(`${appointmentTime}`);
   doc.moveDown();
   doc.font('bold').text(`Consent: `, {continued: true});
   doc.font('regular').text(`Patient consents to treatment`);

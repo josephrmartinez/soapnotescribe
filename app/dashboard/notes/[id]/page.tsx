@@ -20,7 +20,6 @@ import { formatDateToLocal, formatTime } from '@/app/lib/utils';
 import { Button } from '@/app/ui/button';
 import { DeleteNoteFirstStep } from '@/app/ui/appointments/buttons';
 import { createClient } from '@/utils/supabase/server';
-import ViewPdfButton from '@/app/ui/notes/ViewPdfButton';
 
 export const metadata: Metadata = {
   title: 'Approved SOAP Note',
