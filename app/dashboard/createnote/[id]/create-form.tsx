@@ -399,13 +399,13 @@ const CreateAppointmentPrefilled: React.FC<CreateAppointmentProps> = ({
             className="collapse-plus collapse mb-4 rounded-md  border"
           >
             <div className="collapse-title text-lg font-medium text-gray-600">
-              Second Opinion
+              Differential Diagnosis
             </div>
             <div className="collapse-content">
               <p className="text-sm">{secondOpinion}</p>
               <p className="mt-6 text-sm italic text-gray-700">
-                This second opinion is for reference only and will not be
-                included with the approved SOAP note.
+                This differential diagnosis is for reference only and will not
+                be included with the approved SOAP note.
               </p>
             </div>
           </div>

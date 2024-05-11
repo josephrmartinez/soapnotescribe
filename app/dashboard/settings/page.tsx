@@ -1,19 +1,20 @@
 import { Metadata } from 'next';
 import { GeistSans } from 'geist/font/sans';
 
-
 export const metadata: Metadata = {
-  title: "Account Settings",
-}
- 
+  title: 'Account Settings',
+};
+
 export default async function Page() {
-
-
   return (
     <div className="w-full">
-      <div className="flex w-full items-center justify-between">
+      <div className="flex w-full">
         <h1 className={`${GeistSans.className} text-2xl`}>Account Settings</h1>
       </div>
+      <div>Display time: 24h / 12h</div>
+      <div>
+        Include differential diagnosis with SOAP note draft enable / disable
+      </div>
     </div>
-  )
+  );
 }

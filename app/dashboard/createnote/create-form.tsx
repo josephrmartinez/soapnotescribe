@@ -163,7 +163,7 @@ export default function CreateAppointment() {
           {/* Telemedicine Consent */}
           <div className="mb-4">
             <label htmlFor="consent" className="mb-2 block text-sm font-medium">
-              Telemedicine Consent
+              Consent
             </label>
             <div className="relative flex flex-row items-center">
               <input
@@ -176,9 +176,7 @@ export default function CreateAppointment() {
                 onChange={(e) => setConsent(e.target.value)}
                 className="peer mr-4 block h-6 w-6 cursor-pointer rounded-md border border-gray-200 text-sm outline-2 "
               ></input>
-              <div className="text-sm">
-                Patient is located in Arizona and consents to treatment.
-              </div>
+              <div className="text-sm">Patient consents to treatment.</div>
             </div>
           </div>
         </div>

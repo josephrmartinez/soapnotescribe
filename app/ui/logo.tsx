@@ -5,7 +5,7 @@ export default function Logo() {
   return (
     <Link href="/">
       <p className={`${poppins.className} text-xl font-semibold text-gray-700`}>
-        soapscribe.app
+        soapnotescribe
       </p>
     </Link>
   );

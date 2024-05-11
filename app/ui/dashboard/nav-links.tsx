@@ -37,6 +37,11 @@ const links = [
     href: '/dashboard/patients',
     icon: UserGroupIcon,
   },
+  {
+    name: 'Settings',
+    href: '/dashboard/settings',
+    icon: Cog8ToothIcon,
+  },
 ];
 
 export default function NavLinks() {
