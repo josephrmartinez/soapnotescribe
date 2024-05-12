@@ -33,6 +33,7 @@ export default async function Page() {
         </div>
         <div className="mx-auto my-6 text-center text-xl text-gray-500">
           <p>Go from audio memo</p>
+          <p>or appointment recording</p>
           <p>to structured SOAP note</p>
           <p>in seconds.</p>
         </div>
@@ -58,7 +59,7 @@ export default async function Page() {
           alt="HIPAA compliant"
           className="pb-6"
         ></Image>
-        <div className="mx-auto flex w-11/12 flex-col items-center">
+        {/* <div className="mx-auto flex w-11/12 flex-col items-center">
           <Image
             alt="soapscribe demo"
             width={1000}
@@ -67,12 +68,15 @@ export default async function Page() {
             unoptimized={true}
             className="rounded-lg shadow-lg"
           ></Image>
+        </div> */}
+        <div className="mx-auto mt-2 px-6 text-center text-2xl font-semibold text-gray-600">
+          <p>Type less and create SOAP notes faster with soapnotescribe:</p>
         </div>
         <div className="mx-auto my-12 grid max-w-screen-lg gap-8 px-8 md:mt-8 md:grid-cols-3">
           <UseStep
             icon={<MicrophoneIcon />}
             step="1. Upload audio"
-            subtext="Upload clinical audio memos or an entire appointment recording. Soapscribe will intelligently extract the relevant information."
+            subtext="Upload a clinical audio memo or an entire appointment recording. soapnotescribe will intelligently extract the relevant information."
           />
 
           <UseStep
@@ -84,22 +88,47 @@ export default async function Page() {
           <UseStep
             icon={<ArchiveBoxIcon />}
             step="3. Approve note"
-            subtext="Notes are saved in a HIPPA-compliant database that is simple to search. No complex setup or onboarding required."
+            subtext="Finalize your note with an e-signature. Notes are saved in an easily searchable, HIPPA-compliant database."
           />
         </div>
 
-        <div className=" mx-auto grid w-11/12 items-center gap-8 rounded-md bg-gray-50 py-8 shadow-lg">
-          <div
-            id="plan"
-            className="mx-auto text-center text-xl font-semibold text-gray-600"
-          >
-            <p>A simple charting solution for</p>
-            <p>independent healthcare providers:</p>
+        <div className="mb-8 flex flex-col items-center">
+          <div className="mx-auto mt-4 px-6 text-center text-3xl font-semibold text-teal-700">
+            <p>More than just</p>
+            <p>simple transcription:</p>
           </div>
-          <div className="grid w-full gap-4 px-2 text-center text-gray-700">
-            <p className="">First ten notes free, then $29 per month.</p>
-            <p className="">No complex setup. No contracts. No lock-in.</p>
-            <p className="">Freely export notes to other EHR platforms.</p>
+          <div className="mx-auto my-6 text-left text-xl text-gray-500">
+            <ul className=" list-disc">
+              <li>get automatic differential diagnosis</li>
+              <li>reduce clerical errors and medmal risk</li>
+              <li>auto-generate and audit ICD codes</li>
+              <li>easily share discharge instructions</li>
+            </ul>
+          </div>
+        </div>
+
+        <div
+          id="plan"
+          className="mx-auto grid w-11/12 items-center gap-8 rounded-md bg-white py-8 shadow-lg"
+        >
+          <div>
+            <div className="mx-auto text-center text-2xl font-semibold text-gray-600">
+              No gimmicks:
+            </div>
+            <div className="grid w-full gap-2 px-2 text-center  text-lg text-gray-700">
+              <p className="">Cancel your account at any time.</p>
+              <p className="">Freely export notes to other EHR platforms.</p>
+              <p className="">No complex setup. No demo call.</p>
+            </div>
+          </div>
+
+          <div>
+            <div className="mx-auto text-center text-2xl font-semibold text-gray-600">
+              Simple pricing:
+            </div>
+            <div className="grid w-full gap-4 px-2 text-center text-lg  text-gray-700">
+              <p className="">First ten notes free, then $29 per month.</p>
+            </div>
           </div>
 
           <Link
@@ -142,9 +171,6 @@ export default async function Page() {
           className="pb-6"
         ></Image>
 
-        {/* <p className="mx-auto mb-8 mt-20 text-center text-3xl font-bold text-gray-600 dark:text-gray-400">
-          Easy to use. No setup required.
-        </p> */}
         <div className="mx-auto flex w-11/12 flex-col items-center">
           <Image
             alt="soapscribe demo"
@@ -155,11 +181,11 @@ export default async function Page() {
             className="rounded-lg shadow-lg"
           ></Image>
         </div>
-        <div className="mx-auto mt-12 grid max-w-screen-lg gap-8 px-8 md:mt-8 md:grid-cols-3">
+        <div className="mx-auto mt-12 grid max-w-screen-lg gap-4 px-3 md:mt-8 md:grid-cols-3">
           <UseStep
             icon={<MicrophoneIcon />}
             step="1. Upload audio"
-            subtext="Upload clinical audio memos or an entire appointment recording. Soapscribe will intelligently extract the relevant information."
+            subtext="Upload clinical audio memos or an entire appointment recording. soapnotescribe will intelligently extract the relevant information."
           />
 
           <UseStep
@@ -171,28 +197,56 @@ export default async function Page() {
           <UseStep
             icon={<ArchiveBoxIcon />}
             step="3. Approve note"
-            subtext="Notes are saved in a HIPPA-compliant database that is simple to search. No complex setup or onboarding required."
+            subtext="Finalize your note with an e-signature. Notes are saved in an easily searchable, HIPPA-compliant database."
           />
         </div>
 
-        <div className="mx-auto mb-8 mt-20 w-7/12 text-center text-3xl font-bold text-gray-600">
-          <p>A simple charting solution for </p>
-          <p>independent healthcare providers:</p>
+        <div className="my-8 flex flex-col items-center">
+          <div className="mx-auto mt-4 px-6 text-center text-3xl font-semibold text-teal-700">
+            <p>More than just</p>
+            <p>simple transcription:</p>
+          </div>
+          <div className="mx-auto my-6 text-left text-xl text-gray-500">
+            <ul className=" list-disc">
+              <li>get automatic differential diagnosis</li>
+              <li>reduce clerical errors and medmal risk</li>
+              <li>auto-generate and audit ICD codes</li>
+              <li>easily share discharge instructions</li>
+            </ul>
+          </div>
         </div>
+
         <div
-          id="pricing"
-          className="mx-auto mb-12 grid w-full gap-6 text-center text-xl text-gray-700"
+          id="plan"
+          className="mx-auto grid items-center gap-8 rounded-md bg-white px-8 py-8 shadow-lg"
         >
-          <p className="">First ten notes free, then $29 per month.</p>
-          <p className="">No complex setup. No contracts. No lock-in.</p>
-          <p className="">Freely export notes to other EHR platforms.</p>
+          <div>
+            <div className="mx-auto text-center text-2xl font-semibold text-gray-600">
+              No gimmicks:
+            </div>
+            <div className="grid w-full gap-2 px-2 text-center  text-lg text-gray-700">
+              <p className="">Cancel your account at any time.</p>
+              <p className="">Freely export notes to other EHR platforms.</p>
+              <p className="">No complex setup. No demo call required.</p>
+            </div>
+          </div>
+
+          <div>
+            <div className="mx-auto text-center text-2xl font-semibold text-gray-600">
+              Simple pricing:
+            </div>
+            <div className="grid w-full gap-4 px-2 text-center text-lg  text-gray-700">
+              <p className="">First ten notes free, then $29 per month.</p>
+            </div>
+          </div>
+
+          <Link
+            href="/signup"
+            className="mx-auto w-32 rounded-full bg-teal-600 py-3 text-center font-bold text-white shadow-md hover:bg-teal-500 hover:text-white"
+          >
+            get started
+          </Link>
         </div>
-        <Link
-          href="/signup"
-          className="mx-auto w-32 rounded-full bg-teal-600 py-3 text-center font-bold text-white shadow-md hover:bg-teal-500 hover:text-white"
-        >
-          get started
-        </Link>
       </div>
     </main>
   );
