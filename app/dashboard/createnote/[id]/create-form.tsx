@@ -139,32 +139,11 @@ const CreateAppointmentPrefilled: React.FC<CreateAppointmentProps> = ({
       </div>
       <form className="max-w-prose">
         <input name="id" hidden defaultValue={appointment?.id}></input>
-        {audioUrl ? (
-          <audio className="w-full" controls>
-            <source type="audio/mp3" src={audioUrl} />
-            Your browser does not support the audio element.
-          </audio>
-        ) : (
-          <div
-            className={`flex h-[54px] w-full flex-col justify-center rounded-full bg-gray-100`}
-          >
-            <div className="ml-8"></div>
-          </div>
-        )}
 
-        <div
-          tabIndex={0}
-          className="collapse collapse-plus my-4 rounded-md border"
-        >
-          <div className="collapse-title text-lg font-medium">
-            Audio Memo Transcript
+        <div className="mb-8 max-w-prose rounded-md bg-gray-50 p-4">
+          <div className="mb-8 text-lg font-medium text-gray-800">
+            SOAP note
           </div>
-          <div className="collapse-content">
-            <p>{appointment?.audio_transcript}</p>
-          </div>
-        </div>
-
-        <div className="max-w-prose rounded-md bg-gray-50 p-4">
           <div className="grid grid-cols-2 gap-8">
             {/* Appointment Date */}
             <div className="mb-4">
@@ -394,46 +373,6 @@ const CreateAppointmentPrefilled: React.FC<CreateAppointmentProps> = ({
             </div>
           </div>
 
-          <div
-            tabIndex={0}
-            className="collapse-plus collapse mb-4 rounded-md  border"
-          >
-            <div className="collapse-title text-lg font-medium text-gray-600">
-              Differential Diagnosis
-            </div>
-            <div className="collapse-content">
-              <p className="text-sm">{secondOpinion}</p>
-              <p className="mt-6 text-sm italic text-gray-700">
-                This differential diagnosis is for reference only and will not
-                be included with the approved SOAP note.
-              </p>
-            </div>
-          </div>
-
-          {/* <div className="my-8">
-          <div className="flex flex-row  justify-between">
-            <label
-              htmlFor="second_opinion"
-              className="mb-2 block text-sm font-medium"
-            >
-              Second Opinion
-            </label>
-          </div>
-
-          <div className="relative">
-            <div
-              id="second_opinion"
-              // name="second_opinion"
-              // ref={secondOpinionRef}
-              className="peer block w-full rounded-md px-2 text-sm"
-              // value={secondOpinion || ''}
-              // onChange={(e) => setSecondOpinion(e.target.value)}
-            >
-              {secondOpinion}
-            </div>
-          </div>
-        </div> */}
-
           <div className="mb-4">
             <label
               htmlFor="allergies"
@@ -470,6 +409,54 @@ const CreateAppointmentPrefilled: React.FC<CreateAppointmentProps> = ({
             >
               Approve Note
             </Button>
+          </div>
+        </div>
+
+        <div className="collapse-title text-lg font-medium text-gray-600">
+          Audio Memo
+        </div>
+        {audioUrl ? (
+          <audio className="w-full" controls>
+            <source type="audio/mp3" src={audioUrl} />
+            Your browser does not support the audio element.
+          </audio>
+        ) : (
+          <div
+            className={`flex h-[54px] w-full flex-col justify-center rounded-full bg-gray-100`}
+          >
+            <div className="ml-8"></div>
+          </div>
+        )}
+
+        <div
+          tabIndex={0}
+          className="collapse collapse-plus my-4 rounded-md border"
+        >
+          <div className="collapse-title text-lg font-medium text-gray-600">
+            Audio Memo Transcript
+          </div>
+          <div className="collapse-content">
+            <p className="text-sm">{appointment?.audio_transcript}</p>
+            <p className="mt-6 text-center text-xs italic text-gray-700">
+              Audio transcription is for reference only and will not be included
+              with the approved SOAP note.
+            </p>
+          </div>
+        </div>
+
+        <div
+          tabIndex={0}
+          className="collapse collapse-plus mb-4 rounded-md  border"
+        >
+          <div className="collapse-title text-lg font-medium text-gray-600">
+            Differential Diagnosis
+          </div>
+          <div className="collapse-content">
+            <p className="text-sm">{secondOpinion}</p>
+            <p className="mt-6 text-center text-xs italic text-gray-700">
+              This differential diagnosis is for reference only and will not be
+              included with the approved SOAP note.
+            </p>
           </div>
         </div>
       </form>

@@ -22,12 +22,12 @@ export default async function Page() {
   }
 
   return (
-    <main className="bg-gray-100 p-2">
+    <main className="bg-gray-50 p-2">
       <Header />
 
       {/* Mobile view */}
       <div className="mx-auto mb-12 grid md:hidden">
-        <div className="mx-auto mb-8 mt-20 px-6 text-center text-3xl font-black text-gray-600">
+        <div className="mx-auto mb-8 mt-20 px-6 text-center text-3xl font-black text-gray-800">
           <p>Automate your</p>
           <p>clinical charting.</p>
         </div>
@@ -109,10 +109,10 @@ export default async function Page() {
 
       {/* Desktop view */}
       <div className="mx-auto mb-16 hidden md:grid">
-        <p className="mx-auto mb-8 mt-20 px-6 text-center text-5xl font-black text-gray-600 ">
-          Automate your clinical charting.
+        <p className="mx-auto mb-6 mt-20 px-6 text-center text-6xl font-semibold text-gray-700 ">
+          Streamline clinical charting.
         </p>
-        <p className="mx-auto my-12 text-center  text-2xl font-semibold text-gray-500 md:text-3xl">
+        <p className="mx-auto my-8 text-center  text-2xl text-gray-500 md:text-2xl">
           Go from audio memo to structured SOAP note in seconds.
         </p>
 

@@ -5,11 +5,8 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import OpenAI from "openai"
 import { createClient } from "@/utils/supabase/server";
-import { createServerClient } from "@supabase/ssr";
 import { createClient as createClientJS } from "@supabase/supabase-js";
 // import { embed } from './embed'
-import PDFDocument from 'pdfkit';
-import fs from 'fs';
 
 
 
@@ -19,9 +16,6 @@ const openai = new OpenAI({apiKey: process.env.OPENAI_API_KEY })
 const replicate = new Replicate({
   auth: process.env.REPLICATE_API_TOKEN,
 });
-
-// THIS IS CAUSING THE INVARIANT COOKIES ERROR!
-// const supabase = createClient()
 
 interface Word {
   end: number;
@@ -225,7 +219,7 @@ export async function getSOAPData(apptid: string, transcript: string) {
           soap_assessment?: string;
           soap_plan?: string;
           second_opinion?: string;
-        } Your answer MUST begin and end with curly brackets. Do not include any leading backticks or other markers. Include as much specific information as possible from the transcript in the SOAP note. Be thorough! If you do not have the information required to provide a value in one of the fields, just return the JSON object with an empty string or null value for that field. For the second_opinion field, analyze the entire transcript and suggest possible alternative treatment options. Your answer MUST begin and end with curly brackets.`
+        } Your answer MUST begin and end with curly brackets. Do not include any leading backticks or other markers. Include as much specific information as possible from the transcript in the SOAP note. Be thorough! If you do not have the information required to provide a value in one of the fields, just return the JSON object with an empty string or null value for that field. For the second_opinion field, analyze the entire transcript and return a differential diagnosis along with possible alternative treatment options. Your complete answer MUST begin and end with curly brackets.`
       },
       { role: "user", content: `TRANSCRIPT: ${transcript}` },
     ],
@@ -235,8 +229,10 @@ export async function getSOAPData(apptid: string, transcript: string) {
   });
 
     const completionString = completion.choices[0].message.content as string
+    const usage = completion.usage
     
-    console.log("completionString", completionString)
+    console.log("completionString", completionString);
+    console.log("getSOAP data usage:", usage);
 
   updateApptWithSOAPData(apptid, transcript, completionString);
 

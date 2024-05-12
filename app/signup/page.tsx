@@ -5,8 +5,8 @@ import Link from 'next/link';
 
 export default function SignUpPage() {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-between bg-gray-100 p-24">
-      <div className="w-[300px] rounded-md bg-gray-50 p-6 shadow">
+    <div className="flex min-h-screen flex-col items-center justify-between bg-gray-50 p-24">
+      <div className="w-[300px] rounded-md bg-gray-50 p-6 ">
         <div className="mb-6 mt-2 flex justify-center">
           <Logo />
         </div>
@@ -37,7 +37,7 @@ interface LabelProps extends React.LabelHTMLAttributes<HTMLLabelElement> {}
 const Button: React.FC<ButtonProps> = ({ children, ...rest }) => {
   return (
     <button
-      className="rounded bg-teal-700 px-4 py-2 font-semibold text-white transition duration-100 ease-in-out hover:bg-teal-600"
+      className="rounded bg-teal-600 px-4 py-2 font-semibold text-white transition duration-100 ease-in-out hover:bg-teal-500"
       {...rest}
     >
       {children}
@@ -47,7 +47,7 @@ const Button: React.FC<ButtonProps> = ({ children, ...rest }) => {
 const Input: React.FC<InputProps> = ({ ...rest }) => {
   return (
     <input
-      className="rounded border border-gray-200  bg-gray-100 px-4 py-2 outline-none focus:bg-white focus:text-black"
+      className="rounded border border-gray-200  bg-white px-4 py-2 outline-none focus:bg-white focus:text-black"
       {...rest}
     />
   );
