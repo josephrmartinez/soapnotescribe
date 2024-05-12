@@ -26,34 +26,38 @@ export default async function Page() {
       <Header />
 
       {/* Mobile view */}
-      <div className="mx-auto mb-12 grid md:hidden">
-        <div className="mx-auto mb-8 mt-20 px-6 text-center text-3xl font-black text-gray-800">
-          <p>Automate your</p>
+      <div className="mx-auto mb-12 grid justify-items-center md:hidden">
+        <div className="mx-auto mt-16 px-6 text-center text-3xl font-semibold text-teal-700">
+          <p>Streamline your</p>
           <p>clinical charting.</p>
         </div>
-        <div className="mx-auto my-6 text-center text-2xl font-semibold text-gray-500">
+        <div className="mx-auto my-6 text-center text-xl text-gray-500">
           <p>Go from audio memo</p>
           <p>to structured SOAP note</p>
           <p>in seconds.</p>
         </div>
 
-        <div className="mx-auto my-8 flex flex-row items-center justify-center pb-8 align-middle">
+        <div className="mx-auto my-4 flex flex-row items-center justify-center pb-4 align-middle">
           <Link
             href="/signup"
-            className=" mx-2 w-32 rounded-full bg-teal-600 py-3 text-center font-bold text-white shadow-md hover:bg-teal-500 hover:text-white"
+            className=" mx-2 w-32 rounded-full bg-teal-600 py-3 text-center font-bold text-white shadow-md transition-all hover:bg-teal-500 hover:text-white"
           >
             get started
           </Link>
           <Link
             href="#plan"
-            className="mx-2 w-32 rounded-full py-4 font-bold underline underline-offset-8 hover:text-teal-600"
+            className="mx-2 w-32 rounded-full py-4 font-bold underline underline-offset-8 transition-all hover:text-teal-600"
           >
             see pricing
           </Link>
         </div>
-        {/* <p className="mx-auto mb-8 mt-20 text-center text-3xl font-bold text-gray-600 dark:text-gray-400">
-          Easy to use. No setup required.
-        </p> */}
+        <Image
+          src="/hipaa.svg"
+          width={160}
+          height={160}
+          alt="HIPAA compliant"
+          className="pb-6"
+        ></Image>
         <div className="mx-auto flex w-11/12 flex-col items-center">
           <Image
             alt="soapscribe demo"
@@ -108,28 +112,36 @@ export default async function Page() {
       </div>
 
       {/* Desktop view */}
-      <div className="mx-auto mb-16 hidden md:grid">
-        <p className="mx-auto mb-6 mt-20 px-6 text-center text-6xl font-semibold text-gray-700 ">
-          Streamline clinical charting.
+      <div className="mx-auto mb-16 hidden justify-items-center md:grid">
+        <p className="mx-auto mt-20 px-6 text-center text-5xl font-semibold text-teal-700 ">
+          Streamline your clinical charting.
         </p>
         <p className="mx-auto my-8 text-center  text-2xl text-gray-500 md:text-2xl">
           Go from audio memo to structured SOAP note in seconds.
         </p>
 
-        <div className="mx-auto my-8 flex flex-row items-center justify-center pb-8 align-middle">
+        <div className="mx-auto flex flex-row items-center justify-center pb-8 align-middle">
           <Link
             href="/signup"
-            className="mx-2 w-32 rounded-full bg-teal-600 py-3 text-center font-bold text-white shadow-md hover:bg-teal-500 hover:text-white"
+            className="mx-2 w-32 rounded-full bg-teal-600 py-3 text-center font-bold text-white shadow-md transition-all hover:bg-teal-500 hover:text-white"
           >
             get started
           </Link>
           <Link
             href="#pricing"
-            className="mx-2 w-32 rounded-full py-4 font-bold underline underline-offset-8 hover:text-teal-600"
+            className="mx-2 w-32 rounded-full py-4 font-bold underline underline-offset-8 transition-all hover:text-teal-600"
           >
             see pricing
           </Link>
         </div>
+        <Image
+          src="/hipaa.svg"
+          width={160}
+          height={160}
+          alt="HIPAA compliant"
+          className="pb-6"
+        ></Image>
+
         {/* <p className="mx-auto mb-8 mt-20 text-center text-3xl font-bold text-gray-600 dark:text-gray-400">
           Easy to use. No setup required.
         </p> */}
