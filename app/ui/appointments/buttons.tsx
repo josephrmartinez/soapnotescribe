@@ -46,13 +46,13 @@ export function ProcessingSOAPNote({ id }: { id: string }) {
   );
 }
 
-// Update link to APPEND patient_name to url, handle case when page !== 1
+// Update tohandle case when page !== 1
 export function PatientName({ patient_name }: { patient_name: string | null }) {
   return (
     <>
       {patient_name ? (
         <Link
-          href={`/dashboard/notes?query=${patient_name}`}
+          href={`?query=${patient_name}`}
           className={`rounded-md border border-gray-200 p-2 text-sm font-semibold text-gray-800 transition-colors hover:bg-gray-100`}
         >
           {patient_name}

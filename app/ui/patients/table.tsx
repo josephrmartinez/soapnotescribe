@@ -2,51 +2,73 @@ import {
   UpdateAppointment,
   ViewSOAPNote,
   ReviewDraft,
+  PatientName,
 } from '@/app/ui/appointments/buttons';
 import { formatDateToLocal, formatCurrency } from '@/app/lib/utils';
 import { fetchFilteredAppointments } from '@/app/lib/data';
 import { useEffect } from 'react';
+import { getMaxListeners } from 'events';
+import { ViewNotes, ViewProfile } from './buttons';
 
-export default async function AppointmentsTable({
-  query,
-  currentPage,
-}: {
-  query: string;
-  currentPage: number;
-}) {
-  // FETCH APPTS WITH KEYWORD SEARCH
-  const appointments = await fetchFilteredAppointments(query, currentPage);
-  console.log('fetched appointments:', appointments);
+export default async function PatientsTable({ query }: { query: string }) {
+  // FETCH PATIENTS WITH KEYWORD SEARCH
+  // const patients = await fetchFilteredPatients(query);
+  // console.log('fetched patients:', patients);
+
+  const patients = [
+    {
+      id: '2144224',
+      name: 'Brad Nouget',
+      date_of_birth: '12-09-1974',
+      phone_number: '(123) 435-1293',
+      email_address: 'bn@choolee.net',
+      address: '392 North Starlight Way Phoenix, AZ 83923',
+    },
+    {
+      id: '2644234',
+      name: 'Chad Truffle',
+      date_of_birth: '12-09-1974',
+      phone_number: '(123) 535-1293',
+      email_address: 'ctruffle@yangoo.com',
+      address: '392 North Moonbeam Way Bisbee, AZ 83923',
+    },
+    {
+      id: '2149234',
+      name: 'Thad Biscuit',
+      date_of_birth: '12-09-1974',
+      phone_number: '(123) 835-1293',
+      email_address: 'ceo@soapnotescribe.com',
+      address: '392 North Sunstroke Way Tucson, AZ 83923',
+    },
+  ];
 
   return (
     <div className="mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">
         <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
           <div className="md:hidden">
-            {appointments?.map((appointment) => (
+            {patients?.map((patient) => (
               <div
-                key={appointment.id}
+                key={patient.id}
                 className="mb-2 w-full rounded-md bg-white p-4"
               >
                 <div className="flex items-center justify-between pb-4">
                   <div>
                     <div className="mb-2 flex items-center">
-                      <p>{formatDateToLocal(appointment.appointment_date)}</p>
+                      <p>{formatDateToLocal(patient.date_of_birth)}</p>
                     </div>
-                    <p className="text-sm text-gray-500">
-                      {appointment.patient_name}
-                    </p>
+                    <p className="text-sm text-gray-500">{patient.name}</p>
                   </div>
                 </div>
                 <div className="flex w-full items-center justify-between pt-4">
                   <div>
                     <p className="text-xl font-medium">
-                      {appointment.chief_complaint}
+                      {patient.phone_number}
                     </p>
-                    <p>{appointment.status}</p>
+                    <p>{patient.address}</p>
                   </div>
                   <div className="flex justify-end gap-2">
-                    <ViewSOAPNote id={appointment.id} />
+                    <ViewSOAPNote id={patient.id} />
                   </div>
                 </div>
               </div>
@@ -55,50 +77,51 @@ export default async function AppointmentsTable({
           <table className="hidden min-w-full text-gray-900 md:table">
             <thead className="rounded-lg text-left text-sm font-normal">
               <tr>
-                <th scope="col" className="px-4 py-5 font-medium sm:pl-6">
-                  Appointment Date
-                </th>
-                <th scope="col" className="px-3 py-5 font-medium">
+                <th scope="col" className="px-4 py-5 font-medium">
                   Patient
                 </th>
+                <th scope="col" className="px-4 py-5 font-medium"></th>
+
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Chief Complaint
+                  Phone Number
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Note Status
+                  Home Address
+                </th>
+                <th scope="col" className="px-3 py-5 font-medium">
+                  Email Address
                 </th>
               </tr>
             </thead>
             <tbody className="bg-white">
-              {appointments?.map((appointment) => (
+              {patients?.map((patient) => (
                 <tr
-                  key={appointment.id}
-                  className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
+                  key={patient.id}
+                  className="h-16 w-full border-b text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
                 >
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
-                    <p>{formatDateToLocal(appointment.appointment_date)}</p>
+                    <div>{patient.name}</div>
+                  </td>
+                  <td className=" whitespace-nowrap px-3 py-3 font-medium">
+                    <div className="flex flex-row gap-4">
+                      <ViewProfile patient_id={patient.id} />
+                      <ViewNotes patient_name={patient.name} />
+                    </div>
+                  </td>
+
+                  <td className="whitespace-nowrap px-3 py-3 font-medium">
+                    <p>{patient.phone_number}</p>
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    {appointment.patient_name}
+                    {patient.address}
                   </td>
-                  <td className="whitespace-nowrap px-3 py-3">
-                    {appointment.chief_complaint}
+                  <td className="whitespace-nowrap  px-3 ">
+                    {patient.email_address}
                   </td>
-                  <td className="whitespace-nowrap  px-3 "></td>
-                  <td className="whitespace-nowrap px-3 py-3"></td>
+
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
-                      {appointment.status === 'processing' && (
-                        <div className="flex h-10 w-24 flex-row items-center">
-                          <div className="loader ml-2"></div>
-                        </div>
-                      )}
-                      {appointment.status === 'approved' && (
-                        <ViewSOAPNote id={appointment.id} />
-                      )}
-                      {appointment.status === 'awaiting review' && (
-                        <ReviewDraft id={appointment.id} />
-                      )}
+                      {/* <ViewSOAPNote id={patient.id} /> */}
                     </div>
                   </td>
                 </tr>

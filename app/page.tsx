@@ -18,6 +18,7 @@ export default async function Page() {
 
   const { data, error } = await supabase.auth.getUser();
   if (data.user) {
+    console.log('user data:', data);
     redirect('/dashboard/notes');
   }
 
