@@ -40,7 +40,7 @@ export function ViewNotes({ patient_name }: { patient_name: string | null }) {
 export function ViewProfile({ patient_id }: { patient_id: string | null }) {
   return (
     <Link
-      href={`/${patient_id}`}
+      href={`/dashboard/patients/${patient_id}`}
       className={`rounded-md border border-gray-200 p-2 text-sm font-semibold text-gray-800 transition-colors hover:bg-gray-100`}
     >
       profile
