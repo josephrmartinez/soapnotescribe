@@ -159,6 +159,59 @@ export async function fetchFilteredAppointments(query: string, currentPage: numb
  }
 }
 
+
+
+export async function fetchPatients() {
+try {
+    const supabase = createClient()
+    const { data: patients, error } = await supabase
+      .from('patients')
+      .select(
+        'id, name, email, date_of_birth, allergies, phone, address, provider'
+      )
+      // .ilike('audio_transcript', `%${query}%`)
+      .order('name', { ascending: false })
+
+    if (error) {
+      console.error('Error fetching patients:', error);
+      return
+    }
+
+
+  return patients
+    //  as Appointment[];
+ } catch (error) {
+    console.error('Supabase Error:', error);
+    throw new Error('Failed to fetch paients data.');
+ }
+}
+
+
+
+export async function fetchPatientById(id: string) {
+  // EXPERIMENTAL. noStore() allows for immediate re-render of changed appointment data, but may lead to slower load times.
+  noStore()
+  try {
+    const supabase = createClient()
+    const { data: patients, error } = await supabase
+      .from('patients')
+      .select('*')
+      .eq('id', id);
+
+    if (error) {
+      console.error('Supabase Error:', error);
+      throw new Error('Failed to fetch patient data.');
+    }
+
+    const patient = patients ? patients[0] : null;
+    return patient
+  } catch (error) {
+    console.error('Supabase Error:', error);
+    throw new Error('Failed to fetch patient data.');
+  }
+}
+
+
 // export async function fetchSimilarApptsWithEmbedding(query: string, currentPage: number) {
 //   try {
 //     // console.log("query input", query)

@@ -1,9 +1,9 @@
 // import Form from '@/app/ui/appointments/edit-form';
 import Breadcrumbs from '@/app/ui/appointments/breadcrumbs';
 import {
-  fetchAppointmentById,
   getSignedAudioUrl,
   getSignedPdfUrl,
+  fetchPatientById,
 } from '@/app/lib/data';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
@@ -22,43 +22,25 @@ import { DeleteNoteFirstStep } from '@/app/ui/appointments/buttons';
 import { createClient } from '@/utils/supabase/server';
 
 export const metadata: Metadata = {
-  title: 'Approved SOAP Note',
+  title: 'Patient Profile',
 };
 
 export default async function Page({ params }: { params: { id: string } }) {
   const id = params.id;
   // Create and implement fetchPatientById function
-  // const patient = await fetchPatientById(id);
+  const patient = await fetchPatientById(id);
+  console.log('patient data from patients/[id]:', patient);
 
-  const appointment = await fetchAppointmentById(id);
-  console.log('appointment data from appointments/[id]:', appointment);
-
-  // Get audio url for media player:
-  const audioUrl = appointment.audio_storage_url
-    ? await getSignedAudioUrl(
-        appointment.user_id,
-        appointment.audio_storage_url,
-      )
-    : undefined;
-
-  const pdfUrl = await getSignedPdfUrl(
-    appointment.user_id,
-    appointment.patient_name,
-    appointment.appointment_date,
-  );
-
-  const appointmentDate = formatDateToLocal(appointment.appointment_date);
-  const appointmentTime = formatTime(appointment.appointment_time);
-  const patientDOB = formatDateToLocal(appointment.patient_date_of_birth);
+  const patientDOB = formatDateToLocal(patient.date_of_birth);
 
   return (
     <main>
       <Breadcrumbs
         breadcrumbs={[
-          { label: 'SOAP Notes', href: '/dashboard/notes' },
+          { label: 'Patients', href: '/dashboard/patients' },
           {
-            label: `${appointmentDate} with ${appointment.patient_name}`,
-            href: `/dashboard/notes/${id}`,
+            label: `${patient.name}`,
+            href: `/dashboard/patients/${id}`,
             active: true,
           },
         ]}
@@ -66,68 +48,21 @@ export default async function Page({ params }: { params: { id: string } }) {
 
       <div className="max-w-prose">
         <div className="mb-4 flex w-full items-center justify-between">
-          <h1 className={`text-2xl`}>Approved SOAP Note</h1>
+          <h1 className={`text-2xl`}>Patient Profile</h1>
 
-          <div className="grid grid-cols-4 gap-2">
-            <DeleteNoteFirstStep id={appointment.id} />
+          <div className="grid grid-cols-2 gap-2">
+            <DeleteNoteFirstStep id={patient.id} />
             <Link
-              href={`/dashboard/createnote/${appointment.id}`}
+              href={`/dashboard/patients/${patient.id}/edit`}
               className="flex h-10 items-center justify-center rounded-lg bg-gray-100 px-2  text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200 "
             >
               <PencilSquareIcon width={20} height={20} className="mr-2" />
               Edit
             </Link>
-            <Link
-              href={`/dashboard/createnote/${appointment.id}`}
-              className="flex h-10 items-center justify-center rounded-lg bg-gray-100 px-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200 "
-            >
-              <DocumentDuplicateIcon width={20} height={20} className="mr-2" />
-              copy
-            </Link>
-
-            <Link
-              href={pdfUrl ? pdfUrl : ''}
-              rel="noopener noreferrer"
-              target="_blank"
-              className="flex h-10 cursor-pointer items-center justify-center rounded-lg bg-gray-100 px-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200 "
-            >
-              <DocumentIcon width={20} height={20} className="mr-2" />
-              pdf
-            </Link>
           </div>
         </div>
 
         <div className="mb-4 max-w-prose rounded-md bg-gray-50 p-4">
-          <div className="grid grid-cols-2 gap-8">
-            {/* Appointment Date */}
-            <div className="mb-4">
-              <label
-                htmlFor="appointment_date"
-                className="mb-2 block text-sm font-medium"
-              >
-                Appointment Date
-              </label>
-              <div id="appointment_date" className="px-2 py-2 text-sm">
-                {appointmentDate}
-              </div>
-            </div>
-
-            {/* Appointment Time */}
-            <div className="mb-4">
-              <label
-                htmlFor="appointment_time"
-                className="mb-2 block text-sm font-medium"
-              >
-                Appointment Time
-              </label>
-              <div className="relative">
-                <div id="appointment_time" className="px-2 py-2 text-sm">
-                  {appointmentTime}
-                </div>
-              </div>
-            </div>
-          </div>
-
           <div className="grid grid-cols-2 gap-8">
             <div className="mb-4">
               <label
@@ -138,7 +73,7 @@ export default async function Page({ params }: { params: { id: string } }) {
               </label>
               <div className="relative">
                 <div id="patient" className="px-2 py-2 text-sm">
-                  {appointment.patient_name}
+                  {patient.name}
                 </div>
                 {/* <UserCircleIcon className="pointer-events-none absolute right-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" /> */}
               </div>
@@ -160,6 +95,41 @@ export default async function Page({ params }: { params: { id: string } }) {
           </div>
 
           <div className="grid grid-cols-2 gap-8">
+            {/* Phone */}
+            <div className="mb-4">
+              <label htmlFor="phone" className="mb-2 block text-sm font-medium">
+                Phone Number
+              </label>
+              <div id="phone" className="px-2 py-2 text-sm">
+                {patient.phone}
+              </div>
+            </div>
+
+            {/* Email Address */}
+            <div className="mb-4">
+              <label htmlFor="email" className="mb-2 block text-sm font-medium">
+                Email Address
+              </label>
+              <div className="relative">
+                <div id="email" className="px-2 py-2 text-sm">
+                  {patient.email}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="mb-4">
+            <label htmlFor="address" className="mb-2 block text-sm font-medium">
+              Home Address
+            </label>
+            <div className="relative">
+              <div id="address" className="px-2 py-2 text-sm">
+                {patient.address}
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-8">
             <div className="mb-4">
               <label
                 htmlFor="allergies"
@@ -168,7 +138,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                 Allergies
               </label>
               <div className="relative">
-                <div className="px-2 py-2 text-sm">{appointment.allergies}</div>
+                <div className="px-2 py-2 text-sm">{patient.allergies}</div>
               </div>
             </div>
             {/* Telemedicine Consent */}
@@ -187,103 +157,16 @@ export default async function Page({ params }: { params: { id: string } }) {
 
           <div className="mb-4">
             <label
-              htmlFor="complaint"
+              htmlFor="profile_notes"
               className="mb-2 block text-sm font-medium"
             >
-              Chief Complaint
+              Profile Notes
             </label>
             <div className="relative">
-              <div id="complaint" className="px-2 py-2 text-sm">
-                {appointment.chief_complaint}
+              <div id="profile_notes" className="px-2 py-2 text-sm">
+                {patient.profile_notes}
               </div>
             </div>
-          </div>
-
-          <div className="mb-4">
-            <label
-              htmlFor="subjective"
-              className="mb-2 block text-sm font-medium"
-            >
-              Subjective
-            </label>
-            <div className="relative">
-              <div id="subjective" className="px-2 py-2 text-sm">
-                {appointment.soap_subjective}
-              </div>
-            </div>
-          </div>
-
-          <div className="mb-4">
-            <label
-              htmlFor="objective"
-              className="mb-2 block text-sm font-medium"
-            >
-              Objective
-            </label>
-            <div className="relative">
-              <div id="objective" className="px-2 py-2 text-sm">
-                {appointment.soap_objective || ''}
-              </div>
-            </div>
-          </div>
-
-          <div className="mb-4">
-            <label
-              htmlFor="assessment"
-              className="mb-2 block text-sm font-medium"
-            >
-              Assessment
-            </label>
-            <div className="relative">
-              <div id="assessment" className="px-2 py-2 text-sm">
-                {appointment.soap_assessment || ''}
-              </div>
-            </div>
-          </div>
-
-          <div className="mb-4">
-            <label htmlFor="plan" className="mb-2 block text-sm font-medium">
-              Plan
-            </label>
-            <div className="relative">
-              <div id="plan" className="px-2 py-2 text-sm">
-                {appointment.soap_plan || ''}
-              </div>
-            </div>
-          </div>
-          <div className="mb-0">
-            <label
-              htmlFor="doctorsignature"
-              className="mb-2 block text-sm font-medium"
-            >
-              Doctor Signature
-            </label>
-            <div className="relative">
-              <div id="doctor_signature" className="px-2 py-2 text-sm">
-                {appointment.doctor_signature || ''}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="collapse-title text-lg font-medium">Audio Memo</div>
-        {audioUrl ? (
-          <audio className="mb-6 w-full" controls>
-            <source type="audio/mp3" src={audioUrl} />
-            Your browser does not support the audio element.
-          </audio>
-        ) : (
-          <div className="w-full">Loading audio</div>
-        )}
-        <div
-          tabIndex={0}
-          className="collapse collapse-plus mb-4 rounded-md border"
-        >
-          <div className="collapse-title text-lg font-medium">
-            Audio Memo Transcript
-          </div>
-          <div className="collapse-content">
-            <p>{appointment?.audio_transcript}</p>
           </div>
         </div>
       </div>

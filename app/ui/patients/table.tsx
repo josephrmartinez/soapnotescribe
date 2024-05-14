@@ -5,42 +5,42 @@ import {
   PatientName,
 } from '@/app/ui/appointments/buttons';
 import { formatDateToLocal, formatCurrency } from '@/app/lib/utils';
-import { fetchFilteredAppointments } from '@/app/lib/data';
+import { fetchPatients } from '@/app/lib/data';
 import { useEffect } from 'react';
 import { getMaxListeners } from 'events';
 import { ViewNotes, ViewProfile } from './buttons';
 
 export default async function PatientsTable({ query }: { query: string }) {
   // FETCH PATIENTS WITH KEYWORD SEARCH
-  // const patients = await fetchFilteredPatients(query);
+  const patients = await fetchPatients();
   // console.log('fetched patients:', patients);
 
-  const patients = [
-    {
-      id: '2144224',
-      name: 'Brad Nouget',
-      date_of_birth: '12-09-1974',
-      phone_number: '(123) 435-1293',
-      email_address: 'bn@choolee.net',
-      address: '392 North Starlight Way Phoenix, AZ 83923',
-    },
-    {
-      id: '2644234',
-      name: 'Chad Truffle',
-      date_of_birth: '12-09-1974',
-      phone_number: '(123) 535-1293',
-      email_address: 'ctruffle@yangoo.com',
-      address: '392 North Moonbeam Way Bisbee, AZ 83923',
-    },
-    {
-      id: '2149234',
-      name: 'Thad Biscuit',
-      date_of_birth: '12-09-1974',
-      phone_number: '(123) 835-1293',
-      email_address: 'ceo@soapnotescribe.com',
-      address: '392 North Sunstroke Way Tucson, AZ 83923',
-    },
-  ];
+  // const patients = [
+  //   {
+  //     id: '2144224',
+  //     name: 'Brad Nouget',
+  //     date_of_birth: '12-09-1974',
+  //     phone_number: '(123) 435-1293',
+  //     email_address: 'bn@choolee.net',
+  //     address: '392 North Starlight Way Phoenix, AZ 83923',
+  //   },
+  //   {
+  //     id: '2644234',
+  //     name: 'Chad Truffle',
+  //     date_of_birth: '12-09-1974',
+  //     phone_number: '(123) 535-1293',
+  //     email_address: 'ctruffle@yangoo.com',
+  //     address: '392 North Moonbeam Way Bisbee, AZ 83923',
+  //   },
+  //   {
+  //     id: '2149234',
+  //     name: 'Thad Biscuit',
+  //     date_of_birth: '12-09-1974',
+  //     phone_number: '(123) 835-1293',
+  //     email_address: 'ceo@soapnotescribe.com',
+  //     address: '392 North Sunstroke Way Tucson, AZ 83923',
+  //   },
+  // ];
 
   return (
     <div className="mt-6 flow-root">
@@ -62,9 +62,7 @@ export default async function PatientsTable({ query }: { query: string }) {
                 </div>
                 <div className="flex w-full items-center justify-between pt-4">
                   <div>
-                    <p className="text-xl font-medium">
-                      {patient.phone_number}
-                    </p>
+                    <p className="text-xl font-medium">{patient.phone}</p>
                     <p>{patient.address}</p>
                   </div>
                   <div className="flex justify-end gap-2">
@@ -110,14 +108,12 @@ export default async function PatientsTable({ query }: { query: string }) {
                   </td>
 
                   <td className="whitespace-nowrap px-3 py-3 font-medium">
-                    <p>{patient.phone_number}</p>
+                    <p>{patient.phone}</p>
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
                     {patient.address}
                   </td>
-                  <td className="whitespace-nowrap  px-3 ">
-                    {patient.email_address}
-                  </td>
+                  <td className="whitespace-nowrap  px-3 ">{patient.email}</td>
 
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
