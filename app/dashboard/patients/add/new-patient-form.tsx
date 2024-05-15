@@ -4,7 +4,9 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/utils/supabase/client';
 import { Button } from '@/app/ui/button';
-import PhoneInput from 'react-phone-number-input';
+import PhoneInput from '@/app/ui/patients/PhoneInput';
+import StateSelect from '@/app/ui/patients/StateSelect';
+import { OptionProps } from 'react-select';
 
 import {
   CheckIcon,
@@ -16,17 +18,25 @@ import {
 
 export default function NewPatientForm() {
   const [loading, setLoading] = useState(true);
-  const [name, setName] = useState<string | null>(null);
+  const [firstName, setFirstName] = useState<string | null>(null);
+  const [lastName, setLastName] = useState<string | null>(null);
+
   const [dateOfBirth, setDateOfBirth] = useState<string>('');
   const [allergies, setAllergies] = useState<string | null>('');
   const [email, setEmail] = useState<string>('');
   const [phone, setPhone] = useState<string>('');
   const [address, setAddress] = useState<string>('');
+  const [state, setState] = useState<string | null>(null);
+
   const [profileNotes, setProfileNotes] = useState<string | null>(null);
   const [submitOkay, setSubmitOkay] = useState<boolean>(true);
 
   const supabase = createClient();
   const router = useRouter();
+
+  const handleStateChange = (selectedState: string) => {
+    setState(selectedState);
+  };
 
   const addPatient = async (formData: FormData) => {
     try {
@@ -77,29 +87,48 @@ export default function NewPatientForm() {
         <div className="grid grid-cols-2 gap-8">
           <div className="mb-4">
             <label htmlFor="patient" className="mb-2 block text-sm font-medium">
-              Patient Name
+              First Name
             </label>
             <div className="relative">
               <input
-                id="name"
-                name="name"
-                required
-                placeholder="Full name"
+                id="first_name"
+                name="first_name"
+                placeholder="First name"
                 type="text"
                 className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
-                value={name || ''}
-                onChange={(e) => setName(e.target.value)}
+                value={firstName || ''}
+                onChange={(e) => setFirstName(e.target.value)}
               ></input>
               <UserCircleIcon className="pointer-events-none absolute right-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
             </div>
           </div>
+          <div className="mb-4">
+            <label htmlFor="patient" className="mb-2 block text-sm font-medium">
+              Last Name
+            </label>
+            <div className="relative">
+              <input
+                id="last_name"
+                name="last_name"
+                placeholder="Last name"
+                type="text"
+                className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
+                value={lastName || ''}
+                onChange={(e) => setLastName(e.target.value)}
+              ></input>
+              <UserCircleIcon className="pointer-events-none absolute right-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-8">
           {/* Patient Date of Birth */}
           <div className="mb-4">
             <label
               htmlFor="appointment_date"
               className="mb-2 block text-sm font-medium"
             >
-              Patient Date of Birth
+              Date of Birth
             </label>
             <div className="relative">
               <input
@@ -113,59 +142,130 @@ export default function NewPatientForm() {
               <CalendarDaysIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
             </div>
           </div>
-        </div>
-
-        <div className="grid grid-cols-2 gap-8">
           <div className="mb-4">
             <label htmlFor="phone" className="mb-2 block text-sm font-medium">
               Phone Number
             </label>
             <div className="relative">
-              <input
+              {/* <input
                 id="phone"
                 name="phone"
                 type="text"
-                placeholder="451-867-5309"
+                placeholder="123-123-1234"
+                maxLength={12}
                 className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
                 value={phone || ''}
-                onChange={(e) => setPhone(e.target.value)}
-              ></input>
-            </div>
-          </div>
-          <div className="mb-4">
-            <label
-              htmlFor="allergies"
-              className="mb-2 block text-sm font-medium"
-            >
-              Email Address
-            </label>
-            <div className="relative">
-              <input
-                id="email"
-                name="email"
-                type="text"
-                className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
-                value={email || ''}
-                onChange={(e) => setEmail(e.target.value)}
-              ></input>
+                onChange={(e) => {
+                  // Remove non-numeric characters and separate
+                  let numericValue = e.target.value
+                    .replace(/\D/g, '')
+                    .split('');
+
+                  // Insert in dashes at right places
+                  if (numericValue.length > 2) numericValue.splice(3, 0, '-');
+
+                  if (numericValue.length > 6) numericValue.splice(7, 0, '-');
+
+                  // Join back as string and assign as phone value
+                  setPhone(numericValue.join(''));
+                }}
+              ></input> */}
+              <PhoneInput />
             </div>
           </div>
         </div>
 
         <div className="mb-4">
+          <label htmlFor="email" className="mb-2 block text-sm font-medium">
+            Email Address
+          </label>
+          <div className="relative">
+            <input
+              id="email"
+              name="email"
+              type="text"
+              className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
+              value={email || ''}
+              onChange={(e) => setEmail(e.target.value)}
+            ></input>
+          </div>
+        </div>
+
+        <div className="mb-4">
           <label htmlFor="complaint" className="mb-2 block text-sm font-medium">
-            Home Address
+            Street Address
           </label>
           <div className="relative">
             <input
               id="address"
               name="address"
-              placeholder="671 Lincoln Ave, Winnetka, IL 60093"
+              placeholder="671 Lincoln Ave"
               type="text"
               className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
               value={address || ''}
               onChange={(e) => setAddress(e.target.value)}
             ></input>
+          </div>
+        </div>
+
+        <div className="mb-4">
+          <label htmlFor="complaint" className="mb-2 block text-sm font-medium">
+            Apartment, suite, etc.
+          </label>
+          <div className="relative">
+            <input
+              id="address_two"
+              name="address_two"
+              placeholder="optional"
+              type="text"
+              className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
+              value={address || ''}
+              onChange={(e) => setAddress(e.target.value)}
+            ></input>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-3 gap-8">
+          {/* City or Town */}
+          <div className="mb-4">
+            <label htmlFor="city" className="mb-2 block text-sm font-medium">
+              City or Town
+            </label>
+            <div className="relative">
+              <input
+                id="city"
+                name="city"
+                type="text"
+                value={dateOfBirth}
+                placeholder="Winnetka"
+                onChange={(e) => setDateOfBirth(e.target.value)}
+                className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
+              ></input>
+            </div>
+          </div>
+          <div className="mb-4">
+            <label htmlFor="phone" className="mb-2 block text-sm font-medium">
+              State
+            </label>
+            <div className="relative">
+              <StateSelect onChange={handleStateChange} />
+            </div>
+          </div>
+          <div className="mb-4">
+            <label htmlFor="city" className="mb-2 block text-sm font-medium">
+              Zip code
+            </label>
+            <div className="relative">
+              <input
+                id="zip"
+                name="zip"
+                type="text"
+                value={dateOfBirth}
+                placeholder="60093"
+                onChange={(e) => setDateOfBirth(e.target.value)}
+                className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
+              ></input>
+            </div>
           </div>
         </div>
 
@@ -178,6 +278,7 @@ export default function NewPatientForm() {
               id="allergies"
               name="allergies"
               type="text"
+              placeholder="optional"
               className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
               value={allergies || ''}
               onChange={(e) => setAllergies(e.target.value)}
