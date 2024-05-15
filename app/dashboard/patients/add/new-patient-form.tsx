@@ -20,14 +20,15 @@ export default function NewPatientForm() {
   const [loading, setLoading] = useState(true);
   const [firstName, setFirstName] = useState<string | null>(null);
   const [lastName, setLastName] = useState<string | null>(null);
-
   const [dateOfBirth, setDateOfBirth] = useState<string>('');
-  const [allergies, setAllergies] = useState<string | null>('');
+  const [phone, setPhone] = useState<string | null>('');
   const [email, setEmail] = useState<string>('');
-  const [phone, setPhone] = useState<string>('');
-  const [address, setAddress] = useState<string>('');
+  const [address, setAddress] = useState<string | null>('');
+  const [addressTwo, setAddressTwo] = useState<string | null>('');
+  const [city, setCity] = useState<string | null>('');
   const [state, setState] = useState<string | null>(null);
-
+  const [zipcode, setZipcode] = useState<string | null>('');
+  const [allergies, setAllergies] = useState<string | null>('');
   const [profileNotes, setProfileNotes] = useState<string | null>(null);
   const [submitOkay, setSubmitOkay] = useState<boolean>(true);
 
@@ -41,6 +42,7 @@ export default function NewPatientForm() {
   const addPatient = async (formData: FormData) => {
     try {
       setLoading(true);
+      // UPDATE TABLE COLUMNS AND INSERT OPERATION
       const { error } = await supabase.from('patients').insert({
         name: name,
         date_of_birth: dateOfBirth,
@@ -60,26 +62,6 @@ export default function NewPatientForm() {
       setLoading(false);
     }
   };
-
-  // const submitAppointment = async (event: React.FormEvent<HTMLFormElement>) => {
-  //   event.preventDefault();
-
-  //   try {
-  //     setLoading(true);
-  //     const { error, data } = await supabase
-  //       .from('appointments')
-  //       .insert({
-  //         created_at: new Date().toISOString(),
-  //       })
-  //       .select();
-  //     if (error) throw error;
-  //     router.push('/dashboard/appointments');
-  //   } catch (error) {
-  //     console.error('Error creating the appointment:', error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
 
   return (
     <form>
@@ -147,29 +129,7 @@ export default function NewPatientForm() {
               Phone Number
             </label>
             <div className="relative">
-              {/* <input
-                id="phone"
-                name="phone"
-                type="text"
-                placeholder="123-123-1234"
-                maxLength={12}
-                className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
-                value={phone || ''}
-                onChange={(e) => {
-                  // Remove non-numeric characters and separate
-                  let numericValue = e.target.value
-                    .replace(/\D/g, '')
-                    .split('');
-
-                  // Insert in dashes at right places
-                  if (numericValue.length > 2) numericValue.splice(3, 0, '-');
-
-                  if (numericValue.length > 6) numericValue.splice(7, 0, '-');
-
-                  // Join back as string and assign as phone value
-                  setPhone(numericValue.join(''));
-                }}
-              ></input> */}
+              {/* UPDATE TO PASS PHONE VALUE AND SETPHONE PROPS */}
               <PhoneInput />
             </div>
           </div>
@@ -219,8 +179,8 @@ export default function NewPatientForm() {
               placeholder="optional"
               type="text"
               className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
-              value={address || ''}
-              onChange={(e) => setAddress(e.target.value)}
+              value={addressTwo || ''}
+              onChange={(e) => setAddressTwo(e.target.value)}
             ></input>
           </div>
         </div>
@@ -236,9 +196,9 @@ export default function NewPatientForm() {
                 id="city"
                 name="city"
                 type="text"
-                value={dateOfBirth}
+                value={city || ''}
                 placeholder="Winnetka"
-                onChange={(e) => setDateOfBirth(e.target.value)}
+                onChange={(e) => setCity(e.target.value)}
                 className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
               ></input>
             </div>
@@ -260,9 +220,10 @@ export default function NewPatientForm() {
                 id="zip"
                 name="zip"
                 type="text"
-                value={dateOfBirth}
+                value={zipcode || ''}
                 placeholder="60093"
-                onChange={(e) => setDateOfBirth(e.target.value)}
+                maxLength={10}
+                onChange={(e) => setZipcode(e.target.value)}
                 className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
               ></input>
             </div>
