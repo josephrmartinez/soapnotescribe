@@ -55,27 +55,32 @@ export default function CreateAppointment() {
   return (
     <form onSubmit={submitAppointment}>
       <div className="max-w-prose rounded-md bg-gray-50 p-4">
-        <div className="mb-4">
-          <label htmlFor="patient" className="mb-2 block text-sm font-medium">
-            Patient
-          </label>
-          <SelectPatient />
-        </div>
-        <div className="mb-4 w-full text-center">
-          <Link
-            className="text-sm italic text-teal-700 underline underline-offset-4"
-            href={'./patients/add'}
-          >
-            add new patient
-          </Link>
-        </div>
         <div className="grid grid-cols-2 gap-8">
+          <div>
+            <div className="mb-4">
+              <label
+                htmlFor="patient"
+                className="mb-2 block text-sm font-medium"
+              >
+                Patient
+              </label>
+              <SelectPatient />
+            </div>
+            <div className="mb-4 w-full text-center">
+              <Link
+                className="text-sm italic text-teal-700 underline underline-offset-4"
+                href={'./patients/add'}
+              >
+                add new patient
+              </Link>
+            </div>
+          </div>
           {/* Telemedicine Consent */}
           <div className="mb-4">
             <label htmlFor="consent" className="mb-2 block text-sm font-medium">
               Consent
             </label>
-            <div className="relative flex flex-row items-center">
+            <div className="relative flex h-9 flex-row items-center">
               <input
                 id="consent"
                 name="consent"
@@ -89,8 +94,12 @@ export default function CreateAppointment() {
               <div className="text-sm">Patient consents to treatment.</div>
             </div>
           </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-8">
           <div className="mb-4"></div>
         </div>
+
         <div className="grid grid-cols-2 gap-8">
           {/* Appointment Date */}
           <div className="mb-4">
