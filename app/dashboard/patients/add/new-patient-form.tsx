@@ -23,8 +23,8 @@ export default function NewPatientForm() {
   const [dateOfBirth, setDateOfBirth] = useState<string>('');
   const [phone, setPhone] = useState<string | null>('');
   const [email, setEmail] = useState<string>('');
-  const [address, setAddress] = useState<string | null>('');
-  const [addressTwo, setAddressTwo] = useState<string | null>('');
+  const [addressStreet, setAddressStreet] = useState<string | null>('');
+  const [addressUnit, setAddressUnit] = useState<string | null>('');
   const [city, setCity] = useState<string | null>('');
   const [state, setState] = useState<string | null>(null);
   const [zipcode, setZipcode] = useState<string | null>('');
@@ -39,27 +39,33 @@ export default function NewPatientForm() {
     setState(selectedState);
   };
 
-  const addPatient = async (formData: FormData) => {
+  const handlePhoneChange = (phone: string) => {
+    setPhone(phone);
+  };
+
+  const addPatient = async () => {
     try {
       setLoading(true);
-      // UPDATE TABLE COLUMNS AND INSERT OPERATION
       const { error } = await supabase.from('patients').insert({
-        name: name,
+        first_name: firstName,
+        last_name: lastName,
         date_of_birth: dateOfBirth,
         phone: phone,
         email: email,
-        address: address,
+        address_street: addressStreet,
+        address_unit: addressUnit,
+        city: city,
+        state: state,
+        zipcode: zipcode,
         allergies: allergies,
         profile_notes: profileNotes,
       });
       if (error) throw error;
-      setLoading(false);
-
-      router.push('/dashboard/patients');
     } catch (error) {
       console.error('Error creating new patient:', error);
     } finally {
       setLoading(false);
+      router.push('/dashboard/patients');
     }
   };
 
@@ -130,7 +136,7 @@ export default function NewPatientForm() {
             </label>
             <div className="relative">
               {/* UPDATE TO PASS PHONE VALUE AND SETPHONE PROPS */}
-              <PhoneInput />
+              <PhoneInput onChange={handlePhoneChange} />
             </div>
           </div>
         </div>
@@ -157,13 +163,13 @@ export default function NewPatientForm() {
           </label>
           <div className="relative">
             <input
-              id="address"
-              name="address"
+              id="address_street"
+              name="address_street"
               placeholder="671 Lincoln Ave"
               type="text"
               className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
-              value={address || ''}
-              onChange={(e) => setAddress(e.target.value)}
+              value={addressStreet || ''}
+              onChange={(e) => setAddressStreet(e.target.value)}
             ></input>
           </div>
         </div>
@@ -174,13 +180,13 @@ export default function NewPatientForm() {
           </label>
           <div className="relative">
             <input
-              id="address_two"
-              name="address_two"
+              id="address_unit"
+              name="address_unit"
               placeholder="optional"
               type="text"
               className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
-              value={addressTwo || ''}
-              onChange={(e) => setAddressTwo(e.target.value)}
+              value={addressUnit || ''}
+              onChange={(e) => setAddressUnit(e.target.value)}
             ></input>
           </div>
         </div>

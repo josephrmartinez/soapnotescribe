@@ -4,43 +4,15 @@ import {
   ReviewDraft,
   PatientName,
 } from '@/app/ui/appointments/buttons';
-import { formatDateToLocal, formatCurrency } from '@/app/lib/utils';
 import { fetchPatients } from '@/app/lib/data';
 import { useEffect } from 'react';
 import { getMaxListeners } from 'events';
-import { ViewNotes, ViewProfile } from './buttons';
+import { ViewProfile } from './buttons';
 
 export default async function PatientsTable({ query }: { query: string }) {
   // FETCH PATIENTS WITH KEYWORD SEARCH
   const patients = await fetchPatients();
-  // console.log('fetched patients:', patients);
-
-  // const patients = [
-  //   {
-  //     id: '2144224',
-  //     name: 'Brad Nouget',
-  //     date_of_birth: '12-09-1974',
-  //     phone_number: '(123) 435-1293',
-  //     email_address: 'bn@choolee.net',
-  //     address: '392 North Starlight Way Phoenix, AZ 83923',
-  //   },
-  //   {
-  //     id: '2644234',
-  //     name: 'Chad Truffle',
-  //     date_of_birth: '12-09-1974',
-  //     phone_number: '(123) 535-1293',
-  //     email_address: 'ctruffle@yangoo.com',
-  //     address: '392 North Moonbeam Way Bisbee, AZ 83923',
-  //   },
-  //   {
-  //     id: '2149234',
-  //     name: 'Thad Biscuit',
-  //     date_of_birth: '12-09-1974',
-  //     phone_number: '(123) 835-1293',
-  //     email_address: 'ceo@soapnotescribe.com',
-  //     address: '392 North Sunstroke Way Tucson, AZ 83923',
-  //   },
-  // ];
+  console.log('fetched patients:', patients?.length);
 
   return (
     <div className="mt-6 flow-root">
@@ -55,15 +27,17 @@ export default async function PatientsTable({ query }: { query: string }) {
                 <div className="flex items-center justify-between pb-4">
                   <div>
                     <div className="mb-2 flex items-center">
-                      <p>{formatDateToLocal(patient.date_of_birth)}</p>
+                      <p>item</p>
                     </div>
-                    <p className="text-sm text-gray-500">{patient.name}</p>
+                    <p className="text-sm text-gray-500">
+                      {patient.first_name}
+                    </p>
                   </div>
                 </div>
                 <div className="flex w-full items-center justify-between pt-4">
                   <div>
                     <p className="text-xl font-medium">{patient.phone}</p>
-                    <p>{patient.address}</p>
+                    <p>{patient.address_street}</p>
                   </div>
                   <div className="flex justify-end gap-2">
                     <ViewSOAPNote id={patient.id} />
@@ -72,58 +46,55 @@ export default async function PatientsTable({ query }: { query: string }) {
               </div>
             ))}
           </div>
-          <table className="hidden min-w-full text-gray-900 md:table">
-            <thead className="rounded-lg text-left text-sm font-normal">
-              <tr>
-                <th scope="col" className="px-4 py-5 font-medium">
-                  Patient
-                </th>
-                <th scope="col" className="px-4 py-5 font-medium"></th>
-
-                <th scope="col" className="px-3 py-5 font-medium">
-                  Phone Number
-                </th>
-                <th scope="col" className="px-3 py-5 font-medium">
-                  Home Address
-                </th>
-                <th scope="col" className="px-3 py-5 font-medium">
-                  Email Address
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white">
-              {patients?.map((patient) => (
-                <tr
-                  key={patient.id}
-                  className="h-16 w-full border-b text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
-                >
-                  <td className="whitespace-nowrap py-3 pl-6 pr-3">
-                    <div>{patient.name}</div>
-                  </td>
-                  <td className=" whitespace-nowrap px-3 py-3 font-medium">
-                    <div className="flex flex-row gap-4">
-                      <ViewProfile patient_id={patient.id} />
-                      <ViewNotes patient_name={patient.name} />
-                    </div>
-                  </td>
-
-                  <td className="whitespace-nowrap px-3 py-3 font-medium">
-                    <p>{patient.phone}</p>
-                  </td>
-                  <td className="whitespace-nowrap px-3 py-3">
-                    {patient.address}
-                  </td>
-                  <td className="whitespace-nowrap  px-3 ">{patient.email}</td>
-
-                  <td className="whitespace-nowrap py-3 pl-6 pr-3">
-                    <div className="flex justify-end gap-3">
-                      {/* <ViewSOAPNote id={patient.id} /> */}
-                    </div>
-                  </td>
+          <div className="max-h-[120] overflow-y-auto">
+            <table className="hidden min-w-full text-gray-900 md:table">
+              <thead className="sticky top-0 w-full rounded-lg text-left text-sm font-normal">
+                <tr className="sticky top-0 w-full bg-gray-50 ">
+                  <th scope="col" className="px-4 py-5 font-medium">
+                    Patient
+                  </th>
+                  <th scope="col" className="px-3 py-5 font-medium">
+                    Phone Number
+                  </th>
+                  <th scope="col" className="px-3 py-5 font-medium">
+                    Home Address
+                  </th>
+                  <th scope="col" className="px-3 py-5 font-medium">
+                    Email Address
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className=" bg-white">
+                {patients?.map((patient) => (
+                  <tr
+                    key={patient.id}
+                    className="h-16 w-full border-b text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
+                  >
+                    <td className="whitespace-nowrap py-3 pl-6 pr-3">
+                      <div>
+                        <ViewProfile
+                          patient_id={patient.id}
+                          first_name={patient.first_name}
+                          last_name={patient.last_name}
+                        />
+                      </div>
+                    </td>
+
+                    <td className="whitespace-nowrap px-3 py-3 font-medium">
+                      <p>{patient.phone}</p>
+                    </td>
+                    <td className="whitespace-nowrap px-3 py-3">
+                      {patient.address_street} {patient.address_unit}{' '}
+                      {patient.city}, {patient.state} {patient.zipcode}
+                    </td>
+                    <td className="whitespace-nowrap  px-3 ">
+                      {patient.email}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>

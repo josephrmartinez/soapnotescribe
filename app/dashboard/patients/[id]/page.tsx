@@ -39,7 +39,7 @@ export default async function Page({ params }: { params: { id: string } }) {
         breadcrumbs={[
           { label: 'Patients', href: '/dashboard/patients' },
           {
-            label: `${patient.name}`,
+            label: `${patient.first_name} ${patient.last_name}`,
             href: `/dashboard/patients/${id}`,
             active: true,
           },
@@ -73,9 +73,8 @@ export default async function Page({ params }: { params: { id: string } }) {
               </label>
               <div className="relative">
                 <div id="patient" className="px-2 py-2 text-sm">
-                  {patient.name}
+                  {patient.first_name} {patient.last_name}
                 </div>
-                {/* <UserCircleIcon className="pointer-events-none absolute right-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" /> */}
               </div>
             </div>
             {/* Patient Date of Birth */}
@@ -124,7 +123,11 @@ export default async function Page({ params }: { params: { id: string } }) {
             </label>
             <div className="relative">
               <div id="address" className="px-2 py-2 text-sm">
-                {patient.address}
+                <div>{patient.address_street}</div>
+                {patient.address_unit && <div>{patient.address_unit}</div>}
+                <div>
+                  {patient.city}, {patient.state} {patient.zipcode}
+                </div>
               </div>
             </div>
           </div>

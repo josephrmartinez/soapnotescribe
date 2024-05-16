@@ -1,6 +1,10 @@
 import React, { useState, ChangeEvent } from 'react';
 
-const PhoneInput: React.FC = () => {
+interface PhoneInputProps {
+  onChange: (phone: string) => void;
+}
+
+const PhoneInput: React.FC<PhoneInputProps> = ({ onChange }) => {
   const [phone, setPhone] = useState<string>('');
 
   const formatPhoneNumber = (value: string): string => {
@@ -17,6 +21,7 @@ const PhoneInput: React.FC = () => {
 
     // Set the formatted phone number
     setPhone(formatPhoneNumber(value));
+    onChange(formatPhoneNumber(value));
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {

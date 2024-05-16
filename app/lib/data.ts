@@ -162,22 +162,21 @@ export async function fetchFilteredAppointments(query: string, currentPage: numb
 
 
 export async function fetchPatients() {
+  noStore()
 try {
     const supabase = createClient()
     const { data: patients, error } = await supabase
       .from('patients')
       .select(
-        'id, name, email, date_of_birth, allergies, phone, address, provider'
+        'id, first_name, last_name, email, phone, address_street, address_unit, city, state, zipcode, provider'
       )
       // .ilike('audio_transcript', `%${query}%`)
-      .order('name', { ascending: false })
+      .order('last_name', { ascending: true })
 
     if (error) {
       console.error('Error fetching patients:', error);
       return
     }
-
-
   return patients
     //  as Appointment[];
  } catch (error) {
