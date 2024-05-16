@@ -12,7 +12,7 @@ import { ViewProfile } from './buttons';
 export default async function PatientsTable({ query }: { query: string }) {
   // FETCH PATIENTS WITH KEYWORD SEARCH
   const patients = await fetchPatients();
-  console.log('fetched patients:', patients?.length);
+  console.log('fetched patients:', patients);
 
   return (
     <div className="mt-6 flow-root">

@@ -1,32 +1,54 @@
 import React from 'react';
-
 import AsyncSelect from 'react-select/async';
+import { fetchPatients } from '@/app/lib/data';
 
-const patients = [
-  { value: { first_name: 'Kevin', last_name: 'Smith' }, label: 'Kevin Smith' },
-  { value: { first_name: 'Brice', last_name: 'Lopez' }, label: 'Brice Lopez' },
-  { value: { first_name: 'Kim', last_name: 'Basha' }, label: 'Kim Basha' },
-];
+interface Patient {
+  id: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone: string;
+  address_street: string;
+  address_unit: string;
+  city: string;
+  state: string;
+  zipcode: string;
+  provider: string;
+}
 
-const filterPatients = (inputValue: string) => {
+interface PatientOption {
+  value: Patient;
+  label: string;
+}
+
+const structurePatients = (fetchedPatients: Patient[]): PatientOption[] => {
+  return fetchedPatients.map((patient) => ({
+    value: patient,
+    label: `${patient.last_name}, ${patient.first_name}`,
+  }));
+};
+
+const filterPatients = (inputValue: string, patients: PatientOption[]) => {
   return patients.filter((i) =>
     i.label.toLowerCase().includes(inputValue.toLowerCase()),
   );
 };
 
-interface PatientOption {
-  value: { first_name: string; last_name: string };
-  label: string;
-}
+const loadOptions = async (inputValue: string) => {
+  try {
+    const fetchedPatients = await fetchPatients();
+    if (!fetchedPatients) {
+      return [];
+    }
+    const patients = structurePatients(fetchedPatients);
+    return filterPatients(inputValue, patients);
+  } catch (error) {
+    console.error('Error fetching patients:', error);
+    return [];
+  }
+};
 
-const promiseOptions = (inputValue: string) =>
-  new Promise<PatientOption[]>((resolve) => {
-    setTimeout(() => {
-      resolve(filterPatients(inputValue));
-    }, 1000);
-  });
-
-export default () => (
+const PatientSelect: React.FC = () => (
   <AsyncSelect
     cacheOptions
     defaultOptions
@@ -34,7 +56,7 @@ export default () => (
     noOptionsMessage={({ inputValue }) =>
       "Patient not found. Select 'add new patient' below."
     }
-    loadOptions={promiseOptions}
+    loadOptions={loadOptions}
     styles={{
       input: (base) => ({
         ...base,
@@ -45,3 +67,5 @@ export default () => (
     }}
   />
 );
+
+export default PatientSelect;
