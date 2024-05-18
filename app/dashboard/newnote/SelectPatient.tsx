@@ -1,6 +1,7 @@
 import React from 'react';
 import AsyncSelect from 'react-select/async';
 import { fetchPatients } from '@/app/lib/data';
+import { ActionMeta, SingleValue, InputActionMeta } from 'react-select';
 
 interface Patient {
   id: string;
@@ -14,6 +15,9 @@ interface Patient {
   state: string;
   zipcode: string;
   provider: string;
+  date_of_birth: string;
+  allergies: string;
+  profile_notes: string;
 }
 
 interface PatientOption {
@@ -48,7 +52,14 @@ const loadOptions = async (inputValue: string) => {
   }
 };
 
-const PatientSelect: React.FC = () => (
+interface PatientSelectProps {
+  onPatientSelect: (
+    newValue: SingleValue<PatientOption>,
+    actionMeta: ActionMeta<PatientOption>,
+  ) => void;
+}
+
+const PatientSelect: React.FC<PatientSelectProps> = ({ onPatientSelect }) => (
   <AsyncSelect
     cacheOptions
     defaultOptions
@@ -57,6 +68,7 @@ const PatientSelect: React.FC = () => (
       "Patient not found. Select 'add new patient' below."
     }
     loadOptions={loadOptions}
+    onChange={onPatientSelect}
     styles={{
       input: (base) => ({
         ...base,

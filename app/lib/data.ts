@@ -168,7 +168,7 @@ try {
     const { data: patients, error } = await supabase
       .from('patients')
       .select(
-        'id, first_name, last_name, email, phone, address_street, address_unit, city, state, zipcode, provider'
+        'id, first_name, last_name, email, phone, address_street, address_unit, city, state, zipcode, provider, date_of_birth, allergies, profile_notes'
       )
       // .ilike('audio_transcript', `%${query}%`)
       .order('last_name', { ascending: true })

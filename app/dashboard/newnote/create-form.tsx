@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { createClient } from '@/utils/supabase/client';
 import { Button } from '@/app/ui/button';
 import SelectPatient from './SelectPatient';
+import { SingleValue, ActionMeta } from 'react-select';
 
 import {
   CheckIcon,
@@ -13,6 +14,28 @@ import {
   UserCircleIcon,
   PencilSquareIcon,
 } from '@heroicons/react/24/outline';
+
+interface Patient {
+  id: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone: string;
+  address_street: string;
+  address_unit: string;
+  city: string;
+  state: string;
+  zipcode: string;
+  provider: string;
+  date_of_birth: string;
+  allergies: string;
+  profile_notes: string;
+}
+
+interface PatientOption {
+  value: Patient;
+  label: string;
+}
 
 export default function CreateAppointment() {
   const [loading, setLoading] = useState(true);
@@ -26,7 +49,6 @@ export default function CreateAppointment() {
   const [objective, setObjective] = useState<string | null>(null);
   const [assessment, setAssessment] = useState<string | null>(null);
   const [plan, setPlan] = useState<string | null>(null);
-
   const [submitOkay, setSubmitOkay] = useState<boolean>(true);
 
   const supabase = createClient();
@@ -52,6 +74,36 @@ export default function CreateAppointment() {
     }
   };
 
+  const handlePatientSelect = (
+    newValue: SingleValue<PatientOption>,
+    actionMeta: ActionMeta<PatientOption>,
+  ) => {
+    if (newValue) {
+      console.log(newValue.value);
+      setPatientName(newValue.label);
+    } else {
+      setPatientName(null);
+    }
+  };
+
+  // UPDATE COMPONENT TO HANDLE RETURNED VALUE FROM SELECT:
+  //   {
+  //     "id": "a32ec381-ffa0-4803-82a1-50254cde2af5",
+  //     "first_name": "Paul",
+  //     "last_name": "Giamedes",
+  //     "email": "pgiamedes@gmx.de",
+  //     "phone": "415-668-7985",
+  //     "address_street": "612 West Alameda",
+  //     "address_unit": "Unit 12",
+  //     "city": "Oakland",
+  //     "state": "California",
+  //     "zipcode": "94216",
+  //     "provider": "6e6d2d8f-2200-4ae3-8335-f88d72c23eb9",
+  //     "date_of_birth": "1974-09-15",
+  //     "allergies": "NKDA",
+  //     "profile_notes": null
+  // }
+
   return (
     <form onSubmit={submitAppointment}>
       <div className="max-w-prose rounded-md bg-gray-50 p-4">
@@ -64,7 +116,7 @@ export default function CreateAppointment() {
               >
                 Patient
               </label>
-              <SelectPatient />
+              <SelectPatient onPatientSelect={handlePatientSelect} />
             </div>
             <div className="mb-4 w-full text-center">
               <Link
