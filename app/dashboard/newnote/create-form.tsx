@@ -137,31 +137,21 @@ export default function CreateAppointment() {
     <form onSubmit={submitAppointment}>
       <div className="max-w-prose rounded-md bg-gray-50 p-4">
         <div className="grid grid-cols-2 gap-8">
-          <div>
-            <div className="mb-4">
-              <label
-                htmlFor="patient"
-                className="mb-2 block text-sm font-medium"
-              >
-                Patient
-              </label>
-              <SelectPatient onPatientSelect={handlePatientSelect} />
-            </div>
-            {/* <div className="mb-4 w-full text-center">
+          <div className="mb-4">
+            <label htmlFor="patient" className="mb-2 block text-sm font-medium">
+              Patient
+            </label>
+            <SelectPatient onPatientSelect={handlePatientSelect} />
+          </div>
+
+          <div className="mt-3 flex flex-row items-center">
+            {patientId === '' ? (
               <Link
-                className="text-sm italic text-teal-700 underline underline-offset-4"
                 href={'./patients/add'}
+                className="flex h-10 items-center rounded-lg bg-teal-600 px-4 text-sm font-medium text-white shadow transition-colors hover:bg-teal-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-700 active:bg-teal-600"
               >
                 add new patient
               </Link>
-            </div> */}
-          </div>
-
-          <div className="flex flex-row items-center">
-            {patientId === '' ? (
-              <div className="flex h-10 items-center rounded-lg bg-teal-600 px-4 text-sm font-medium text-white shadow transition-colors hover:bg-teal-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-700 active:bg-teal-600">
-                add new patient
-              </div>
             ) : (
               <div className="flex h-10 items-center rounded-lg bg-teal-600 px-4 text-sm font-medium text-white shadow transition-colors hover:bg-teal-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-700 active:bg-teal-600">
                 edit patient info
