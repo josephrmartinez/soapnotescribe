@@ -9,7 +9,7 @@ export async function submitAppointment(formData: FormData) {
   const supabase = createClient();
 
   const { error, data } = await supabase
-    .from('appointments')
+    .from('notes')
     .update({
       status: 'approved',
       appointment_date: formData.get('appointment_date') as string,
@@ -28,7 +28,7 @@ export async function submitAppointment(formData: FormData) {
     .eq('id', formData.get('id'))
     .select();
   if (error) {
-    console.error('Supabase error updating the appointment:', error);
+    console.error('Supabase error updating the note:', error);
 
     return;
   }
@@ -54,7 +54,7 @@ export async function submitAppointmentDraft(formData: FormData) {
   const supabase = createClient();
 
   const { error, data } = await supabase
-    .from('appointments')
+    .from('notes')
     .update({
       status: 'awaiting review',
       appointment_date: formData.get('appointment_date') as string,

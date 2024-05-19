@@ -42,6 +42,9 @@ export default function CreateAppointment() {
   const [patientName, setPatientName] = useState<string | null>(null);
   const [chiefComplaint, setChiefComplaint] = useState<string | null>(null);
   const [date, setDate] = useState<string>('');
+  const [time, setTime] = useState<string>('');
+  const [patientId, setPatientId] = useState<string>('');
+
   const [patientDateOfBirth, setPatientDateOfBirth] = useState<string>('');
   const [allergies, setAllergies] = useState<string>('');
   const [consent, setConsent] = useState<string | null>(null);
@@ -49,6 +52,7 @@ export default function CreateAppointment() {
   const [objective, setObjective] = useState<string | null>(null);
   const [assessment, setAssessment] = useState<string | null>(null);
   const [plan, setPlan] = useState<string | null>(null);
+  const [signature, setSignature] = useState<string | null>(null);
   const [submitOkay, setSubmitOkay] = useState<boolean>(true);
 
   const supabase = createClient();
@@ -59,14 +63,22 @@ export default function CreateAppointment() {
 
     try {
       setLoading(true);
-      const { error, data } = await supabase
-        .from('appointments')
-        .insert({
-          created_at: new Date().toISOString(),
-        })
-        .select();
+      const { error, data } = await supabase.from('notes').insert({
+        status: 'approved',
+        appointment_date: date,
+        appointment_time: time,
+        patient_id: patientId,
+        allergies: allergies,
+        consent: consent,
+        chief_complaint: chiefComplaint,
+        soap_objective: objective,
+        soap_subjective: subjective,
+        soap_assessment: assessment,
+        soap_plan: plan,
+        doctor_signature: signature,
+      });
       if (error) throw error;
-      router.push('/dashboard/appointments');
+      router.push('/dashboard/notes');
     } catch (error) {
       console.error('Error creating the appointment:', error);
     } finally {
@@ -79,10 +91,10 @@ export default function CreateAppointment() {
     actionMeta: ActionMeta<PatientOption>,
   ) => {
     if (newValue) {
-      console.log(newValue.value);
-      setPatientName(newValue.label);
+      setPatientId(newValue.value.id);
+      setAllergies(newValue.value.allergies);
     } else {
-      setPatientName(null);
+      console.log('No new patient value');
     }
   };
 
@@ -188,8 +200,8 @@ export default function CreateAppointment() {
                 name="appointment_time"
                 required
                 type="time"
-                // value={date}
-                // onChange={(e) => setDate(e.target.value)}
+                value={time}
+                onChange={(e) => setTime(e.target.value)}
                 className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
               ></input>
             </div>

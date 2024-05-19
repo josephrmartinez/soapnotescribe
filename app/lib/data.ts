@@ -18,13 +18,13 @@ export async function fetchAppointmentById(id: string) {
   try {
     const supabase = createClient()
     const { data: appointments, error } = await supabase
-      .from('appointments')
+      .from('notes')
       .select('*')
       .eq('id', id);
 
     if (error) {
       console.error('Supabase Error:', error);
-      throw new Error('Failed to fetch appointment data.');
+      throw new Error('Failed to fetch note data.');
     }
 
     const appointment = appointments ? appointments[0] : null;
@@ -110,7 +110,7 @@ export async function fetchFilteredAppointments(query: string, currentPage: numb
 
     const supabase = createClient()
     const { data: appointments, error } = await supabase
-      .from('appointments')
+      .from('notes')
       .select(
         'id, status, created_at, patient_name, appointment_date, chief_complaint, audio_transcript'
       )

@@ -30,7 +30,7 @@ export default function NotesTable({
         {
           event: '*',
           schema: 'public',
-          table: 'appointments',
+          table: 'notes',
         },
         () => {
           router.refresh();

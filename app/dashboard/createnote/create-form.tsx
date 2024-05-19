@@ -37,15 +37,15 @@ export default function CreateAppointment() {
     try {
       setLoading(true);
       const { error, data } = await supabase
-        .from('appointments')
+        .from('notes')
         .insert({
           created_at: new Date().toISOString(),
         })
         .select();
       if (error) throw error;
-      router.push('/dashboard/appointments');
+      router.push('/dashboard/notes');
     } catch (error) {
-      console.error('Error creating the appointment:', error);
+      console.error('Error creating the note:', error);
     } finally {
       setLoading(false);
     }

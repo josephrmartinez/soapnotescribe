@@ -148,7 +148,7 @@ export async function getReplicateDiarizedTranscript(url: string, apptid: string
 }
 
 
-// Update the appointment table row with the transcript
+// Update the notes table row with the transcript
 export async function updateApptWithTranscript(apptid: string, transcript: string){
   console.log("Running updateApptWithTranscript")
 
@@ -160,7 +160,7 @@ export async function updateApptWithTranscript(apptid: string, transcript: strin
 
   try {
     const { data, error } = await supabase
-      .from('appointments')
+      .from('notes')
       .update({ audio_transcript: transcript })
       .eq('id', apptid)
       .select();
@@ -186,7 +186,7 @@ export async function deleteNote(id: string) {
   try {
     const supabase = createClient()
     const { error } = await supabase
-      .from('appointments')
+      .from('notes')
       .delete()
       .eq('id', id);
 
@@ -257,7 +257,7 @@ async function updateApptWithSOAPData(apptid: string, transcript: string, comple
 
 
     const { data, error, status } = await supabase
-      .from("appointments")
+      .from("notes")
       .update({
         status: "awaiting review",
         audio_transcript: transcript,
@@ -266,17 +266,17 @@ async function updateApptWithSOAPData(apptid: string, transcript: string, comple
       .eq('id', apptid)
       .select()
 if (error) {
-      throw new Error(`Error updating appointment in Supabase: ${error.message}`);
+      throw new Error(`Error updating note in Supabase: ${error.message}`);
     }
 
     if (data) {
-      console.log('Appointment updated successfully.');
-      console.log('Updated appointment data status:', status);
+      console.log('Note updated successfully.');
+      console.log('Updated note data status:', status);
     } else {
       throw new Error('No data returned from the update operation.');
     }
  } catch (error) {
-    console.error('Error updating appointment:', error);
+    console.error('Error updating note:', error);
  }
 }
 
