@@ -7,6 +7,7 @@ import { Button } from '@/app/ui/button';
 import PhoneInput from '@/app/ui/patients/PhoneInput';
 import StateSelect from '@/app/ui/patients/StateSelect';
 import { OptionProps } from 'react-select';
+import { fetchPatientById } from '@/app/lib/data';
 
 import {
   CheckIcon,
@@ -16,20 +17,27 @@ import {
   PencilSquareIcon,
 } from '@heroicons/react/24/outline';
 
-export default function EditPatientForm() {
-  const [loading, setLoading] = useState(true);
-  const [firstName, setFirstName] = useState<string | null>(null);
-  const [lastName, setLastName] = useState<string | null>(null);
-  const [dateOfBirth, setDateOfBirth] = useState<string>('');
-  const [phone, setPhone] = useState<string | null>('');
-  const [email, setEmail] = useState<string>('');
-  const [addressStreet, setAddressStreet] = useState<string | null>('');
-  const [addressUnit, setAddressUnit] = useState<string | null>('');
-  const [city, setCity] = useState<string | null>('');
-  const [state, setState] = useState<string | null>(null);
-  const [zipcode, setZipcode] = useState<string | null>('');
-  const [allergies, setAllergies] = useState<string | null>('');
-  const [profileNotes, setProfileNotes] = useState<string | null>(null);
+// DEFINE PATIENT IN DEFINITIONS DOC; IMPORT PATIENT TYPE INTO COMPONENT
+interface EditPatientProps {
+  patient: Patient;
+}
+const EditPatientForm: React.FC<EditPatientProps> = ({
+  patient
+}) => {
+    const [loading, setLoading] = useState(true);
+    const [patienttId, setPatientId] = useState<string>(patient?.id);
+  const [firstName, setFirstName] = useState<string | null>(patient?.first_name || null);
+  const [lastName, setLastName] = useState<string | null>(patient?.last_name || null);
+  const [dateOfBirth, setDateOfBirth] = useState<string>(patient?.date_of_birth);
+  const [phone, setPhone] = useState<string | null>(patient?.phone);
+  const [email, setEmail] = useState<string>(patient?.email;
+  const [addressStreet, setAddressStreet] = useState<string | null>(patient?.address_street);
+  const [addressUnit, setAddressUnit] = useState<string | null>(patient?.address_unit);
+  const [city, setCity] = useState<string | null>(patient?.city);
+  const [state, setState] = useState<string | null>(patient?.state);
+  const [zipcode, setZipcode] = useState<string | null>(patient?.zipcode);
+  const [allergies, setAllergies] = useState<string | null>(patient?.allergies);
+  const [profileNotes, setProfileNotes] = useState<string | null>(patient?.profile_notes);
   const [submitOkay, setSubmitOkay] = useState<boolean>(true);
 
   const supabase = createClient();
@@ -46,7 +54,7 @@ export default function EditPatientForm() {
   const addPatient = async () => {
     try {
       setLoading(true);
-      const { error } = await supabase.from('patients').insert({
+      const { error } = await supabase.from('patients').update({
         first_name: firstName,
         last_name: lastName,
         date_of_birth: dateOfBirth,
@@ -59,10 +67,11 @@ export default function EditPatientForm() {
         zipcode: zipcode,
         allergies: allergies,
         profile_notes: profileNotes,
-      });
+      })
+        .eq('id', patient.id); // CHECK COLUMN NAMES
       if (error) throw error;
     } catch (error) {
-      console.error('Error creating new patient:', error);
+      console.error('Error updating patient:', error);
     } finally {
       setLoading(false);
       router.push('/dashboard/patients');
@@ -287,3 +296,5 @@ export default function EditPatientForm() {
     </form>
   );
 }
+
+export default EditPatientForm;
