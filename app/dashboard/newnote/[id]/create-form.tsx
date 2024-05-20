@@ -15,7 +15,7 @@ import { GeistSans } from 'geist/font/sans';
 
 import { Appointment } from '@/app/lib/definitions';
 import { getSignedAudioUrl } from '@/app/lib/data';
-import { submitAppointment, submitAppointmentDraft } from './action';
+import { submitNote, submitNoteDraft } from './action';
 import { DeleteNoteFirstStep } from '@/app/ui/appointments/buttons';
 
 interface CreateAppointmentProps {
@@ -400,13 +400,10 @@ const CreateAppointmentPrefilled: React.FC<CreateAppointmentProps> = ({
               Cancel
             </Link>
             <DeleteNoteFirstStep id={appointment.id} />
-            <Button formAction={submitAppointmentDraft} secondary>
+            <Button formAction={submitNoteDraft} secondary>
               Save Draft
             </Button>
-            <Button
-              formAction={submitAppointment}
-              active={doctorSignature !== ''}
-            >
+            <Button formAction={submitNote} active={doctorSignature !== ''}>
               Approve Note
             </Button>
           </div>

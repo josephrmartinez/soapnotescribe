@@ -13,6 +13,7 @@ import {
   CalendarDaysIcon,
   UserCircleIcon,
   PencilSquareIcon,
+  PlusIcon,
 } from '@heroicons/react/24/outline';
 
 interface Patient {
@@ -40,7 +41,6 @@ interface PatientOption {
 export default function CreateAppointment() {
   const [loading, setLoading] = useState(true);
   const [patientId, setPatientId] = useState<string>('');
-
   const [dateOfBirth, setDateOfBirth] = useState<string>('');
   const [phone, setPhone] = useState<string | null>('');
   const [email, setEmail] = useState<string>('');
@@ -50,9 +50,7 @@ export default function CreateAppointment() {
   const [state, setState] = useState<string | null>(null);
   const [zipcode, setZipcode] = useState<string | null>('');
   const [allergies, setAllergies] = useState<string>('');
-
   const [profileNotes, setProfileNotes] = useState<string | null>(null);
-
   const [chiefComplaint, setChiefComplaint] = useState<string | null>(null);
   const [date, setDate] = useState<string>('');
   const [time, setTime] = useState<string>('');
@@ -67,7 +65,7 @@ export default function CreateAppointment() {
   const supabase = createClient();
   const router = useRouter();
 
-  const submitAppointment = async (event: React.FormEvent<HTMLFormElement>) => {
+  const submitNote = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     try {
@@ -95,6 +93,36 @@ export default function CreateAppointment() {
     }
   };
 
+  const submitNoteDraft = async (
+    event: React.MouseEvent<HTMLButtonElement>,
+  ): Promise<void> => {
+    // event.preventDefault();
+
+    try {
+      setLoading(true);
+      const { error, data } = await supabase.from('notes').insert({
+        status: 'awaiting review',
+        appointment_date: date,
+        appointment_time: time,
+        patient_id: patientId,
+        allergies: allergies,
+        consent: consent,
+        chief_complaint: chiefComplaint,
+        soap_objective: objective,
+        soap_subjective: subjective,
+        soap_assessment: assessment,
+        soap_plan: plan,
+        doctor_signature: signature,
+      });
+      if (error) throw error;
+      router.push('/dashboard/notes');
+    } catch (error) {
+      console.error('Error creating the appointment draft:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handlePatientSelect = (
     newValue: SingleValue<PatientOption>,
     actionMeta: ActionMeta<PatientOption>,
@@ -110,6 +138,7 @@ export default function CreateAppointment() {
       setZipcode(newValue.value.zipcode);
       setEmail(newValue.value.email);
       setPhone(newValue.value.phone);
+      setProfileNotes(newValue.value.profile_notes);
     } else {
       console.log('No new patient value');
     }
@@ -134,7 +163,7 @@ export default function CreateAppointment() {
   // }
 
   return (
-    <form onSubmit={submitAppointment}>
+    <form onSubmit={submitNote}>
       <div className="max-w-prose rounded-md bg-gray-50 p-4">
         <div className="grid grid-cols-2 gap-8">
           <div className="mb-4">
@@ -150,12 +179,17 @@ export default function CreateAppointment() {
                 href={'./patients/add'}
                 className="flex h-10 items-center rounded-lg bg-teal-600 px-4 text-sm font-medium text-white shadow transition-colors hover:bg-teal-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-700 active:bg-teal-600"
               >
+                <PlusIcon width={22} className="mr-2" />
                 add new patient
               </Link>
             ) : (
-              <div className="flex h-10 items-center rounded-lg bg-teal-600 px-4 text-sm font-medium text-white shadow transition-colors hover:bg-teal-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-700 active:bg-teal-600">
-                edit patient info
-              </div>
+              <Link
+                href={`./patients/${patientId}/edit`}
+                className="flex h-10 items-center rounded-lg bg-teal-600 px-4 text-sm font-medium text-white shadow transition-colors hover:bg-teal-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-700 active:bg-teal-600"
+              >
+                <PencilSquareIcon width={22} className="mr-2" />
+                <div>edit patient info</div>
+              </Link>
             )}
           </div>
         </div>
@@ -396,11 +430,14 @@ export default function CreateAppointment() {
 
         <div className="mt-6 flex justify-end gap-4">
           <Link
-            href="/dashboard/appointments"
+            href="/dashboard/notes"
             className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
           >
             Cancel
           </Link>
+          <Button onClick={submitNoteDraft} secondary>
+            Save Draft
+          </Button>
           <Button type="submit" active={submitOkay}>
             Add Note
           </Button>
