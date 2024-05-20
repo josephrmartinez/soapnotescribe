@@ -7,7 +7,6 @@ import { Button } from '@/app/ui/button';
 import PhoneInput from '@/app/ui/patients/PhoneInput';
 import StateSelect from '@/app/ui/patients/StateSelect';
 import { OptionProps } from 'react-select';
-import { fetchPatientById } from '@/app/lib/data';
 
 import {
   CheckIcon,
@@ -25,7 +24,7 @@ const EditPatientForm: React.FC<EditPatientProps> = ({
   patient
 }) => {
     const [loading, setLoading] = useState(true);
-    const [patienttId, setPatientId] = useState<string>(patient?.id);
+    const [patientId, setPatientId] = useState<string>(patient?.id);
   const [firstName, setFirstName] = useState<string | null>(patient?.first_name || null);
   const [lastName, setLastName] = useState<string | null>(patient?.last_name || null);
   const [dateOfBirth, setDateOfBirth] = useState<string>(patient?.date_of_birth);
@@ -51,7 +50,8 @@ const EditPatientForm: React.FC<EditPatientProps> = ({
     setPhone(phone);
   };
 
-  const addPatient = async () => {
+  // MORE EFFICIENT WAY TO UPDATE? THIS OVERWRITES THE ENTIRE NEW.
+  const updatePatient = async () => {
     try {
       setLoading(true);
       const { error } = await supabase.from('patients').update({
@@ -288,8 +288,8 @@ const EditPatientForm: React.FC<EditPatientProps> = ({
           >
             Cancel
           </Link>
-          <Button type="submit" formAction={addPatient} active={submitOkay}>
-            Add Patient
+          <Button type="submit" formAction={updatePatient} active={submitOkay}>
+            Update Patient
           </Button>
         </div>
       </div>

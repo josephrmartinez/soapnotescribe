@@ -5,6 +5,7 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { generateAndSavePdf } from '@/utils/generatePdf';
 
+// CURRENTLY NOT IN USE. DETERMINE IF IT IS PREFERABLE TO PERFORM UPDATE ON CLIENT OR THROUGH SERVER ACTION.
 export async function addPatient(formData: FormData) {
   const supabase = createClient();
 
