@@ -1,15 +1,11 @@
 'use server'
 
-// import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
-// import { cookies } from 'next/headers'
-// import { Database } from '@/app/database.types';
 import { unstable_noStore as noStore, revalidatePath,  } from 'next/cache';
 import { Database } from '../database.types';
 import { createClient } from '@/utils/supabase/server'
 import { Appointment } from './definitions';
-import { redirect } from 'next/navigation';
-
-// const supabase = createServerComponentClient<Database>({ cookies })
+// import { cookies } from 'next/headers'
+// import { Database } from '@/app/database.types';
 
 
 export async function fetchAppointmentById(id: string) {
@@ -35,7 +31,6 @@ export async function fetchAppointmentById(id: string) {
   }
 }
 
-
 export async function getSignedPdfUrl(userId: string, patientName: string, appointmentDate: string) {
   try {
     const supabase = createClient();
@@ -57,13 +52,9 @@ export async function getSignedPdfUrl(userId: string, patientName: string, appoi
     console.error('Supabase Error:', error);
     throw new Error('Failed to get signed PDF URL.');
   }
-}
-    
-
-   
+} 
 
 export async function getSignedAudioUrl(userId: string, audio_url:string) {
-  // return (`url path: ${patient}/${audio_url}`)
   try {
     const supabase = createClient()
     const { data, error } = await supabase
@@ -76,7 +67,6 @@ export async function getSignedAudioUrl(userId: string, audio_url:string) {
       throw new Error('Failed to get signed audio URL.');
     }
 
-    // Assuming data is an object containing the signed URL
     const signedUrl = data?.signedUrl;
 
     return signedUrl;
@@ -85,10 +75,6 @@ export async function getSignedAudioUrl(userId: string, audio_url:string) {
     throw new Error('Failed to get signed audio URL.');
   }
 }
-
-
-
-
 
 export const fetchUserSession = async () => {
   try {

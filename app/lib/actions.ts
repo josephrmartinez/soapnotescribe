@@ -6,12 +6,8 @@ import { redirect } from 'next/navigation';
 import OpenAI from "openai"
 import { createClient } from "@/utils/supabase/server";
 import { createClient as createClientJS } from "@supabase/supabase-js";
-// import { embed } from './embed'
-
-
 
 const openai = new OpenAI({apiKey: process.env.OPENAI_API_KEY })
-
 
 const replicate = new Replicate({
   auth: process.env.REPLICATE_API_TOKEN,
@@ -113,7 +109,7 @@ export async function getReplicateMonoTranscript(url: string, apptid: string) {
 // Run Replicate model to create diarized transcription from audio url
 export async function getReplicateDiarizedTranscript(url: string, apptid: string) {
   const startTime = new Date()
-  console.log("running getTranscript", startTime);
+  console.log("running getReplicateDiarizedTranscript", startTime);
 
   let webhookUrl;
 
@@ -206,7 +202,7 @@ export async function getSOAPData(apptid: string, transcript: string) {
     messages: [
       {
         role: "system",
-        content: `You are a helpful and highly trained medical assistant. You will carefully review the following TRANSCRIPT and generate a clinical SOAP note as a JSON object with the following structure:
+        content: `You are a helpful, highly-trained medical assistant. Carefully review the following TRANSCRIPT and generate a clinical SOAP note as a JSON object with the following structure:
         {
           patient_name: string;
           patient_date_of_birth: Date;

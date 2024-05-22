@@ -16,27 +16,53 @@ import {
   PencilSquareIcon,
 } from '@heroicons/react/24/outline';
 
-// DEFINE PATIENT IN DEFINITIONS DOC; IMPORT PATIENT TYPE INTO COMPONENT
 interface EditPatientProps {
   patient: Patient;
 }
-const EditPatientForm: React.FC<EditPatientProps> = ({
-  patient
-}) => {
-    const [loading, setLoading] = useState(true);
-    const [patientId, setPatientId] = useState<string>(patient?.id);
-  const [firstName, setFirstName] = useState<string | null>(patient?.first_name || null);
-  const [lastName, setLastName] = useState<string | null>(patient?.last_name || null);
-  const [dateOfBirth, setDateOfBirth] = useState<string>(patient?.date_of_birth);
+
+interface Patient {
+  id: string;
+  first_name: string | null;
+  last_name: string | null;
+  date_of_birth: string;
+  phone: string | null;
+  email: string;
+  address_street: string | null;
+  address_unit: string | null;
+  city: string | null;
+  state: string | null;
+  zipcode: string | null;
+  allergies: string | null;
+  profile_notes: string | null;
+}
+
+const EditPatientForm: React.FC<EditPatientProps> = ({ patient }) => {
+  const [loading, setLoading] = useState(true);
+  const [patientId, setPatientId] = useState<string>(patient?.id);
+  const [firstName, setFirstName] = useState<string | null>(
+    patient?.first_name || null,
+  );
+  const [lastName, setLastName] = useState<string | null>(
+    patient?.last_name || null,
+  );
+  const [dateOfBirth, setDateOfBirth] = useState<string>(
+    patient?.date_of_birth,
+  );
   const [phone, setPhone] = useState<string | null>(patient?.phone);
-  const [email, setEmail] = useState<string>(patient?.email;
-  const [addressStreet, setAddressStreet] = useState<string | null>(patient?.address_street);
-  const [addressUnit, setAddressUnit] = useState<string | null>(patient?.address_unit);
+  const [email, setEmail] = useState<string>(patient?.email);
+  const [addressStreet, setAddressStreet] = useState<string | null>(
+    patient?.address_street,
+  );
+  const [addressUnit, setAddressUnit] = useState<string | null>(
+    patient?.address_unit,
+  );
   const [city, setCity] = useState<string | null>(patient?.city);
   const [state, setState] = useState<string | null>(patient?.state);
   const [zipcode, setZipcode] = useState<string | null>(patient?.zipcode);
   const [allergies, setAllergies] = useState<string | null>(patient?.allergies);
-  const [profileNotes, setProfileNotes] = useState<string | null>(patient?.profile_notes);
+  const [profileNotes, setProfileNotes] = useState<string | null>(
+    patient?.profile_notes,
+  );
   const [submitOkay, setSubmitOkay] = useState<boolean>(true);
 
   const supabase = createClient();
@@ -54,20 +80,22 @@ const EditPatientForm: React.FC<EditPatientProps> = ({
   const updatePatient = async () => {
     try {
       setLoading(true);
-      const { error } = await supabase.from('patients').update({
-        first_name: firstName,
-        last_name: lastName,
-        date_of_birth: dateOfBirth,
-        phone: phone,
-        email: email,
-        address_street: addressStreet,
-        address_unit: addressUnit,
-        city: city,
-        state: state,
-        zipcode: zipcode,
-        allergies: allergies,
-        profile_notes: profileNotes,
-      })
+      const { error } = await supabase
+        .from('patients')
+        .update({
+          first_name: firstName,
+          last_name: lastName,
+          date_of_birth: dateOfBirth,
+          phone: phone,
+          email: email,
+          address_street: addressStreet,
+          address_unit: addressUnit,
+          city: city,
+          state: state,
+          zipcode: zipcode,
+          allergies: allergies,
+          profile_notes: profileNotes,
+        })
         .eq('id', patient.id); // CHECK COLUMN NAMES
       if (error) throw error;
     } catch (error) {
@@ -145,7 +173,7 @@ const EditPatientForm: React.FC<EditPatientProps> = ({
             </label>
             <div className="relative">
               {/* UPDATE TO PASS PHONE VALUE AND SETPHONE PROPS */}
-              <PhoneInput onChange={handlePhoneChange} />
+              <PhoneInput phone={phone} setPhone={handlePhoneChange} />
             </div>
           </div>
         </div>
@@ -295,6 +323,6 @@ const EditPatientForm: React.FC<EditPatientProps> = ({
       </div>
     </form>
   );
-}
+};
 
 export default EditPatientForm;

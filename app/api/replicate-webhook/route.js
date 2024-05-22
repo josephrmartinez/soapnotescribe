@@ -1,6 +1,4 @@
 import { NextResponse } from "next/server";
-import { formatReplicateReponse } from "@/app/lib/actions";
-import { redirect } from "next/navigation";
 import { getSOAPData } from "@/app/lib/actions";
 
 export async function GET(req) {

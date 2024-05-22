@@ -1,11 +1,12 @@
 import React, { useState, ChangeEvent } from 'react';
 
 interface PhoneInputProps {
-  onChange: (phone: string) => void;
+  setPhone: (phone: string) => void;
+  phone: string | null;
 }
 
-const PhoneInput: React.FC<PhoneInputProps> = ({ onChange }) => {
-  const [phone, setPhone] = useState<string>('');
+const PhoneInput: React.FC<PhoneInputProps> = ({ phone, setPhone }) => {
+  // const [phone, setPhone] = useState<string>('');
 
   const formatPhoneNumber = (value: string): string => {
     const numericValue = value.replace(/\D/g, '');
@@ -21,7 +22,7 @@ const PhoneInput: React.FC<PhoneInputProps> = ({ onChange }) => {
 
     // Set the formatted phone number
     setPhone(formatPhoneNumber(value));
-    onChange(formatPhoneNumber(value));
+    // onChange(formatPhoneNumber(value));
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
