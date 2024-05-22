@@ -10,9 +10,11 @@ import { getMaxListeners } from 'events';
 import { ViewProfile } from './buttons';
 
 export default async function PatientsTable({ query }: { query: string }) {
-  // FETCH PATIENTS WITH KEYWORD SEARCH
+  // UPDATE TABLE TO FETCH PATIENTS WITH QUERY KEYWORD SEARCH
+
+  // CURRENT IMPLEMENTATION FETCHES ALL PATIENTS. QUERY SEARCH NOT ENABLED
   const patients = await fetchPatients();
-  console.log('fetched patients:', patients);
+  console.log('fetched patients:', patients?.length);
 
   return (
     <div className="mt-6 flow-root">

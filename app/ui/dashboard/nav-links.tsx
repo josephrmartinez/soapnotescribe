@@ -19,7 +19,7 @@ const links = [
   { name: 'SOAP Notes', href: '/dashboard/notes', icon: ArchiveBoxIcon },
   {
     name: 'Write New Note',
-    href: '/dashboard/createnote',
+    href: '/dashboard/newnote',
     icon: PencilSquareIcon,
   },
   {

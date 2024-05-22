@@ -1,6 +1,6 @@
 'use server'
 
-import { unstable_noStore as noStore, revalidatePath,  } from 'next/cache';
+import { unstable_noStore as noStore, revalidatePath  } from 'next/cache';
 import { Database } from '../database.types';
 import { createClient } from '@/utils/supabase/server'
 import { Appointment } from './definitions';
@@ -148,7 +148,7 @@ export async function fetchFilteredAppointments(query: string, currentPage: numb
 
 
 export async function fetchPatients() {
-  noStore()
+  noStore();
 try {
     const supabase = createClient()
     const { data: patients, error } = await supabase
@@ -164,7 +164,6 @@ try {
       return
     }
   return patients
-    //  as Appointment[];
  } catch (error) {
     console.error('Supabase Error:', error);
     throw new Error('Failed to fetch paients data.');

@@ -7,6 +7,7 @@ import { Button } from '@/app/ui/button';
 import PhoneInput from '@/app/ui/patients/PhoneInput';
 import StateSelect from '@/app/ui/patients/StateSelect';
 import { OptionProps } from 'react-select';
+import { revalidatePath } from 'next/cache';
 
 import {
   CheckIcon,
@@ -30,7 +31,7 @@ interface Patient {
   address_street: string | null;
   address_unit: string | null;
   city: string | null;
-  state: string | null;
+  state: string | undefined;
   zipcode: string | null;
   allergies: string | null;
   profile_notes: string | null;
@@ -57,7 +58,7 @@ const EditPatientForm: React.FC<EditPatientProps> = ({ patient }) => {
     patient?.address_unit,
   );
   const [city, setCity] = useState<string | null>(patient?.city);
-  const [state, setState] = useState<string | null>(patient?.state);
+  const [state, setState] = useState<string | undefined>(patient?.state);
   const [zipcode, setZipcode] = useState<string | null>(patient?.zipcode);
   const [allergies, setAllergies] = useState<string | null>(patient?.allergies);
   const [profileNotes, setProfileNotes] = useState<string | null>(
@@ -76,7 +77,7 @@ const EditPatientForm: React.FC<EditPatientProps> = ({ patient }) => {
     setPhone(phone);
   };
 
-  // MORE EFFICIENT WAY TO UPDATE? THIS OVERWRITES THE ENTIRE NEW.
+  // MORE EFFICIENT WAY TO UPDATE? THIS OVERWRITES THE ENTIRE OBJECT.
   const updatePatient = async () => {
     try {
       setLoading(true);
@@ -98,11 +99,13 @@ const EditPatientForm: React.FC<EditPatientProps> = ({ patient }) => {
         })
         .eq('id', patient.id); // CHECK COLUMN NAMES
       if (error) throw error;
+      router.push('/dashboard/patients');
+      // revalidatePath('/dashboard/patients', 'page'); // server only?
+      // router.replace('/dashboard/patients');
     } catch (error) {
       console.error('Error updating patient:', error);
     } finally {
       setLoading(false);
-      router.push('/dashboard/patients');
     }
   };
 
@@ -251,7 +254,7 @@ const EditPatientForm: React.FC<EditPatientProps> = ({ patient }) => {
               State
             </label>
             <div className="relative">
-              <StateSelect onChange={handleStateChange} />
+              <StateSelect setState={handleStateChange} state={state} />
             </div>
           </div>
           <div className="mb-4">

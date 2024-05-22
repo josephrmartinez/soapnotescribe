@@ -1,21 +1,19 @@
 import React, { useState } from 'react';
 
 interface StateSelectProps {
-  onChange: (selectedState: string) => void;
+  setState: (selectedState: string) => void;
+  state: string | undefined;
 }
 
-const StateSelect: React.FC<StateSelectProps> = ({ onChange }) => {
-  const [selectedState, setSelectedState] = useState<string>('');
-
+const StateSelect: React.FC<StateSelectProps> = ({ setState, state }) => {
   const handleStateChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedState = event.target.value;
-    setSelectedState(selectedState);
-    onChange(selectedState);
+    setState(selectedState);
   };
 
   return (
     <select
-      value={selectedState}
+      value={state}
       onChange={handleStateChange}
       className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
     >
