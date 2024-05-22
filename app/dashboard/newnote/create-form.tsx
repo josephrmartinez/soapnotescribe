@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/utils/supabase/client';
@@ -61,9 +61,25 @@ export default function CreateAppointment() {
   const [plan, setPlan] = useState<string | null>(null);
   const [signature, setSignature] = useState<string | null>(null);
   const [submitOkay, setSubmitOkay] = useState<boolean>(true);
+  const accessTokenRef = useRef<string | undefined>('');
+  const userIDRef = useRef<string | undefined>('');
 
   const supabase = createClient();
   const router = useRouter();
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const { data, error } = await supabase.auth.getSession();
+      if (error) {
+        console.error(error);
+      } else {
+        userIDRef.current = data.session?.user.id;
+        accessTokenRef.current = data.session?.access_token;
+      }
+    };
+
+    fetchUser();
+  }, []);
 
   const submitNote = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -73,6 +89,7 @@ export default function CreateAppointment() {
       const { error, data } = await supabase.from('notes').insert({
         status: 'approved',
         appointment_date: date,
+        user_id: userIDRef.current,
         appointment_time: time,
         patient_id: patientId,
         allergies: allergies,
