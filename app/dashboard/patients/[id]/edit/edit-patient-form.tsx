@@ -8,6 +8,7 @@ import PhoneInput from '@/app/ui/patients/PhoneInput';
 import StateSelect from '@/app/ui/patients/StateSelect';
 import { OptionProps } from 'react-select';
 import { revalidatePath } from 'next/cache';
+import { editPatient } from './action';
 
 import {
   CheckIcon,
@@ -39,7 +40,6 @@ interface Patient {
 
 const EditPatientForm: React.FC<EditPatientProps> = ({ patient }) => {
   const [loading, setLoading] = useState(true);
-  const [patientId, setPatientId] = useState<string>(patient?.id);
   const [firstName, setFirstName] = useState<string | null>(
     patient?.first_name || null,
   );
@@ -78,40 +78,41 @@ const EditPatientForm: React.FC<EditPatientProps> = ({ patient }) => {
   };
 
   // MORE EFFICIENT WAY TO UPDATE? THIS OVERWRITES THE ENTIRE OBJECT.
-  const updatePatient = async () => {
-    try {
-      setLoading(true);
-      const { error } = await supabase
-        .from('patients')
-        .update({
-          first_name: firstName,
-          last_name: lastName,
-          date_of_birth: dateOfBirth,
-          phone: phone,
-          email: email,
-          address_street: addressStreet,
-          address_unit: addressUnit,
-          city: city,
-          state: state,
-          zipcode: zipcode,
-          allergies: allergies,
-          profile_notes: profileNotes,
-        })
-        .eq('id', patient.id); // CHECK COLUMN NAMES
-      if (error) throw error;
-      router.push('/dashboard/patients');
-      // revalidatePath('/dashboard/patients', 'page'); // server only?
-      // router.replace('/dashboard/patients');
-    } catch (error) {
-      console.error('Error updating patient:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // const updatePatient = async () => {
+  //   try {
+  //     setLoading(true);
+  //     const { error } = await supabase
+  //       .from('patients')
+  //       .update({
+  //         first_name: firstName,
+  //         last_name: lastName,
+  //         date_of_birth: dateOfBirth,
+  //         phone: phone,
+  //         email: email,
+  //         address_street: addressStreet,
+  //         address_unit: addressUnit,
+  //         city: city,
+  //         state: state,
+  //         zipcode: zipcode,
+  //         allergies: allergies,
+  //         profile_notes: profileNotes,
+  //       })
+  //       .eq('id', patient.id); // CHECK COLUMN NAMES
+  //     if (error) throw error;
+  //     router.push('/dashboard/patients');
+  //     // revalidatePath('/dashboard/patients', 'page'); // server only?
+  //     // router.replace('/dashboard/patients');
+  //   } catch (error) {
+  //     console.error('Error updating patient:', error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   return (
-    <form>
+    <form action={editPatient}>
       <div className="max-w-prose rounded-md bg-gray-50 p-4">
+        <input name="id" hidden defaultValue={patient?.id}></input>
         <div className="grid grid-cols-2 gap-8">
           <div className="mb-4">
             <label htmlFor="patient" className="mb-2 block text-sm font-medium">
@@ -250,7 +251,7 @@ const EditPatientForm: React.FC<EditPatientProps> = ({ patient }) => {
             </div>
           </div>
           <div className="mb-4">
-            <label htmlFor="phone" className="mb-2 block text-sm font-medium">
+            <label htmlFor="state" className="mb-2 block text-sm font-medium">
               State
             </label>
             <div className="relative">
@@ -319,7 +320,7 @@ const EditPatientForm: React.FC<EditPatientProps> = ({ patient }) => {
           >
             Cancel
           </Link>
-          <Button type="submit" formAction={updatePatient} active={submitOkay}>
+          <Button type="submit" formAction={editPatient} active={submitOkay}>
             Update Patient
           </Button>
         </div>

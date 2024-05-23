@@ -14,6 +14,7 @@ const StateSelect: React.FC<StateSelectProps> = ({ setState, state }) => {
   return (
     <select
       value={state}
+      name="state"
       onChange={handleStateChange}
       className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
     >

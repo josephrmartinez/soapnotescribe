@@ -13,35 +13,34 @@ export async function editPatient(formData: FormData) {
 
   console.log('formData:', formData);
 
-  //   const { error, data } = await supabase
-  //     .from('patients')
-  //     .upsert({
-  //       status: 'approved',
-  //       appointment_date: formData.get('appointment_date') as string,
-  //       appointment_time: formData.get('appointment_time') as string,
-  //       patient_name: formData.get('patient_name') as string,
-  //       patient_date_of_birth: formData.get('patient_date_of_birth') as string,
-  //       allergies: formData.get('allergies') as string,
-  //       consent: formData.get('consent') === 'on' ? true : false,
-  //       chief_complaint: formData.get('chief_complaint') as string,
-  //       soap_objective: formData.get('soap_objective') as string,
-  //       soap_subjective: formData.get('soap_subjective') as string,
-  //       soap_assessment: formData.get('soap_assessment') as string,
-  //       soap_plan: formData.get('soap_plan') as string,
-  //       doctor_signature: formData.get('doctor_signature') as string,
-  //     })
-  //     .eq('id', formData.get('id'))
-  //     .select();
-  //   if (error) {
-  //     console.error('Supabase error creating or updating patient:', error);
+  const { error, data } = await supabase
+    .from('patients')
+    .update({
+      first_name: formData.get('first_name') as string,
+      last_name: formData.get('last_name') as string,
+      date_of_birth: formData.get('date_of_birth') as string,
+      phone: formData.get('phone') as string,
+      email: formData.get('email') as string,
+      address_street: formData.get('address_street') as string,
+      address_unit: formData.get('address_unit') as string,
+      city: formData.get('city') as string,
+      state: formData.get('phone') as string,
+      zipcode: formData.get('zipcode') as string,
+      allergies: formData.get('allergies') as string,
+      profile_notes: formData.get('profile_notes') as string,
+    })
+    .eq('id', formData.get('id'))
+    .select();
+  if (error) {
+    console.error('Supabase error creating or updating patient:', error);
 
-  //     return;
-  //   }
-  //   if (data && data.length > 0) {
-  //     revalidatePath('/dashboard/patients', 'page');
-  //     redirect('/dashboard/patients');
-  //   } else {
-  //     // Handle the case where the update was successful but the data is not as expected
-  //     console.error('Update successful, but data is not as expected');
-  //   }
+    return;
+  }
+  if (data && data.length > 0) {
+    revalidatePath('/dashboard/patients', 'page');
+    redirect('/dashboard/patients');
+  } else {
+    // Handle the case where the update was successful but the data is not as expected
+    console.error('Update successful, but data is not as expected');
+  }
 }
