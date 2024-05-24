@@ -4,8 +4,8 @@ import { createClient } from '@/utils/supabase/server';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
-// CURRENTLY NOT IN USE. ROUTE CURRENTLY USES CLIENT ACTIONS TO UPDATE PATIENT INFO.
-// USNG SERVER ACTION WOULD ALLOW ME TO USE REVALIDATEPATH AND REDIRECT
+// SERVER ACTION NOW IN USE. ROUTE FORMERLY USED CLIENT ACTIONS TO UPDATE PATIENT INFO.
+// USNG SERVER ACTION ALLOWS USE OF REVALIDATEPATH AND REDIRECT
 // nextjs.org/learn/dashboard-app/mutating-data
 
 export async function editPatient(formData: FormData) {

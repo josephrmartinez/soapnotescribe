@@ -3,31 +3,124 @@
 import { unstable_noStore as noStore, revalidatePath  } from 'next/cache';
 import { Database } from '../database.types';
 import { createClient } from '@/utils/supabase/server'
-import { Appointment } from './definitions';
+import { Note } from './definitions';
 // import { cookies } from 'next/headers'
 // import { Database } from '@/app/database.types';
 
 
-export async function fetchAppointmentById(id: string) {
-  // EXPERIMENTAL. noStore() allows for immediate re-render of changed appointment data, but may lead to slower load times.
+
+// UPDATE TO ALWAYS DISPLAY PROCESSING NOTES (AUDIO_TRANSCRIPT IS NULL)
+export async function fetchFilteredNotes(query: string, currentPage: number) {
   noStore()
   try {
+    const ITEMS_PER_PAGE = 6;
+    const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+
     const supabase = createClient()
-    const { data: appointments, error } = await supabase
-      .from('notes')
-      .select('*')
+    const { data: notes, error } = await supabase
+      .from('note')
+      .select(`
+      *,
+      patient (
+        id,
+        email,
+        date_of_birth,
+        allergies,
+        phone,
+        provider,
+        profile_notes,
+        first_name,
+        last_name,
+        address_street,
+        address_unit,
+        state,
+        city,
+        zipcode
+      )`)
+      // .ilike('audio_transcript', `%${query}%`)
+      .order('appointment_date', { ascending: false })
+      .range(offset, offset + ITEMS_PER_PAGE - 1);
+
+    if (error) {
+      console.error('Error fetching notes:', error);
+      return
+    }
+
+    // Implement custom sorting logic: processing at top, then "awaiting review", then "approved"
+    notes.sort((a, b) => {
+      // Prioritize "processing" status
+      if (a.status === 'processing' && b.status !== 'processing') {
+        return -1;
+      } else if (a.status !== 'processing' && b.status === 'processing') {
+        return 1;
+      }
+
+      // Then prioritize "awaiting review" status
+      if (a.status === 'awaiting review' && b.status !== 'awaiting review') {
+        return -1;
+      } else if (a.status !== 'awaiting review' && b.status === 'awaiting review') {
+        return 1;
+      }
+
+      // Finally, sort by status and then by appointment_date
+      if (a.status === b.status) {
+        // If both appointments have the same status, sort by appointment_date
+        // Since we know there will be no null appointment_date values, we can directly create Date objects
+        const aDate = new Date(a.appointment_date);
+        const bDate = new Date(b.appointment_date);
+        return bDate.getTime() - aDate.getTime(); // Sort in descending order
+    }
+
+      // Default return value if none of the above conditions are met
+      return 0;
+    });
+
+    return notes as Note[];
+ } catch (error) {
+    console.error('Supabase Error:', error);
+    throw new Error('Failed to fetch appointments data.');
+ }
+}
+
+
+export async function fetchNoteById(id: string) {
+  try {
+    const supabase = createClient();
+    const { data: notes, error } = await supabase
+      .from('note')
+      .select(`
+      *,
+      patient (
+        id,
+        email,
+        date_of_birth,
+        allergies,
+        phone,
+        provider,
+        profile_notes,
+        first_name,
+        last_name,
+        address_street,
+        address_unit,
+        state,
+        city,
+        zipcode
+      )`)
       .eq('id', id);
 
     if (error) {
-      console.error('Supabase Error:', error);
-      throw new Error('Failed to fetch note data.');
+      throw new Error('Supabase Error: ' + error.message);
     }
 
-    const appointment = appointments ? appointments[0] : null;
-    return appointment
+    const note = notes ? notes[0] : null;
+    if (!note) {
+      throw new Error(`Note with ID ${id} not found.`);
+    }
+
+    return note;
   } catch (error) {
-    console.error('Supabase Error:', error);
-    throw new Error('Failed to fetch appointment data.');
+    console.error('Error fetching note:', error);
+    throw new Error('Failed to fetch note data.');
   }
 }
 
@@ -86,64 +179,6 @@ export const fetchUserSession = async () => {
     throw new Error('Failed to fetch user session.');
   }
 };
-
-// UPDATE TO ALWAYS DISPLAY PROCESSING APPOINTMENTS (AUDIO_TRANSCRIPT IS NULL)
-export async function fetchFilteredAppointments(query: string, currentPage: number) {
-  noStore()
-  try {
-    const ITEMS_PER_PAGE = 6;
-    const offset = (currentPage - 1) * ITEMS_PER_PAGE;
-
-    const supabase = createClient()
-    const { data: appointments, error } = await supabase
-      .from('notes')
-      .select(
-        'id, status, created_at, patient_name, appointment_date, chief_complaint, audio_transcript'
-      )
-      // .ilike('audio_transcript', `%${query}%`)
-      .order('appointment_date', { ascending: false })
-      .range(offset, offset + ITEMS_PER_PAGE - 1);
-
-    if (error) {
-      console.error('Error fetching appointments:', error);
-      return
-    }
-
-    // Implement custom sorting logic: processing at top, then "awaiting review", then "approved"
-    appointments.sort((a, b) => {
-      // Prioritize "processing" status
-      if (a.status === 'processing' && b.status !== 'processing') {
-        return -1;
-      } else if (a.status !== 'processing' && b.status === 'processing') {
-        return 1;
-      }
-
-      // Then prioritize "awaiting review" status
-      if (a.status === 'awaiting review' && b.status !== 'awaiting review') {
-        return -1;
-      } else if (a.status !== 'awaiting review' && b.status === 'awaiting review') {
-        return 1;
-      }
-
-      // Finally, sort by status and then by appointment_date
-      if (a.status === b.status) {
-        // If both appointments have the same status, sort by appointment_date
-        // Since we know there will be no null appointment_date values, we can directly create Date objects
-        const aDate = new Date(a.appointment_date);
-        const bDate = new Date(b.appointment_date);
-        return bDate.getTime() - aDate.getTime(); // Sort in descending order
-    }
-
-      // Default return value if none of the above conditions are met
-      return 0;
-    });
-
-    return appointments as Appointment[];
- } catch (error) {
-    console.error('Supabase Error:', error);
-    throw new Error('Failed to fetch appointments data.');
- }
-}
 
 
 

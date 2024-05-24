@@ -1,7 +1,7 @@
 // import Form from '@/app/ui/appointments/edit-form';
-import Breadcrumbs from '@/app/ui/appointments/breadcrumbs';
+import Breadcrumbs from '@/app/ui/notes/breadcrumbs';
 import {
-  fetchAppointmentById,
+  fetchNoteById,
   getSignedAudioUrl,
   getSignedPdfUrl,
 } from '@/app/lib/data';
@@ -18,7 +18,7 @@ import {
 import { Metadata } from 'next';
 import { formatDateToLocal, formatTime } from '@/app/lib/utils';
 import { Button } from '@/app/ui/button';
-import { DeleteNoteFirstStep } from '@/app/ui/appointments/buttons';
+import { DeleteNoteFirstStep } from '@/app/ui/notes/buttons';
 import { createClient } from '@/utils/supabase/server';
 
 export const metadata: Metadata = {
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
 
 export default async function Page({ params }: { params: { id: string } }) {
   const id = params.id;
-  const appointment = await fetchAppointmentById(id);
+  const appointment = await fetchNoteById(id);
   console.log('appointment data from appointments/[id]:', appointment);
 
   // Get audio url for media player:
@@ -46,7 +46,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 
   const appointmentDate = formatDateToLocal(appointment.appointment_date);
   const appointmentTime = formatTime(appointment.appointment_time);
-  const patientDOB = formatDateToLocal(appointment.patient_date_of_birth);
+  const patientDOB = formatDateToLocal(appointment.patient.date_of_birth);
 
   return (
     <main>
@@ -54,7 +54,7 @@ export default async function Page({ params }: { params: { id: string } }) {
         breadcrumbs={[
           { label: 'SOAP Notes', href: '/dashboard/notes' },
           {
-            label: `${appointmentDate} with ${appointment.patient_name}`,
+            label: `${appointmentDate} with ${appointment.patient.first_name} ${appointment.patient.last_name}`,
             href: `/dashboard/notes/${id}`,
             active: true,
           },
@@ -135,7 +135,7 @@ export default async function Page({ params }: { params: { id: string } }) {
               </label>
               <div className="relative">
                 <div id="patient" className="px-2 py-2 text-sm">
-                  {appointment.patient_name}
+                  {`${appointment.patient.first_name} ${appointment.patient.last_name}`}
                 </div>
                 {/* <UserCircleIcon className="pointer-events-none absolute right-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" /> */}
               </div>
@@ -263,26 +263,29 @@ export default async function Page({ params }: { params: { id: string } }) {
           </div>
         </div>
 
-        <div className="collapse-title text-lg font-medium">Audio Memo</div>
         {audioUrl ? (
-          <audio className="mb-6 w-full" controls>
-            <source type="audio/mp3" src={audioUrl} />
-            Your browser does not support the audio element.
-          </audio>
+          <div>
+            <div className="collapse-title text-lg font-medium">Audio Memo</div>
+
+            <audio className="mb-6 w-full" controls>
+              <source type="audio/mp3" src={audioUrl} />
+              Your browser does not support the audio element.
+            </audio>
+            <div
+              tabIndex={0}
+              className="collapse collapse-plus mb-4 rounded-md border"
+            >
+              <div className="collapse-title text-lg font-medium">
+                Audio Memo Transcript
+              </div>
+              <div className="collapse-content">
+                <p>{appointment?.audio_transcript}</p>
+              </div>
+            </div>
+          </div>
         ) : (
-          <div className="w-full">Loading audio</div>
+          <div></div>
         )}
-        <div
-          tabIndex={0}
-          className="collapse collapse-plus mb-4 rounded-md border"
-        >
-          <div className="collapse-title text-lg font-medium">
-            Audio Memo Transcript
-          </div>
-          <div className="collapse-content">
-            <p>{appointment?.audio_transcript}</p>
-          </div>
-        </div>
       </div>
     </main>
   );

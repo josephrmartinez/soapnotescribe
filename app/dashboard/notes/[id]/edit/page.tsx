@@ -1,5 +1,5 @@
 // import EditAppointment from '@/app/ui/appointments/edit-form';
-import Breadcrumbs from '@/app/ui/appointments/breadcrumbs';
+import Breadcrumbs from '@/app/ui/notes/breadcrumbs';
 import { fetchAppointmentById } from '@/app/lib/data';
 import { notFound } from 'next/navigation';
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';

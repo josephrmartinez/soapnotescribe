@@ -1,4 +1,4 @@
-import Pagination from '@/app/ui/appointments/pagination';
+import Pagination from '@/app/ui/notes/pagination';
 import Search from '@/app/ui/search';
 import { GeistSans } from 'geist/font/sans';
 import { AppointmentsTableSkeleton } from '@/app/ui/skeletons';
@@ -6,7 +6,7 @@ import { Suspense } from 'react';
 import { Metadata } from 'next';
 import NotesTable from './realtimetable';
 import { createClient } from '@/utils/supabase/server';
-import { fetchFilteredAppointments } from '@/app/lib/data';
+import { fetchFilteredNotes } from '@/app/lib/data';
 
 export const metadata: Metadata = {
   title: 'SOAP Notes',
@@ -25,8 +25,9 @@ export default async function Page({
   // const totalPages = await fetchApptsPages(query);
   const totalPages = 3;
 
-  const appointments =
-    (await fetchFilteredAppointments(query, currentPage)) || [];
+  const notes = (await fetchFilteredNotes(query, currentPage)) || [];
+
+  console.log('notes data:', notes);
 
   return (
     <div className="w-full">
@@ -39,7 +40,7 @@ export default async function Page({
         fallback={<AppointmentsTableSkeleton />}
       >
         {/* <Table query={query} currentPage={currentPage} /> */}
-        <NotesTable appointments={appointments} />
+        <NotesTable notes={notes} />
       </Suspense>
       <div className="mt-5 flex w-full justify-center">
         <Pagination totalPages={totalPages} />

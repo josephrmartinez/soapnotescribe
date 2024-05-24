@@ -16,7 +16,7 @@ import { GeistSans } from 'geist/font/sans';
 import { Appointment } from '@/app/lib/definitions';
 import { getSignedAudioUrl } from '@/app/lib/data';
 import { submitNote, submitNoteDraft } from './action';
-import { DeleteNoteFirstStep } from '@/app/ui/appointments/buttons';
+import { DeleteNoteFirstStep } from '@/app/ui/notes/buttons';
 
 interface CreateAppointmentProps {
   appointment: Appointment;
@@ -375,7 +375,7 @@ const CreateAppointmentPrefilled: React.FC<CreateAppointmentProps> = ({
 
           <div className="mb-4">
             <label
-              htmlFor="allergies"
+              htmlFor="doctor_signature"
               className="mb-2 block text-sm font-medium"
             >
               Doctor Signature

@@ -154,7 +154,7 @@ export default function AudioUpload() {
     console.log('calling uploadToSupabaseTable');
     try {
       const { error, data } = await supabase
-        .from('appointments')
+        .from('notes')
         .insert({
           user_id: userIDRef.current as string,
           audio_storage_url,

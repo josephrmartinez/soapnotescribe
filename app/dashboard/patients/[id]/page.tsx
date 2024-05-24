@@ -1,5 +1,5 @@
 // import Form from '@/app/ui/appointments/edit-form';
-import Breadcrumbs from '@/app/ui/appointments/breadcrumbs';
+import Breadcrumbs from '@/app/ui/notes/breadcrumbs';
 import {
   getSignedAudioUrl,
   getSignedPdfUrl,
@@ -18,7 +18,7 @@ import {
 import { Metadata } from 'next';
 import { formatDateToLocal, formatTime } from '@/app/lib/utils';
 import { Button } from '@/app/ui/button';
-import { DeleteNoteFirstStep } from '@/app/ui/appointments/buttons';
+import { DeleteNoteFirstStep } from '@/app/ui/notes/buttons';
 import { createClient } from '@/utils/supabase/server';
 
 export const metadata: Metadata = {

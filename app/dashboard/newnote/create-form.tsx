@@ -6,6 +6,7 @@ import { createClient } from '@/utils/supabase/client';
 import { Button } from '@/app/ui/button';
 import SelectPatient from './SelectPatient';
 import { SingleValue, ActionMeta } from 'react-select';
+import { submitNote, submitNoteDraft } from './action';
 
 import {
   CheckIcon,
@@ -59,7 +60,7 @@ export default function CreateAppointment() {
   const [objective, setObjective] = useState<string | null>(null);
   const [assessment, setAssessment] = useState<string | null>(null);
   const [plan, setPlan] = useState<string | null>(null);
-  const [signature, setSignature] = useState<string | null>(null);
+  const [doctorSignature, setDoctorSignature] = useState<string | null>(null);
   const [submitOkay, setSubmitOkay] = useState<boolean>(true);
   const accessTokenRef = useRef<string | undefined>('');
   const userIDRef = useRef<string | undefined>('');
@@ -67,78 +68,78 @@ export default function CreateAppointment() {
   const supabase = createClient();
   const router = useRouter();
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      const { data, error } = await supabase.auth.getSession();
-      if (error) {
-        console.error(error);
-      } else {
-        userIDRef.current = data.session?.user.id;
-        accessTokenRef.current = data.session?.access_token;
-      }
-    };
+  // useEffect(() => {
+  //   const fetchUser = async () => {
+  //     const { data, error } = await supabase.auth.getSession();
+  //     if (error) {
+  //       console.error(error);
+  //     } else {
+  //       userIDRef.current = data.session?.user.id;
+  //       accessTokenRef.current = data.session?.access_token;
+  //     }
+  //   };
 
-    fetchUser();
-  }, []);
+  //   fetchUser();
+  // }, []);
 
-  const submitNote = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  // const submitNote = async (event: React.FormEvent<HTMLFormElement>) => {
+  //   event.preventDefault();
 
-    try {
-      setLoading(true);
-      const { error, data } = await supabase.from('notes').insert({
-        status: 'approved',
-        appointment_date: date,
-        user_id: userIDRef.current,
-        appointment_time: time,
-        patient_id: patientId,
-        allergies: allergies,
-        consent: consent,
-        chief_complaint: chiefComplaint,
-        soap_objective: objective,
-        soap_subjective: subjective,
-        soap_assessment: assessment,
-        soap_plan: plan,
-        doctor_signature: signature,
-      });
-      if (error) throw error;
-      router.push('/dashboard/notes');
-    } catch (error) {
-      console.error('Error creating the appointment:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  //   try {
+  //     setLoading(true);
+  //     const { error, data } = await supabase.from('notes').insert({
+  //       status: 'approved',
+  //       appointment_date: date,
+  //       user_id: userIDRef.current,
+  //       appointment_time: time,
+  //       patient_id: patientId,
+  //       allergies: allergies,
+  //       consent: consent,
+  //       chief_complaint: chiefComplaint,
+  //       soap_objective: objective,
+  //       soap_subjective: subjective,
+  //       soap_assessment: assessment,
+  //       soap_plan: plan,
+  //       doctor_signature: signature,
+  //     });
+  //     if (error) throw error;
+  //     router.push('/dashboard/notes');
+  //   } catch (error) {
+  //     console.error('Error creating the appointment:', error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
-  const submitNoteDraft = async (
-    event: React.MouseEvent<HTMLButtonElement>,
-  ): Promise<void> => {
-    // event.preventDefault();
+  // const submitNoteDraft = async (
+  //   event: React.MouseEvent<HTMLButtonElement>,
+  // ): Promise<void> => {
+  //   // event.preventDefault();
 
-    try {
-      setLoading(true);
-      const { error, data } = await supabase.from('notes').insert({
-        status: 'awaiting review',
-        appointment_date: date,
-        appointment_time: time,
-        patient_id: patientId,
-        allergies: allergies,
-        consent: consent,
-        chief_complaint: chiefComplaint,
-        soap_objective: objective,
-        soap_subjective: subjective,
-        soap_assessment: assessment,
-        soap_plan: plan,
-        doctor_signature: signature,
-      });
-      if (error) throw error;
-      router.push('/dashboard/notes');
-    } catch (error) {
-      console.error('Error creating the appointment draft:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  //   try {
+  //     setLoading(true);
+  //     const { error, data } = await supabase.from('notes').insert({
+  //       status: 'awaiting review',
+  //       appointment_date: date,
+  //       appointment_time: time,
+  //       patient_id: patientId,
+  //       allergies: allergies,
+  //       consent: consent,
+  //       chief_complaint: chiefComplaint,
+  //       soap_objective: objective,
+  //       soap_subjective: subjective,
+  //       soap_assessment: assessment,
+  //       soap_plan: plan,
+  //       doctor_signature: signature,
+  //     });
+  //     if (error) throw error;
+  //     router.push('/dashboard/notes');
+  //   } catch (error) {
+  //     console.error('Error creating the appointment draft:', error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   const handlePatientSelect = (
     newValue: SingleValue<PatientOption>,
@@ -180,7 +181,7 @@ export default function CreateAppointment() {
   // }
 
   return (
-    <form onSubmit={submitNote}>
+    <form>
       <div className="max-w-prose rounded-md bg-gray-50 p-4">
         <div className="grid grid-cols-2 gap-8">
           <div className="mb-4">
@@ -188,6 +189,7 @@ export default function CreateAppointment() {
               Patient
             </label>
             <SelectPatient onPatientSelect={handlePatientSelect} />
+            <input name="patient_id" hidden defaultValue={patientId}></input>
           </div>
 
           <div className="mt-3 flex flex-row items-center">
@@ -363,13 +365,16 @@ export default function CreateAppointment() {
         </div>
 
         <div className="mb-4">
-          <label htmlFor="complaint" className="mb-2 block text-sm font-medium">
+          <label
+            htmlFor="chief_complaint"
+            className="mb-2 block text-sm font-medium"
+          >
             Chief Complaint
           </label>
           <div className="relative">
             <input
-              id="complaint"
-              name="complaint"
+              id="chief_complaint"
+              name="chief_complaint"
               required
               type="text"
               className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
@@ -381,15 +386,15 @@ export default function CreateAppointment() {
 
         <div className="mb-4">
           <label
-            htmlFor="subjective"
+            htmlFor="soap_subjective"
             className="mb-2 block text-sm font-medium"
           >
             Subjective
           </label>
           <div className="relative">
             <textarea
-              id="subjective"
-              name="subjective"
+              id="soap_subjective"
+              name="soap_subjective"
               className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
               value={subjective || ''}
               onChange={(e) => setSubjective(e.target.value)}
@@ -398,13 +403,16 @@ export default function CreateAppointment() {
         </div>
 
         <div className="mb-4">
-          <label htmlFor="objective" className="mb-2 block text-sm font-medium">
+          <label
+            htmlFor="soap_objective"
+            className="mb-2 block text-sm font-medium"
+          >
             Objective
           </label>
           <div className="relative">
             <textarea
-              id="objective"
-              name="objective"
+              id="soap_objective"
+              name="soap_objective"
               className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
               value={objective || ''}
               onChange={(e) => setObjective(e.target.value)}
@@ -414,15 +422,15 @@ export default function CreateAppointment() {
 
         <div className="mb-4">
           <label
-            htmlFor="assessment"
+            htmlFor="soap_assessment"
             className="mb-2 block text-sm font-medium"
           >
             Assessment
           </label>
           <div className="relative">
             <textarea
-              id="assessment"
-              name="assessment"
+              id="soap_assessment"
+              name="soap_assessment"
               className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
               value={assessment || ''}
               onChange={(e) => setAssessment(e.target.value)}
@@ -431,17 +439,35 @@ export default function CreateAppointment() {
         </div>
 
         <div className="mb-4">
-          <label htmlFor="plan" className="mb-2 block text-sm font-medium">
+          <label htmlFor="soap_plan" className="mb-2 block text-sm font-medium">
             Plan
           </label>
           <div className="relative">
             <textarea
-              id="plan"
-              name="plan"
+              id="soap_plan"
+              name="soap_plan"
               className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
               value={plan || ''}
               onChange={(e) => setPlan(e.target.value)}
             ></textarea>
+          </div>
+        </div>
+        <div className="mb-4">
+          <label
+            htmlFor="doctor_signature"
+            className="mb-2 block text-sm font-medium"
+          >
+            Doctor Signature
+          </label>
+          <div className="relative">
+            <input
+              id="doctor_signature"
+              name="doctor_signature"
+              type="text"
+              className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
+              value={doctorSignature || ''}
+              onChange={(e) => setDoctorSignature(e.target.value)}
+            ></input>
           </div>
         </div>
 
@@ -452,10 +478,14 @@ export default function CreateAppointment() {
           >
             Cancel
           </Link>
-          <Button onClick={submitNoteDraft} secondary>
+          <Button formAction={submitNoteDraft} secondary>
             Save Draft
           </Button>
-          <Button type="submit" active={submitOkay}>
+          <Button
+            type="submit"
+            formAction={submitNote}
+            active={doctorSignature !== null}
+          >
             Add Note
           </Button>
         </div>

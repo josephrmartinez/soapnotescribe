@@ -1,6 +1,7 @@
 import { Database } from "../database.types";
 
-export type Appointment = Database['public']['Tables']['appointments']['Row'];
+// HOW TO UPDATE NOTE TO CORRECT TYPE (INCLUDES JOIN WITH PATIENT_ID)
+export type Note = Database['public']['Tables']['note']['Row'];
 
 export type User = {
   id: string;

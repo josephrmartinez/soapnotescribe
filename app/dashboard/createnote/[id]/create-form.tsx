@@ -16,7 +16,7 @@ import { GeistSans } from 'geist/font/sans';
 import { Appointment } from '@/app/lib/definitions';
 import { getSignedAudioUrl } from '@/app/lib/data';
 import { submitAppointment, submitAppointmentDraft } from './action';
-import { DeleteNoteFirstStep } from '@/app/ui/appointments/buttons';
+import { DeleteNoteFirstStep } from '@/app/ui/notes/buttons';
 
 interface CreateAppointmentProps {
   appointment: Appointment;

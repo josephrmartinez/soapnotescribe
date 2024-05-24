@@ -3,7 +3,7 @@ import {
   ViewSOAPNote,
   ReviewDraft,
   PatientName,
-} from '@/app/ui/appointments/buttons';
+} from '@/app/ui/notes/buttons';
 import { fetchPatients } from '@/app/lib/data';
 import { useEffect } from 'react';
 import { getMaxListeners } from 'events';

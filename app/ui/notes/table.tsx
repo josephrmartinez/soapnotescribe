@@ -2,7 +2,7 @@ import {
   UpdateAppointment,
   ViewSOAPNote,
   ReviewDraft,
-} from '@/app/ui/appointments/buttons';
+} from '@/app/ui/notes/buttons';
 import { formatDateToLocal, formatCurrency } from '@/app/lib/utils';
 import { fetchFilteredAppointments } from '@/app/lib/data';
 import { useEffect } from 'react';

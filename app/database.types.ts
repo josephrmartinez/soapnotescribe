@@ -9,7 +9,7 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      appointments: {
+      note: {
         Row: {
           allergies: string | null
           appointment_date: string | null
@@ -26,9 +26,7 @@ export type Database = {
           feedback: string | null
           id: string
           image_urls: string[] | null
-          patient_date_of_birth: string | null
-          patient_location: string | null
-          patient_name: string | null
+          patient_id: string | null
           second_opinion: string | null
           soap_assessment: string | null
           soap_objective: string | null
@@ -54,9 +52,7 @@ export type Database = {
           feedback?: string | null
           id?: string
           image_urls?: string[] | null
-          patient_date_of_birth?: string | null
-          patient_location?: string | null
-          patient_name?: string | null
+          patient_id?: string | null
           second_opinion?: string | null
           soap_assessment?: string | null
           soap_objective?: string | null
@@ -64,7 +60,7 @@ export type Database = {
           soap_subjective?: string | null
           status?: string | null
           temp_audio_url?: string | null
-          user_id: string
+          user_id?: string
         }
         Update: {
           allergies?: string | null
@@ -82,9 +78,7 @@ export type Database = {
           feedback?: string | null
           id?: string
           image_urls?: string[] | null
-          patient_date_of_birth?: string | null
-          patient_location?: string | null
-          patient_name?: string | null
+          patient_id?: string | null
           second_opinion?: string | null
           soap_assessment?: string | null
           soap_objective?: string | null
@@ -96,6 +90,13 @@ export type Database = {
         }
         Relationships: [
           {
+            foreignKeyName: "notes_patient_id_fkey"
+            columns: ["patient_id"]
+            isOneToOne: false
+            referencedRelation: "patient"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "public_appointments_provider_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
@@ -104,12 +105,79 @@ export type Database = {
           },
         ]
       }
+      patient: {
+        Row: {
+          address_street: string | null
+          address_unit: string | null
+          allergies: string | null
+          city: string | null
+          created_at: string
+          date_of_birth: string | null
+          email: string | null
+          first_name: string | null
+          id: string
+          last_name: string | null
+          phone: string | null
+          profile_notes: string | null
+          provider: string | null
+          state: string | null
+          zipcode: string | null
+        }
+        Insert: {
+          address_street?: string | null
+          address_unit?: string | null
+          allergies?: string | null
+          city?: string | null
+          created_at?: string
+          date_of_birth?: string | null
+          email?: string | null
+          first_name?: string | null
+          id?: string
+          last_name?: string | null
+          phone?: string | null
+          profile_notes?: string | null
+          provider?: string | null
+          state?: string | null
+          zipcode?: string | null
+        }
+        Update: {
+          address_street?: string | null
+          address_unit?: string | null
+          allergies?: string | null
+          city?: string | null
+          created_at?: string
+          date_of_birth?: string | null
+          email?: string | null
+          first_name?: string | null
+          id?: string
+          last_name?: string | null
+          phone?: string | null
+          profile_notes?: string | null
+          provider?: string | null
+          state?: string | null
+          zipcode?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      delete_note_audio: {
+        Args: {
+          user_id: string
+          audio_storage_url: string
+        }
+        Returns: Record<string, unknown>
+      }
+      delete_storage_object: {
+        Args: {
+          bucket: string
+          object: string
+        }
+        Returns: Record<string, unknown>
+      }
     }
     Enums: {
       [_ in never]: never

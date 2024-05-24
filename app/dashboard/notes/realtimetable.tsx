@@ -5,19 +5,15 @@ import {
   ReviewDraft,
   ProcessingSOAPNote,
   PatientName,
-} from '@/app/ui/appointments/buttons';
+} from '@/app/ui/notes/buttons';
 import { formatDateToLocal } from '@/app/lib/utils';
 import { useEffect } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import { useRouter } from 'next/navigation';
-import { Appointment } from '@/app/lib/definitions';
+import { Note } from '@/app/lib/definitions';
 
-export default function NotesTable({
-  appointments,
-}: {
-  appointments: Appointment[];
-}) {
-  // FETCH APPOINTMENTS WITH REALTIME
+export default function NotesTable({ notes }: { notes: Note[] }) {
+  // FETCH NOTES WITH REALTIME
 
   const supabase = createClient();
   const router = useRouter();
@@ -30,7 +26,7 @@ export default function NotesTable({
         {
           event: '*',
           schema: 'public',
-          table: 'notes',
+          table: 'note',
         },
         () => {
           router.refresh();
@@ -48,30 +44,28 @@ export default function NotesTable({
       <div className="inline-block min-w-full align-middle">
         <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
           <div className="md:hidden">
-            {appointments?.map((appointment) => (
+            {notes?.map((note) => (
               <div
-                key={appointment.id}
+                key={note.id}
                 className="mb-2 w-full rounded-md bg-white p-4"
               >
                 <div className="flex items-center justify-between pb-4">
                   <div>
                     <div className="mb-2 flex items-center">
-                      <p>{formatDateToLocal(appointment.appointment_date)}</p>
+                      <p>{formatDateToLocal(note.appointment_date)}</p>
                     </div>
-                    <p className="text-sm text-gray-500">
-                      {appointment.patient_name}
-                    </p>
+                    <p className="text-sm text-gray-500">{`${note.patient.last_name}, ${note.patient.first_name}`}</p>
                   </div>
                 </div>
                 <div className="flex w-full items-center justify-between pt-4">
                   <div>
                     <p className="text-xl font-medium">
-                      {appointment.chief_complaint}
+                      {note.chief_complaint}
                     </p>
-                    <p>{appointment.status}</p>
+                    <p>{note.status}</p>
                   </div>
                   <div className="flex justify-end gap-2">
-                    <ViewSOAPNote id={appointment.id} />
+                    <ViewSOAPNote id={note.id} />
                   </div>
                 </div>
               </div>
@@ -81,7 +75,7 @@ export default function NotesTable({
             <thead className="rounded-lg text-left text-sm font-normal">
               <tr>
                 <th scope="col" className="px-4 py-5 font-medium sm:pl-6">
-                  Appointment Date
+                  note Date
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
                   Patient
@@ -95,31 +89,34 @@ export default function NotesTable({
               </tr>
             </thead>
             <tbody className="bg-white">
-              {appointments?.map((appointment) => (
+              {notes?.map((note) => (
                 <tr
-                  key={appointment.id}
+                  key={note.id}
                   className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
                 >
                   <td className="whitespace-nowrap py-3 pl-6 pr-3 font-medium">
-                    <p>{formatDateToLocal(appointment.appointment_date)}</p>
+                    <p>{formatDateToLocal(note.appointment_date)}</p>
                   </td>
                   <td className="whitespace-nowrap px-3 py-3 font-medium">
-                    <PatientName patient_name={appointment.patient_name} />
+                    <PatientName
+                      last_name={note.patient.last_name}
+                      first_name={note.patient.first_name}
+                    />
                   </td>
                   <td className="whitespace-nowrap px-3 py-3 font-medium">
-                    {appointment.chief_complaint}
+                    {note.chief_complaint}
                   </td>
 
                   <td className="whitespace-nowrap px-3 py-3">
                     <div className="flex justify-start gap-3">
-                      {appointment.status === 'processing' && (
-                        <ProcessingSOAPNote id={appointment.id} />
+                      {note.status === 'processing' && (
+                        <ProcessingSOAPNote id={note.id} />
                       )}
-                      {appointment.status === 'approved' && (
-                        <ViewSOAPNote id={appointment.id} />
+                      {note.status === 'approved' && (
+                        <ViewSOAPNote id={note.id} />
                       )}
-                      {appointment.status === 'awaiting review' && (
-                        <ReviewDraft id={appointment.id} />
+                      {note.status === 'awaiting review' && (
+                        <ReviewDraft id={note.id} />
                       )}
                     </div>
                   </td>

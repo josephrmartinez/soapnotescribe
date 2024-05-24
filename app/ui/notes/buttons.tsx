@@ -47,15 +47,21 @@ export function ProcessingSOAPNote({ id }: { id: string }) {
 }
 
 // Update tohandle case when page !== 1
-export function PatientName({ patient_name }: { patient_name: string | null }) {
+export function PatientName({
+  first_name,
+  last_name,
+}: {
+  first_name: string | null;
+  last_name: string | null;
+}) {
   return (
     <>
-      {patient_name ? (
+      {last_name ? (
         <Link
-          href={`?query=${patient_name}`}
+          href={`?query=${last_name}, ${first_name}`}
           className={`rounded-md border border-gray-200 p-2 text-sm font-semibold text-gray-800 transition-colors hover:bg-gray-100`}
         >
-          {patient_name}
+          {`${last_name}, ${first_name}`}
         </Link>
       ) : (
         <div></div>
