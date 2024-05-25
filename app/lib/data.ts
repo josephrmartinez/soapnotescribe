@@ -187,7 +187,7 @@ export async function fetchPatients() {
 try {
     const supabase = createClient()
     const { data: patients, error } = await supabase
-      .from('patients')
+      .from('patient')
       .select(
         'id, first_name, last_name, email, phone, address_street, address_unit, city, state, zipcode, provider, date_of_birth, allergies, profile_notes'
       )
@@ -213,7 +213,7 @@ export async function fetchPatientById(id: string) {
   try {
     const supabase = createClient()
     const { data: patients, error } = await supabase
-      .from('patients')
+      .from('patient')
       .select('*')
       .eq('id', id);
 

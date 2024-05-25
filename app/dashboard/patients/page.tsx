@@ -6,7 +6,6 @@ import { AddPatientButton } from '@/app/ui/patients/buttons';
 import { Suspense } from 'react';
 import { Metadata } from 'next';
 import PatientsTable from '@/app/ui/patients/table';
-import { fetchFilteredAppointments } from '@/app/lib/data';
 import { PlusIcon } from '@heroicons/react/24/outline';
 
 export const metadata: Metadata = {
