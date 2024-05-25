@@ -124,10 +124,10 @@ export async function fetchNoteById(id: string) {
   }
 }
 
-export async function getSignedPdfUrl(userId: string, patientName: string, appointmentDate: string) {
+export async function getSignedPdfUrl(userId: string, patientLastName: string, patientFirstName: string, appointmentDate: string) {
   try {
     const supabase = createClient();
-    const filePath = `${userId}/${patientName}/${appointmentDate}.pdf`;
+    const filePath = `${userId}/${patientLastName} ${patientFirstName}/${appointmentDate}.pdf`;
     console.log("file path:", filePath)
 
     const { data, error } = await supabase.storage

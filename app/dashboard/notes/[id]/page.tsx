@@ -27,26 +27,24 @@ export const metadata: Metadata = {
 
 export default async function Page({ params }: { params: { id: string } }) {
   const id = params.id;
-  const appointment = await fetchNoteById(id);
-  console.log('appointment data from appointments/[id]:', appointment);
+  const note = await fetchNoteById(id);
+  console.log('appointment data from appointments/[id]:', note);
 
   // Get audio url for media player:
-  const audioUrl = appointment.audio_storage_url
-    ? await getSignedAudioUrl(
-        appointment.user_id,
-        appointment.audio_storage_url,
-      )
+  const audioUrl = note.audio_storage_url
+    ? await getSignedAudioUrl(note.user_id, note.audio_storage_url)
     : undefined;
 
   const pdfUrl = await getSignedPdfUrl(
-    appointment.user_id,
-    appointment.patient_name,
-    appointment.appointment_date,
+    note.user_id,
+    note.patient.last_name,
+    note.patient.first_name,
+    note.appointment_date,
   );
 
-  const appointmentDate = formatDateToLocal(appointment.appointment_date);
-  const appointmentTime = formatTime(appointment.appointment_time);
-  const patientDOB = formatDateToLocal(appointment.patient.date_of_birth);
+  const appointmentDate = formatDateToLocal(note.appointment_date);
+  const appointmentTime = formatTime(note.appointment_time);
+  const patientDOB = formatDateToLocal(note.patient.date_of_birth);
 
   return (
     <main>
@@ -54,7 +52,7 @@ export default async function Page({ params }: { params: { id: string } }) {
         breadcrumbs={[
           { label: 'SOAP Notes', href: '/dashboard/notes' },
           {
-            label: `${appointmentDate} with ${appointment.patient.first_name} ${appointment.patient.last_name}`,
+            label: `${appointmentDate} with ${note.patient.first_name} ${note.patient.last_name}`,
             href: `/dashboard/notes/${id}`,
             active: true,
           },
@@ -66,16 +64,16 @@ export default async function Page({ params }: { params: { id: string } }) {
           <h1 className={`text-2xl`}>Approved SOAP Note</h1>
 
           <div className="grid grid-cols-4 gap-2">
-            <DeleteNoteFirstStep id={appointment.id} />
+            <DeleteNoteFirstStep id={note.id} />
             <Link
-              href={`/dashboard/createnote/${appointment.id}`}
+              href={`/dashboard/createnote/${note.id}`}
               className="flex h-10 items-center justify-center rounded-lg bg-gray-100 px-2  text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200 "
             >
               <PencilSquareIcon width={20} height={20} className="mr-2" />
               Edit
             </Link>
             <Link
-              href={`/dashboard/createnote/${appointment.id}`}
+              href={`/dashboard/createnote/${note.id}`}
               className="flex h-10 items-center justify-center rounded-lg bg-gray-100 px-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200 "
             >
               <DocumentDuplicateIcon width={20} height={20} className="mr-2" />
@@ -135,7 +133,7 @@ export default async function Page({ params }: { params: { id: string } }) {
               </label>
               <div className="relative">
                 <div id="patient" className="px-2 py-2 text-sm">
-                  {`${appointment.patient.first_name} ${appointment.patient.last_name}`}
+                  {`${note.patient.first_name} ${note.patient.last_name}`}
                 </div>
                 {/* <UserCircleIcon className="pointer-events-none absolute right-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" /> */}
               </div>
@@ -165,7 +163,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                 Allergies
               </label>
               <div className="relative">
-                <div className="px-2 py-2 text-sm">{appointment.allergies}</div>
+                <div className="px-2 py-2 text-sm">{note.allergies}</div>
               </div>
             </div>
             {/* Telemedicine Consent */}
@@ -191,7 +189,7 @@ export default async function Page({ params }: { params: { id: string } }) {
             </label>
             <div className="relative">
               <div id="complaint" className="px-2 py-2 text-sm">
-                {appointment.chief_complaint}
+                {note.chief_complaint}
               </div>
             </div>
           </div>
@@ -205,7 +203,7 @@ export default async function Page({ params }: { params: { id: string } }) {
             </label>
             <div className="relative">
               <div id="subjective" className="px-2 py-2 text-sm">
-                {appointment.soap_subjective}
+                {note.soap_subjective}
               </div>
             </div>
           </div>
@@ -219,7 +217,7 @@ export default async function Page({ params }: { params: { id: string } }) {
             </label>
             <div className="relative">
               <div id="objective" className="px-2 py-2 text-sm">
-                {appointment.soap_objective || ''}
+                {note.soap_objective || ''}
               </div>
             </div>
           </div>
@@ -233,7 +231,7 @@ export default async function Page({ params }: { params: { id: string } }) {
             </label>
             <div className="relative">
               <div id="assessment" className="px-2 py-2 text-sm">
-                {appointment.soap_assessment || ''}
+                {note.soap_assessment || ''}
               </div>
             </div>
           </div>
@@ -244,7 +242,7 @@ export default async function Page({ params }: { params: { id: string } }) {
             </label>
             <div className="relative">
               <div id="plan" className="px-2 py-2 text-sm">
-                {appointment.soap_plan || ''}
+                {note.soap_plan || ''}
               </div>
             </div>
           </div>
@@ -257,7 +255,7 @@ export default async function Page({ params }: { params: { id: string } }) {
             </label>
             <div className="relative">
               <div id="doctor_signature" className="px-2 py-2 text-sm">
-                {appointment.doctor_signature || ''}
+                {note.doctor_signature || ''}
               </div>
             </div>
           </div>
@@ -279,7 +277,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                 Audio Memo Transcript
               </div>
               <div className="collapse-content">
-                <p>{appointment?.audio_transcript}</p>
+                <p>{note?.audio_transcript}</p>
               </div>
             </div>
           </div>

@@ -1,7 +1,7 @@
 'use client';
 
 import Breadcrumbs from '@/app/ui/notes/breadcrumbs';
-import { fetchAppointmentById } from '@/app/lib/data';
+import { fetchNoteById } from '@/app/lib/data';
 import Link from 'next/link';
 import { formatDateToLocal } from '@/app/lib/utils';
 import { Metadata } from 'next';
@@ -9,7 +9,7 @@ import { Button } from '@/app/ui/button';
 import { DeleteNoteConfirm } from '@/app/ui/notes/buttons';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { Appointment } from '@/app/lib/definitions';
+import { Note } from '@/app/lib/definitions';
 
 // export const metadata: Metadata = {
 //   title: 'Delete Note',

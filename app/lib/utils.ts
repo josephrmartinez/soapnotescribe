@@ -1,11 +1,6 @@
 import { Revenue } from './definitions';
 
-export function mapFormDataToObject(formData: FormData, fields: string[]): Record<string, string> {
-  return fields.reduce((acc, field) => {
-    acc[field] = formData.get(field) as string;
-    return acc;
-  }, {} as Record<string, string>);
-}
+
 
 export const formatCurrency = (amount: number) => {
   return (amount / 100).toLocaleString('en-US', {

@@ -162,24 +162,6 @@ export default function CreateAppointment() {
     }
   };
 
-  // UPDATE COMPONENT TO HANDLE RETURNED VALUE FROM SELECT:
-  //   {
-  //     "id": "a32ec381-ffa0-4803-82a1-50254cde2af5",
-  //     "first_name": "Paul",
-  //     "last_name": "Giamedes",
-  //     "email": "pgiamedes@gmx.de",
-  //     "phone": "415-668-7985",
-  //     "address_street": "612 West Alameda",
-  //     "address_unit": "Unit 12",
-  //     "city": "Oakland",
-  //     "state": "California",
-  //     "zipcode": "94216",
-  //     "provider": "6e6d2d8f-2200-4ae3-8335-f88d72c23eb9",
-  //     "date_of_birth": "1974-09-15",
-  //     "allergies": "NKDA",
-  //     "profile_notes": null
-  // }
-
   return (
     <form>
       <div className="max-w-prose rounded-md bg-gray-50 p-4">

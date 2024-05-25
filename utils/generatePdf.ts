@@ -1,17 +1,17 @@
 import { createClient } from '@/utils/supabase/server';
 import PDFDocument from 'pdfkit';
 import { formatDateToLocal, formatTime } from '@/app/lib/utils';
+import { fetchNoteById } from '@/app/lib/data';
 
 
-export async function generateAndSavePdf(appointmentData: any) {
-  // Initialize Supabase client
-    const supabase = createClient();
-  const userId = appointmentData.user_id;
+export async function generateAndSavePdf(id: string) {  
+  const note = await fetchNoteById(id)
   
-  const appointmentDate = formatDateToLocal(appointmentData.appointment_date);
-  const patientDOB = formatDateToLocal(appointmentData.patient_date_of_birth);
-  const appointmentTime = formatTime(appointmentData.appointment_time);
+  const appointmentDate = formatDateToLocal(note.appointment_date);
+  const patientDOB = formatDateToLocal(note.patient.date_of_birth);
+  const appointmentTime = formatTime(note.appointment_time);
 
+  //write a parser that executes the moveDown() operation once it sees a linebreak.
 
   // Generate PDF
   const doc = new PDFDocument({ font: 'public/fonts/Inter-Regular.ttf' });
@@ -20,13 +20,13 @@ export async function generateAndSavePdf(appointmentData: any) {
   doc.registerFont('regular', 'public/fonts/Inter-Regular.ttf');
 
   doc.font('bold').text(`Patient name: `, {continued: true});
-  doc.font('regular').text(`${appointmentData.patient_name}`)
+  doc.font('regular').text(`${note.patient.last_name}, ${note.patient.first_name}`)
   doc.moveDown();
   doc.font('bold').text(`Patient date of birth: `, {continued: true});
   doc.font('regular').text(`${patientDOB}`);
   doc.moveDown();
 doc.font('bold').text(`Allergies: `, {continued: true});
-  doc.font('regular').text(`${appointmentData.allergies}`);
+  doc.font('regular').text(`${note.allergies}`);
   doc.moveDown();
   doc.font('bold').text(`Appointment Date: `, {continued: true});
   doc.font('regular').text(`${appointmentDate}`);
@@ -44,23 +44,23 @@ doc.font('bold').text(`Allergies: `, {continued: true});
   doc.moveDown();
   doc.moveDown();
   doc.font('bold').text(`Chief Complaint: `);
-  doc.font('regular').text(`${appointmentData.chief_complaint}`);
+  doc.font('regular').text(`${note.chief_complaint}`);
   doc.moveDown();
   doc.font('bold').text(`Subjective: `);
-  doc.font('regular').text(`${appointmentData.soap_subjective}`);
+  doc.font('regular').text(`${note.soap_subjective.replace(/\r\n|\r/g, '\n')}`);
   doc.moveDown();
   doc.font('bold').text(`Objective: `);
-  doc.font('regular').text(`${appointmentData.soap_objective}`);
+  doc.font('regular').text(`${note.soap_objective.replace(/\r\n|\r/g, '\n')}`);
   doc.moveDown();
   doc.font('bold').text(`Assessment: `);
-  doc.font('regular').text(`${appointmentData.soap_assessment}`);
+  doc.font('regular').text(`${note.soap_assessment.replace(/\r\n|\r/g, '\n')}`);
   doc.moveDown();
   doc.font('bold').text(`Plan: `);
-  doc.font('regular').text(`${appointmentData.soap_plan}`);
+  doc.font('regular').text(`${note.soap_plan.replace(/\r\n|\r/g, '\n')}`);
   doc.moveDown();
   doc.moveDown();
   doc.font('bold').text(`Doctor Signature:`);
-  doc.font('regular').text(`${appointmentData.doctor_signature}`); 
+  doc.font('regular').text(`${note.doctor_signature}`); 
 
     const pdfBuffer: Buffer[] = []
     
@@ -71,7 +71,10 @@ doc.font('bold').text(`Allergies: `, {continued: true});
     const pdfData = Buffer.concat(pdfBuffer);
     
     // Define the path where the PDF will be stored in Supabase Storage
-    const filePath = `${userId}/${appointmentData.patient_name}/${appointmentData.appointment_date}.pdf`;
+    const filePath = `${note.user_id}/${note.patient.last_name} ${note.patient.first_name}/${note.appointment_date}.pdf`;
+
+    // Initialize Supabase client
+    const supabase = createClient();
 
     // Upload the PDF to Supabase Storage
     const { error } = await supabase.storage.from('pdfs').upload(filePath, pdfData, { upsert: true, contentType: "application/pdf" });
