@@ -13,24 +13,23 @@ import {
 } from '@heroicons/react/24/outline';
 import { GeistSans } from 'geist/font/sans';
 
-import { Appointment } from '@/app/lib/definitions';
+import { Note } from '@/app/lib/definitions';
 import { getSignedAudioUrl } from '@/app/lib/data';
 import { submitAppointment, submitAppointmentDraft } from './action';
 import { DeleteNoteFirstStep } from '@/app/ui/notes/buttons';
 
-interface CreateAppointmentProps {
-  appointment: Appointment;
+interface CreateNoteProps {
+  note: Note;
 }
 
-const CreateAppointmentPrefilled: React.FC<CreateAppointmentProps> = ({
-  appointment,
-}) => {
+// CURRENTLY BEING UPDATED
+const CreateAppointmentPrefilled: React.FC<CreateNoteProps> = ({ note }) => {
   // pass in Appointment object data to pre-populate form
   const [loading, setLoading] = useState<boolean>(true);
   const [audioUrl, setAudioUrl] = useState<string>('');
-  const [apptid, setApptid] = useState<string>(appointment.id);
+  const [apptid, setApptid] = useState<string>(note.id);
   const [patientName, setPatientName] = useState<string | null>(
-    appointment?.patient_name || null,
+    note?.patient.first_name || null,
   );
   const [chiefComplaint, setChiefComplaint] = useState<string | null>(
     appointment?.chief_complaint || null,
