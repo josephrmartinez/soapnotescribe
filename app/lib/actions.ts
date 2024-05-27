@@ -156,7 +156,7 @@ export async function updateApptWithTranscript(apptid: string, transcript: strin
 
   try {
     const { data, error } = await supabase
-      .from('notes')
+      .from('note')
       .update({ audio_transcript: transcript })
       .eq('id', apptid)
       .select();
@@ -182,7 +182,7 @@ export async function deleteNote(id: string) {
 
   try {
     const { error } = await supabase
-      .from('notes')
+      .from('note')
       .delete()
       .eq('id', id);
 
@@ -259,7 +259,7 @@ async function updateApptWithSOAPData(apptid: string, transcript: string, comple
 
 
     const { data, error, status } = await supabase
-      .from("notes")
+      .from('note')
       .update({
         status: "awaiting review",
         audio_transcript: transcript,
