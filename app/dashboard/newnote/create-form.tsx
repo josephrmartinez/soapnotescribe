@@ -42,6 +42,8 @@ interface PatientOption {
 export default function CreateAppointment() {
   const [loading, setLoading] = useState(true);
   const [patientId, setPatientId] = useState<string>('');
+  const [firstName, setFirstName] = useState<string>('');
+  const [lastName, setLastName] = useState<string>('');
   const [dateOfBirth, setDateOfBirth] = useState<string>('');
   const [phone, setPhone] = useState<string | null>('');
   const [email, setEmail] = useState<string>('');
@@ -146,7 +148,10 @@ export default function CreateAppointment() {
     actionMeta: ActionMeta<PatientOption>,
   ) => {
     if (newValue) {
+      console.log('newValue', newValue);
       setPatientId(newValue.value.id);
+      setFirstName(newValue.value.first_name);
+      setLastName(newValue.value.last_name);
       setAllergies(newValue.value.allergies);
       setDateOfBirth(newValue.value.date_of_birth);
       setAddressStreet(newValue.value.address_street);
@@ -172,6 +177,8 @@ export default function CreateAppointment() {
             </label>
             <SelectPatient onPatientSelect={handlePatientSelect} />
             <input name="patient_id" hidden defaultValue={patientId}></input>
+            <input name="first_name" hidden defaultValue={firstName}></input>
+            <input name="last_name" hidden defaultValue={lastName}></input>
           </div>
 
           <div className="mt-3 flex flex-row items-center">

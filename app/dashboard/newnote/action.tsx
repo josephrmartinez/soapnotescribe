@@ -10,10 +10,13 @@ export async function submitNote(formData: FormData) {
 
   // console.log('formData', formData);
 
+  const pdfStorageUrl = `${formData.get('last_name')} ${formData.get('first_name')}/${formData.get('appointment_date')}.pdf`;
+
   const { error, data } = await supabase
     .from('note')
     .insert({
       status: 'approved',
+      pdf_storage_url: pdfStorageUrl as string,
       appointment_date: formData.get('appointment_date') as string,
       appointment_time: formData.get('appointment_time') as string,
       patient_id: formData.get('patient_id') as string,
