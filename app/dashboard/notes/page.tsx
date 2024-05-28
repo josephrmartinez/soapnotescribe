@@ -27,7 +27,7 @@ export default async function Page({
 
   const notes = (await fetchFilteredNotes(query, currentPage)) || [];
 
-  // console.log('notes data:', notes);
+  console.log('notes data:', notes);
 
   return (
     <div className="w-full">

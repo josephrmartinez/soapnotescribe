@@ -73,7 +73,6 @@ const CreateAppointmentPrefilled: React.FC<CreateNoteProps> = ({ note }) => {
   const planRef = useRef<HTMLTextAreaElement | null>(null);
   const secondOpinionRef = useRef<HTMLTextAreaElement | null>(null);
 
-  // Refactored autoResizeTextarea function with type
   const autoResizeTextarea = (
     textareaRef: React.MutableRefObject<HTMLTextAreaElement | null>,
   ) => {

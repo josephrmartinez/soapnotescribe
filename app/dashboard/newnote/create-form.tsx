@@ -16,6 +16,7 @@ import {
   PencilSquareIcon,
   PlusIcon,
 } from '@heroicons/react/24/outline';
+import AppointmentsTable from '@/app/ui/notes/table';
 
 interface Patient {
   id: string;
@@ -39,7 +40,7 @@ interface PatientOption {
   label: string;
 }
 
-export default function CreateAppointment() {
+const CreateAppointment = () => {
   const [loading, setLoading] = useState(true);
   const [patientId, setPatientId] = useState<string>('');
   const [firstName, setFirstName] = useState<string>('');
@@ -55,7 +56,9 @@ export default function CreateAppointment() {
   const [allergies, setAllergies] = useState<string>('');
   const [profileNotes, setProfileNotes] = useState<string | null>(null);
   const [chiefComplaint, setChiefComplaint] = useState<string | null>(null);
-  const [date, setDate] = useState<string>('');
+  const [date, setDate] = useState<string>(
+    new Date().toISOString().split('T')[0],
+  );
   const [time, setTime] = useState<string>('');
   const [consent, setConsent] = useState<string | null>(null);
   const [subjective, setSubjective] = useState<string | null>(null);
@@ -64,8 +67,13 @@ export default function CreateAppointment() {
   const [plan, setPlan] = useState<string | null>(null);
   const [doctorSignature, setDoctorSignature] = useState<string | null>(null);
   const [submitOkay, setSubmitOkay] = useState<boolean>(true);
+  const [patientAgeYears, setPatientAgeYears] = useState<number | null>(null);
   const accessTokenRef = useRef<string | undefined>('');
   const userIDRef = useRef<string | undefined>('');
+  const subjectiveRef = useRef<HTMLTextAreaElement | null>(null);
+  const objectiveRef = useRef<HTMLTextAreaElement | null>(null);
+  const assessmentRef = useRef<HTMLTextAreaElement | null>(null);
+  const planRef = useRef<HTMLTextAreaElement | null>(null);
 
   const supabase = createClient();
   const router = useRouter();
@@ -167,6 +175,56 @@ export default function CreateAppointment() {
     }
   };
 
+  function calculateAge(patientDOB: string, appointmentDate: string) {
+    // Parse the date of birth string into a Date object
+    const dob = new Date(patientDOB);
+
+    const appointment = new Date(appointmentDate);
+
+    let age = appointment.getFullYear() - dob.getFullYear();
+
+    const monthDifference = appointment.getMonth() - dob.getMonth();
+    if (
+      monthDifference < 0 ||
+      (monthDifference === 0 && appointment.getDate() < dob.getDate())
+    ) {
+      age--;
+    }
+
+    return age;
+  }
+
+  const patientAge = calculateAge(dateOfBirth, date);
+
+  const autoResizeTextarea = (
+    textareaRef: React.MutableRefObject<HTMLTextAreaElement | null>,
+  ) => {
+    const textarea = textareaRef.current;
+    console.log('called autoresize!', textarea);
+    if (textarea) {
+      const minHeight = 80; // Minimum height in pixels
+      textarea.style.height = 'auto'; // Reset the height
+      const newHeight = Math.max(textarea.scrollHeight + 10, minHeight);
+      textarea.style.height = `${newHeight}px`; // Set the height to the greater of scrollHeight or minHeight
+    }
+  };
+
+  useEffect(() => {
+    autoResizeTextarea(subjectiveRef);
+  }, [subjective]);
+
+  useEffect(() => {
+    autoResizeTextarea(objectiveRef);
+  }, [objective]);
+
+  useEffect(() => {
+    autoResizeTextarea(assessmentRef);
+  }, [assessment]);
+
+  useEffect(() => {
+    autoResizeTextarea(planRef);
+  }, [plan]);
+
   return (
     <form>
       <div className="max-w-prose rounded-md bg-gray-50 p-4">
@@ -213,33 +271,47 @@ export default function CreateAppointment() {
                 Date of Birth
               </label>
               <div className="relative">
-                <div>{dateOfBirth}</div>
+                <div className="ml-2 text-sm">{dateOfBirth}</div>
               </div>
             </div>
             <div className="mb-4">
               <label htmlFor="phone" className="mb-2 block text-sm font-medium">
                 Phone Number
               </label>
-              <div className="relative">{phone}</div>
+              <div className="ml-2 text-sm">{phone}</div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-8">
+            {/* Patient Age */}
+            <div className="mb-4">
+              <label
+                htmlFor="patient_age"
+                className="mb-2 block text-sm font-medium"
+              >
+                Patient Age
+              </label>
+              <div className="ml-2 text-sm">
+                {patientAge && <div>{patientAge} years old</div>}
+              </div>
+            </div>
+            <div className="mb-4">
+              {/* <label htmlFor="phone" className="mb-2 block text-sm font-medium">
+                Sex
+              </label>
+              <div className="ml-2 text-sm">Male</div> */}
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-8">
             <div className="mb-4">
-              <label htmlFor="email" className="mb-2 block text-sm font-medium">
-                Email Address
-              </label>
-              <div className="relative">{email}</div>
-            </div>
-
-            <div className="mb-4">
               <label
-                htmlFor="complaint"
+                htmlFor="address"
                 className="mb-2 block text-sm font-medium"
               >
                 Street Address
               </label>
-              <div className="relative">
+              <div className="ml-2 text-sm">
                 <div>{addressStreet}</div>
                 {addressUnit && <div>{addressUnit}</div>}
                 <div>
@@ -247,26 +319,36 @@ export default function CreateAppointment() {
                 </div>
               </div>
             </div>
+
+            <div className="mb-4">
+              <label htmlFor="email" className="mb-2 block text-sm font-medium">
+                Email Address
+              </label>
+              <div className="ml-2 text-sm">{email}</div>
+            </div>
           </div>
 
-          <div className="mb-4">
-            <label
-              htmlFor="profilenotes"
-              className="mb-2 block text-sm font-medium"
-            >
-              Patient Profile Notes
-            </label>
-            <div className="relative">
-              <textarea
+          {profileNotes && (
+            <div className="mb-4">
+              <label
+                htmlFor="profilenotes"
+                className="mb-2 block text-sm font-medium"
+              >
+                Patient Profile Notes
+              </label>
+
+              <div className="ml-2 text-sm">
+                {/* <textarea
                 id="profile_notes"
                 name="profile_notes"
                 className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
                 value={profileNotes || ''}
                 onChange={(e) => setProfileNotes(e.target.value)}
-              ></textarea>
+              ></textarea> */}
+                {profileNotes}
+              </div>
             </div>
-          </div>
-
+          )}
           {/* Allergies */}
           <div className="mb-4">
             <label
@@ -307,178 +389,187 @@ export default function CreateAppointment() {
               <div className="text-sm">Patient consents to treatment.</div>
             </div>
           </div>
-        </div>
 
-        <div className="grid grid-cols-2 gap-8">
-          {/* Appointment Date */}
+          <div className="grid grid-cols-2 gap-8">
+            {/* Appointment Date */}
+            <div className="mb-4">
+              <label
+                htmlFor="appointment_date"
+                className="mb-2 block text-sm font-medium"
+              >
+                Appointment Date
+              </label>
+              <div className="relative">
+                <input
+                  id="appointment_date"
+                  name="appointment_date"
+                  required
+                  type="date"
+                  value={date}
+                  onChange={(e) => setDate(e.target.value)}
+                  className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
+                ></input>
+              </div>
+            </div>
+
+            {/* Appointment Time */}
+            <div className="mb-4">
+              <label
+                htmlFor="appointment_time"
+                className="mb-2 block text-sm font-medium"
+              >
+                Appointment Time
+              </label>
+              <div className="relative">
+                <input
+                  id="appointment_time"
+                  name="appointment_time"
+                  required
+                  type="time"
+                  value={time}
+                  onChange={(e) => setTime(e.target.value)}
+                  className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
+                ></input>
+              </div>
+            </div>
+          </div>
+
           <div className="mb-4">
             <label
-              htmlFor="appointment_date"
+              htmlFor="chief_complaint"
               className="mb-2 block text-sm font-medium"
             >
-              Appointment Date
+              Chief Complaint
             </label>
             <div className="relative">
               <input
-                id="appointment_date"
-                name="appointment_date"
+                id="chief_complaint"
+                name="chief_complaint"
                 required
-                type="date"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
+                type="text"
                 className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
+                value={chiefComplaint || ''}
+                onChange={(e) => setChiefComplaint(e.target.value)}
               ></input>
             </div>
           </div>
 
-          {/* Appointment Time */}
           <div className="mb-4">
             <label
-              htmlFor="appointment_time"
+              htmlFor="soap_subjective"
               className="mb-2 block text-sm font-medium"
             >
-              Appointment Time
+              Subjective
+            </label>
+            <div className="relative">
+              <textarea
+                id="soap_subjective"
+                ref={subjectiveRef}
+                name="soap_subjective"
+                className="w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
+                value={subjective || ''}
+                onChange={(e) => setSubjective(e.target.value)}
+              ></textarea>
+            </div>
+          </div>
+
+          <div className="mb-4">
+            <label
+              htmlFor="soap_objective"
+              className="mb-2 block text-sm font-medium"
+            >
+              Objective
+            </label>
+            <div className="relative">
+              <textarea
+                id="soap_objective"
+                ref={objectiveRef}
+                name="soap_objective"
+                className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
+                value={objective || ''}
+                onChange={(e) => setObjective(e.target.value)}
+              ></textarea>
+            </div>
+          </div>
+
+          <div className="mb-4">
+            <label
+              htmlFor="soap_assessment"
+              className="mb-2 block text-sm font-medium"
+            >
+              Assessment
+            </label>
+            <div className="relative">
+              <textarea
+                id="soap_assessment"
+                name="soap_assessment"
+                ref={assessmentRef}
+                className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
+                value={assessment || ''}
+                onChange={(e) => setAssessment(e.target.value)}
+              ></textarea>
+            </div>
+          </div>
+
+          <div className="mb-4">
+            <label
+              htmlFor="soap_plan"
+              className="mb-2 block text-sm font-medium"
+            >
+              Plan
+            </label>
+            <div className="relative">
+              <textarea
+                id="soap_plan"
+                name="soap_plan"
+                ref={planRef}
+                className="block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
+                value={plan || ''}
+                onChange={(e) => setPlan(e.target.value)}
+              ></textarea>
+            </div>
+          </div>
+          <div className="mb-4">
+            <label
+              htmlFor="doctor_signature"
+              className="mb-2 block text-sm font-medium"
+            >
+              Doctor Signature
             </label>
             <div className="relative">
               <input
-                id="appointment_time"
-                name="appointment_time"
-                required
-                type="time"
-                value={time}
-                onChange={(e) => setTime(e.target.value)}
+                id="doctor_signature"
+                name="doctor_signature"
+                type="text"
                 className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
+                value={doctorSignature || ''}
+                onChange={(e) => setDoctorSignature(e.target.value)}
               ></input>
             </div>
           </div>
-        </div>
 
-        <div className="mb-4">
-          <label
-            htmlFor="chief_complaint"
-            className="mb-2 block text-sm font-medium"
-          >
-            Chief Complaint
-          </label>
-          <div className="relative">
-            <input
-              id="chief_complaint"
-              name="chief_complaint"
-              required
-              type="text"
-              className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
-              value={chiefComplaint || ''}
-              onChange={(e) => setChiefComplaint(e.target.value)}
-            ></input>
+          <div className="mt-6 flex justify-end gap-4">
+            <Link
+              href="/dashboard/notes"
+              className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
+            >
+              Cancel
+            </Link>
+            <Button formAction={submitNoteDraft} secondary>
+              Save Draft
+            </Button>
+            <Button
+              type="submit"
+              formAction={submitNote}
+              active={doctorSignature !== null}
+            >
+              Add Note
+            </Button>
           </div>
-        </div>
-
-        <div className="mb-4">
-          <label
-            htmlFor="soap_subjective"
-            className="mb-2 block text-sm font-medium"
-          >
-            Subjective
-          </label>
-          <div className="relative">
-            <textarea
-              id="soap_subjective"
-              name="soap_subjective"
-              className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
-              value={subjective || ''}
-              onChange={(e) => setSubjective(e.target.value)}
-            ></textarea>
-          </div>
-        </div>
-
-        <div className="mb-4">
-          <label
-            htmlFor="soap_objective"
-            className="mb-2 block text-sm font-medium"
-          >
-            Objective
-          </label>
-          <div className="relative">
-            <textarea
-              id="soap_objective"
-              name="soap_objective"
-              className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
-              value={objective || ''}
-              onChange={(e) => setObjective(e.target.value)}
-            ></textarea>
-          </div>
-        </div>
-
-        <div className="mb-4">
-          <label
-            htmlFor="soap_assessment"
-            className="mb-2 block text-sm font-medium"
-          >
-            Assessment
-          </label>
-          <div className="relative">
-            <textarea
-              id="soap_assessment"
-              name="soap_assessment"
-              className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
-              value={assessment || ''}
-              onChange={(e) => setAssessment(e.target.value)}
-            ></textarea>
-          </div>
-        </div>
-
-        <div className="mb-4">
-          <label htmlFor="soap_plan" className="mb-2 block text-sm font-medium">
-            Plan
-          </label>
-          <div className="relative">
-            <textarea
-              id="soap_plan"
-              name="soap_plan"
-              className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
-              value={plan || ''}
-              onChange={(e) => setPlan(e.target.value)}
-            ></textarea>
-          </div>
-        </div>
-        <div className="mb-4">
-          <label
-            htmlFor="doctor_signature"
-            className="mb-2 block text-sm font-medium"
-          >
-            Doctor Signature
-          </label>
-          <div className="relative">
-            <input
-              id="doctor_signature"
-              name="doctor_signature"
-              type="text"
-              className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
-              value={doctorSignature || ''}
-              onChange={(e) => setDoctorSignature(e.target.value)}
-            ></input>
-          </div>
-        </div>
-
-        <div className="mt-6 flex justify-end gap-4">
-          <Link
-            href="/dashboard/notes"
-            className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
-          >
-            Cancel
-          </Link>
-          <Button formAction={submitNoteDraft} secondary>
-            Save Draft
-          </Button>
-          <Button
-            type="submit"
-            formAction={submitNote}
-            active={doctorSignature !== null}
-          >
-            Add Note
-          </Button>
         </div>
       </div>
     </form>
   );
-}
+};
+
+export default CreateAppointment;
