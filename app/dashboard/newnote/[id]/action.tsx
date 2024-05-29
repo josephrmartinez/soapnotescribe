@@ -9,7 +9,7 @@ export async function submitNote(formData: FormData) {
   const supabase = createClient();
 
   const { error, data } = await supabase
-    .from('notes')
+    .from('note')
     .update({
       status: 'approved',
       appointment_date: formData.get('appointment_date') as string,
@@ -54,7 +54,7 @@ export async function submitNoteDraft(formData: FormData) {
   const supabase = createClient();
 
   const { error, data } = await supabase
-    .from('notes')
+    .from('note')
     .update({
       status: 'awaiting review',
       appointment_date: formData.get('appointment_date') as string,
