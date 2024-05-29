@@ -213,7 +213,7 @@ export async function getSOAPData(apptid: string, transcript: string) {
           soap_assessment?: string;
           soap_plan?: string;
           differential_diagnosis?: string;
-        } Your answer MUST begin and end with curly brackets. Do not include any leading backticks or other markers. Include as much specific information as possible from the transcript in the SOAP note. Be thorough! If you do not have the information required to provide a value in one of the fields, just return the JSON object with an empty string for that field. For the differential_diagnosis field, analyze the entire transcript and return a differential diagnosis along with possible alternative treatment options. Your complete answer MUST begin and end with curly brackets.`
+        } Your answer MUST begin and end with curly brackets. Do not include any leading backticks or other markers. Include as much specific information as possible from the transcript in the SOAP note. Be thorough! If you do not have the information required to provide a value in one of the fields, just return the JSON object with an empty string for that field. Try very hard to not return empty strings for any field, but do not make up information that is not included in the transcript. For the differential_diagnosis field, analyze the entire transcript and return a differential diagnosis along with possible alternative treatment options. DO NOT ever include the patient's name in your response. Just refer to the patient as "the patient". Your complete answer MUST begin and end with curly brackets.`
       },
       { role: "user", content: `TRANSCRIPT: ${transcript}` },
     ],

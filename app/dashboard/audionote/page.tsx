@@ -14,7 +14,13 @@ export default async function Page() {
           Create Note from Audio
         </h1>
       </div>
-      <AudioUpload />
+      <div className="mb-4 text-xl">
+        Upload clinical audio memo or full telehealth appointment recording.
+      </div>
+      <div className="mb-8 text-xl">
+        soapscribe will automatically draft a structured SOAP note.
+      </div>
+      {/* <AudioUpload /> */}
     </main>
   );
 }

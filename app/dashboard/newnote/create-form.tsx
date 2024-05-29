@@ -7,6 +7,7 @@ import { Button } from '@/app/ui/button';
 import SelectPatient from './SelectPatient';
 import { SingleValue, ActionMeta } from 'react-select';
 import { submitNote, submitNoteDraft } from './action';
+import AudioUpload from '../audionote/AudioUpload';
 
 import {
   CheckIcon,
@@ -349,6 +350,9 @@ const CreateAppointment = () => {
               </div>
             </div>
           )}
+
+          <AudioUpload patientId={patientId} />
+
           {/* Allergies */}
           <div className="mb-4">
             <label

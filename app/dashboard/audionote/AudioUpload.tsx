@@ -9,7 +9,7 @@ import { getReplicateMonoTranscript } from '@/app/lib/actions';
 import { AudioRecorder } from 'react-audio-voice-recorder';
 import { revalidatePath } from 'next/cache';
 
-export default function AudioUpload() {
+export default function AudioUpload({ patientId }: { patientId: string }) {
   const [uploadComplete, setUploadComplete] = useState<boolean>(false);
   const [percentageUploaded, setPercentageUploaded] = useState(0);
   const [isUploading, setIsUploading] = useState<boolean>(false);
@@ -160,6 +160,7 @@ export default function AudioUpload() {
           user_id: userIDRef.current as string,
           audio_storage_url,
           temp_audio_url,
+          patient_id: patientId,
         })
         .select();
 
@@ -199,15 +200,8 @@ export default function AudioUpload() {
   };
 
   return (
-    <div className="h-96">
-      <div className="items-left flex flex-col">
-        <div className="mb-4 text-xl">
-          Upload clinical audio memo or full telehealth appointment recording.
-        </div>
-        <div className="mb-8 text-xl">
-          soapscribe will automatically draft a structured SOAP note.
-        </div>
-
+    <div className="items-left flex flex-col">
+      <div className="">
         <div
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}

@@ -75,7 +75,7 @@ export function PatientName({
 export function ReviewDraft({ id }: { id: string }) {
   return (
     <Link
-      href={`/dashboard/createnote/${id}`}
+      href={`/dashboard/newnote/${id}`}
       className="flex flex-row rounded-md bg-red-600 p-2 shadow-md transition-all hover:bg-red-500 "
     >
       <div className="text-sm font-semibold text-white ">review draft</div>
