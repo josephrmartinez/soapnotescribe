@@ -10,9 +10,9 @@ import { formatDateToLocal } from '@/app/lib/utils';
 import { useEffect } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import { useRouter } from 'next/navigation';
-import { Note } from '@/app/lib/definitions';
+import { Note, NoteWithPatient } from '@/app/lib/definitions';
 
-export default function NotesTable({ notes }: { notes: Note[] }) {
+export default function NotesTable({ notes }: { notes: NoteWithPatient[] }) {
   // FETCH NOTES WITH REALTIME
 
   const supabase = createClient();

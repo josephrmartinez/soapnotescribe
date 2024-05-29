@@ -1,7 +1,13 @@
 import { Database } from "../database.types";
 
-// HOW TO UPDATE NOTE TO CORRECT TYPE (INCLUDES JOIN WITH PATIENT_ID)
 export type Note = Database['public']['Tables']['note']['Row'];
+
+export type Patient = Database['public']['Tables']['patient']['Row'];
+
+export type NoteWithPatient = Omit<Database['public']['Tables']['note']['Row'], 'patient_id'> & {
+  patient_id: string;
+  patient: Patient;
+}
 
 export type User = {
   id: string;

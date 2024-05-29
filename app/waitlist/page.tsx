@@ -1,12 +1,12 @@
 import React from 'react';
 import Logo from '../ui/logo';
-import { login } from './action';
+import { waitlist } from './action';
 import Link from 'next/link';
 
-export default function LoginPage() {
+export default function WaitlistPage() {
   return (
-    <div className="flex h-screen flex-col items-center justify-between bg-gray-50 p-24">
-      <div className="w-[300px] rounded-md bg-gray-50 p-6">
+    <div className="flex min-h-screen flex-col items-center justify-between bg-gray-50 p-24">
+      <div className="w-[300px] rounded-md bg-gray-50 p-6 ">
         <div className="mb-6 mt-2 flex justify-center">
           <Logo />
         </div>
@@ -14,18 +14,15 @@ export default function LoginPage() {
         <form className="flex flex-col gap-2">
           <Label htmlFor="email">Email:</Label>
           <Input id="email" name="email" type="email" required />
-          <Label htmlFor="password">Password:</Label>
-          <Input id="password" name="password" type="password" required />
+          <Label htmlFor="note">Note:</Label>
+          <Input id="note" name="note" type="text" />
           <Separator />
-          <Button formAction={login}>Log in</Button>
+          <Button formAction={waitlist}>Join waitlist</Button>
         </form>
         <div className="mt-6 flex flex-col items-center">
-          <p className="text-gray-500">Don't yet have an account?</p>
-          {/* <Link href="/signup" className="my-1  underline underline-offset-4">
-            sign up for free
-          </Link> */}
-          <Link href="/waitlist" className="my-1  underline underline-offset-4">
-            join the waitlist
+          <p className="text-gray-500">Already have an account?</p>
+          <Link href="/login" className="my-1  underline underline-offset-4">
+            log in
           </Link>
         </div>
       </div>
@@ -47,7 +44,6 @@ const Button: React.FC<ButtonProps> = ({ children, ...rest }) => {
     </button>
   );
 };
-
 const Input: React.FC<InputProps> = ({ ...rest }) => {
   return (
     <input

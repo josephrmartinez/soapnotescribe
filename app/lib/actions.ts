@@ -204,8 +204,6 @@ export async function getSOAPData(apptid: string, transcript: string) {
         role: "system",
         content: `You are a helpful, highly-trained medical assistant. Carefully review the following TRANSCRIPT and generate a clinical SOAP note as a JSON object with the following structure:
         {
-          patient_name: string;
-          patient_date_of_birth: Date;
           appointment_date: Date ("yyyy-mm-dd");
           appointment_time: string ("hh:mm");
           allergies: string ("NKDA" if none);
@@ -214,8 +212,8 @@ export async function getSOAPData(apptid: string, transcript: string) {
           soap_objective?: string;
           soap_assessment?: string;
           soap_plan?: string;
-          second_opinion?: string;
-        } Your answer MUST begin and end with curly brackets. Do not include any leading backticks or other markers. Include as much specific information as possible from the transcript in the SOAP note. Be thorough! If you do not have the information required to provide a value in one of the fields, just return the JSON object with an empty string or null value for that field. For the second_opinion field, analyze the entire transcript and return a differential diagnosis along with possible alternative treatment options. Your complete answer MUST begin and end with curly brackets.`
+          differential_diagnosis?: string;
+        } Your answer MUST begin and end with curly brackets. Do not include any leading backticks or other markers. Include as much specific information as possible from the transcript in the SOAP note. Be thorough! If you do not have the information required to provide a value in one of the fields, just return the JSON object with an empty string for that field. For the differential_diagnosis field, analyze the entire transcript and return a differential diagnosis along with possible alternative treatment options. Your complete answer MUST begin and end with curly brackets.`
       },
       { role: "user", content: `TRANSCRIPT: ${transcript}` },
     ],

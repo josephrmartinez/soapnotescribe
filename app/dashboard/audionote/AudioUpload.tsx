@@ -3,10 +3,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import * as tus from 'tus-js-client';
 import { createClient } from '@/utils/supabase/client';
-import { useRouter } from 'next/navigation';
+import { redirect, useRouter } from 'next/navigation';
 import { getReplicateMonoTranscript } from '@/app/lib/actions';
 
 import { AudioRecorder } from 'react-audio-voice-recorder';
+import { revalidatePath } from 'next/cache';
 
 export default function AudioUpload() {
   const [uploadComplete, setUploadComplete] = useState<boolean>(false);
@@ -154,7 +155,7 @@ export default function AudioUpload() {
     console.log('calling uploadToSupabaseTable');
     try {
       const { error, data } = await supabase
-        .from('notes')
+        .from('note')
         .insert({
           user_id: userIDRef.current as string,
           audio_storage_url,
@@ -173,6 +174,8 @@ export default function AudioUpload() {
       data && router.push(`/dashboard/notes`);
     } catch (error) {
       console.error('Failed to upload to Supabase table:', error);
+      // Display error message to user
+      revalidatePath(`/dashboard/notes`);
     }
   }
 

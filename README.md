@@ -9,13 +9,13 @@
 **Assessment:** Healthcare provider's diagnosis or analysis.  
 **Plan:** Treatment and follow-up recommendations.
 
-Healthcare providers complete a SOAP note for each patient encounter. By automatically generating a draft note immediately after each encounter, soapscribe reduces administrative burden and improves accuracy and consistency of clinical documentation.
+Healthcare providers complete a SOAP note for each patient encounter. By automatically generating a draft note immediately after each encounter, soapnotescribe reduces administrative burden and improves accuracy and consistency of clinical documentation.
 
 ### GIF demo:
 
 ![soapnotescribe gif illustration](public/soapscribedemo.gif)
 
-[soapnotescribe](https://soapnotescribe.com/) saves healthcare providers time by drafting structured SOAP notes. Providers upload a recording of the entire appointment or an audio memo with clinical notes - soapscribe automatically drafts a structured clinical note for easy review and approval. soapnotescribe also automatically provides a differential diagnosis for the clinician, enhancing diagnostic accuracy and treatment planning. This not only streamlines the documentation process but also promotes better patient care by ensuring thorough and consistent note-taking. With soapnotescribe, healthcare professionals can focus more on patient interaction and less on paperwork, leading to improved efficiency and patient satisfaction.
+[soapnotescribe](https://soapnotescribe.com/) saves healthcare providers time by drafting structured SOAP notes. Providers upload a recording of the entire appointment or an audio memo with clinical notes - soapnotescribe automatically drafts a structured clinical note for easy review and approval. soapnotescribe also automatically provides a differential diagnosis for the clinician, enhancing diagnostic accuracy and treatment planning. This not only streamlines the documentation process but also promotes better patient care by ensuring thorough and consistent note-taking. With soapnotescribe, healthcare professionals can focus more on patient interaction and less on paperwork, leading to improved efficiency and patient satisfaction.
 
 ![soapnotescribe homepage image](public/soapscribescreenlightgray.webp)
 

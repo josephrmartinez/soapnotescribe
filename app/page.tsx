@@ -40,7 +40,7 @@ export default async function Page() {
         </div>
 
         <div className="mx-auto my-4 flex flex-row items-center justify-center pb-4 align-middle">
-          <Link
+          {/* <Link
             href="/signup"
             className=" mx-2 w-32 rounded-full bg-teal-600 py-3 text-center font-bold text-white shadow-md transition-all hover:bg-teal-500 hover:text-white"
           >
@@ -51,15 +51,21 @@ export default async function Page() {
             className="mx-2 w-32 rounded-full py-4 font-bold underline underline-offset-8 transition-all hover:text-teal-600"
           >
             see pricing
+          </Link> */}
+          <Link
+            href="/waitlist"
+            className=" mx-2 w-32 rounded-full bg-teal-600 py-3 text-center font-bold text-white shadow-md transition-all hover:bg-teal-500 hover:text-white"
+          >
+            join waitlist
           </Link>
         </div>
-        <Image
+        {/* <Image
           src="/hipaa.svg"
           width={160}
           height={160}
           alt="HIPAA compliant"
           className="pb-6"
-        ></Image>
+        ></Image> */}
         {/* <div className="mx-auto flex w-11/12 flex-col items-center">
           <Image
             alt="soapscribe demo"
@@ -108,7 +114,14 @@ export default async function Page() {
           </div>
         </div>
 
-        <div
+        <Link
+          href="/waitlist"
+          className="mx-auto w-32 rounded-full bg-teal-600 py-3 text-center font-bold text-white shadow-md hover:bg-teal-500 hover:text-white"
+        >
+          join waitlist
+        </Link>
+
+        {/* <div
           id="plan"
           className="mx-auto grid w-11/12 items-center gap-8 rounded-md bg-white py-8 shadow-lg"
         >
@@ -138,7 +151,7 @@ export default async function Page() {
           >
             get started
           </Link>
-        </div>
+        </div> */}
       </div>
 
       {/* Desktop view */}
@@ -152,6 +165,12 @@ export default async function Page() {
 
         <div className="mx-auto flex flex-row items-center justify-center pb-8 align-middle">
           <Link
+            href="/waitlist"
+            className="mx-2 w-32 rounded-full bg-teal-600 py-3 text-center font-bold text-white shadow-md transition-all hover:bg-teal-500 hover:text-white"
+          >
+            join waitlist
+          </Link>
+          {/* <Link
             href="/signup"
             className="mx-2 w-32 rounded-full bg-teal-600 py-3 text-center font-bold text-white shadow-md transition-all hover:bg-teal-500 hover:text-white"
           >
@@ -162,15 +181,15 @@ export default async function Page() {
             className="mx-2 w-32 rounded-full py-4 font-bold underline underline-offset-8 transition-all hover:text-teal-600"
           >
             see pricing
-          </Link>
+          </Link> */}
         </div>
-        <Image
+        {/* <Image
           src="/hipaa.svg"
           width={160}
           height={160}
           alt="HIPAA compliant"
           className="pb-6"
-        ></Image>
+        ></Image> */}
 
         <div className="mx-auto flex w-11/12 flex-col items-center">
           <Image
@@ -217,7 +236,14 @@ export default async function Page() {
           </div>
         </div>
 
-        <div
+        <Link
+          href="/waitlist"
+          className="mx-auto w-32 rounded-full bg-teal-600 py-3 text-center font-bold text-white shadow-md hover:bg-teal-500 hover:text-white"
+        >
+          join waitlist
+        </Link>
+
+        {/* <div
           id="plan"
           className="mx-auto grid items-center gap-8 rounded-md bg-white px-8 py-8 shadow-lg"
         >
@@ -247,7 +273,7 @@ export default async function Page() {
           >
             get started
           </Link>
-        </div>
+        </div> */}
       </div>
     </main>
   );

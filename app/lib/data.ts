@@ -3,7 +3,7 @@
 import { unstable_noStore as noStore, revalidatePath  } from 'next/cache';
 import { Database } from '../database.types';
 import { createClient } from '@/utils/supabase/server'
-import { Note } from './definitions';
+import { Note, NoteWithPatient } from './definitions';
 // import { cookies } from 'next/headers'
 // import { Database } from '@/app/database.types';
 
@@ -75,7 +75,7 @@ export async function fetchFilteredNotes(query: string, currentPage: number) {
       return 0;
     });
 
-    return notes as Note[];
+    return notes as NoteWithPatient[];
  } catch (error) {
     console.error('Supabase Error:', error);
     throw new Error('Failed to fetch appointments data.');
@@ -117,7 +117,7 @@ export async function fetchNoteById(id: string) {
       throw new Error(`Note with ID ${id} not found.`);
     }
 
-    return note;
+    return note as NoteWithPatient
   } catch (error) {
     console.error('Error fetching note:', error);
     throw new Error('Failed to fetch note data.');
