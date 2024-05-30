@@ -200,8 +200,10 @@ export default function AudioUpload({ patientId }: { patientId: string }) {
   };
 
   return (
-    <div className="items-left flex flex-col">
+    <div className="mb-6 grid grid-cols-2 gap-8">
       <div className="">
+        <div className="mb-2 block text-sm font-medium">Upload Audio</div>
+
         <div
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
@@ -228,19 +230,20 @@ export default function AudioUpload({ patientId }: { patientId: string }) {
           onChange={handleFileInputChange}
           style={{ display: 'none' }}
         />
-        <div className="mt-12">
-          <div>Record Audio Memo</div>
-          <AudioRecorder
-            onRecordingComplete={uploadAudioRecording}
-            audioTrackConstraints={{
-              noiseSuppression: true,
-              echoCancellation: true,
-            }}
-            downloadOnSavePress={false}
-            showVisualizer={true}
-            downloadFileExtension="webm"
-          />
-        </div>
+      </div>
+
+      <div className="">
+        <div className="mb-2 block text-sm font-medium">Record Audio</div>
+        <AudioRecorder
+          onRecordingComplete={uploadAudioRecording}
+          audioTrackConstraints={{
+            noiseSuppression: true,
+            echoCancellation: true,
+          }}
+          downloadOnSavePress={false}
+          showVisualizer={true}
+          downloadFileExtension="webm"
+        />
       </div>
     </div>
   );
