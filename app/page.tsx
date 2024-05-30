@@ -193,10 +193,10 @@ export default async function Page() {
 
         <div className="mx-auto flex w-11/12 flex-col items-center">
           <Image
-            alt="soapscribe demo"
+            alt="soapnotescribe demo"
             width={1000}
             height={1000}
-            src="/soapscribedemo.gif"
+            src="/soapnotescribedemo.gif"
             unoptimized={true}
             className="rounded-lg shadow-lg"
           ></Image>
