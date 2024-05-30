@@ -187,8 +187,9 @@ const CreateNotePrefilled: React.FC<CreateNoteProps> = ({ note }) => {
                 Patient Age
               </label>
               <div className="ml-2 text-sm">
-                {/* {patientAge && <div>{patientAge} years old</div>} */}{' '}
-                patient age
+                {note.patient_age_years && (
+                  <div>{note.patient_age_years} years old</div>
+                )}{' '}
               </div>
             </div>
             <div className="mb-4">

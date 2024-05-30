@@ -14,7 +14,7 @@ export async function editPatient(formData: FormData) {
   console.log('formData:', formData);
 
   const { error, data } = await supabase
-    .from('patients')
+    .from('patient')
     .update({
       first_name: formData.get('first_name') as string,
       last_name: formData.get('last_name') as string,

@@ -9,9 +9,8 @@ export async function generateAndSavePdf(id: string) {
   
   const appointmentDate = formatDateToLocal(note.appointment_date);
   const patientDOB = formatDateToLocal(note.patient.date_of_birth);
-  const appointmentTime = formatTime(note.appointment_time);
+  const appointmentTime = note.appointment_time ? formatTime(note.appointment_time) : '';
 
-  //write a parser that executes the moveDown() operation once it sees a linebreak.
 
   // Generate PDF
   const doc = new PDFDocument({ font: 'public/fonts/Inter-Regular.ttf' });
@@ -47,16 +46,16 @@ doc.font('bold').text(`Allergies: `, {continued: true});
   doc.font('regular').text(`${note.chief_complaint}`);
   doc.moveDown();
   doc.font('bold').text(`Subjective: `);
-  doc.font('regular').text(`${note.soap_subjective.replace(/\r\n|\r/g, '\n')}`);
+  doc.font('regular').text(`${note.soap_subjective?.replace(/\r\n|\r/g, '\n')}`);
   doc.moveDown();
   doc.font('bold').text(`Objective: `);
-  doc.font('regular').text(`${note.soap_objective.replace(/\r\n|\r/g, '\n')}`);
+  doc.font('regular').text(`${note.soap_objective?.replace(/\r\n|\r/g, '\n')}`);
   doc.moveDown();
   doc.font('bold').text(`Assessment: `);
-  doc.font('regular').text(`${note.soap_assessment.replace(/\r\n|\r/g, '\n')}`);
+  doc.font('regular').text(`${note.soap_assessment?.replace(/\r\n|\r/g, '\n')}`);
   doc.moveDown();
   doc.font('bold').text(`Plan: `);
-  doc.font('regular').text(`${note.soap_plan.replace(/\r\n|\r/g, '\n')}`);
+  doc.font('regular').text(`${note.soap_plan?.replace(/\r\n|\r/g, '\n')}`);
   doc.moveDown();
   doc.moveDown();
   doc.font('bold').text(`Doctor Signature:`);

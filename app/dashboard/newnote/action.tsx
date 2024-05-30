@@ -12,6 +12,13 @@ export async function submitNote(formData: FormData) {
 
   const pdfStorageUrl = `${formData.get('last_name')} ${formData.get('first_name')}/${formData.get('appointment_date')}.pdf`;
 
+  const patientAgeValue = formData.get('patient_age');
+  console.log('patientAgeValue:', patientAgeValue);
+
+  // Directly convert the value to a number
+  const patientAgeYears: number = Number(patientAgeValue);
+  console.log('patient age years', patientAgeYears);
+
   const { error, data } = await supabase
     .from('note')
     .insert({
@@ -22,6 +29,7 @@ export async function submitNote(formData: FormData) {
       patient_id: formData.get('patient_id') as string,
       allergies: formData.get('allergies') as string,
       consent: formData.get('consent') === 'true' ? true : false,
+      patient_age_years: patientAgeYears,
       chief_complaint: formData.get('chief_complaint') as string,
       soap_objective: formData.get('soap_objective') as string,
       soap_subjective: formData.get('soap_subjective') as string,
@@ -51,13 +59,14 @@ export async function submitNoteDraft(formData: FormData) {
   const supabase = createClient();
 
   const { error, data } = await supabase
-    .from('notes')
+    .from('note')
     .update({
       status: 'awaiting review',
       appointment_date: formData.get('appointment_date') as string,
       appointment_time: formData.get('appointment_time') as string,
       patient_name: formData.get('patient_name') as string,
       patient_date_of_birth: formData.get('patient_date_of_birth') as string,
+      patient_age_years: formData.get('patient_age') as string,
       allergies: formData.get('allergies') as string,
       consent: formData.get('consent') === 'on' ? true : false,
       chief_complaint: formData.get('chief_complaint') as string,

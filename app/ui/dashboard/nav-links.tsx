@@ -18,14 +18,9 @@ import clsx from 'clsx';
 const links = [
   { name: 'SOAP Notes', href: '/dashboard/notes', icon: ArchiveBoxIcon },
   {
-    name: 'Write New Note',
+    name: 'New Note',
     href: '/dashboard/newnote',
     icon: PencilSquareIcon,
-  },
-  {
-    name: 'Create Note from Audio',
-    href: '/dashboard/audionote',
-    icon: ChatBubbleLeftEllipsisIcon,
   },
   {
     name: 'Templates',

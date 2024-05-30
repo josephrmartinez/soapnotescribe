@@ -27,6 +27,7 @@ export type Database = {
           id: string
           image_urls: string[] | null
           patient_id: string | null
+          patient_age_years: number
           differential_diagnosis: string | null
           soap_assessment: string | null
           soap_objective: string | null

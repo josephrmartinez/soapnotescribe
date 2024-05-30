@@ -1,23 +1,13 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { createClient } from '@/utils/supabase/client';
 import { Button } from '@/app/ui/button';
 import SelectPatient from './SelectPatient';
 import { SingleValue, ActionMeta } from 'react-select';
 import { submitNote, submitNoteDraft } from './action';
 import AudioUpload from '../audionote/AudioUpload';
 
-import {
-  CheckIcon,
-  BuildingOffice2Icon,
-  CalendarDaysIcon,
-  UserCircleIcon,
-  PencilSquareIcon,
-  PlusIcon,
-} from '@heroicons/react/24/outline';
-import AppointmentsTable from '@/app/ui/notes/table';
+import { PencilSquareIcon, PlusIcon } from '@heroicons/react/24/outline';
 
 interface Patient {
   id: string;
@@ -68,89 +58,15 @@ const CreateAppointment = () => {
   const [plan, setPlan] = useState<string | null>(null);
   const [doctorSignature, setDoctorSignature] = useState<string | null>(null);
   const [submitOkay, setSubmitOkay] = useState<boolean>(true);
-  const [patientAgeYears, setPatientAgeYears] = useState<number | null>(null);
+  const [patientAgeYears, setPatientAgeYears] = useState<number | undefined>(
+    undefined,
+  );
   const accessTokenRef = useRef<string | undefined>('');
   const userIDRef = useRef<string | undefined>('');
   const subjectiveRef = useRef<HTMLTextAreaElement | null>(null);
   const objectiveRef = useRef<HTMLTextAreaElement | null>(null);
   const assessmentRef = useRef<HTMLTextAreaElement | null>(null);
   const planRef = useRef<HTMLTextAreaElement | null>(null);
-
-  const supabase = createClient();
-  const router = useRouter();
-
-  // useEffect(() => {
-  //   const fetchUser = async () => {
-  //     const { data, error } = await supabase.auth.getSession();
-  //     if (error) {
-  //       console.error(error);
-  //     } else {
-  //       userIDRef.current = data.session?.user.id;
-  //       accessTokenRef.current = data.session?.access_token;
-  //     }
-  //   };
-
-  //   fetchUser();
-  // }, []);
-
-  // const submitNote = async (event: React.FormEvent<HTMLFormElement>) => {
-  //   event.preventDefault();
-
-  //   try {
-  //     setLoading(true);
-  //     const { error, data } = await supabase.from('notes').insert({
-  //       status: 'approved',
-  //       appointment_date: date,
-  //       user_id: userIDRef.current,
-  //       appointment_time: time,
-  //       patient_id: patientId,
-  //       allergies: allergies,
-  //       consent: consent,
-  //       chief_complaint: chiefComplaint,
-  //       soap_objective: objective,
-  //       soap_subjective: subjective,
-  //       soap_assessment: assessment,
-  //       soap_plan: plan,
-  //       doctor_signature: signature,
-  //     });
-  //     if (error) throw error;
-  //     router.push('/dashboard/notes');
-  //   } catch (error) {
-  //     console.error('Error creating the appointment:', error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-  // const submitNoteDraft = async (
-  //   event: React.MouseEvent<HTMLButtonElement>,
-  // ): Promise<void> => {
-  //   // event.preventDefault();
-
-  //   try {
-  //     setLoading(true);
-  //     const { error, data } = await supabase.from('notes').insert({
-  //       status: 'awaiting review',
-  //       appointment_date: date,
-  //       appointment_time: time,
-  //       patient_id: patientId,
-  //       allergies: allergies,
-  //       consent: consent,
-  //       chief_complaint: chiefComplaint,
-  //       soap_objective: objective,
-  //       soap_subjective: subjective,
-  //       soap_assessment: assessment,
-  //       soap_plan: plan,
-  //       doctor_signature: signature,
-  //     });
-  //     if (error) throw error;
-  //     router.push('/dashboard/notes');
-  //   } catch (error) {
-  //     console.error('Error creating the appointment draft:', error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
 
   const handlePatientSelect = (
     newValue: SingleValue<PatientOption>,
@@ -195,7 +111,12 @@ const CreateAppointment = () => {
     return age;
   }
 
-  const patientAge = calculateAge(dateOfBirth, date);
+  useEffect(() => {
+    if (dateOfBirth && date) {
+      const age = calculateAge(dateOfBirth, date);
+      setPatientAgeYears(age);
+    }
+  }, [dateOfBirth, date]);
 
   const autoResizeTextarea = (
     textareaRef: React.MutableRefObject<HTMLTextAreaElement | null>,
@@ -293,8 +214,15 @@ const CreateAppointment = () => {
                 Patient Age
               </label>
               <div className="ml-2 text-sm">
-                {patientAge && <div>{patientAge} years old</div>}
+                {patientAgeYears && <div>{patientAgeYears} years old</div>}
               </div>
+              <input
+                name="patient_age"
+                id="patient_age"
+                hidden
+                type="number"
+                defaultValue={patientAgeYears}
+              ></input>
             </div>
             <div className="mb-4">
               {/* <label htmlFor="phone" className="mb-2 block text-sm font-medium">
@@ -577,3 +505,79 @@ const CreateAppointment = () => {
 };
 
 export default CreateAppointment;
+
+// const supabase = createClient();
+// const router = useRouter();
+
+// useEffect(() => {
+//   const fetchUser = async () => {
+//     const { data, error } = await supabase.auth.getSession();
+//     if (error) {
+//       console.error(error);
+//     } else {
+//       userIDRef.current = data.session?.user.id;
+//       accessTokenRef.current = data.session?.access_token;
+//     }
+//   };
+
+//   fetchUser();
+// }, []);
+
+// const submitNote = async (event: React.FormEvent<HTMLFormElement>) => {
+//   event.preventDefault();
+
+//   try {
+//     setLoading(true);
+//     const { error, data } = await supabase.from('notes').insert({
+//       status: 'approved',
+//       appointment_date: date,
+//       user_id: userIDRef.current,
+//       appointment_time: time,
+//       patient_id: patientId,
+//       allergies: allergies,
+//       consent: consent,
+//       chief_complaint: chiefComplaint,
+//       soap_objective: objective,
+//       soap_subjective: subjective,
+//       soap_assessment: assessment,
+//       soap_plan: plan,
+//       doctor_signature: signature,
+//     });
+//     if (error) throw error;
+//     router.push('/dashboard/notes');
+//   } catch (error) {
+//     console.error('Error creating the appointment:', error);
+//   } finally {
+//     setLoading(false);
+//   }
+// };
+
+// const submitNoteDraft = async (
+//   event: React.MouseEvent<HTMLButtonElement>,
+// ): Promise<void> => {
+//   // event.preventDefault();
+
+//   try {
+//     setLoading(true);
+//     const { error, data } = await supabase.from('notes').insert({
+//       status: 'awaiting review',
+//       appointment_date: date,
+//       appointment_time: time,
+//       patient_id: patientId,
+//       allergies: allergies,
+//       consent: consent,
+//       chief_complaint: chiefComplaint,
+//       soap_objective: objective,
+//       soap_subjective: subjective,
+//       soap_assessment: assessment,
+//       soap_plan: plan,
+//       doctor_signature: signature,
+//     });
+//     if (error) throw error;
+//     router.push('/dashboard/notes');
+//   } catch (error) {
+//     console.error('Error creating the appointment draft:', error);
+//   } finally {
+//     setLoading(false);
+//   }
+// };
