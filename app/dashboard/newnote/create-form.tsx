@@ -58,9 +58,7 @@ const CreateAppointment = () => {
   const [plan, setPlan] = useState<string | null>(null);
   const [doctorSignature, setDoctorSignature] = useState<string | null>(null);
   const [submitOkay, setSubmitOkay] = useState<boolean>(true);
-  const [patientAgeYears, setPatientAgeYears] = useState<number | undefined>(
-    undefined,
-  );
+  const [patientAgeYears, setPatientAgeYears] = useState<number | undefined>(1);
   const accessTokenRef = useRef<string | undefined>('');
   const userIDRef = useRef<string | undefined>('');
   const subjectiveRef = useRef<HTMLTextAreaElement | null>(null);
@@ -73,7 +71,7 @@ const CreateAppointment = () => {
     actionMeta: ActionMeta<PatientOption>,
   ) => {
     if (newValue) {
-      console.log('newValue', newValue);
+      // console.log('newValue', newValue);
       setPatientId(newValue.value.id);
       setFirstName(newValue.value.first_name);
       setLastName(newValue.value.last_name);
@@ -93,13 +91,9 @@ const CreateAppointment = () => {
   };
 
   function calculateAge(patientDOB: string, appointmentDate: string) {
-    // Parse the date of birth string into a Date object
     const dob = new Date(patientDOB);
-
     const appointment = new Date(appointmentDate);
-
     let age = appointment.getFullYear() - dob.getFullYear();
-
     const monthDifference = appointment.getMonth() - dob.getMonth();
     if (
       monthDifference < 0 ||
@@ -107,7 +101,6 @@ const CreateAppointment = () => {
     ) {
       age--;
     }
-
     return age;
   }
 
@@ -221,7 +214,7 @@ const CreateAppointment = () => {
                 id="patient_age"
                 hidden
                 type="number"
-                defaultValue={patientAgeYears}
+                value={patientAgeYears}
               ></input>
             </div>
             <div className="mb-4">

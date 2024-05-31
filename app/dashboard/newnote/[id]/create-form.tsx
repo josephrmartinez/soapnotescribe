@@ -2,17 +2,8 @@
 import { useCallback, useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { createClient } from '@/utils/supabase/client';
 import { Button } from '@/app/ui/button';
-import {
-  CheckIcon,
-  BuildingOffice2Icon,
-  CalendarDaysIcon,
-  UserCircleIcon,
-  PencilSquareIcon,
-} from '@heroicons/react/24/outline';
 import { GeistSans } from 'geist/font/sans';
-
 import { NoteWithPatient } from '@/app/lib/definitions';
 import { getSignedAudioUrl } from '@/app/lib/data';
 import { submitNote, submitNoteDraft } from './action';
@@ -23,16 +14,8 @@ interface CreateNoteProps {
 }
 
 const CreateNotePrefilled: React.FC<CreateNoteProps> = ({ note }) => {
-  // pass in NoteWithPatient object data to pre-populate form
   const [loading, setLoading] = useState<boolean>(true);
   const [audioUrl, setAudioUrl] = useState<string>('');
-  const [noteId, setNoteId] = useState<string>(note.id);
-  const [patientFirstName, setPatientFirstName] = useState<string | null>(
-    note?.patient.first_name || null,
-  );
-  const [patientLastName, setPatientLastName] = useState<string | null>(
-    note?.patient.last_name || null,
-  );
   const [chiefComplaint, setChiefComplaint] = useState<string | null>(
     note?.chief_complaint || null,
   );
@@ -116,8 +99,6 @@ const CreateNotePrefilled: React.FC<CreateNoteProps> = ({ note }) => {
 
     console.log('note data from client CreateNotePrefilled:', note);
   }, []);
-
-  const router = useRouter();
 
   return (
     <div className="w-full">
@@ -461,38 +442,6 @@ const CreateNotePrefilled: React.FC<CreateNoteProps> = ({ note }) => {
           </div>
         </div>
 
-        <div className="collapse-title text-lg font-medium text-gray-600">
-          Audio Memo
-        </div>
-        {audioUrl ? (
-          <audio className="w-full" controls>
-            <source type="audio/mp3" src={audioUrl} />
-            Your browser does not support the audio element.
-          </audio>
-        ) : (
-          <div
-            className={`flex h-[54px] w-full flex-col justify-center rounded-full bg-gray-100`}
-          >
-            <div className="ml-8"></div>
-          </div>
-        )}
-
-        <div
-          tabIndex={0}
-          className="collapse collapse-plus my-4 rounded-md border"
-        >
-          <div className="collapse-title text-lg font-medium text-gray-600">
-            Audio Memo Transcript
-          </div>
-          <div className="collapse-content">
-            <p className="text-sm">{note?.audio_transcript}</p>
-            <p className="mt-6 text-center text-xs italic text-gray-700">
-              Audio transcription is for reference only and will not be included
-              with the approved SOAP note.
-            </p>
-          </div>
-        </div>
-
         <div
           tabIndex={0}
           className="collapse collapse-plus mb-4 rounded-md  border"
@@ -508,6 +457,38 @@ const CreateNotePrefilled: React.FC<CreateNoteProps> = ({ note }) => {
             </p>
           </div>
         </div>
+
+        <div
+          tabIndex={0}
+          className="collapse-plus collapse my-4 rounded-md border"
+        >
+          <div className="collapse-title text-lg font-medium text-gray-600">
+            Audio Transcript
+          </div>
+          <div className="collapse-content">
+            <p className="text-sm">{note?.audio_transcript}</p>
+            <p className="mt-6 text-center text-xs italic text-gray-700">
+              Audio transcription is for reference only and will not be included
+              with the approved SOAP note.
+            </p>
+          </div>
+        </div>
+
+        <div className="collapse-title text-lg font-medium text-gray-600">
+          Audio
+        </div>
+        {audioUrl ? (
+          <audio className="w-full" controls preload="length" src={audioUrl}>
+            {/* <source src= /> */}
+            Your browser does not support the audio element.
+          </audio>
+        ) : (
+          <div
+            className={`flex h-[54px] w-full flex-col justify-center rounded-full bg-gray-100`}
+          >
+            <div className="ml-8"></div>
+          </div>
+        )}
       </form>
     </div>
   );

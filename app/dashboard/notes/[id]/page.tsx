@@ -19,7 +19,6 @@ import { Metadata } from 'next';
 import { formatDateToLocal, formatTime } from '@/app/lib/utils';
 import { Button } from '@/app/ui/button';
 import { DeleteNoteFirstStep } from '@/app/ui/notes/buttons';
-import { createClient } from '@/utils/supabase/server';
 
 export const metadata: Metadata = {
   title: 'Approved SOAP Note',
@@ -117,7 +116,7 @@ export default async function Page({ params }: { params: { id: string } }) {
               </label>
               <div className="relative">
                 <div id="appointment_time" className="px-2 py-2 text-sm">
-                  {appointmentTime}
+                  {note.appointment_time}
                 </div>
               </div>
             </div>
@@ -263,7 +262,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 
         {audioUrl ? (
           <div>
-            <div className="collapse-title text-lg font-medium">Audio Memo</div>
+            <div className="collapse-title text-lg font-medium">Audio</div>
 
             <audio className="mb-6 w-full" controls>
               <source type="audio/mp3" src={audioUrl} />
@@ -274,7 +273,7 @@ export default async function Page({ params }: { params: { id: string } }) {
               className="collapse collapse-plus mb-4 rounded-md border"
             >
               <div className="collapse-title text-lg font-medium">
-                Audio Memo Transcript
+                Audio Memo
               </div>
               <div className="collapse-content">
                 <p>{note?.audio_transcript}</p>

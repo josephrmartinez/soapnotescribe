@@ -32,13 +32,20 @@ export default async function Page() {
           <p>Streamline your</p>
           <p>clinical charting.</p>
         </div>
-        <div className="mx-auto my-6 text-center text-xl text-gray-500">
+        <div className="my-6 text-left text-xl text-gray-500">
           <p>Go from audio memo</p>
           <p>or appointment recording</p>
           <p>to structured SOAP note</p>
           <p>in seconds.</p>
         </div>
-
+        <Image
+          alt="soapscribe demo"
+          width={1000}
+          height={1000}
+          src="/soapnotescribedemo.gif"
+          unoptimized={true}
+          className="mb-6 rounded-lg shadow-lg"
+        ></Image>
         <div className="mx-auto my-4 flex flex-row items-center justify-center pb-4 align-middle">
           {/* <Link
             href="/signup"
@@ -59,23 +66,14 @@ export default async function Page() {
             join waitlist
           </Link>
         </div>
-        {/* <Image
+        <Image
           src="/hipaa.svg"
           width={160}
           height={160}
           alt="HIPAA compliant"
           className="pb-6"
-        ></Image> */}
-        {/* <div className="mx-auto flex w-11/12 flex-col items-center">
-          <Image
-            alt="soapscribe demo"
-            width={1000}
-            height={1000}
-            src="/soapscribedemo.gif"
-            unoptimized={true}
-            className="rounded-lg shadow-lg"
-          ></Image>
-        </div> */}
+        ></Image>
+        <div className="mx-auto flex w-11/12 flex-col items-center"></div>
         <div className="mx-auto mt-2 px-6 text-center text-2xl font-semibold text-gray-600">
           <p>Type less and create SOAP notes faster with soapnotescribe:</p>
         </div>
@@ -106,7 +104,7 @@ export default async function Page() {
           </div>
           <div className="mx-auto my-6 text-left text-xl text-gray-500">
             <ul className=" list-disc">
-              <li>get automatic differential diagnosis</li>
+              <li>automatic differential diagnosis</li>
               <li>reduce clerical errors and medmal risk</li>
               <li>auto-generate and audit ICD codes</li>
               <li>easily share discharge instructions</li>

@@ -6,10 +6,6 @@ import { fetchNoteById } from '@/app/lib/data';
 
 export async function generateAndSavePdf(id: string) {  
   const note = await fetchNoteById(id)
-  
-  const appointmentDate = formatDateToLocal(note.appointment_date);
-  const patientDOB = formatDateToLocal(note.patient.date_of_birth);
-  const appointmentTime = note.appointment_time ? formatTime(note.appointment_time) : '';
 
 
   // Generate PDF
@@ -22,16 +18,16 @@ export async function generateAndSavePdf(id: string) {
   doc.font('regular').text(`${note.patient.last_name}, ${note.patient.first_name}`)
   doc.moveDown();
   doc.font('bold').text(`Patient date of birth: `, {continued: true});
-  doc.font('regular').text(`${patientDOB}`);
+  doc.font('regular').text(`${note.patient.date_of_birth}`);
   doc.moveDown();
 doc.font('bold').text(`Allergies: `, {continued: true});
   doc.font('regular').text(`${note.allergies}`);
   doc.moveDown();
   doc.font('bold').text(`Appointment Date: `, {continued: true});
-  doc.font('regular').text(`${appointmentDate}`);
+  doc.font('regular').text(`${note.appointment_date}`);
   doc.moveDown();
   doc.font('bold').text(`Appointment Time: `, {continued: true});
-  doc.font('regular').text(`${appointmentTime}`);
+  doc.font('regular').text(`${note.appointment_time}`);
   doc.moveDown();
   doc.font('bold').text(`Consent: `, {continued: true});
   doc.font('regular').text(`Patient consents to treatment`);

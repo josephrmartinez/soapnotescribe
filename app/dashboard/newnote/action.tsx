@@ -8,16 +8,10 @@ import { generateAndSavePdf } from '@/utils/generatePdf';
 export async function submitNote(formData: FormData) {
   const supabase = createClient();
 
-  // console.log('formData', formData);
-
   const pdfStorageUrl = `${formData.get('last_name')} ${formData.get('first_name')}/${formData.get('appointment_date')}.pdf`;
 
   const patientAgeValue = formData.get('patient_age');
-  console.log('patientAgeValue:', patientAgeValue);
-
-  // Directly convert the value to a number
   const patientAgeYears: number = Number(patientAgeValue);
-  console.log('patient age years', patientAgeYears);
 
   const { error, data } = await supabase
     .from('note')
