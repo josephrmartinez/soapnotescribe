@@ -16,19 +16,21 @@ export async function generateAndSavePdf(id: string) {
 
   doc.font('bold').text(`Patient name: `, {continued: true});
   doc.font('regular').text(`${note.patient.last_name}, ${note.patient.first_name}`)
-  doc.moveDown();
+  // doc.moveDown();
   doc.font('bold').text(`Patient date of birth: `, {continued: true});
   doc.font('regular').text(`${note.patient.date_of_birth}`);
-  doc.moveDown();
+  doc.font('bold').text(`Patient age: `, {continued: true});
+  doc.font('regular').text(`${note.patient_age_years} years old`);
+  // doc.moveDown();
 doc.font('bold').text(`Allergies: `, {continued: true});
   doc.font('regular').text(`${note.allergies}`);
-  doc.moveDown();
+  // doc.moveDown();
   doc.font('bold').text(`Appointment Date: `, {continued: true});
   doc.font('regular').text(`${note.appointment_date}`);
-  doc.moveDown();
+  // doc.moveDown();
   doc.font('bold').text(`Appointment Time: `, {continued: true});
   doc.font('regular').text(`${note.appointment_time}`);
-  doc.moveDown();
+  // doc.moveDown();
   doc.font('bold').text(`Consent: `, {continued: true});
   doc.font('regular').text(`Patient consents to treatment`);
   doc.moveDown();

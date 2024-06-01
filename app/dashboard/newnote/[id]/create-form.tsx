@@ -6,7 +6,7 @@ import { Button } from '@/app/ui/button';
 import { GeistSans } from 'geist/font/sans';
 import { NoteWithPatient } from '@/app/lib/definitions';
 import { getSignedAudioUrl } from '@/app/lib/data';
-import { submitNote, submitNoteDraft } from './action';
+import { updateNote } from './action';
 import { DeleteNoteFirstStep } from '@/app/ui/notes/buttons';
 
 interface CreateNoteProps {
@@ -38,9 +38,9 @@ const CreateNotePrefilled: React.FC<CreateNoteProps> = ({ note }) => {
     note?.soap_assessment || null,
   );
   const [plan, setPlan] = useState<string | null>(note?.soap_plan || null);
-  const [secondOpinion, setSecondOpinion] = useState<string | null>(
-    note?.differential_diagnosis || null,
-  );
+  const [differentialDiagnosis, setDifferentialDiagnosis] = useState<
+    string | null
+  >(note?.differential_diagnosis || null);
   const [doctorSignature, setDoctorSignature] = useState<string>(
     note?.doctor_signature || '',
   );
@@ -99,6 +99,9 @@ const CreateNotePrefilled: React.FC<CreateNoteProps> = ({ note }) => {
 
     console.log('note data from client CreateNotePrefilled:', note);
   }, []);
+
+  const saveDraft = updateNote.bind(null, 'awaiting review');
+  const approveNote = updateNote.bind(null, 'approved');
 
   return (
     <div className="w-full">
@@ -433,60 +436,70 @@ const CreateNotePrefilled: React.FC<CreateNoteProps> = ({ note }) => {
               Cancel
             </Link>
             <DeleteNoteFirstStep id={note.id} />
-            <Button formAction={submitNoteDraft} secondary>
+            <Button formAction={saveDraft} secondary>
               Save Draft
             </Button>
-            <Button formAction={submitNote} active={doctorSignature !== ''}>
+            <Button formAction={approveNote} active={doctorSignature !== ''}>
               Approve Note
             </Button>
           </div>
         </div>
 
-        <div
-          tabIndex={0}
-          className="collapse collapse-plus mb-4 rounded-md  border"
-        >
-          <div className="collapse-title text-lg font-medium text-gray-600">
-            Differential Diagnosis
-          </div>
-          <div className="collapse-content">
-            <p className="text-sm">{secondOpinion}</p>
-            <p className="mt-6 text-center text-xs italic text-gray-700">
-              This differential diagnosis is for reference only and will not be
-              included with the approved SOAP note.
-            </p>
-          </div>
-        </div>
-
-        <div
-          tabIndex={0}
-          className="collapse-plus collapse my-4 rounded-md border"
-        >
-          <div className="collapse-title text-lg font-medium text-gray-600">
-            Audio Transcript
-          </div>
-          <div className="collapse-content">
-            <p className="text-sm">{note?.audio_transcript}</p>
-            <p className="mt-6 text-center text-xs italic text-gray-700">
-              Audio transcription is for reference only and will not be included
-              with the approved SOAP note.
-            </p>
-          </div>
-        </div>
-
-        <div className="collapse-title text-lg font-medium text-gray-600">
-          Audio
-        </div>
-        {audioUrl ? (
-          <audio className="w-full" controls preload="length" src={audioUrl}>
-            {/* <source src= /> */}
-            Your browser does not support the audio element.
-          </audio>
-        ) : (
+        {differentialDiagnosis && (
           <div
-            className={`flex h-[54px] w-full flex-col justify-center rounded-full bg-gray-100`}
+            tabIndex={0}
+            className="collapse collapse-plus mb-4 rounded-md  border"
           >
-            <div className="ml-8"></div>
+            <div className="collapse-title text-lg font-medium text-gray-600">
+              Differential Diagnosis
+            </div>
+            <div className="collapse-content">
+              <p className="text-sm">{differentialDiagnosis}</p>
+              <p className="mt-6 text-center text-xs italic text-gray-700">
+                This differential diagnosis is for reference only and will not
+                be included with the approved SOAP note.
+              </p>
+            </div>
+          </div>
+        )}
+
+        {note.audio_transcript && (
+          <div>
+            <div
+              tabIndex={0}
+              className="collapse-plus collapse my-4 rounded-md border"
+            >
+              <div className="collapse-title text-lg font-medium text-gray-600">
+                Audio Transcript
+              </div>
+              <div className="collapse-content">
+                <p className="text-sm">{note.audio_transcript}</p>
+                <p className="mt-6 text-center text-xs italic text-gray-700">
+                  Audio transcription is for reference only and will not be
+                  included with the approved SOAP note.
+                </p>
+              </div>
+            </div>
+            <div className="collapse-title text-lg font-medium text-gray-600">
+              Audio
+            </div>
+            {audioUrl ? (
+              <audio
+                className="w-full"
+                controls
+                preload="length"
+                src={audioUrl}
+              >
+                {/* <source src= /> */}
+                Your browser does not support the audio element.
+              </audio>
+            ) : (
+              <div
+                className={`flex h-[54px] w-full flex-col justify-center rounded-full bg-gray-100`}
+              >
+                <div className="ml-8"></div>
+              </div>
+            )}
           </div>
         )}
       </form>

@@ -65,14 +65,14 @@ export default async function Page({ params }: { params: { id: string } }) {
           <div className="grid grid-cols-4 gap-2">
             <DeleteNoteFirstStep id={note.id} />
             <Link
-              href={`/dashboard/createnote/${note.id}`}
+              href={`/dashboard/newnote/${note.id}`}
               className="flex h-10 items-center justify-center rounded-lg bg-gray-100 px-2  text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200 "
             >
               <PencilSquareIcon width={20} height={20} className="mr-2" />
               Edit
             </Link>
             <Link
-              href={`/dashboard/createnote/${note.id}`}
+              href={`/dashboard/newnote/${note.id}`}
               className="flex h-10 items-center justify-center rounded-lg bg-gray-100 px-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200 "
             >
               <DocumentDuplicateIcon width={20} height={20} className="mr-2" />
