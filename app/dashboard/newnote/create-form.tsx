@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { Button } from '@/app/ui/button';
 import SelectPatient from './SelectPatient';
 import { SingleValue, ActionMeta } from 'react-select';
-import { submitNote, submitNoteDraft } from './action';
+import { createNote } from './action';
 import AudioUpload from '../audionote/AudioUpload';
 
 import { PencilSquareIcon, PlusIcon } from '@heroicons/react/24/outline';
@@ -31,7 +31,7 @@ interface PatientOption {
   label: string;
 }
 
-const CreateAppointment = () => {
+const CreateNote = () => {
   const [loading, setLoading] = useState(true);
   const [patientId, setPatientId] = useState<string>('');
   const [firstName, setFirstName] = useState<string>('');
@@ -139,6 +139,9 @@ const CreateAppointment = () => {
   useEffect(() => {
     autoResizeTextarea(planRef);
   }, [plan]);
+
+  const submitDraftNote = createNote.bind(null, 'awaiting review');
+  const submitApprovedNote = createNote.bind(null, 'approved');
 
   return (
     <form>
@@ -480,12 +483,13 @@ const CreateAppointment = () => {
             >
               Cancel
             </Link>
-            <Button formAction={submitNoteDraft} secondary>
+            {/* CURRENTLY UPDATING BUTTONS TO USE SAME FUNCTION, PASS STATUS PROP */}
+            <Button formAction={submitDraftNote} secondary>
               Save Draft
             </Button>
             <Button
               type="submit"
-              formAction={submitNote}
+              formAction={submitApprovedNote}
               active={doctorSignature !== null}
             >
               Add Note
@@ -497,7 +501,7 @@ const CreateAppointment = () => {
   );
 };
 
-export default CreateAppointment;
+export default CreateNote;
 
 // const supabase = createClient();
 // const router = useRouter();
