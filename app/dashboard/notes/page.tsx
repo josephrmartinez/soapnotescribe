@@ -27,7 +27,7 @@ export default async function Page({
 
   const notes = (await fetchFilteredNotes(query, currentPage)) || [];
 
-  // console.log('notes data:', notes);
+  console.log('notes data:', notes);
 
   return (
     <div className="w-full">
@@ -39,7 +39,6 @@ export default async function Page({
         key={query + currentPage}
         fallback={<AppointmentsTableSkeleton />}
       >
-        {/* <Table query={query} currentPage={currentPage} /> */}
         <NotesTable notes={notes} />
       </Suspense>
       <div className="mt-5 flex w-full justify-center">

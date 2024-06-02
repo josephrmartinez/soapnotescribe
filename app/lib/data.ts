@@ -4,8 +4,6 @@ import { unstable_noStore as noStore, revalidatePath  } from 'next/cache';
 import { Database } from '../database.types';
 import { createClient } from '@/utils/supabase/server'
 import { Note, NoteWithPatient } from './definitions';
-// import { cookies } from 'next/headers'
-// import { Database } from '@/app/database.types';
 
 
 
@@ -20,26 +18,17 @@ export async function fetchFilteredNotes(query: string, currentPage: number) {
     const { data: notes, error } = await supabase
       .from('note')
       .select(`
-      *,
+      id,
+      chief_complaint,
+      status, 
+      appointment_date,
       patient (
         id,
-        email,
-        date_of_birth,
-        allergies,
-        phone,
-        provider,
-        profile_notes,
         first_name,
-        last_name,
-        address_street,
-        address_unit,
-        state,
-        city,
-        zipcode
+        last_name
       )`)
       // .ilike('audio_transcript', `%${query}%`)
-      .order('appointment_date', { ascending: false })
-      .range(offset, offset + ITEMS_PER_PAGE - 1);
+      .order('appointment_date', { ascending: false });      
 
     if (error) {
       console.error('Error fetching notes:', error);
@@ -75,7 +64,10 @@ export async function fetchFilteredNotes(query: string, currentPage: number) {
       return 0;
     });
 
-    return notes as NoteWithPatient[];
+    const paginatedNotes = notes.slice(offset, offset + ITEMS_PER_PAGE);
+    return paginatedNotes;
+    // return notes.range(offset, offset + ITEMS_PER_PAGE - 1); // I WANT TO MOVE THE PAGINATION TO HAPPEN AFTER THE SORTING IS COMPLETE
+
  } catch (error) {
     console.error('Supabase Error:', error);
     throw new Error('Failed to fetch appointments data.');

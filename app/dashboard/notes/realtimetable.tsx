@@ -13,8 +13,6 @@ import { useRouter } from 'next/navigation';
 import { Note, NoteWithPatient } from '@/app/lib/definitions';
 
 export default function NotesTable({ notes }: { notes: NoteWithPatient[] }) {
-  // FETCH NOTES WITH REALTIME
-
   const supabase = createClient();
   const router = useRouter();
 

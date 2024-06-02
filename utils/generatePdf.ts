@@ -21,18 +21,13 @@ export async function generateAndSavePdf(id: string) {
   doc.font('regular').text(`${note.patient.date_of_birth}`);
   doc.font('bold').text(`Patient age: `, {continued: true});
   doc.font('regular').text(`${note.patient_age_years} years old`);
-  // doc.moveDown();
-doc.font('bold').text(`Allergies: `, {continued: true});
-  doc.font('regular').text(`${note.allergies}`);
-  // doc.moveDown();
   doc.font('bold').text(`Appointment Date: `, {continued: true});
-  doc.font('regular').text(`${note.appointment_date}`);
-  // doc.moveDown();
-  doc.font('bold').text(`Appointment Time: `, {continued: true});
+  doc.font('regular').text(`${note.appointment_date}`);  doc.font('bold').text(`Appointment Time: `, {continued: true});
   doc.font('regular').text(`${note.appointment_time}`);
-  // doc.moveDown();
   doc.font('bold').text(`Consent: `, {continued: true});
   doc.font('regular').text(`Patient consents to treatment`);
+  doc.font('bold').text(`Allergies: `, { continued: true });
+  doc.font('regular').text(`${note.allergies}`);
   doc.moveDown();
   doc.moveDown();
   doc.moveTo(0 + 50, doc.y)
