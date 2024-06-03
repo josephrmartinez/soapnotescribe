@@ -19,6 +19,7 @@ import {
 export default function NewPatientForm() {
   const [loading, setLoading] = useState(true);
   const [firstName, setFirstName] = useState<string | null>(null);
+  const [middleName, setMiddleName] = useState<string | null>(null);
   const [lastName, setLastName] = useState<string | null>(null);
   const [dateOfBirth, setDateOfBirth] = useState<string>('');
   const [phone, setPhone] = useState<string | null>('');
@@ -46,8 +47,9 @@ export default function NewPatientForm() {
   const addPatient = async () => {
     try {
       setLoading(true);
-      const { error } = await supabase.from('patients').insert({
+      const { error } = await supabase.from('patient').insert({
         first_name: firstName,
+        middle_name: middleName,
         last_name: lastName,
         date_of_birth: dateOfBirth,
         phone: phone,
@@ -92,6 +94,26 @@ export default function NewPatientForm() {
           </div>
           <div className="mb-4">
             <label htmlFor="patient" className="mb-2 block text-sm font-medium">
+              Middle Name
+            </label>
+            <div className="relative">
+              <input
+                id="middle_name"
+                name="middle_name"
+                placeholder="Middle name"
+                type="text"
+                className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
+                value={middleName || ''}
+                onChange={(e) => setMiddleName(e.target.value)}
+              ></input>
+              <UserCircleIcon className="pointer-events-none absolute right-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-8">
+          <div className="mb-4">
+            <label htmlFor="patient" className="mb-2 block text-sm font-medium">
               Last Name
             </label>
             <div className="relative">
@@ -107,9 +129,6 @@ export default function NewPatientForm() {
               <UserCircleIcon className="pointer-events-none absolute right-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
             </div>
           </div>
-        </div>
-
-        <div className="grid grid-cols-2 gap-8">
           {/* Patient Date of Birth */}
           <div className="mb-4">
             <label
@@ -130,30 +149,32 @@ export default function NewPatientForm() {
               <CalendarDaysIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
             </div>
           </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-8">
           <div className="mb-4">
             <label htmlFor="phone" className="mb-2 block text-sm font-medium">
               Phone Number
             </label>
             <div className="relative">
               {/* UPDATE TO PASS PHONE VALUE AND SETPHONE PROPS */}
-              <PhoneInput onChange={handlePhoneChange} />
+              <PhoneInput phone={phone} setPhone={handlePhoneChange} />
             </div>
           </div>
-        </div>
-
-        <div className="mb-4">
-          <label htmlFor="email" className="mb-2 block text-sm font-medium">
-            Email Address
-          </label>
-          <div className="relative">
-            <input
-              id="email"
-              name="email"
-              type="text"
-              className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
-              value={email || ''}
-              onChange={(e) => setEmail(e.target.value)}
-            ></input>
+          <div className="mb-4">
+            <label htmlFor="email" className="mb-2 block text-sm font-medium">
+              Email Address
+            </label>
+            <div className="relative">
+              <input
+                id="email"
+                name="email"
+                type="text"
+                className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
+                value={email || ''}
+                onChange={(e) => setEmail(e.target.value)}
+              ></input>
+            </div>
           </div>
         </div>
 

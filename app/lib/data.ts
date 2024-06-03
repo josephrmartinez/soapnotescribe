@@ -25,6 +25,7 @@ export async function fetchFilteredNotes(query: string, currentPage: number) {
       patient (
         id,
         first_name,
+        middle_name,
         last_name
       )`)
       // .ilike('audio_transcript', `%${query}%`)
@@ -66,7 +67,6 @@ export async function fetchFilteredNotes(query: string, currentPage: number) {
 
     const paginatedNotes = notes.slice(offset, offset + ITEMS_PER_PAGE);
     return paginatedNotes;
-    // return notes.range(offset, offset + ITEMS_PER_PAGE - 1); // I WANT TO MOVE THE PAGINATION TO HAPPEN AFTER THE SORTING IS COMPLETE
 
  } catch (error) {
     console.error('Supabase Error:', error);

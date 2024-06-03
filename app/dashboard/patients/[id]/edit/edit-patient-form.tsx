@@ -176,7 +176,6 @@ const EditPatientForm: React.FC<EditPatientProps> = ({ patient }) => {
               Phone Number
             </label>
             <div className="relative">
-              {/* UPDATE TO PASS PHONE VALUE AND SETPHONE PROPS */}
               <PhoneInput phone={phone} setPhone={handlePhoneChange} />
             </div>
           </div>
