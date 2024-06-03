@@ -157,7 +157,6 @@ export default function NewPatientForm() {
               Phone Number
             </label>
             <div className="relative">
-              {/* UPDATE TO PASS PHONE VALUE AND SETPHONE PROPS */}
               <PhoneInput phone={phone} setPhone={handlePhoneChange} />
             </div>
           </div>
