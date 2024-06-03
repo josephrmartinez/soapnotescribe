@@ -6,8 +6,8 @@ import { createClient } from '@/utils/supabase/client';
 import { Button } from '@/app/ui/button';
 import PhoneInput from '@/app/ui/patients/PhoneInput';
 import StateSelect from '@/app/ui/patients/StateSelect';
-
 import { CalendarDaysIcon, UserCircleIcon } from '@heroicons/react/24/outline';
+import { addPatient } from './action';
 
 export default function NewPatientForm() {
   const [loading, setLoading] = useState(true);
@@ -35,33 +35,6 @@ export default function NewPatientForm() {
 
   const handlePhoneChange = (phone: string) => {
     setPhone(phone);
-  };
-
-  const addPatient = async () => {
-    try {
-      setLoading(true);
-      const { error } = await supabase.from('patients').insert({
-        first_name: firstName,
-        last_name: lastName,
-        middle_name: middleName,
-        date_of_birth: dateOfBirth,
-        phone: phone,
-        email: email,
-        address_street: addressStreet,
-        address_unit: addressUnit,
-        city: city,
-        state: state,
-        zipcode: zipcode,
-        allergies: allergies,
-        profile_notes: profileNotes,
-      });
-      if (error) throw error;
-    } catch (error) {
-      console.error('Error creating new patient:', error);
-    } finally {
-      setLoading(false);
-      router.push('/dashboard/patients');
-    }
   };
 
   return (
