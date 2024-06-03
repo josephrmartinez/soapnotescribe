@@ -38,7 +38,7 @@ export function ViewSOAPNote({ id }: { id: string }) {
 export function ProcessingSOAPNote({ id }: { id: string }) {
   return (
     <Link
-      href={`/dashboard/notes/${id}`}
+      href={`/dashboard/deletenote/${id}`}
       className="flex flex-row rounded-md border border-gray-200 p-2 text-teal-600 transition-colors hover:bg-gray-100"
     >
       <div className="text-sm font-semibold">processing</div>

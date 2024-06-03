@@ -4,10 +4,6 @@ import { createClient } from '@/utils/supabase/server';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
-// SERVER ACTION NOW IN USE. ROUTE FORMERLY USED CLIENT ACTIONS TO UPDATE PATIENT INFO.
-// USNG SERVER ACTION ALLOWS USE OF REVALIDATEPATH AND REDIRECT
-// nextjs.org/learn/dashboard-app/mutating-data
-
 export async function editPatient(formData: FormData) {
   const supabase = createClient();
 
@@ -17,6 +13,7 @@ export async function editPatient(formData: FormData) {
     .from('patient')
     .update({
       first_name: formData.get('first_name') as string,
+      middle_name: formData.get('middle_name') as string,
       last_name: formData.get('last_name') as string,
       date_of_birth: formData.get('date_of_birth') as string,
       phone: formData.get('phone') as string,

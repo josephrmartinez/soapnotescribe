@@ -211,7 +211,7 @@ export default function NewPatientForm() {
             </div>
           </div>
           <div className="mb-4">
-            <label htmlFor="phone" className="mb-2 block text-sm font-medium">
+            <label htmlFor="state" className="mb-2 block text-sm font-medium">
               State
             </label>
             <div className="relative">
@@ -219,13 +219,13 @@ export default function NewPatientForm() {
             </div>
           </div>
           <div className="mb-4">
-            <label htmlFor="zip" className="mb-2 block text-sm font-medium">
+            <label htmlFor="zipcode" className="mb-2 block text-sm font-medium">
               Zip code
             </label>
             <div className="relative">
               <input
-                id="zip"
-                name="zip"
+                id="zipcode"
+                name="zipcode"
                 type="text"
                 value={zipcode || ''}
                 placeholder="60093"

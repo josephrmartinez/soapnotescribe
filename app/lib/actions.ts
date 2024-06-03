@@ -6,6 +6,8 @@ import { redirect } from 'next/navigation';
 import OpenAI from "openai"
 import { createClient } from "@/utils/supabase/server";
 import { createClient as createClientJS } from "@supabase/supabase-js";
+import { fetchNoteById } from "./data";
+import { calculateAge } from "./utils";
 
 const openai = new OpenAI({apiKey: process.env.OPENAI_API_KEY })
 
@@ -13,62 +15,24 @@ const replicate = new Replicate({
   auth: process.env.REPLICATE_API_TOKEN,
 });
 
-interface Word {
-  end: number;
-  start: number;
-  word: string;
-}
 
-interface Segment {
-  end: string;
-  start: string;
-  text: string;
-  words?: Word[];
-  speaker: string;
-}
+export async function deleteNote(id: string) {
+  const supabase = createClient();
 
-interface TranscriptOutput {
-  language: string;
-  segments: Segment[];
-  num_speakers: number;
-}
+  const { error } = await supabase
+    .from('note')
+    .delete()
+    .eq('id', id);
 
-function reformatTimestamps(transcriptOutput: TranscriptOutput): void {
-  for (const segment of transcriptOutput.segments) {
-    segment.start = secondsToHHMMSS(parseFloat(segment.start));
-    segment.end = secondsToHHMMSS(parseFloat(segment.end));
+  if (error) {
+    console.error('Error deleting note from Supabase:', error);
+    throw new Error('Failed to delete the note.');
   }
+
+  console.log('Note deleted successfully');
+  revalidatePath('/dashboard/notes');
+  redirect('/dashboard/notes'); 
 }
-
-function secondsToHHMMSS(seconds: number): string {
-  const hours = Math.floor(seconds / 3600);
-  const minutes = Math.floor((seconds % 3600) / 60);
-  const remainingSeconds = Math.floor(seconds % 60);
-
-  const formattedHours = hours.toString().padStart(2, '0');
-  const formattedMinutes = minutes.toString().padStart(2, '0');
-  const formattedSeconds = remainingSeconds.toString().padStart(2, '0');
-
-  return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
-}
-
-// OpenAI Whisper transcription
-export async function getWhisperTranscript(formData: FormData) {
-  const audioFile = formData.get('audio') as File
-  
-  try {
-    const transcription = await openai.audio.transcriptions.create({
-      file: audioFile,
-      model: "whisper-1",
-      response_format: "text",
-    });
-    return transcription;
-  } catch (error) {
-    console.error('Error:', error);
-    throw new Error('Failed to transcribe audio');
-  }
-}
-
 
 export async function getReplicateMonoTranscript(url: string, apptid: string) {
   const startTime = new Date()
@@ -106,96 +70,9 @@ export async function getReplicateMonoTranscript(url: string, apptid: string) {
 }
 
 
-// Run Replicate model to create diarized transcription from audio url
-export async function getReplicateDiarizedTranscript(url: string, apptid: string) {
-  const startTime = new Date()
-  console.log("running getReplicateDiarizedTranscript", startTime);
-
-  let webhookUrl;
-
-  if (process.env.NODE_ENV === 'production') {
-      webhookUrl = process.env.PROD_REPLICATE_WEBHOOK;
-  } else {
-      webhookUrl = process.env.DEV_REPLICATE_WEBHOOK;
-  }
-  console.log("webhook url:", webhookUrl)
-
-  try {
-  const prediction = await replicate.predictions.create(
-    {
-      version: "7fa6110280767642cf5a357e4273f27ec10ebb60c107be25d6e15f928fd03147",
-      input: {
-        file_url: url,
-      },
-      webhook: `${webhookUrl}?apptid=${apptid}`,
-      webhook_events_filter: ["completed"]
-    });
-
-    const endTime = new Date()
-    const runTime = (endTime.getTime() - startTime.getTime())
-    console.log("prediction runtime:", runTime);
-
-    console.log("replicate prediction:", prediction)
-  
-} catch (error) {
-  console.error("Error in getTranscript:", error);
-  // Handle error appropriately
-}
-}
 
 
-// Update the notes table row with the transcript
-export async function updateApptWithTranscript(apptid: string, transcript: string){
-  console.log("Running updateApptWithTranscript")
-
-  // Using service key to update appointment row
-  // const supabase = createClientJS(process.env.SUPABASE_URL!,
-  //   process.env.SUPABASE_SERVICE_KEY!)
-
-  const supabase = createClient()
-
-  try {
-    const { data, error } = await supabase
-      .from('note')
-      .update({ audio_transcript: transcript })
-      .eq('id', apptid)
-      .select();
-
-    if (error) {
-      console.error(`Error updating transcript for appointment ID ${apptid}:`, error);
-      throw new Error(`Error updating transcript for appointment ID ${apptid}: ${error.message}`);
-    }
-
-    console.log(`Transcript updated successfully for appointment ID ${apptid}:`, data);
-    getSOAPData(apptid, transcript)
-    return data;
- } catch (error) {
-    console.error(`Failed to update transcript for appointment ID ${apptid}:`, error);
-    throw error; // Rethrow the error to be handled by the caller
- }
-}
-
-
-
-export async function deleteNote(id: string) {
-  const supabase = createClient();
-
-  const { error } = await supabase
-    .from('note')
-    .delete()
-    .eq('id', id);
-
-  if (error) {
-    console.error('Error deleting note from Supabase:', error);
-    throw new Error('Failed to delete the note.');
-  }
-
-  console.log('Note deleted successfully');
-  revalidatePath('/dashboard/notes');
-  redirect('/dashboard/notes'); 
-}
-
-export async function getSOAPData(apptid: string, transcript: string) {
+export async function getSOAPData(noteid: string, transcript: string) {
   console.log("Running getSOAPData")
   try {
   const completion = await openai.chat.completions.create({
@@ -213,12 +90,10 @@ export async function getSOAPData(apptid: string, transcript: string) {
           soap_assessment?: string;
           soap_plan?: string;
           differential_diagnosis?: string;
-          patient_age_years?: number;
-        } Your answer MUST begin and end with curly brackets. Do not include any leading backticks or other markers. Include as much specific information as possible from the transcript in the SOAP note. Be thorough! If you do not have the information required to provide a value in one of the fields, just return the JSON object with an empty string for that field. Try very hard to not return empty strings for any field, but do not make up information that is not included in the transcript. For the differential_diagnosis field, analyze the entire transcript and return a differential diagnosis along with possible alternative treatment options. DO NOT ever include the patient's name, age, or gender in any of the soap_ fields. Just refer to the patient as "the patient". Your complete answer MUST begin and end with curly brackets.`
+        } Your answer MUST begin and end with curly brackets. Do not include any leading backticks or other markers. Include as much specific information as possible from the transcript in the SOAP note. Be thorough! If you do not have the information required to provide a value in any of the fields, just return the JSON object WITHOUT those fields. For the differential_diagnosis field, analyze the entire transcript and return a differential diagnosis along with possible alternative treatment options. DO NOT ever include the patient's name, age, or gender in any of the soap_ fields. Just refer to the patient as "the patient". Your complete answer MUST begin and end with curly brackets.`
       },
       { role: "user", content: `TRANSCRIPT: ${transcript}` },
     ],
-    // model: "gpt-3.5-turbo-1106",
     model: "gpt-4-turbo",
     response_format: { type: "json_object" },
   });
@@ -229,7 +104,7 @@ export async function getSOAPData(apptid: string, transcript: string) {
     console.log("completionString", completionString);
     console.log("getSOAP data usage:", usage);
 
-  updateApptWithSOAPData(apptid, transcript, completionString);
+  updateNoteWithSOAPData(noteid, transcript, completionString);
 
   } catch (error){
     console.log("Error getting OpenAI completion data:", error)
@@ -239,8 +114,8 @@ export async function getSOAPData(apptid: string, transcript: string) {
 
 
 // Update the appointment table row with the summary and feedback
-async function updateApptWithSOAPData(apptid: string, transcript: string, completion: string){
-  console.log("Running updateApptWithSOAPData");
+async function updateNoteWithSOAPData(noteid: string, transcript: string, completion: string){
+  console.log("Running updateNoteWithSOAPData");
 
   // Using service key to update appointment row
   const supabase = createClientJS(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_KEY!)
@@ -250,7 +125,6 @@ async function updateApptWithSOAPData(apptid: string, transcript: string, comple
   try {
     const completionObject = JSON.parse(completion);
 
-
     const { data, error, status } = await supabase
       .from('note')
       .update({
@@ -258,7 +132,7 @@ async function updateApptWithSOAPData(apptid: string, transcript: string, comple
         audio_transcript: transcript,
         ...completionObject
       })
-      .eq('id', apptid)
+      .eq('id', noteid)
       .select()
 if (error) {
       throw new Error(`Error updating note in Supabase: ${error.message}`);
@@ -277,6 +151,44 @@ if (error) {
 
 
 
+// interface Word {
+//   end: number;
+//   start: number;
+//   word: string;
+// }
+
+// interface Segment {
+//   end: string;
+//   start: string;
+//   text: string;
+//   words?: Word[];
+//   speaker: string;
+// }
+
+// interface TranscriptOutput {
+//   language: string;
+//   segments: Segment[];
+//   num_speakers: number;
+// }
+
+// function reformatTimestamps(transcriptOutput: TranscriptOutput): void {
+//   for (const segment of transcriptOutput.segments) {
+//     segment.start = secondsToHHMMSS(parseFloat(segment.start));
+//     segment.end = secondsToHHMMSS(parseFloat(segment.end));
+//   }
+// }
+
+// function secondsToHHMMSS(seconds: number): string {
+//   const hours = Math.floor(seconds / 3600);
+//   const minutes = Math.floor((seconds % 3600) / 60);
+//   const remainingSeconds = Math.floor(seconds % 60);
+
+//   const formattedHours = hours.toString().padStart(2, '0');
+//   const formattedMinutes = minutes.toString().padStart(2, '0');
+//   const formattedSeconds = remainingSeconds.toString().padStart(2, '0');
+
+//   return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
+// }
 
 
 
@@ -388,6 +300,95 @@ if (error) {
 //   redirect('/dashboard/appointments');
 // }
 // }
+
+
+// OpenAI Whisper transcription
+// export async function getWhisperTranscript(formData: FormData) {
+//   const audioFile = formData.get('audio') as File
+  
+//   try {
+//     const transcription = await openai.audio.transcriptions.create({
+//       file: audioFile,
+//       model: "whisper-1",
+//       response_format: "text",
+//     });
+//     return transcription;
+//   } catch (error) {
+//     console.error('Error:', error);
+//     throw new Error('Failed to transcribe audio');
+//   }
+// }
+
+
+// Run Replicate model to create diarized transcription from audio url
+// export async function getReplicateDiarizedTranscript(url: string, apptid: string) {
+//   const startTime = new Date()
+//   console.log("running getReplicateDiarizedTranscript", startTime);
+
+//   let webhookUrl;
+
+//   if (process.env.NODE_ENV === 'production') {
+//       webhookUrl = process.env.PROD_REPLICATE_WEBHOOK;
+//   } else {
+//       webhookUrl = process.env.DEV_REPLICATE_WEBHOOK;
+//   }
+//   console.log("webhook url:", webhookUrl)
+
+//   try {
+//   const prediction = await replicate.predictions.create(
+//     {
+//       version: "7fa6110280767642cf5a357e4273f27ec10ebb60c107be25d6e15f928fd03147",
+//       input: {
+//         file_url: url,
+//       },
+//       webhook: `${webhookUrl}?apptid=${apptid}`,
+//       webhook_events_filter: ["completed"]
+//     });
+
+//     const endTime = new Date()
+//     const runTime = (endTime.getTime() - startTime.getTime())
+//     console.log("prediction runtime:", runTime);
+
+//     console.log("replicate prediction:", prediction)
+  
+// } catch (error) {
+//   console.error("Error in getTranscript:", error);
+//   // Handle error appropriately
+// }
+// }
+
+
+// Update the notes table row with the transcript
+// export async function updateApptWithTranscript(apptid: string, transcript: string){
+//   console.log("Running updateApptWithTranscript")
+
+//   // Using service key to update appointment row
+//   // const supabase = createClientJS(process.env.SUPABASE_URL!,
+//   //   process.env.SUPABASE_SERVICE_KEY!)
+
+//   const supabase = createClient()
+
+//   try {
+//     const { data, error } = await supabase
+//       .from('note')
+//       .update({ audio_transcript: transcript })
+//       .eq('id', apptid)
+//       .select();
+
+//     if (error) {
+//       console.error(`Error updating transcript for appointment ID ${apptid}:`, error);
+//       throw new Error(`Error updating transcript for appointment ID ${apptid}: ${error.message}`);
+//     }
+
+//     console.log(`Transcript updated successfully for appointment ID ${apptid}:`, data);
+//     getSOAPData(apptid, transcript)
+//     return data;
+//  } catch (error) {
+//     console.error(`Failed to update transcript for appointment ID ${apptid}:`, error);
+//     throw error; // Rethrow the error to be handled by the caller
+//  }
+// }
+
 
 
 

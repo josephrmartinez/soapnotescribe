@@ -197,7 +197,9 @@ try {
  }
 }
 
-
+export async function getPatientDOBFromNoteId(id: string) {
+  
+}
 
 export async function fetchPatientById(id: string) {
   // EXPERIMENTAL. noStore() allows for immediate re-render of changed appointment data, but may lead to slower load times.

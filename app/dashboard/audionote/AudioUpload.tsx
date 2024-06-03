@@ -5,7 +5,6 @@ import * as tus from 'tus-js-client';
 import { createClient } from '@/utils/supabase/client';
 import { redirect, useRouter } from 'next/navigation';
 import { getReplicateMonoTranscript } from '@/app/lib/actions';
-
 import { AudioRecorder } from 'react-audio-voice-recorder';
 import { revalidatePath } from 'next/cache';
 
@@ -126,7 +125,7 @@ export default function AudioUpload({ patientId }: { patientId: string }) {
 
             // Check if signedUrl is defined before setting the state
             if (signedUrl !== undefined) {
-              uploadToSupabaseTable(fileName, signedUrl);
+              createNote(fileName, signedUrl);
             } else {
               console.error('Error: Signed URL is undefined');
             }
@@ -148,11 +147,8 @@ export default function AudioUpload({ patientId }: { patientId: string }) {
     });
   }
 
-  async function uploadToSupabaseTable(
-    audio_storage_url: string,
-    temp_audio_url: string,
-  ) {
-    console.log('calling uploadToSupabaseTable');
+  async function createNote(audio_storage_url: string, temp_audio_url: string) {
+    console.log('calling createNote');
     try {
       const { error, data } = await supabase
         .from('note')

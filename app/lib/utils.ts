@@ -1,6 +1,18 @@
 import { Revenue } from './definitions';
 
-
+export function calculateAge(patientDOB: string, appointmentDate: string) {
+    const dob = new Date(patientDOB);
+    const appointment = new Date(appointmentDate);
+    let age = appointment.getFullYear() - dob.getFullYear();
+    const monthDifference = appointment.getMonth() - dob.getMonth();
+    if (
+      monthDifference < 0 ||
+      (monthDifference === 0 && appointment.getDate() < dob.getDate())
+    ) {
+      age--;
+    }
+    return age;
+  }
 
 export const formatCurrency = (amount: number) => {
   return (amount / 100).toLocaleString('en-US', {

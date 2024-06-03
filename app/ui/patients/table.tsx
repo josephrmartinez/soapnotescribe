@@ -14,7 +14,7 @@ export default async function PatientsTable({ query }: { query: string }) {
 
   // CURRENT IMPLEMENTATION FETCHES ALL PATIENTS. QUERY SEARCH NOT ENABLED
   const patients = await fetchPatients();
-  console.log('fetched patients:', patients?.length);
+  // console.log('fetched patients:', patients);
 
   return (
     <div className="mt-6 flow-root">

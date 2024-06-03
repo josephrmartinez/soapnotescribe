@@ -25,6 +25,7 @@ interface EditPatientProps {
 interface Patient {
   id: string;
   first_name: string | null;
+  middle_name: string | null;
   last_name: string | null;
   date_of_birth: string;
   phone: string | null;
@@ -42,6 +43,9 @@ const EditPatientForm: React.FC<EditPatientProps> = ({ patient }) => {
   const [loading, setLoading] = useState(true);
   const [firstName, setFirstName] = useState<string | null>(
     patient?.first_name || null,
+  );
+  const [middleName, setMiddleName] = useState<string | null>(
+    patient?.middle_name || null,
   );
   const [lastName, setLastName] = useState<string | null>(
     patient?.last_name || null,
@@ -77,45 +81,16 @@ const EditPatientForm: React.FC<EditPatientProps> = ({ patient }) => {
     setPhone(phone);
   };
 
-  // MORE EFFICIENT WAY TO UPDATE? THIS OVERWRITES THE ENTIRE OBJECT.
-  // const updatePatient = async () => {
-  //   try {
-  //     setLoading(true);
-  //     const { error } = await supabase
-  //       .from('patients')
-  //       .update({
-  //         first_name: firstName,
-  //         last_name: lastName,
-  //         date_of_birth: dateOfBirth,
-  //         phone: phone,
-  //         email: email,
-  //         address_street: addressStreet,
-  //         address_unit: addressUnit,
-  //         city: city,
-  //         state: state,
-  //         zipcode: zipcode,
-  //         allergies: allergies,
-  //         profile_notes: profileNotes,
-  //       })
-  //       .eq('id', patient.id); // CHECK COLUMN NAMES
-  //     if (error) throw error;
-  //     router.push('/dashboard/patients');
-  //     // revalidatePath('/dashboard/patients', 'page'); // server only?
-  //     // router.replace('/dashboard/patients');
-  //   } catch (error) {
-  //     console.error('Error updating patient:', error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
   return (
     <form action={editPatient}>
       <div className="max-w-prose rounded-md bg-gray-50 p-4">
         <input name="id" hidden defaultValue={patient?.id}></input>
         <div className="grid grid-cols-2 gap-8">
           <div className="mb-4">
-            <label htmlFor="patient" className="mb-2 block text-sm font-medium">
+            <label
+              htmlFor="first_name"
+              className="mb-2 block text-sm font-medium"
+            >
               First Name
             </label>
             <div className="relative">
@@ -132,7 +107,10 @@ const EditPatientForm: React.FC<EditPatientProps> = ({ patient }) => {
             </div>
           </div>
           <div className="mb-4">
-            <label htmlFor="patient" className="mb-2 block text-sm font-medium">
+            <label
+              htmlFor="last_name"
+              className="mb-2 block text-sm font-medium"
+            >
               Last Name
             </label>
             <div className="relative">
@@ -154,7 +132,7 @@ const EditPatientForm: React.FC<EditPatientProps> = ({ patient }) => {
           {/* Patient Date of Birth */}
           <div className="mb-4">
             <label
-              htmlFor="appointment_date"
+              htmlFor="date_of_birth"
               className="mb-2 block text-sm font-medium"
             >
               Date of Birth
@@ -198,7 +176,10 @@ const EditPatientForm: React.FC<EditPatientProps> = ({ patient }) => {
         </div>
 
         <div className="mb-4">
-          <label htmlFor="complaint" className="mb-2 block text-sm font-medium">
+          <label
+            htmlFor="address_street"
+            className="mb-2 block text-sm font-medium"
+          >
             Street Address
           </label>
           <div className="relative">
@@ -215,7 +196,10 @@ const EditPatientForm: React.FC<EditPatientProps> = ({ patient }) => {
         </div>
 
         <div className="mb-4">
-          <label htmlFor="complaint" className="mb-2 block text-sm font-medium">
+          <label
+            htmlFor="address_unit"
+            className="mb-2 block text-sm font-medium"
+          >
             Apartment, suite, etc.
           </label>
           <div className="relative">
@@ -258,13 +242,13 @@ const EditPatientForm: React.FC<EditPatientProps> = ({ patient }) => {
             </div>
           </div>
           <div className="mb-4">
-            <label htmlFor="city" className="mb-2 block text-sm font-medium">
+            <label htmlFor="zipcode" className="mb-2 block text-sm font-medium">
               Zip code
             </label>
             <div className="relative">
               <input
-                id="zip"
-                name="zip"
+                id="zipcode"
+                name="zipcode"
                 type="text"
                 value={zipcode || ''}
                 placeholder="60093"
@@ -295,7 +279,7 @@ const EditPatientForm: React.FC<EditPatientProps> = ({ patient }) => {
 
         <div className="mb-4">
           <label
-            htmlFor="profilenotes"
+            htmlFor="profile_notes"
             className="mb-2 block text-sm font-medium"
           >
             Patient Profile Notes

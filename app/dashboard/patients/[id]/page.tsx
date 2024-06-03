@@ -51,6 +51,7 @@ export default async function Page({ params }: { params: { id: string } }) {
           <h1 className={`text-2xl`}>Patient Profile</h1>
 
           <div className="grid grid-cols-2 gap-2">
+            {/* UPLOAD TO DELETE PATIENT FIRST STEP */}
             <DeleteNoteFirstStep id={patient.id} />
             <Link
               href={`/dashboard/patients/${patient.id}/edit`}

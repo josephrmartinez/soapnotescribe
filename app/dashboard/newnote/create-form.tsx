@@ -6,6 +6,7 @@ import SelectPatient from './SelectPatient';
 import { SingleValue, ActionMeta } from 'react-select';
 import { createNote } from './action';
 import AudioUpload from '../audionote/AudioUpload';
+import { calculateAge } from '@/app/lib/utils';
 
 import { PencilSquareIcon, PlusIcon } from '@heroicons/react/24/outline';
 
@@ -90,19 +91,19 @@ const CreateNote = () => {
     }
   };
 
-  function calculateAge(patientDOB: string, appointmentDate: string) {
-    const dob = new Date(patientDOB);
-    const appointment = new Date(appointmentDate);
-    let age = appointment.getFullYear() - dob.getFullYear();
-    const monthDifference = appointment.getMonth() - dob.getMonth();
-    if (
-      monthDifference < 0 ||
-      (monthDifference === 0 && appointment.getDate() < dob.getDate())
-    ) {
-      age--;
-    }
-    return age;
-  }
+  // function calculateAge(patientDOB: string, appointmentDate: string) {
+  //   const dob = new Date(patientDOB);
+  //   const appointment = new Date(appointmentDate);
+  //   let age = appointment.getFullYear() - dob.getFullYear();
+  //   const monthDifference = appointment.getMonth() - dob.getMonth();
+  //   if (
+  //     monthDifference < 0 ||
+  //     (monthDifference === 0 && appointment.getDate() < dob.getDate())
+  //   ) {
+  //     age--;
+  //   }
+  //   return age;
+  // }
 
   useEffect(() => {
     if (dateOfBirth && date) {
@@ -262,16 +263,7 @@ const CreateNote = () => {
                 Patient Profile Notes
               </label>
 
-              <div className="ml-2 text-sm">
-                {/* <textarea
-                id="profile_notes"
-                name="profile_notes"
-                className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
-                value={profileNotes || ''}
-                onChange={(e) => setProfileNotes(e.target.value)}
-              ></textarea> */}
-                {profileNotes}
-              </div>
+              <div className="ml-2 text-sm">{profileNotes}</div>
             </div>
           )}
 
