@@ -6,15 +6,8 @@ import { createClient } from '@/utils/supabase/client';
 import { Button } from '@/app/ui/button';
 import PhoneInput from '@/app/ui/patients/PhoneInput';
 import StateSelect from '@/app/ui/patients/StateSelect';
-import { OptionProps } from 'react-select';
 
-import {
-  CheckIcon,
-  BuildingOffice2Icon,
-  CalendarDaysIcon,
-  UserCircleIcon,
-  PencilSquareIcon,
-} from '@heroicons/react/24/outline';
+import { CalendarDaysIcon, UserCircleIcon } from '@heroicons/react/24/outline';
 
 export default function NewPatientForm() {
   const [loading, setLoading] = useState(true);
@@ -27,7 +20,7 @@ export default function NewPatientForm() {
   const [addressStreet, setAddressStreet] = useState<string | null>('');
   const [addressUnit, setAddressUnit] = useState<string | null>('');
   const [city, setCity] = useState<string | null>('');
-  const [state, setState] = useState<string | null>(null);
+  const [state, setState] = useState<string | undefined>(undefined);
   const [zipcode, setZipcode] = useState<string | null>('');
   const [allergies, setAllergies] = useState<string | null>('');
   const [profileNotes, setProfileNotes] = useState<string | null>(null);
@@ -47,10 +40,10 @@ export default function NewPatientForm() {
   const addPatient = async () => {
     try {
       setLoading(true);
-      const { error } = await supabase.from('patient').insert({
+      const { error } = await supabase.from('patients').insert({
         first_name: firstName,
-        middle_name: middleName,
         last_name: lastName,
+        middle_name: middleName,
         date_of_birth: dateOfBirth,
         phone: phone,
         email: email,
@@ -76,7 +69,10 @@ export default function NewPatientForm() {
       <div className="max-w-prose rounded-md bg-gray-50 p-4">
         <div className="grid grid-cols-2 gap-8">
           <div className="mb-4">
-            <label htmlFor="patient" className="mb-2 block text-sm font-medium">
+            <label
+              htmlFor="first_name"
+              className="mb-2 block text-sm font-medium"
+            >
               First Name
             </label>
             <div className="relative">
@@ -93,7 +89,10 @@ export default function NewPatientForm() {
             </div>
           </div>
           <div className="mb-4">
-            <label htmlFor="patient" className="mb-2 block text-sm font-medium">
+            <label
+              htmlFor="middle_name"
+              className="mb-2 block text-sm font-medium"
+            >
               Middle Name
             </label>
             <div className="relative">
@@ -113,7 +112,10 @@ export default function NewPatientForm() {
 
         <div className="grid grid-cols-2 gap-8">
           <div className="mb-4">
-            <label htmlFor="patient" className="mb-2 block text-sm font-medium">
+            <label
+              htmlFor="last_name"
+              className="mb-2 block text-sm font-medium"
+            >
               Last Name
             </label>
             <div className="relative">
@@ -132,7 +134,7 @@ export default function NewPatientForm() {
           {/* Patient Date of Birth */}
           <div className="mb-4">
             <label
-              htmlFor="appointment_date"
+              htmlFor="date_of_birth"
               className="mb-2 block text-sm font-medium"
             >
               Date of Birth
@@ -178,7 +180,10 @@ export default function NewPatientForm() {
         </div>
 
         <div className="mb-4">
-          <label htmlFor="complaint" className="mb-2 block text-sm font-medium">
+          <label
+            htmlFor="address_street"
+            className="mb-2 block text-sm font-medium"
+          >
             Street Address
           </label>
           <div className="relative">
@@ -195,7 +200,10 @@ export default function NewPatientForm() {
         </div>
 
         <div className="mb-4">
-          <label htmlFor="complaint" className="mb-2 block text-sm font-medium">
+          <label
+            htmlFor="address_unit"
+            className="mb-2 block text-sm font-medium"
+          >
             Apartment, suite, etc.
           </label>
           <div className="relative">
@@ -234,11 +242,11 @@ export default function NewPatientForm() {
               State
             </label>
             <div className="relative">
-              <StateSelect onChange={handleStateChange} />
+              <StateSelect state={state} setState={handleStateChange} />
             </div>
           </div>
           <div className="mb-4">
-            <label htmlFor="city" className="mb-2 block text-sm font-medium">
+            <label htmlFor="zip" className="mb-2 block text-sm font-medium">
               Zip code
             </label>
             <div className="relative">
@@ -275,7 +283,7 @@ export default function NewPatientForm() {
 
         <div className="mb-4">
           <label
-            htmlFor="profilenotes"
+            htmlFor="profile_notes"
             className="mb-2 block text-sm font-medium"
           >
             Patient Profile Notes
