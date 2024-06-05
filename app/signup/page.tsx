@@ -1,9 +1,15 @@
-import React from 'react';
+'use client';
+
+import React, { useState } from 'react';
 import Logo from '../ui/logo';
 import { signup } from './action';
 import Link from 'next/link';
 
 export default function SignUpPage() {
+  const [password, setPassword] = useState<string>('');
+  const [passwordConfirm, setPasswordConfirm] = useState<string>('');
+  const submitOkay = password !== '' && password === passwordConfirm;
+
   return (
     <div className="flex min-h-screen flex-col items-center justify-between bg-gray-50 p-24">
       <div className="w-[300px] rounded-md bg-gray-50 p-6 ">
@@ -15,16 +21,27 @@ export default function SignUpPage() {
           <Label htmlFor="email">Email:</Label>
           <Input id="email" name="email" type="email" required />
           <Label htmlFor="password">Create Password:</Label>
-          <Input id="password" name="password" type="password" required />
+          <Input
+            id="password"
+            name="password"
+            type="password"
+            required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
           <Label htmlFor="password">Confirm Password:</Label>
           <Input
             id="password_confirm"
             name="password_confirm"
             type="password"
             required
+            value={passwordConfirm}
+            onChange={(e) => setPasswordConfirm(e.target.value)}
           />
           <Separator />
-          <Button formAction={signup}>Sign up</Button>
+          <Button formAction={signup} active={submitOkay}>
+            Sign up
+          </Button>
         </form>
         <div className="mt-6 flex flex-col items-center">
           <p className="text-gray-500">Already have an account?</p>
@@ -37,14 +54,17 @@ export default function SignUpPage() {
   );
 }
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {}
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  active: boolean;
+}
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {}
 interface LabelProps extends React.LabelHTMLAttributes<HTMLLabelElement> {}
 
-const Button: React.FC<ButtonProps> = ({ children, ...rest }) => {
+const Button: React.FC<ButtonProps> = ({ children, active, ...rest }) => {
   return (
     <button
-      className="rounded bg-teal-600 px-4 py-2 font-semibold text-white transition duration-100 ease-in-out hover:bg-teal-500"
+      disabled={!active}
+      className={`rounded  px-4 py-2 font-semibold text-white transition duration-100 ease-in-out ${active ? 'bg-teal-600 hover:bg-teal-500' : 'bg-gray-400'} `}
       {...rest}
     >
       {children}
