@@ -39,7 +39,7 @@ export default async function Page({ params }: { params: { id: string } }) {
         breadcrumbs={[
           { label: 'Patients', href: '/dashboard/patients' },
           {
-            label: `${patient.first_name} ${patient.last_name}`,
+            label: `${patient.first_name} ${patient.middle_name && patient.middle_name} ${patient.last_name}`,
             href: `/dashboard/patients/${id}`,
             active: true,
           },
@@ -70,11 +70,11 @@ export default async function Page({ params }: { params: { id: string } }) {
                 htmlFor="patient"
                 className="mb-2 block text-sm font-medium"
               >
-                Patient Name
+                Patient
               </label>
               <div className="relative">
                 <div id="patient" className="px-2 py-2 text-sm">
-                  {patient.first_name} {patient.last_name}
+                  {patient.first_name} {patient.middle_name} {patient.last_name}
                 </div>
               </div>
             </div>
@@ -127,7 +127,8 @@ export default async function Page({ params }: { params: { id: string } }) {
                 <div>{patient.address_street}</div>
                 {patient.address_unit && <div>{patient.address_unit}</div>}
                 <div>
-                  {patient.city}, {patient.state} {patient.zipcode}
+                  {patient.city}
+                  {patient.city && ','} {patient.state} {patient.zipcode}
                 </div>
               </div>
             </div>
@@ -143,18 +144,6 @@ export default async function Page({ params }: { params: { id: string } }) {
               </label>
               <div className="relative">
                 <div className="px-2 py-2 text-sm">{patient.allergies}</div>
-              </div>
-            </div>
-            {/* Telemedicine Consent */}
-            <div className="mb-4">
-              <label
-                htmlFor="consent"
-                className="mb-2 block text-sm font-medium"
-              >
-                Telemedicine Consent
-              </label>
-              <div className="px-2 py-2 text-sm">
-                Patient consents to treatment.
               </div>
             </div>
           </div>

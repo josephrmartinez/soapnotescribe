@@ -87,7 +87,8 @@ export default async function PatientsTable({ query }: { query: string }) {
                     </td>
                     <td className="whitespace-nowrap px-3 py-3">
                       {patient.address_street} {patient.address_unit}{' '}
-                      {patient.city}, {patient.state} {patient.zipcode}
+                      {patient.city}
+                      {patient.city && ','} {patient.state} {patient.zipcode}
                     </td>
                     <td className="whitespace-nowrap  px-3 ">
                       {patient.email}

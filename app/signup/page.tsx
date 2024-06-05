@@ -14,8 +14,15 @@ export default function SignUpPage() {
         <form className="flex flex-col gap-2">
           <Label htmlFor="email">Email:</Label>
           <Input id="email" name="email" type="email" required />
-          <Label htmlFor="password">Password:</Label>
+          <Label htmlFor="password">Create Password:</Label>
           <Input id="password" name="password" type="password" required />
+          <Label htmlFor="password">Confirm Password:</Label>
+          <Input
+            id="password_confirm"
+            name="password_confirm"
+            type="password"
+            required
+          />
           <Separator />
           <Button formAction={signup}>Sign up</Button>
         </form>

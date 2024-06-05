@@ -65,7 +65,7 @@ const PatientSelect: React.FC<PatientSelectProps> = ({ onPatientSelect }) => (
     defaultOptions
     placeholder="Select patient..."
     noOptionsMessage={({ inputValue }) =>
-      "Patient not found. Select 'add new patient' below."
+      "Patient not found. Select '+ add new patient'"
     }
     loadOptions={loadOptions}
     onChange={onPatientSelect}
