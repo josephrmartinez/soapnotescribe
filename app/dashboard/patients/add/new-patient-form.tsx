@@ -40,8 +40,8 @@ export default function NewPatientForm() {
   return (
     <form>
       <div className="max-w-prose rounded-md bg-gray-50 p-4">
-        <div className="grid grid-cols-2 gap-8">
-          <div className="mb-4">
+        <div className="mb-4 grid grid-cols-1 gap-x-8 gap-y-4 sm:grid-cols-2">
+          <div className="">
             <label
               htmlFor="first_name"
               className="mb-2 block text-sm font-medium"
@@ -61,7 +61,7 @@ export default function NewPatientForm() {
               <UserCircleIcon className="pointer-events-none absolute right-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
             </div>
           </div>
-          <div className="mb-4">
+          <div className="">
             <label
               htmlFor="middle_name"
               className="mb-2 block text-sm font-medium"
@@ -81,10 +81,8 @@ export default function NewPatientForm() {
               <UserCircleIcon className="pointer-events-none absolute right-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
             </div>
           </div>
-        </div>
 
-        <div className="grid grid-cols-2 gap-8">
-          <div className="mb-4">
+          <div className="">
             <label
               htmlFor="last_name"
               className="mb-2 block text-sm font-medium"
@@ -105,7 +103,7 @@ export default function NewPatientForm() {
             </div>
           </div>
           {/* Patient Date of Birth */}
-          <div className="mb-4">
+          <div className="">
             <label
               htmlFor="date_of_birth"
               className="mb-2 block text-sm font-medium"
@@ -124,10 +122,8 @@ export default function NewPatientForm() {
               <CalendarDaysIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
             </div>
           </div>
-        </div>
 
-        <div className="grid grid-cols-2 gap-8">
-          <div className="mb-4">
+          <div className="">
             <label htmlFor="phone" className="mb-2 block text-sm font-medium">
               Phone Number
             </label>
@@ -135,7 +131,7 @@ export default function NewPatientForm() {
               <PhoneInput phone={phone} setPhone={handlePhoneChange} />
             </div>
           </div>
-          <div className="mb-4">
+          <div className="">
             <label htmlFor="email" className="mb-2 block text-sm font-medium">
               Email Address
             </label>
@@ -192,9 +188,9 @@ export default function NewPatientForm() {
           </div>
         </div>
 
-        <div className="grid grid-cols-3 gap-8">
+        <div className="mb-4 grid grid-cols-1 gap-x-8 gap-y-4 sm:grid-cols-3">
           {/* City or Town */}
-          <div className="mb-4">
+          <div className="">
             <label htmlFor="city" className="mb-2 block text-sm font-medium">
               City or Town
             </label>
@@ -210,7 +206,7 @@ export default function NewPatientForm() {
               ></input>
             </div>
           </div>
-          <div className="mb-4">
+          <div className="">
             <label htmlFor="state" className="mb-2 block text-sm font-medium">
               State
             </label>
@@ -218,7 +214,7 @@ export default function NewPatientForm() {
               <StateSelect state={state} setState={handleStateChange} />
             </div>
           </div>
-          <div className="mb-4">
+          <div className="">
             <label htmlFor="zipcode" className="mb-2 block text-sm font-medium">
               Zip code
             </label>
