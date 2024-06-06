@@ -196,7 +196,7 @@ export default function AudioUpload({ patientId }: { patientId: string }) {
   };
 
   return (
-    <div className="mb-6 grid grid-cols-2 gap-8">
+    <div className="mb-6 grid grid-cols-1 gap-8 sm:grid-cols-2">
       <div className="">
         <div className="mb-2 block text-sm font-medium">Upload Audio</div>
 
@@ -210,7 +210,12 @@ export default function AudioUpload({ patientId }: { patientId: string }) {
           className={`flex h-48 max-w-prose cursor-pointer flex-col items-center justify-center rounded-md border bg-gray-50 p-4 text-center text-sm text-gray-600 focus:ring-2 ${isDragging ? 'ring-2' : 'ring-0'}  `}
         >
           {!isUploading && !uploadComplete && (
-            <div className="">Click or drag and drop your audio file here</div>
+            <div>
+              <div className="hidden sm:block">
+                Click or drag and drop your audio file here
+              </div>
+              <div className="sm:hidden">Click to upload audio file</div>
+            </div>
           )}
           {isUploading && !uploadComplete && (
             <div className="">

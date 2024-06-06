@@ -147,8 +147,8 @@ const CreateNote = () => {
   return (
     <form>
       <div className="max-w-prose rounded-md bg-gray-50 p-4">
-        <div className="grid grid-cols-2 gap-8">
-          <div className="mb-4">
+        <div className="mb-4 grid grid-cols-1  gap-4 sm:grid-cols-2 sm:gap-8">
+          <div className="">
             <label htmlFor="patient" className="mb-2 block text-sm font-medium">
               Patient
             </label>
@@ -158,7 +158,7 @@ const CreateNote = () => {
             <input name="last_name" hidden defaultValue={lastName}></input>
           </div>
 
-          <div className="mt-3 flex flex-row items-center">
+          <div className="flex flex-row items-center sm:mt-7">
             {patientId === '' ? (
               <Link
                 href={'./patients/add'}
@@ -180,9 +180,9 @@ const CreateNote = () => {
         </div>
 
         <div className={`${patientId === '' ? 'hidden' : ''}`}>
-          <div className="grid grid-cols-2 gap-8">
+          <div className="mb-8 grid grid-cols-2 gap-8">
             {/* Patient Date of Birth */}
-            <div className="mb-4">
+            <div className="">
               <label
                 htmlFor="appointment_date"
                 className="mb-2 block text-sm font-medium"
@@ -193,17 +193,8 @@ const CreateNote = () => {
                 <div className="ml-2 text-sm">{dateOfBirth}</div>
               </div>
             </div>
-            <div className="mb-4">
-              <label htmlFor="phone" className="mb-2 block text-sm font-medium">
-                Phone Number
-              </label>
-              <div className="ml-2 text-sm">{phone}</div>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-8">
             {/* Patient Age */}
-            <div className="mb-4">
+            <div className="">
               <label
                 htmlFor="patient_age"
                 className="mb-2 block text-sm font-medium"
@@ -221,41 +212,52 @@ const CreateNote = () => {
                 value={patientAgeYears}
               ></input>
             </div>
-            <div className="mb-4">
-              {/* <label htmlFor="phone" className="mb-2 block text-sm font-medium">
-                Sex
-              </label>
-              <div className="ml-2 text-sm">Male</div> */}
-            </div>
-          </div>
 
-          <div className="grid grid-cols-2 gap-8">
-            <div className="mb-4">
-              <label
-                htmlFor="address"
-                className="mb-2 block text-sm font-medium"
-              >
-                Street Address
-              </label>
-              <div className="ml-2 text-sm">
-                <div>{addressStreet}</div>
-                {addressUnit && <div>{addressUnit}</div>}
-                <div>
-                  {city}, {state} {zipcode}
+            {phone && (
+              <div className="">
+                <label
+                  htmlFor="phone"
+                  className="mb-2 block text-sm font-medium"
+                >
+                  Phone Number
+                </label>
+                <div className="ml-2 text-sm">{phone}</div>
+              </div>
+            )}
+
+            {email && (
+              <div className="">
+                <label
+                  htmlFor="email"
+                  className="mb-2 block text-sm font-medium"
+                >
+                  Email Address
+                </label>
+                <div className="ml-2 text-sm">{email}</div>
+              </div>
+            )}
+
+            {addressStreet && (
+              <div className="">
+                <label
+                  htmlFor="address"
+                  className="mb-2 block text-sm font-medium"
+                >
+                  Street Address
+                </label>
+                <div className="ml-2 text-sm">
+                  <div>{addressStreet}</div>
+                  {addressUnit && <div>{addressUnit}</div>}
+                  <div>
+                    {city}, {state} {zipcode}
+                  </div>
                 </div>
               </div>
-            </div>
-
-            <div className="mb-4">
-              <label htmlFor="email" className="mb-2 block text-sm font-medium">
-                Email Address
-              </label>
-              <div className="ml-2 text-sm">{email}</div>
-            </div>
+            )}
           </div>
 
           {profileNotes && (
-            <div className="mb-4">
+            <div className="">
               <label
                 htmlFor="profilenotes"
                 className="mb-2 block text-sm font-medium"
