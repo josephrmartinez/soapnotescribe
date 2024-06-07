@@ -1,9 +1,16 @@
-import React from 'react';
+'use client';
+
+import React, { useState } from 'react';
 import Logo from '../ui/logo';
 import { login } from './action';
 import Link from 'next/link';
+import { SubmitButton } from '../ui/submitButton';
 
 export default function LoginPage() {
+  const [password, setPassword] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
+  const submitOkay = password !== '' && email !== '';
+
   return (
     <div className="flex h-screen flex-col items-center justify-between bg-gray-50 p-24">
       <div className="w-[300px] rounded-md bg-gray-50 p-6">
@@ -11,13 +18,30 @@ export default function LoginPage() {
           <Logo />
         </div>
 
-        <form className="flex flex-col gap-2">
+        <form action={login} className="flex flex-col gap-2">
           <Label htmlFor="email">Email:</Label>
-          <Input id="email" name="email" type="email" required />
+          <Input
+            id="email"
+            name="email"
+            type="email"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
           <Label htmlFor="password">Password:</Label>
-          <Input id="password" name="password" type="password" required />
+          <Input
+            id="password"
+            name="password"
+            type="password"
+            required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
           <Separator />
-          <Button formAction={login}>Log in</Button>
+          {/* <Button active={submitOkay} pending={pending}>
+            Log in
+          </Button> */}
+          <SubmitButton active={submitOkay}>Log In</SubmitButton>
         </form>
         <div className="mt-6 flex flex-col items-center">
           <p className="text-gray-500">Don't yet have an account?</p>
@@ -33,20 +57,8 @@ export default function LoginPage() {
   );
 }
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {}
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {}
 interface LabelProps extends React.LabelHTMLAttributes<HTMLLabelElement> {}
-
-const Button: React.FC<ButtonProps> = ({ children, ...rest }) => {
-  return (
-    <button
-      className="rounded bg-teal-600 px-4 py-2 font-semibold text-white transition duration-100 ease-in-out hover:bg-teal-500"
-      {...rest}
-    >
-      {children}
-    </button>
-  );
-};
 
 const Input: React.FC<InputProps> = ({ ...rest }) => {
   return (
