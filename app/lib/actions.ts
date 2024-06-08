@@ -81,8 +81,8 @@ export async function getSOAPData(noteid: string, transcript: string) {
         role: "system",
         content: `You are a helpful, highly-trained medical assistant. Carefully review the following TRANSCRIPT and generate a clinical SOAP note as a JSON object with the following structure:
         {
-          appointment_date: Date ("yyyy-mm-dd");
-          appointment_time: string ("hh:mm");
+          appointment_date?: Date ("yyyy-mm-dd");
+          appointment_time?: string ("hh:mm");
           allergies: string ("NKDA" if none);
           chief_complaint?: string (max 50 characters, capitalize first character);
           soap_subjective?: string;
@@ -123,6 +123,7 @@ async function updateNoteWithSOAPData(noteid: string, transcript: string, comple
   // const supabase = createClient()
 
   try {
+    // Assumes 100% success rate returning object in correct format
     const completionObject = JSON.parse(completion);
 
     const { data, error, status } = await supabase

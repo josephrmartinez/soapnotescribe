@@ -8,6 +8,7 @@ import { NoteWithPatient } from '@/app/lib/definitions';
 import { getSignedAudioUrl } from '@/app/lib/data';
 import { updateNote } from './action';
 import { DeleteNoteFirstStep } from '@/app/ui/notes/buttons';
+import { calculateAge } from '@/app/lib/utils';
 
 interface CreateNoteProps {
   note: NoteWithPatient;
@@ -19,12 +20,17 @@ const CreateNotePrefilled: React.FC<CreateNoteProps> = ({ note }) => {
   const [chiefComplaint, setChiefComplaint] = useState<string | null>(
     note?.chief_complaint || null,
   );
-  const [date, setDate] = useState<string>(note?.appointment_date || '');
+  const [date, setDate] = useState<string>(
+    note?.appointment_date || new Date().toISOString().split('T')[0],
+  );
   const [appointmentTime, setAppointmentTime] = useState<string>(
     note?.appointment_time || '',
   );
-  const [patientDateOfBirth, setPatientDateOfBirth] = useState<string>(
+  const [dateOfBirth, setDateOfBirth] = useState<string>(
     note?.patient.date_of_birth || '',
+  );
+  const [patientAgeYears, setPatientAgeYears] = useState<number>(
+    note?.patient_age_years || 0,
   );
   const [allergies, setAllergies] = useState<string>(note?.allergies || '');
   const [consent, setConsent] = useState<boolean | null>(note?.consent || null);
@@ -100,6 +106,14 @@ const CreateNotePrefilled: React.FC<CreateNoteProps> = ({ note }) => {
     console.log('note data from client CreateNotePrefilled:', note);
   }, []);
 
+  // Calculate patientAgeYears based on patient dob and appointment date
+  useEffect(() => {
+    if (dateOfBirth && date) {
+      const age = calculateAge(dateOfBirth, date);
+      setPatientAgeYears(age);
+    }
+  }, [dateOfBirth, date]);
+
   const saveDraft = updateNote.bind(null, 'awaiting review');
   const approveNote = updateNote.bind(null, 'approved');
 
@@ -168,8 +182,9 @@ const CreateNotePrefilled: React.FC<CreateNoteProps> = ({ note }) => {
               </div>
             )}
 
+            {/* UPDATE TO USE CALCULATED VALUE */}
             {/* Patient Age */}
-            {note.patient_age_years && (
+            {patientAgeYears && (
               <div className="">
                 <label
                   htmlFor="patient_age"
@@ -178,10 +193,15 @@ const CreateNotePrefilled: React.FC<CreateNoteProps> = ({ note }) => {
                   Patient Age
                 </label>
                 <div className="ml-2 text-sm">
-                  {note.patient_age_years && (
-                    <div>{note.patient_age_years} years old</div>
-                  )}{' '}
+                  <div>{patientAgeYears} years old</div>
                 </div>
+                <input
+                  name="patient_age"
+                  id="patient_age"
+                  hidden
+                  type="number"
+                  value={patientAgeYears}
+                ></input>
               </div>
             )}
 
