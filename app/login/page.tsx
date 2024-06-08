@@ -38,10 +38,8 @@ export default function LoginPage() {
             onChange={(e) => setPassword(e.target.value)}
           />
           <Separator />
-          {/* <Button active={submitOkay} pending={pending}>
-            Log in
-          </Button> */}
-          <SubmitButton active={submitOkay}>Log In</SubmitButton>
+
+          <SubmitButton active={submitOkay}>Log in</SubmitButton>
         </form>
         <div className="mt-6 flex flex-col items-center">
           <p className="text-gray-500">Don't yet have an account?</p>

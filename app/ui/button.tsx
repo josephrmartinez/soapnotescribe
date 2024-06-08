@@ -17,7 +17,7 @@ export function Button({
     <button
       {...rest}
       className={clsx(
-        'flex h-10 items-center rounded-lg px-4 text-sm font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-700',
+        'flex h-10 items-center justify-center rounded-lg px-4 text-sm font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-700',
         {
           'bg-gray-100 hover:bg-gray-200': secondary,
           'bg-teal-600 text-white shadow hover:bg-teal-500 active:bg-teal-600':

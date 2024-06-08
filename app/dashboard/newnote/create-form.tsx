@@ -470,10 +470,10 @@ const CreateNote = () => {
             </div>
           </div>
 
-          <div className="mt-6 flex justify-end gap-4">
+          <div className="mt-6 grid grid-cols-2  gap-4 sm:grid-cols-3">
             <Link
               href="/dashboard/notes"
-              className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
+              className="flex h-10 items-center justify-center rounded-lg bg-gray-100 px-4 text-center text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
             >
               Cancel
             </Link>
@@ -482,6 +482,7 @@ const CreateNote = () => {
               Save Draft
             </Button>
             <Button
+              className="col-span-2 sm:col-span-1"
               type="submit"
               formAction={submitApprovedNote}
               active={doctorSignature !== null}

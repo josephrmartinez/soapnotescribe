@@ -12,10 +12,10 @@ const SubmitButton: React.FC<ButtonProps> = ({ children, active, ...rest }) => {
   return (
     <button
       disabled={!active || pending}
-      className={`rounded  px-4 py-2 font-semibold text-white transition duration-100 ease-in-out ${pending ? 'bg-red-400' : active ? 'bg-teal-600 hover:bg-teal-500' : 'bg-gray-400'} `}
+      className={`rounded  px-4 py-2 font-semibold text-white transition duration-100 ease-in-out ${pending ? 'bg-teal-500' : active ? 'bg-teal-600 hover:bg-teal-500' : 'bg-gray-400'} `}
       {...rest}
     >
-      {children}
+      {pending ? <div>Loading...</div> : children}
     </button>
   );
 };

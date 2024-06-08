@@ -116,9 +116,9 @@ const CreateNotePrefilled: React.FC<CreateNoteProps> = ({ note }) => {
             SOAP note
           </div>
 
-          <div className="grid grid-cols-2 gap-8">
+          <div className="mb-8 grid grid-cols-2 gap-8">
             {/* Patient First Name */}
-            <div className="mb-4">
+            <div className="">
               <label
                 htmlFor="first_name"
                 className="mb-2 block text-sm font-medium"
@@ -129,7 +129,7 @@ const CreateNotePrefilled: React.FC<CreateNoteProps> = ({ note }) => {
                 <div className="ml-2 text-sm">{note.patient.first_name}</div>
               </div>
             </div>
-            <div className="mb-4">
+            <div className="">
               <label
                 htmlFor="last_name"
                 className="mb-2 block text-sm font-medium"
@@ -138,78 +138,85 @@ const CreateNotePrefilled: React.FC<CreateNoteProps> = ({ note }) => {
               </label>
               <div className="ml-2 text-sm">{note.patient.last_name}</div>
             </div>
-          </div>
 
-          <div className="grid grid-cols-2 gap-8">
             {/* Patient Date of Birth */}
-            <div className="mb-4">
-              <label
-                htmlFor="appointment_date"
-                className="mb-2 block text-sm font-medium"
-              >
-                Date of Birth
-              </label>
-              <div className="relative">
-                <div className="ml-2 text-sm">{note.patient.date_of_birth}</div>
-              </div>
-            </div>
-            <div className="mb-4">
-              <label htmlFor="phone" className="mb-2 block text-sm font-medium">
-                Phone Number
-              </label>
-              <div className="ml-2 text-sm">{note.patient.phone}</div>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-8">
-            {/* Patient Age */}
-            <div className="mb-4">
-              <label
-                htmlFor="patient_age"
-                className="mb-2 block text-sm font-medium"
-              >
-                Patient Age
-              </label>
-              <div className="ml-2 text-sm">
-                {note.patient_age_years && (
-                  <div>{note.patient_age_years} years old</div>
-                )}{' '}
-              </div>
-            </div>
-            <div className="mb-4">
-              {/* <label htmlFor="phone" className="mb-2 block text-sm font-medium">
-                Sex
-              </label>
-              <div className="ml-2 text-sm">Male</div> */}
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-8">
-            <div className="mb-4">
-              <label
-                htmlFor="address"
-                className="mb-2 block text-sm font-medium"
-              >
-                Street Address
-              </label>
-              <div className="ml-2 text-sm">
-                <div>{note.patient.address_street}</div>
-                {note.patient.address_unit && (
-                  <div>{note.patient.address_unit}</div>
-                )}
-                <div>
-                  {note.patient.city}, {note.patient.state}{' '}
-                  {note.patient.zipcode}
+            {note.patient.date_of_birth && (
+              <div className="">
+                <label
+                  htmlFor="appointment_date"
+                  className="mb-2 block text-sm font-medium"
+                >
+                  Date of Birth
+                </label>
+                <div className="relative">
+                  <div className="ml-2 text-sm">
+                    {note.patient.date_of_birth}
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
 
-            <div className="mb-4">
-              <label htmlFor="email" className="mb-2 block text-sm font-medium">
-                Email Address
-              </label>
-              <div className="ml-2 text-sm">{note.patient.email}</div>
-            </div>
+            {note.patient.phone && (
+              <div className="">
+                <label
+                  htmlFor="phone"
+                  className="mb-2 block text-sm font-medium"
+                >
+                  Phone Number
+                </label>
+                <div className="ml-2 text-sm">{note.patient.phone}</div>
+              </div>
+            )}
+
+            {/* Patient Age */}
+            {note.patient_age_years && (
+              <div className="">
+                <label
+                  htmlFor="patient_age"
+                  className="mb-2 block text-sm font-medium"
+                >
+                  Patient Age
+                </label>
+                <div className="ml-2 text-sm">
+                  {note.patient_age_years && (
+                    <div>{note.patient_age_years} years old</div>
+                  )}{' '}
+                </div>
+              </div>
+            )}
+
+            {note.patient.address_street && (
+              <div className="">
+                <label
+                  htmlFor="address"
+                  className="mb-2 block text-sm font-medium"
+                >
+                  Street Address
+                </label>
+                <div className="ml-2 text-sm">
+                  <div>{note.patient.address_street}</div>
+                  {note.patient.address_unit && (
+                    <div>{note.patient.address_unit}</div>
+                  )}
+                  <div>
+                    {note.patient.city}, {note.patient.state}{' '}
+                    {note.patient.zipcode}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {note.patient.email && (
+              <div className="">
+                <label
+                  htmlFor="email"
+                  className="mb-2 block text-sm font-medium"
+                >
+                  Email Address
+                </label>
+                <div className="ml-2 text-sm">{note.patient.email}</div>
+              </div>
+            )}
           </div>
 
           {note.patient.profile_notes && (
@@ -428,10 +435,10 @@ const CreateNotePrefilled: React.FC<CreateNoteProps> = ({ note }) => {
             </div>
           </div>
 
-          <div className="mt-6 flex justify-end gap-4">
+          <div className="mt-6 grid grid-cols-3 gap-4 md:grid-cols-4">
             <Link
               href="/dashboard/notes"
-              className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
+              className="flex h-10 items-center justify-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
             >
               Cancel
             </Link>
@@ -439,7 +446,11 @@ const CreateNotePrefilled: React.FC<CreateNoteProps> = ({ note }) => {
             <Button formAction={saveDraft} secondary>
               Save Draft
             </Button>
-            <Button formAction={approveNote} active={doctorSignature !== ''}>
+            <Button
+              className="col-span-3 md:col-span-1"
+              formAction={approveNote}
+              active={doctorSignature !== ''}
+            >
               Approve Note
             </Button>
           </div>
