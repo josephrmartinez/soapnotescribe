@@ -16,7 +16,7 @@ import {
   DocumentIcon,
 } from '@heroicons/react/24/outline';
 import { Metadata } from 'next';
-import { formatDateToLocal, formatTime } from '@/app/lib/utils';
+import { calculateAge, formatDateToLocal, formatTime } from '@/app/lib/utils';
 import { Button } from '@/app/ui/button';
 import { DeleteNoteFirstStep } from '@/app/ui/notes/buttons';
 import { createClient } from '@/utils/supabase/server';
@@ -32,6 +32,8 @@ export default async function Page({ params }: { params: { id: string } }) {
   console.log('patient data from patients/[id]:', patient);
 
   const patientDOB = formatDateToLocal(patient.date_of_birth);
+  const dateToday = new Date();
+  const patientAge = calculateAge(patientDOB, dateToday.toString());
 
   return (
     <main>
@@ -51,7 +53,7 @@ export default async function Page({ params }: { params: { id: string } }) {
           <h1 className={`text-2xl`}>Patient Profile</h1>
 
           <div className="grid grid-cols-2 gap-2">
-            {/* UPLOAD TO DELETE PATIENT FIRST STEP */}
+            {/* UPDATE TO DELETE PATIENT FIRST STEP */}
             <DeleteNoteFirstStep id={patient.id} />
             <Link
               href={`/dashboard/patients/${patient.id}/edit`}
@@ -65,7 +67,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 
         <div className="mb-4 max-w-prose rounded-md bg-gray-50 p-4">
           <div className="grid grid-cols-2 gap-8">
-            <div className="mb-4">
+            <div className="">
               <label
                 htmlFor="patient"
                 className="mb-2 block text-sm font-medium"
@@ -79,7 +81,7 @@ export default async function Page({ params }: { params: { id: string } }) {
               </div>
             </div>
             {/* Patient Date of Birth */}
-            <div className="mb-4">
+            <div className="">
               <label
                 htmlFor="appointment_date"
                 className="mb-2 block text-sm font-medium"
@@ -92,11 +94,21 @@ export default async function Page({ params }: { params: { id: string } }) {
                 </div>
               </div>
             </div>
-          </div>
 
-          <div className="grid grid-cols-2 gap-8">
+            <div className="">
+              <label
+                htmlFor="patient_age"
+                className="mb-2 block text-sm font-medium"
+              >
+                Patient Age
+              </label>
+              <div className="ml-2 text-sm">
+                <div>{patientAge} years old</div>
+              </div>
+            </div>
+
             {/* Phone */}
-            <div className="mb-4">
+            <div className="">
               <label htmlFor="phone" className="mb-2 block text-sm font-medium">
                 Phone Number
               </label>
@@ -106,7 +118,7 @@ export default async function Page({ params }: { params: { id: string } }) {
             </div>
 
             {/* Email Address */}
-            <div className="mb-4">
+            <div className="">
               <label htmlFor="email" className="mb-2 block text-sm font-medium">
                 Email Address
               </label>
@@ -116,25 +128,26 @@ export default async function Page({ params }: { params: { id: string } }) {
                 </div>
               </div>
             </div>
-          </div>
 
-          <div className="mb-4">
-            <label htmlFor="address" className="mb-2 block text-sm font-medium">
-              Home Address
-            </label>
-            <div className="relative">
-              <div id="address" className="px-2 py-2 text-sm">
-                <div>{patient.address_street}</div>
-                {patient.address_unit && <div>{patient.address_unit}</div>}
-                <div>
-                  {patient.city}
-                  {patient.city && ','} {patient.state} {patient.zipcode}
+            <div className="mb-4">
+              <label
+                htmlFor="address"
+                className="mb-2 block text-sm font-medium"
+              >
+                Home Address
+              </label>
+              <div className="relative">
+                <div id="address" className="px-2 py-2 text-sm">
+                  <div>{patient.address_street}</div>
+                  {patient.address_unit && <div>{patient.address_unit}</div>}
+                  <div>
+                    {patient.city}
+                    {patient.city && ','} {patient.state} {patient.zipcode}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <div className="grid grid-cols-2 gap-8">
             <div className="mb-4">
               <label
                 htmlFor="allergies"
@@ -146,18 +159,18 @@ export default async function Page({ params }: { params: { id: string } }) {
                 <div className="px-2 py-2 text-sm">{patient.allergies}</div>
               </div>
             </div>
-          </div>
 
-          <div className="mb-4">
-            <label
-              htmlFor="profile_notes"
-              className="mb-2 block text-sm font-medium"
-            >
-              Profile Notes
-            </label>
-            <div className="relative">
-              <div id="profile_notes" className="px-2 py-2 text-sm">
-                {patient.profile_notes}
+            <div className="mb-4">
+              <label
+                htmlFor="profile_notes"
+                className="mb-2 block text-sm font-medium"
+              >
+                Profile Notes
+              </label>
+              <div className="relative">
+                <div id="profile_notes" className="px-2 py-2 text-sm">
+                  {patient.profile_notes}
+                </div>
               </div>
             </div>
           </div>

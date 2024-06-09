@@ -9,6 +9,7 @@ import StateSelect from '@/app/ui/patients/StateSelect';
 import { OptionProps } from 'react-select';
 import { revalidatePath } from 'next/cache';
 import { editPatient } from './action';
+import { formatDateToLocal, calculateAge } from '@/app/lib/utils';
 
 import {
   CheckIcon,
@@ -70,8 +71,9 @@ const EditPatientForm: React.FC<EditPatientProps> = ({ patient }) => {
   );
   const [submitOkay, setSubmitOkay] = useState<boolean>(true);
 
-  const supabase = createClient();
-  const router = useRouter();
+  const patientDOB = formatDateToLocal(patient.date_of_birth);
+  const dateToday = new Date();
+  const patientAge = calculateAge(patientDOB, dateToday.toString());
 
   const handleStateChange = (selectedState: string) => {
     setState(selectedState);
@@ -86,7 +88,7 @@ const EditPatientForm: React.FC<EditPatientProps> = ({ patient }) => {
       <div className="max-w-prose rounded-md bg-gray-50 p-4">
         <input name="id" hidden defaultValue={patient?.id}></input>
         <div className="grid grid-cols-2 gap-8">
-          <div className="mb-4">
+          <div className="">
             <label
               htmlFor="first_name"
               className="mb-2 block text-sm font-medium"
@@ -106,7 +108,27 @@ const EditPatientForm: React.FC<EditPatientProps> = ({ patient }) => {
               <UserCircleIcon className="pointer-events-none absolute right-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
             </div>
           </div>
-          <div className="mb-4">
+          <div className="">
+            <label
+              htmlFor="middle_name"
+              className="mb-2 block text-sm font-medium"
+            >
+              Middle Name
+            </label>
+            <div className="relative">
+              <input
+                id="middle_name"
+                name="middle_name"
+                placeholder="Middle name"
+                type="text"
+                className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
+                value={middleName || ''}
+                onChange={(e) => setMiddleName(e.target.value)}
+              ></input>
+              <UserCircleIcon className="pointer-events-none absolute right-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+            </div>
+          </div>
+          <div className="">
             <label
               htmlFor="last_name"
               className="mb-2 block text-sm font-medium"
@@ -126,11 +148,9 @@ const EditPatientForm: React.FC<EditPatientProps> = ({ patient }) => {
               <UserCircleIcon className="pointer-events-none absolute right-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
             </div>
           </div>
-        </div>
 
-        <div className="grid grid-cols-2 gap-8">
           {/* Patient Date of Birth */}
-          <div className="mb-4">
+          <div className="">
             <label
               htmlFor="date_of_birth"
               className="mb-2 block text-sm font-medium"
@@ -149,7 +169,19 @@ const EditPatientForm: React.FC<EditPatientProps> = ({ patient }) => {
               <CalendarDaysIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
             </div>
           </div>
-          <div className="mb-4">
+          <div className="">
+            <label
+              htmlFor="patient_age"
+              className="mb-2 block text-sm font-medium"
+            >
+              Patient Age
+            </label>
+            <div className="ml-2 text-sm">
+              <div>{patientAge} years old</div>
+            </div>
+          </div>
+
+          <div className="">
             <label htmlFor="phone" className="mb-2 block text-sm font-medium">
               Phone Number
             </label>
@@ -157,61 +189,61 @@ const EditPatientForm: React.FC<EditPatientProps> = ({ patient }) => {
               <PhoneInput phone={phone} setPhone={handlePhoneChange} />
             </div>
           </div>
-        </div>
 
-        <div className="mb-4">
-          <label htmlFor="email" className="mb-2 block text-sm font-medium">
-            Email Address
-          </label>
-          <div className="relative">
-            <input
-              id="email"
-              name="email"
-              type="text"
-              className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
-              value={email || ''}
-              onChange={(e) => setEmail(e.target.value)}
-            ></input>
+          <div className="">
+            <label htmlFor="email" className="mb-2 block text-sm font-medium">
+              Email Address
+            </label>
+            <div className="relative">
+              <input
+                id="email"
+                name="email"
+                type="text"
+                className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
+                value={email || ''}
+                onChange={(e) => setEmail(e.target.value)}
+              ></input>
+            </div>
           </div>
-        </div>
 
-        <div className="mb-4">
-          <label
-            htmlFor="address_street"
-            className="mb-2 block text-sm font-medium"
-          >
-            Street Address
-          </label>
-          <div className="relative">
-            <input
-              id="address_street"
-              name="address_street"
-              placeholder="671 Lincoln Ave"
-              type="text"
-              className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
-              value={addressStreet || ''}
-              onChange={(e) => setAddressStreet(e.target.value)}
-            ></input>
+          <div className="">
+            <label
+              htmlFor="address_street"
+              className="mb-2 block text-sm font-medium"
+            >
+              Street Address
+            </label>
+            <div className="relative">
+              <input
+                id="address_street"
+                name="address_street"
+                placeholder="671 Lincoln Ave"
+                type="text"
+                className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
+                value={addressStreet || ''}
+                onChange={(e) => setAddressStreet(e.target.value)}
+              ></input>
+            </div>
           </div>
-        </div>
 
-        <div className="mb-4">
-          <label
-            htmlFor="address_unit"
-            className="mb-2 block text-sm font-medium"
-          >
-            Apartment, suite, etc.
-          </label>
-          <div className="relative">
-            <input
-              id="address_unit"
-              name="address_unit"
-              placeholder="optional"
-              type="text"
-              className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
-              value={addressUnit || ''}
-              onChange={(e) => setAddressUnit(e.target.value)}
-            ></input>
+          <div className="">
+            <label
+              htmlFor="address_unit"
+              className="mb-2 block text-sm font-medium"
+            >
+              Apartment, suite, etc.
+            </label>
+            <div className="relative">
+              <input
+                id="address_unit"
+                name="address_unit"
+                placeholder="optional"
+                type="text"
+                className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
+                value={addressUnit || ''}
+                onChange={(e) => setAddressUnit(e.target.value)}
+              ></input>
+            </div>
           </div>
         </div>
 
