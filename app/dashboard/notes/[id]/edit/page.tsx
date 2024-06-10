@@ -1,43 +1,19 @@
-// import EditAppointment from '@/app/ui/appointments/edit-form';
-import Breadcrumbs from '@/app/ui/notes/breadcrumbs';
-import { fetchAppointmentById } from '@/app/lib/data';
-import { notFound } from 'next/navigation';
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
-import { Database } from '@/app/database.types';
+import { Metadata } from 'next';
+import { fetchNoteById } from '@/app/lib/data';
+import EditDraftNote from './create-form';
+
+export const metadata: Metadata = {
+  title: 'Review Draft',
+};
 
 export default async function Page({ params }: { params: { id: string } }) {
-  //   const id = params.id;
-  //   const appointment = await fetchAppointmentById(id)
-
-  //   if (!appointment) {
-  //     notFound();
-  //   }
-
-  //   const supabase = createServerComponentClient<Database>({ cookies })
-
-  // const {
-  //   data: { session },
-  // } = await supabase.auth.getSession()
+  const id = params.id;
+  const note = await fetchNoteById(id);
+  console.log('note data from newnote/[id]/page.tsx:', note);
 
   return (
-    <main>
-      Edit Appointment
-      {/* <Breadcrumbs
-        breadcrumbs={[
-          { label: 'Appointments', href: '/dashboard/appointments' },
-          {
-            label: `${appointment.title} with ${appointment.provider}`,
-            href: `/dashboard/appointments/${id}`
-          },
-          {
-            label: 'Edit',
-            href: `/dashboard/appointments/${id}/edit`,
-            active: true,
-          },
-        ]}
-      />
-      <EditAppointment session={session} appointment={appointment}/> */}
-    </main>
+    <div>
+      <EditDraftNote note={note} />
+    </div>
   );
 }

@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
-import CreateNotePrefilled from './create-form';
 import { fetchNoteById } from '@/app/lib/data';
+import EditDraftNote from './create-form';
 
 export const metadata: Metadata = {
   title: 'Review Draft',
@@ -13,7 +13,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 
   return (
     <div>
-      <CreateNotePrefilled note={note} />
+      <EditDraftNote note={note} />
     </div>
   );
 }

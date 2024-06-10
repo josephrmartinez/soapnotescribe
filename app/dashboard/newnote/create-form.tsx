@@ -13,6 +13,7 @@ import { PencilSquareIcon, PlusIcon } from '@heroicons/react/24/outline';
 interface Patient {
   id: string;
   first_name: string;
+  middle_namee: string;
   last_name: string;
   email: string;
   phone: string;
@@ -36,6 +37,7 @@ const CreateNote = () => {
   const [loading, setLoading] = useState(true);
   const [patientId, setPatientId] = useState<string>('');
   const [firstName, setFirstName] = useState<string>('');
+  const [middleName, setMiddleName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
   const [dateOfBirth, setDateOfBirth] = useState<string>('');
   const [phone, setPhone] = useState<string | null>('');
@@ -75,6 +77,7 @@ const CreateNote = () => {
       // console.log('newValue', newValue);
       setPatientId(newValue.value.id);
       setFirstName(newValue.value.first_name);
+      setMiddleName(newValue.value.middle_name);
       setLastName(newValue.value.last_name);
       setAllergies(newValue.value.allergies);
       setDateOfBirth(newValue.value.date_of_birth);
@@ -155,6 +158,7 @@ const CreateNote = () => {
             <SelectPatient onPatientSelect={handlePatientSelect} />
             <input name="patient_id" hidden defaultValue={patientId}></input>
             <input name="first_name" hidden defaultValue={firstName}></input>
+            <input name="middle_name" hidden defaultValue={middleName}></input>
             <input name="last_name" hidden defaultValue={lastName}></input>
           </div>
 

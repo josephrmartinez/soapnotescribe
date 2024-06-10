@@ -18,6 +18,7 @@ import {
   UserCircleIcon,
   PencilSquareIcon,
 } from '@heroicons/react/24/outline';
+import { SubmitButton } from '@/app/ui/SubmitButton';
 
 interface EditPatientProps {
   patient: Patient;
@@ -335,9 +336,7 @@ const EditPatientForm: React.FC<EditPatientProps> = ({ patient }) => {
           >
             Cancel
           </Link>
-          <Button type="submit" formAction={editPatient} active={submitOkay}>
-            Update Patient
-          </Button>
+          <SubmitButton active={submitOkay}>Update Patient</SubmitButton>
         </div>
       </div>
     </form>

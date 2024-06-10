@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Logo from '../ui/logo';
 import { login } from './action';
 import Link from 'next/link';
-import { SubmitButton } from '../ui/submitButton';
+import { SubmitButton } from '../ui/SubmitButton';
 
 export default function LoginPage() {
   const [password, setPassword] = useState<string>('');

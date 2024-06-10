@@ -52,18 +52,28 @@ export default function NotesTable({ notes }: { notes: NoteWithPatient[] }) {
                     <div className="mb-2 flex items-center">
                       <p>{formatDateToLocal(note.appointment_date)}</p>
                     </div>
-                    <p className="text-sm text-gray-500">{`${note.patient.last_name}, ${note.patient.first_name}`}</p>
+                    <PatientName
+                      last_name={note.patient.last_name}
+                      first_name={note.patient.first_name}
+                    />
                   </div>
                 </div>
                 <div className="flex w-full items-center justify-between pt-4">
                   <div>
-                    <p className="text-xl font-medium">
+                    <p className="text-lg font-medium">
                       {note.chief_complaint}
                     </p>
-                    <p>{note.status}</p>
                   </div>
                   <div className="flex justify-end gap-2">
-                    <ViewSOAPNote id={note.id} />
+                    {note.status === 'processing' && (
+                      <ProcessingSOAPNote id={note.id} />
+                    )}
+                    {note.status === 'approved' && (
+                      <ViewSOAPNote id={note.id} />
+                    )}
+                    {note.status === 'awaiting review' && (
+                      <ReviewDraft id={note.id} />
+                    )}
                   </div>
                 </div>
               </div>
