@@ -30,9 +30,9 @@ export function ViewNotes({ patient_name }: { patient_name: string | null }) {
   return (
     <Link
       href={`./notes?query=${patient_name}`}
-      className={`rounded-md border border-gray-200 p-2 text-sm font-semibold text-gray-800 transition-colors hover:bg-gray-100`}
+      className={`nowrap flex w-24 items-center justify-center rounded-md border border-gray-200 p-2 text-center text-sm font-semibold text-gray-800 transition-colors hover:bg-gray-100`}
     >
-      notes
+      <div>view notes</div>
     </Link>
   );
 }
@@ -42,7 +42,7 @@ export function NewNote({ patient_id }: { patient_id: string }) {
     <Link
       href={`./createnote?patient=${patient_id}`}
       className={
-        'flex h-10 items-center rounded-lg bg-teal-600 px-4 text-sm font-medium text-white shadow transition-colors hover:bg-teal-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-700 active:bg-teal-600'
+        'flex h-10 w-32 items-center justify-center rounded-lg bg-teal-600 text-sm font-medium text-white shadow transition-colors hover:bg-teal-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-700 active:bg-teal-600'
       }
     >
       <PlusIcon width={22} className="mr-2" />

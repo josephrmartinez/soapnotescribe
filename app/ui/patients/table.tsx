@@ -1,13 +1,9 @@
-import {
-  UpdateAppointment,
-  ViewSOAPNote,
-  ReviewDraft,
-  PatientName,
-} from '@/app/ui/notes/buttons';
+import { ViewSOAPNote, ReviewDraft, PatientName } from '@/app/ui/notes/buttons';
 import { fetchPatients } from '@/app/lib/data';
 import { useEffect } from 'react';
 import { getMaxListeners } from 'events';
-import { ViewProfile } from './buttons';
+import { ViewProfile, ViewNotes, NewNote } from './buttons';
+import CreateNote from '@/app/dashboard/newnote/create-form';
 
 export default async function PatientsTable({ query }: { query: string }) {
   // UPDATE TABLE TO FETCH PATIENTS WITH QUERY KEYWORD SEARCH
@@ -26,23 +22,23 @@ export default async function PatientsTable({ query }: { query: string }) {
                 key={patient.id}
                 className="mb-2 w-full rounded-md bg-white p-4"
               >
-                <div className="flex items-center justify-between pb-4">
-                  <div>
-                    <div className="mb-2 flex items-center">
-                      <p>item</p>
-                    </div>
-                    <p className="text-sm text-gray-500">
-                      {patient.first_name}
-                    </p>
-                  </div>
+                <div className="flex w-full items-center justify-between pb-4">
+                  <ViewProfile
+                    patient_id={patient.id}
+                    first_name={patient.first_name}
+                    last_name={patient.last_name}
+                  />
+
+                  <ViewNotes
+                    patient_name={`${patient.first_name} ${patient.last_name}`}
+                  />
                 </div>
-                <div className="flex w-full items-center justify-between pt-4">
+                <div className="flex w-full items-center justify-between">
                   <div>
-                    <p className="text-xl font-medium">{patient.phone}</p>
-                    <p>{patient.address_street}</p>
+                    <p className="font-medium">{patient.phone}</p>
                   </div>
                   <div className="flex justify-end gap-2">
-                    <ViewSOAPNote id={patient.id} />
+                    <NewNote patient_id={patient.id} />
                   </div>
                 </div>
               </div>
@@ -53,16 +49,16 @@ export default async function PatientsTable({ query }: { query: string }) {
               <thead className="sticky top-0 w-full rounded-lg text-left text-sm font-normal">
                 <tr className="sticky top-0 w-full bg-gray-50 ">
                   <th scope="col" className="px-4 py-5 font-medium">
-                    Patient
+                    Patient Profile
                   </th>
                   <th scope="col" className="px-3 py-5 font-medium">
                     Phone Number
                   </th>
                   <th scope="col" className="px-3 py-5 font-medium">
-                    Home Address
+                    View Notes
                   </th>
                   <th scope="col" className="px-3 py-5 font-medium">
-                    Email Address
+                    Create Note
                   </th>
                 </tr>
               </thead>
@@ -85,13 +81,13 @@ export default async function PatientsTable({ query }: { query: string }) {
                     <td className="whitespace-nowrap px-3 py-3 font-medium">
                       <p>{patient.phone}</p>
                     </td>
-                    <td className="whitespace-nowrap px-3 py-3">
-                      {patient.address_street} {patient.address_unit}{' '}
-                      {patient.city}
-                      {patient.city && ','} {patient.state} {patient.zipcode}
+                    <td className="">
+                      <ViewNotes
+                        patient_name={`${patient.first_name} ${patient.last_name}`}
+                      />
                     </td>
-                    <td className="whitespace-nowrap  px-3 ">
-                      {patient.email}
+                    <td className="">
+                      <NewNote patient_id={patient.id} />
                     </td>
                   </tr>
                 ))}
