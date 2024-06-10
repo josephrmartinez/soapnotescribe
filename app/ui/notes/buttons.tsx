@@ -29,7 +29,7 @@ export function ViewSOAPNote({ id }: { id: string }) {
       href={`/dashboard/notes/${id}`}
       className="flex flex-row rounded-md border border-gray-200 bg-teal-600 p-2 font-semibold text-white transition-colors hover:bg-teal-500"
     >
-      <div className="text-sm ">view SOAP note</div>
+      <div className="mr-2 text-sm">view note</div>
       <ArrowRightIcon className="h-5 md:ml-4 md:mr-1" />
     </Link>
   );
@@ -61,7 +61,7 @@ export function PatientName({
       {last_name ? (
         <Link
           href={`?query=${last_name}, ${first_name}`}
-          className={`rounded-md border border-gray-200 p-2 text-sm font-semibold text-gray-800 transition-colors hover:bg-gray-100`}
+          className={`rounded-md border border-gray-200 p-2 text-center text-sm font-semibold text-gray-800 transition-colors hover:bg-gray-100`}
         >
           {`${last_name}, ${first_name}`}
         </Link>
@@ -75,50 +75,62 @@ export function PatientName({
 export function ReviewDraft({ id }: { id: string }) {
   return (
     <Link
-      href={`/dashboard/newnote/${id}`}
+      href={`/dashboard/notes/${id}/edit`}
       className="flex flex-row rounded-md bg-red-600 p-2 shadow-md transition-all hover:bg-red-500 "
     >
-      <div className="text-sm font-semibold text-white ">review draft</div>
+      <div className="mr-2 text-sm font-semibold text-white">review draft</div>
       <ArrowRightIcon className="h-5 text-white md:ml-4 md:mr-1" />
     </Link>
   );
 }
 
-export function UpdateAppointment({ id }: { id: string }) {
-  return (
-    <Link
-      href={`/dashboard/appointments/${id}/edit`}
-      className="flex h-10 w-20 flex-row rounded-md border bg-teal-600 p-2 text-gray-50 transition-colors hover:bg-teal-500"
-    >
-      <PencilIcon className="w-5" />
-      <div className="ml-1 tracking-wider">edit</div>
-    </Link>
-  );
-}
+// export function ReviewDraft({ id }: { id: string }) {
+//   return (
+//     <Link
+//       href={`/dashboard/newnote/${id}`}
+//       className="flex flex-row rounded-md bg-red-600 p-2 shadow-md transition-all hover:bg-red-500 "
+//     >
+//       <div className="text-sm font-semibold text-white ">review draft</div>
+//       <ArrowRightIcon className="h-5 text-white md:ml-4 md:mr-1" />
+//     </Link>
+//   );
+// }
 
-export function AddDocsToAppointment({ id }: { id: string }) {
-  return (
-    <Link
-      href={`/dashboard/appointments/${id}/edit`}
-      className="flex h-10 w-44 flex-row rounded-md border bg-teal-600 p-2 text-gray-50 transition-colors hover:bg-teal-500"
-    >
-      <DocumentPlusIcon className="w-6" />
-      <div className="ml-1 tracking-wider">add documents</div>
-    </Link>
-  );
-}
+// export function UpdateAppointment({ id }: { id: string }) {
+//   return (
+//     <Link
+//       href={`/dashboard/appointments/${id}/edit`}
+//       className="flex h-10 w-20 flex-row rounded-md border bg-teal-600 p-2 text-gray-50 transition-colors hover:bg-teal-500"
+//     >
+//       <PencilIcon className="w-5" />
+//       <div className="ml-1 tracking-wider">edit</div>
+//     </Link>
+//   );
+// }
 
-export function ShareAppointment({ id }: { id: string }) {
-  return (
-    <Link
-      href={`/dashboard/appointments/${id}/share`}
-      className="flex h-10 w-24 flex-row rounded-md border bg-teal-600 p-2 text-gray-50 transition-colors hover:bg-teal-500"
-    >
-      <ShareIcon className="w-6" />
-      <div className="ml-1 tracking-wider">share</div>
-    </Link>
-  );
-}
+// export function AddDocsToAppointment({ id }: { id: string }) {
+//   return (
+//     <Link
+//       href={`/dashboard/appointments/${id}/edit`}
+//       className="flex h-10 w-44 flex-row rounded-md border bg-teal-600 p-2 text-gray-50 transition-colors hover:bg-teal-500"
+//     >
+//       <DocumentPlusIcon className="w-6" />
+//       <div className="ml-1 tracking-wider">add documents</div>
+//     </Link>
+//   );
+// }
+
+// export function ShareAppointment({ id }: { id: string }) {
+//   return (
+//     <Link
+//       href={`/dashboard/appointments/${id}/share`}
+//       className="flex h-10 w-24 flex-row rounded-md border bg-teal-600 p-2 text-gray-50 transition-colors hover:bg-teal-500"
+//     >
+//       <ShareIcon className="w-6" />
+//       <div className="ml-1 tracking-wider">share</div>
+//     </Link>
+//   );
+// }
 
 export function DeleteNoteFirstStep({ id }: { id: string }) {
   return (

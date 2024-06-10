@@ -47,22 +47,18 @@ export default function NotesTable({ notes }: { notes: NoteWithPatient[] }) {
                 key={note.id}
                 className="mb-2 w-full rounded-md bg-white p-4"
               >
-                <div className="flex items-center justify-between pb-4">
-                  <div>
-                    <div className="mb-2 flex items-center">
-                      <p>{formatDateToLocal(note.appointment_date)}</p>
-                    </div>
-                    <PatientName
-                      last_name={note.patient.last_name}
-                      first_name={note.patient.first_name}
-                    />
+                <div className="flex flex-row  justify-between pb-4">
+                  <div className="mb-2 flex items-center">
+                    <p>{formatDateToLocal(note.appointment_date)}</p>
                   </div>
+                  <PatientName
+                    last_name={note.patient.last_name}
+                    first_name={note.patient.first_name}
+                  />
                 </div>
-                <div className="flex w-full items-center justify-between pt-4">
+                <div className="grid grid-cols-2 items-center gap-2">
                   <div>
-                    <p className="text-lg font-medium">
-                      {note.chief_complaint}
-                    </p>
+                    <p className="font-medium">{note.chief_complaint}</p>
                   </div>
                   <div className="flex justify-end gap-2">
                     {note.status === 'processing' && (
