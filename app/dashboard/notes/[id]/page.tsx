@@ -18,6 +18,7 @@ import {
 import { Metadata } from 'next';
 import { formatDateToLocal, formatTime } from '@/app/lib/utils';
 import { Button } from '@/app/ui/button';
+import { LinkButton } from '@/app/ui/LinkButton';
 import { DeleteNoteFirstStep } from '@/app/ui/notes/buttons';
 
 export const metadata: Metadata = {
@@ -27,12 +28,25 @@ export const metadata: Metadata = {
 export default async function Page({ params }: { params: { id: string } }) {
   const id = params.id;
   const note = await fetchNoteById(id);
-  console.log('appointment data from appointments/[id]:', note);
+  // console.log('appointment data from appointments/[id]:', note);
 
   // Get audio url for media player:
   const audioUrl = note.audio_storage_url
     ? await getSignedAudioUrl(note.user_id, note.audio_storage_url)
     : undefined;
+
+  console.log('audioUrl:', audioUrl);
+
+  let isMp3 = false;
+
+  if (audioUrl) {
+    const url = new URL(audioUrl);
+    // console.log('search params:', url.searchParams);
+    console.log('pathname:', url.pathname);
+    if (url.pathname.endsWith('.mp3')) {
+      isMp3 = true;
+    }
+  }
 
   const pdfUrl = await getSignedPdfUrl(
     note.user_id,
@@ -264,10 +278,17 @@ export default async function Page({ params }: { params: { id: string } }) {
           <div>
             <div className="collapse-title text-lg font-medium">Audio</div>
 
-            <audio className="mb-6 w-full" controls>
-              <source type="audio/mp3" src={audioUrl} />
-              Your browser does not support the audio element.
-            </audio>
+            {isMp3 ? (
+              <audio className="mb-6 w-full" controls>
+                <source type="audio" src={audioUrl} />
+                Your browser does not support the audio element.
+              </audio>
+            ) : (
+              <div className="mb-8">
+                <LinkButton href={audioUrl}>Download audio</LinkButton>
+              </div>
+            )}
+
             <div
               tabIndex={0}
               className="collapse collapse-plus mb-4 rounded-md border"
