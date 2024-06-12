@@ -35,14 +35,10 @@ export default async function Page({ params }: { params: { id: string } }) {
     ? await getSignedAudioUrl(note.user_id, note.audio_storage_url)
     : undefined;
 
-  console.log('audioUrl:', audioUrl);
-
   let isMp3 = false;
 
   if (audioUrl) {
     const url = new URL(audioUrl);
-    // console.log('search params:', url.searchParams);
-    console.log('pathname:', url.pathname);
     if (url.pathname.endsWith('.mp3')) {
       isMp3 = true;
     }
