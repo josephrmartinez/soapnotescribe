@@ -9,6 +9,9 @@ import { getSignedAudioUrl } from '@/app/lib/data';
 import { updateNote } from './action';
 import { DeleteNoteFirstStep } from '@/app/ui/notes/buttons';
 import { calculateAge } from '@/app/lib/utils';
+import { AMRPlayer } from 'web-amr';
+import type { Player } from 'web-amr';
+import { PlayCircleIcon } from '@heroicons/react/24/outline';
 
 interface CreateNoteProps {
   note: NoteWithPatient;
@@ -93,7 +96,7 @@ const EditDraftNote: React.FC<CreateNoteProps> = ({ note }) => {
             note.user_id,
             note.audio_storage_url,
           );
-          console.log('signed url:', url);
+          // console.log('signed url:', url);
           setAudioUrl(url);
         } catch (error) {
           console.error('Error fetching audio url:', error);
@@ -103,8 +106,37 @@ const EditDraftNote: React.FC<CreateNoteProps> = ({ note }) => {
 
     fetchAudioUrl();
 
-    console.log('note data from client CreateNotePrefilled:', note);
+    // console.log('note data from client CreateNotePrefilled:', note);
   }, []);
+
+  let isAMR = false;
+
+  if (audioUrl) {
+    const url = new URL(audioUrl);
+    if (url.pathname.endsWith('.amr')) {
+      isAMR = true;
+    }
+  }
+
+  if (isAMR) {
+    console.log('my file:', audioUrl);
+    fetch(audioUrl).then(function (res) {
+      if (res.ok) {
+        res.arrayBuffer().then(function (buffer) {
+          const player: Player = AMRPlayer(buffer);
+          const button = document.getElementById('play');
+          if (button) {
+            button.onclick = (e) => {
+              e.preventDefault();
+              player.play();
+            };
+          }
+
+          console.log('player:', player);
+        });
+      }
+    });
+  }
 
   // Calculate patientAgeYears based on patient dob and appointment date
   useEffect(() => {
@@ -522,7 +554,15 @@ const EditDraftNote: React.FC<CreateNoteProps> = ({ note }) => {
             <div className="collapse-title text-lg font-medium text-gray-600">
               Audio
             </div>
-            {audioUrl ? (
+            {isAMR ? (
+              <div
+                className={`flex h-[54px] w-full flex-col justify-center rounded-full bg-gray-100`}
+              >
+                <button className="border" id="play">
+                  PLAY
+                </button>
+              </div>
+            ) : (
               <audio
                 className="w-full"
                 controls
@@ -532,12 +572,6 @@ const EditDraftNote: React.FC<CreateNoteProps> = ({ note }) => {
                 {/* <source src= /> */}
                 Your browser does not support the audio element.
               </audio>
-            ) : (
-              <div
-                className={`flex h-[54px] w-full flex-col justify-center rounded-full bg-gray-100`}
-              >
-                <div className="ml-8"></div>
-              </div>
             )}
           </div>
         )}

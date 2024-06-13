@@ -55,6 +55,7 @@
     "typescript": "5.2.2",
     "use-debounce": "^10.0.0",
     "uuid": "^9.0.1",
+    "web-amr": "^0.0.6",
     "zod": "^3.22.2"
   },
   "devDependencies": {
