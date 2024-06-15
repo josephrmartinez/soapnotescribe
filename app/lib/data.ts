@@ -197,6 +197,25 @@ try {
  }
 }
 
+
+export async function fetchPatientCount() {
+try {
+    const supabase = createClient()
+  const { data: count, error } = await supabase
+    .from('patient')
+    .select('*', {count: 'exact', head: true});
+
+  if (error) {
+    console.error('Supabase Error:', error);
+    throw new Error('Failed to fetch paient count.');
+  }
+  return count;
+} catch (error) {
+  console.error('Unexpected Error:', error);
+    throw new Error('Failed to fetch patient count due to an unexpected error.');
+  }
+}
+
 export async function getPatientDOBFromNoteId(id: string) {
   
 }

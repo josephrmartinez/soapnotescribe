@@ -9,9 +9,8 @@ import { getSignedAudioUrl } from '@/app/lib/data';
 import { updateNote } from './action';
 import { DeleteNoteFirstStep } from '@/app/ui/notes/buttons';
 import { calculateAge } from '@/app/lib/utils';
-import { AMRPlayer } from 'web-amr';
-import type { Player } from 'web-amr';
 import { PlayCircleIcon } from '@heroicons/react/24/outline';
+import AudioPlayer from '@/app/components/AudioPlayer';
 
 interface CreateNoteProps {
   note: NoteWithPatient;
@@ -109,34 +108,31 @@ const EditDraftNote: React.FC<CreateNoteProps> = ({ note }) => {
     // console.log('note data from client CreateNotePrefilled:', note);
   }, []);
 
-  let isAMR = false;
+  // let isAMR = false;
 
-  if (audioUrl) {
-    const url = new URL(audioUrl);
-    if (url.pathname.endsWith('.amr')) {
-      isAMR = true;
-    }
-  }
+  // if (audioUrl) {
+  //   const url = new URL(audioUrl);
+  //   if (url.pathname.endsWith('.amr')) {
+  //     isAMR = true;
+  //   }
+  // }
 
-  if (isAMR) {
-    console.log('my file:', audioUrl);
-    fetch(audioUrl).then(function (res) {
-      if (res.ok) {
-        res.arrayBuffer().then(function (buffer) {
-          const player: Player = AMRPlayer(buffer);
-          const button = document.getElementById('play');
-          if (button) {
-            button.onclick = (e) => {
-              e.preventDefault();
-              player.play();
-            };
-          }
-
-          console.log('player:', player);
-        });
-      }
-    });
-  }
+  // if (isAMR) {
+  //   fetch(audioUrl).then(function (res) {
+  //     if (res.ok) {
+  //       res.arrayBuffer().then(function (buffer) {
+  //         const player: Player = AMRPlayer(buffer);
+  //         const button = document.getElementById('play');
+  //         if (button) {
+  //           button.onclick = (e) => {
+  //             e.preventDefault();
+  //             player.play();
+  //           };
+  //         }
+  //       });
+  //     }
+  //   });
+  // }
 
   // Calculate patientAgeYears based on patient dob and appointment date
   useEffect(() => {
@@ -554,25 +550,7 @@ const EditDraftNote: React.FC<CreateNoteProps> = ({ note }) => {
             <div className="collapse-title text-lg font-medium text-gray-600">
               Audio
             </div>
-            {isAMR ? (
-              <div
-                className={`flex h-[54px] w-full flex-col justify-center rounded-full bg-gray-100`}
-              >
-                <button className="border" id="play">
-                  PLAY
-                </button>
-              </div>
-            ) : (
-              <audio
-                className="w-full"
-                controls
-                preload="length"
-                src={audioUrl}
-              >
-                {/* <source src= /> */}
-                Your browser does not support the audio element.
-              </audio>
-            )}
+            <AudioPlayer audioUrl={audioUrl} />
           </div>
         )}
       </form>
@@ -581,3 +559,26 @@ const EditDraftNote: React.FC<CreateNoteProps> = ({ note }) => {
 };
 
 export default EditDraftNote;
+
+{
+  /* <div>
+              {isAMR ? (
+                <div
+                  className={`flex h-[54px] w-full flex-col justify-center rounded-full bg-gray-100`}
+                >
+                  <button className="border" id="play">
+                    PLAY
+                  </button>
+                </div>
+              ) : (
+                <audio
+                  className="w-full"
+                  controls
+                  preload="length"
+                  src={audioUrl}
+                >
+                  Your browser does not support the audio element.
+                </audio>
+              )}
+            </div> */
+}

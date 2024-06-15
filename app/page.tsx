@@ -12,13 +12,18 @@ import Image from 'next/image';
 import Header from './ui/Header';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/utils/supabase/server';
+import { fetchPatientCount } from './lib/data';
 
 export default async function Page() {
   const supabase = createClient();
 
   const { data, error } = await supabase.auth.getUser();
   if (data.user) {
-    console.log('user data:', data);
+    // get number of patients. If 0, redirect to 'add patient' page.
+    const count = await fetchPatientCount();
+    if (count === null) {
+      redirect('/dashboard/patients/add');
+    }
     redirect('/dashboard/notes');
   }
 
