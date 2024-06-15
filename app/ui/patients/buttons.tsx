@@ -51,12 +51,12 @@ export function NewNote({ patient_id }: { patient_id: string }) {
   );
 }
 
-export function ViewProfile({
+export function PatientNameLink({
   patient_id,
   first_name,
   last_name,
 }: {
-  patient_id: string | null;
+  patient_id: string;
   first_name: string;
   last_name: string;
 }) {
@@ -66,6 +66,17 @@ export function ViewProfile({
       className={`rounded-md border border-gray-200 p-2 text-sm font-semibold text-gray-800 transition-colors hover:bg-gray-100`}
     >
       {last_name}, {first_name}
+    </Link>
+  );
+}
+
+export function ViewProfile({ patient_id }: { patient_id: string }) {
+  return (
+    <Link
+      href={`/dashboard/patients/${patient_id}`}
+      className={`nowrap flex w-24 rounded-md p-2 text-sm font-semibold text-teal-700 underline  underline-offset-4 transition-colors hover:bg-gray-100`}
+    >
+      view profile
     </Link>
   );
 }

@@ -6,6 +6,7 @@ import { createClient } from '@/utils/supabase/client';
 import { Button } from '@/app/ui/button';
 import PhoneInput from '@/app/ui/patients/PhoneInput';
 import StateSelect from '@/app/ui/patients/StateSelect';
+import ProvinceSelect from '@/app/ui/patients/ProvinceSelect';
 import { OptionProps } from 'react-select';
 import { revalidatePath } from 'next/cache';
 import { editPatient } from './action';
@@ -36,6 +37,7 @@ interface Patient {
   address_unit: string | null;
   city: string | null;
   state: string | undefined;
+  country: string;
   zipcode: string | null;
   allergies: string | null;
   profile_notes: string | null;
@@ -65,6 +67,8 @@ const EditPatientForm: React.FC<EditPatientProps> = ({ patient }) => {
   );
   const [city, setCity] = useState<string | null>(patient?.city);
   const [state, setState] = useState<string | undefined>(patient?.state);
+  const [country, setCountry] = useState<string>(patient?.country);
+
   const [zipcode, setZipcode] = useState<string | null>(patient?.zipcode);
   const [allergies, setAllergies] = useState<string | null>(patient?.allergies);
   const [profileNotes, setProfileNotes] = useState<string | null>(
@@ -78,6 +82,10 @@ const EditPatientForm: React.FC<EditPatientProps> = ({ patient }) => {
 
   const handleStateChange = (selectedState: string) => {
     setState(selectedState);
+  };
+
+  const handleCountryChange = (selectedCountry: string) => {
+    setCountry(selectedCountry);
   };
 
   const handlePhoneChange = (phone: string) => {
@@ -266,17 +274,25 @@ const EditPatientForm: React.FC<EditPatientProps> = ({ patient }) => {
               ></input>
             </div>
           </div>
+
           <div className="mb-4">
             <label htmlFor="state" className="mb-2 block text-sm font-medium">
-              State
+              {country === 'Canada' ? 'Province / Territory' : 'State'}
             </label>
             <div className="relative">
-              <StateSelect setState={handleStateChange} state={state} />
+              {country === 'United States' ? (
+                <StateSelect state={state} setState={handleStateChange} />
+              ) : (
+                <ProvinceSelect
+                  province={state}
+                  setProvince={handleStateChange}
+                />
+              )}
             </div>
           </div>
           <div className="mb-4">
             <label htmlFor="zipcode" className="mb-2 block text-sm font-medium">
-              Zip code
+              {country === 'Canada' ? 'Postal code' : 'Zip code'}
             </label>
             <div className="relative">
               <input

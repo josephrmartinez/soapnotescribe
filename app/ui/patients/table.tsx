@@ -2,7 +2,7 @@ import { ViewSOAPNote, ReviewDraft, PatientName } from '@/app/ui/notes/buttons';
 import { fetchPatients } from '@/app/lib/data';
 import { useEffect } from 'react';
 import { getMaxListeners } from 'events';
-import { ViewProfile, ViewNotes, NewNote } from './buttons';
+import { ViewProfile, ViewNotes, NewNote, PatientNameLink } from './buttons';
 import CreateNote from '@/app/dashboard/newnote/create-form';
 
 export default async function PatientsTable({ query }: { query: string }) {
@@ -23,7 +23,7 @@ export default async function PatientsTable({ query }: { query: string }) {
                 className="mb-2 w-full rounded-md bg-white p-4"
               >
                 <div className="flex w-full items-center justify-between pb-4">
-                  <ViewProfile
+                  <PatientNameLink
                     patient_id={patient.id}
                     first_name={patient.first_name}
                     last_name={patient.last_name}
@@ -35,7 +35,7 @@ export default async function PatientsTable({ query }: { query: string }) {
                 </div>
                 <div className="flex w-full items-center justify-between">
                   <div>
-                    <p className="font-medium">{patient.phone}</p>
+                    <ViewProfile patient_id={patient.id} />
                   </div>
                   <div className="flex justify-end gap-2">
                     <NewNote patient_id={patient.id} />
@@ -49,10 +49,10 @@ export default async function PatientsTable({ query }: { query: string }) {
               <thead className="sticky top-0 w-full rounded-lg text-left text-sm font-normal">
                 <tr className="sticky top-0 w-full bg-gray-50 ">
                   <th scope="col" className="px-4 py-5 font-medium">
-                    Patient Profile
+                    Patient Name
                   </th>
                   <th scope="col" className="px-3 py-5 font-medium">
-                    Phone Number
+                    Patient Profile
                   </th>
                   <th scope="col" className="px-3 py-5 font-medium">
                     View Notes
@@ -70,7 +70,7 @@ export default async function PatientsTable({ query }: { query: string }) {
                   >
                     <td className="whitespace-nowrap py-3 pl-6 pr-3">
                       <div>
-                        <ViewProfile
+                        <PatientNameLink
                           patient_id={patient.id}
                           first_name={patient.first_name}
                           last_name={patient.last_name}
@@ -79,7 +79,7 @@ export default async function PatientsTable({ query }: { query: string }) {
                     </td>
 
                     <td className="whitespace-nowrap px-3 py-3 font-medium">
-                      <p>{patient.phone}</p>
+                      <ViewProfile patient_id={patient.id} />
                     </td>
                     <td className="">
                       <ViewNotes
