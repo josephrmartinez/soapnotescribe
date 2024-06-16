@@ -54,6 +54,7 @@ export default function NotesTable({ notes }: { notes: NoteWithPatient[] }) {
                   <PatientName
                     last_name={note.patient.last_name}
                     first_name={note.patient.first_name}
+                    patient_id={note.patient.id}
                   />
                 </div>
                 <div className="grid grid-cols-2 items-center gap-2">
@@ -105,6 +106,7 @@ export default function NotesTable({ notes }: { notes: NoteWithPatient[] }) {
                     <PatientName
                       last_name={note.patient.last_name}
                       first_name={note.patient.first_name}
+                      patient_id={note.patient.id}
                     />
                   </td>
                   <td className="whitespace-nowrap px-3 py-3 font-medium">

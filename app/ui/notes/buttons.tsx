@@ -52,15 +52,17 @@ export function ProcessingSOAPNote({ id }: { id: string }) {
 export function PatientName({
   first_name,
   last_name,
+  patient_id,
 }: {
   first_name: string | null;
   last_name: string | null;
+  patient_id: string | null;
 }) {
   return (
     <>
       {last_name ? (
         <Link
-          href={`?query=${last_name}, ${first_name}`}
+          href={`/dashboard/patients/${patient_id}`}
           className={`rounded-md border border-gray-200 p-2 text-center text-sm font-semibold text-gray-800 transition-colors hover:bg-gray-100`}
         >
           {`${last_name}, ${first_name}`}
