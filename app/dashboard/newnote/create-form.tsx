@@ -7,13 +7,14 @@ import { SingleValue, ActionMeta } from 'react-select';
 import { createNote } from './action';
 import AudioUpload from '../audionote/AudioUpload';
 import { calculateAge } from '@/app/lib/utils';
-
+import AppointmentTypeSelect from '@/app/ui/notes/AppointmentTypeSelect';
+import AppointmentSpecialtySelect from '@/app/ui/notes/AppointmentSpecialtySelect';
 import { PencilSquareIcon, PlusIcon } from '@heroicons/react/24/outline';
 
 interface Patient {
   id: string;
   first_name: string;
-  middle_namee: string;
+  middle_name: string;
   last_name: string;
   email: string;
   phone: string;
@@ -55,6 +56,10 @@ const CreateNote = () => {
   );
   const [time, setTime] = useState<string>('');
   const [consent, setConsent] = useState<string | null>(null);
+  const [appointmentType, setAppointmentType] = useState<string>('');
+  const [appointmentSpecialty, setAppointmentSpecialty] = useState<string>('');
+
+  const [patientLocation, setPatientLocation] = useState<string>('');
   const [subjective, setSubjective] = useState<string | null>(null);
   const [objective, setObjective] = useState<string | null>(null);
   const [assessment, setAssessment] = useState<string | null>(null);
@@ -94,20 +99,6 @@ const CreateNote = () => {
     }
   };
 
-  // function calculateAge(patientDOB: string, appointmentDate: string) {
-  //   const dob = new Date(patientDOB);
-  //   const appointment = new Date(appointmentDate);
-  //   let age = appointment.getFullYear() - dob.getFullYear();
-  //   const monthDifference = appointment.getMonth() - dob.getMonth();
-  //   if (
-  //     monthDifference < 0 ||
-  //     (monthDifference === 0 && appointment.getDate() < dob.getDate())
-  //   ) {
-  //     age--;
-  //   }
-  //   return age;
-  // }
-
   useEffect(() => {
     if (dateOfBirth && date) {
       const age = calculateAge(dateOfBirth, date);
@@ -143,6 +134,16 @@ const CreateNote = () => {
   useEffect(() => {
     autoResizeTextarea(planRef);
   }, [plan]);
+
+  const handleAppointmentTypeChange = (selectedAppointmentType: string) => {
+    setAppointmentType(selectedAppointmentType);
+  };
+
+  const handleAppointmentSpecialtyChange = (
+    selectedAppointmentSpecialty: string,
+  ) => {
+    setAppointmentSpecialty(selectedAppointmentSpecialty);
+  };
 
   const submitDraftNote = createNote.bind(null, 'awaiting review');
   const submitApprovedNote = createNote.bind(null, 'approved');
@@ -296,29 +297,77 @@ const CreateNote = () => {
             </div>
           </div>
 
-          {/* Telemedicine Consent */}
-          <div className="mb-4">
-            <label htmlFor="consent" className="mb-2 block text-sm font-medium">
-              Consent
-            </label>
-            <div className="relative flex h-9 flex-row items-center">
-              <input
-                id="consent"
-                name="consent"
-                required
-                type="checkbox"
-                value="true"
-                // if checked, value is true. if unchecked, value is false
-                onChange={(e) => setConsent(e.target.value)}
-                className="peer mr-4 block h-6 w-6 cursor-pointer rounded-md border border-gray-200 text-sm outline-2 "
-              ></input>
-              <div className="text-sm">Patient consents to treatment.</div>
+          <div className="mb-4 grid grid-cols-2 gap-x-8 gap-y-4">
+            <div className="">
+              <label
+                htmlFor="appointment_type"
+                className="mb-2 block text-sm font-medium"
+              >
+                Appointment Type
+              </label>
+              <AppointmentTypeSelect
+                appointmentType={appointmentType}
+                setAppointmentType={handleAppointmentTypeChange}
+              />
             </div>
-          </div>
 
-          <div className="grid grid-cols-2 gap-8">
+            <div className="">
+              <label
+                htmlFor="appointment_specialty"
+                className="mb-2 block text-sm font-medium"
+              >
+                Appointment Specialty
+              </label>
+              <AppointmentSpecialtySelect
+                appointmentSpecialty={appointmentSpecialty}
+                setAppointmentSpecialty={handleAppointmentSpecialtyChange}
+              />
+            </div>
+
+            <div className="">
+              <label
+                htmlFor="patient_location"
+                className="mb-2 block text-sm font-medium"
+              >
+                Patient Location
+              </label>
+              <div className="relative">
+                <input
+                  id="patient_location"
+                  name="patient_location"
+                  required
+                  type="text"
+                  className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
+                  value={patientLocation || ''}
+                  onChange={(e) => setPatientLocation(e.target.value)}
+                ></input>
+              </div>
+            </div>
+
+            <div className="">
+              <label
+                htmlFor="consent"
+                className="mb-2 block text-sm font-medium"
+              >
+                Consent
+              </label>
+              <div className="relative flex h-9 flex-row items-center">
+                <input
+                  id="consent"
+                  name="consent"
+                  required
+                  type="checkbox"
+                  value="true"
+                  // if checked, value is true. if unchecked, value is false
+                  onChange={(e) => setConsent(e.target.value)}
+                  className="peer mr-4 block h-6 w-6 cursor-pointer rounded-md border border-gray-200 text-sm outline-2 "
+                ></input>
+                <div className="text-sm">Patient consents to treatment.</div>
+              </div>
+            </div>
+
             {/* Appointment Date */}
-            <div className="mb-4">
+            <div className="">
               <label
                 htmlFor="appointment_date"
                 className="mb-2 block text-sm font-medium"
@@ -339,7 +388,7 @@ const CreateNote = () => {
             </div>
 
             {/* Appointment Time */}
-            <div className="mb-4">
+            <div className="">
               <label
                 htmlFor="appointment_time"
                 className="mb-2 block text-sm font-medium"

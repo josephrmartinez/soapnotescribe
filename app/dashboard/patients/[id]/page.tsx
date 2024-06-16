@@ -52,9 +52,7 @@ export default async function Page({ params }: { params: { id: string } }) {
         <div className="mb-4 flex w-full items-center justify-between">
           <h1 className={`text-2xl`}>Patient Profile</h1>
 
-          <div className="grid grid-cols-2 gap-2">
-            {/* UPDATE TO DELETE PATIENT FIRST STEP */}
-            <DeleteNoteFirstStep id={patient.id} />
+          <div className="">
             <Link
               href={`/dashboard/patients/${patient.id}/edit`}
               className="flex h-10 items-center justify-center rounded-lg bg-gray-100 px-2  text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200 "
@@ -144,6 +142,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                     {patient.city}
                     {patient.city && ','} {patient.state} {patient.zipcode}
                   </div>
+                  <div>{patient.country}</div>
                 </div>
               </div>
             </div>

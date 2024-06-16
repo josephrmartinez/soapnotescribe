@@ -28,6 +28,11 @@ const links = [
     icon: DocumentDuplicateIcon,
   },
   {
+    name: 'Protocols',
+    href: '/dashboard/protocols',
+    icon: DocumentDuplicateIcon,
+  },
+  {
     name: 'Patients',
     href: '/dashboard/patients',
     icon: UserGroupIcon,
