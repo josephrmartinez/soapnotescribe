@@ -30,7 +30,7 @@ export function ViewNotes({ patient_name }: { patient_name: string | null }) {
   return (
     <Link
       href={`./notes?query=${patient_name}`}
-      className={`nowrap flex w-24 items-center justify-center rounded-md border border-gray-200 p-2 text-center text-sm font-semibold text-gray-800 transition-colors hover:bg-gray-100`}
+      className={`nowrap flex w-24 rounded-md p-2 text-sm font-semibold text-teal-700 underline  underline-offset-4 transition-colors hover:bg-gray-100`}
     >
       <div>view notes</div>
     </Link>

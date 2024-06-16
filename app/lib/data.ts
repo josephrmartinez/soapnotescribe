@@ -6,7 +6,6 @@ import { createClient } from '@/utils/supabase/server'
 import { Note, NoteWithPatient } from './definitions';
 
 
-
 // UPDATE TO ALWAYS DISPLAY PROCESSING NOTES (AUDIO_TRANSCRIPT IS NULL)
 export async function fetchFilteredNotes(query: string, currentPage: number) {
   noStore()
@@ -201,15 +200,19 @@ try {
 export async function fetchPatientCount() {
 try {
     const supabase = createClient()
-  const { data: count, error } = await supabase
+  // const { data: count, error } = await supabase
+  //   .from('patient')
+  //   .select('*', { count: 'exact', head: true });
+  const { data, error } = await supabase
     .from('patient')
-    .select('*', {count: 'exact', head: true});
+    .select('id');
 
   if (error) {
     console.error('Supabase Error:', error);
     throw new Error('Failed to fetch paient count.');
   }
-  return count;
+  // console.log("patient count:", data.length)
+  return data.length;
 } catch (error) {
   console.error('Unexpected Error:', error);
     throw new Error('Failed to fetch patient count due to an unexpected error.');

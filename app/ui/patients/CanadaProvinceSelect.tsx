@@ -1,26 +1,24 @@
 import React, { useState } from 'react';
 
-interface ProvinceSelectProps {
-  setProvince: (selectedProvince: string) => void;
-  province: string | undefined;
+interface CanadaProvinceSelectProps {
+  setState: (selectedState: string) => void;
+  state: string | undefined;
 }
 
-const ProvinceSelect: React.FC<ProvinceSelectProps> = ({
-  setProvince,
-  province,
+const CanadaProvinceSelect: React.FC<CanadaProvinceSelectProps> = ({
+  setState,
+  state,
 }) => {
-  const handleProvinceChange = (
-    event: React.ChangeEvent<HTMLSelectElement>,
-  ) => {
-    const selectedProvince = event.target.value;
-    setProvince(selectedProvince);
+  const handleStateChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedState = event.target.value;
+    setState(selectedState);
   };
 
   return (
     <select
-      value={province}
-      name="province"
-      onChange={handleProvinceChange}
+      value={state}
+      name="state"
+      onChange={handleStateChange}
       className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
     >
       <option value="">Select</option>
@@ -43,4 +41,4 @@ const ProvinceSelect: React.FC<ProvinceSelectProps> = ({
   );
 };
 
-export default ProvinceSelect;
+export default CanadaProvinceSelect;

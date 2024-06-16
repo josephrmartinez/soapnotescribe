@@ -1,4 +1,5 @@
-import NewPatientForm from './new-patient-form';
+import PatientForm from '@/app/ui/patients/patient-form';
+import { addPatient } from './action';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -11,7 +12,7 @@ export default async function Page() {
       <div className="mb-8 flex w-full items-center justify-between">
         <h1 className={` text-2xl`}>Add New Patient</h1>
       </div>
-      <NewPatientForm />
+      <PatientForm formAction={addPatient} />
     </main>
   );
 }

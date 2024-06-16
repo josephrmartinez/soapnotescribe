@@ -1,28 +1,16 @@
 'use client';
 import React, { useState } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { createClient } from '@/utils/supabase/client';
-import { Button } from '@/app/ui/button';
 import PhoneInput from '@/app/ui/patients/PhoneInput';
 import StateSelect from '@/app/ui/patients/StateSelect';
-import ProvinceSelect from '@/app/ui/patients/ProvinceSelect';
-import { OptionProps } from 'react-select';
-import { revalidatePath } from 'next/cache';
-import { editPatient } from './action';
-import { formatDateToLocal, calculateAge } from '@/app/lib/utils';
+import CanadaProvinceSelect from '@/app/ui/patients/CanadaProvinceSelect';
+import CountrySelect from '@/app/ui/patients/CountrySelect';
+import { CalendarDaysIcon, UserCircleIcon } from '@heroicons/react/24/outline';
+import { Button } from '@/app/ui/button';
+import { CancelGoBackButton } from '@/app/ui/Buttons';
 
-import {
-  CheckIcon,
-  BuildingOffice2Icon,
-  CalendarDaysIcon,
-  UserCircleIcon,
-  PencilSquareIcon,
-} from '@heroicons/react/24/outline';
-import { SubmitButton } from '@/app/ui/SubmitButton';
-
-interface EditPatientProps {
-  patient: Patient;
+interface PatientFormProps {
+  patient?: Patient;
+  formAction: string | ((formData: FormData) => void) | undefined;
 }
 
 interface Patient {
@@ -43,7 +31,7 @@ interface Patient {
   profile_notes: string | null;
 }
 
-const EditPatientForm: React.FC<EditPatientProps> = ({ patient }) => {
+const PatientForm: React.FC<PatientFormProps> = ({ patient, formAction }) => {
   const [loading, setLoading] = useState(true);
   const [firstName, setFirstName] = useState<string | null>(
     patient?.first_name || null,
@@ -55,30 +43,28 @@ const EditPatientForm: React.FC<EditPatientProps> = ({ patient }) => {
     patient?.last_name || null,
   );
   const [dateOfBirth, setDateOfBirth] = useState<string>(
-    patient?.date_of_birth,
+    patient?.date_of_birth || '',
   );
-  const [phone, setPhone] = useState<string | null>(patient?.phone);
-  const [email, setEmail] = useState<string>(patient?.email);
+  const [phone, setPhone] = useState<string | null>(patient?.phone || '');
+  const [email, setEmail] = useState<string>(patient?.email || '');
   const [addressStreet, setAddressStreet] = useState<string | null>(
-    patient?.address_street,
+    patient?.address_street || '',
   );
   const [addressUnit, setAddressUnit] = useState<string | null>(
-    patient?.address_unit,
+    patient?.address_unit || '',
   );
-  const [city, setCity] = useState<string | null>(patient?.city);
+  const [city, setCity] = useState<string | null>(patient?.city || '');
   const [state, setState] = useState<string | undefined>(patient?.state);
-  const [country, setCountry] = useState<string>(patient?.country);
+  const [country, setCountry] = useState<string>(patient?.country || '');
 
-  const [zipcode, setZipcode] = useState<string | null>(patient?.zipcode);
-  const [allergies, setAllergies] = useState<string | null>(patient?.allergies);
+  const [zipcode, setZipcode] = useState<string | null>(patient?.zipcode || '');
+  const [allergies, setAllergies] = useState<string | null>(
+    patient?.allergies || '',
+  );
   const [profileNotes, setProfileNotes] = useState<string | null>(
-    patient?.profile_notes,
+    patient?.profile_notes || '',
   );
   const [submitOkay, setSubmitOkay] = useState<boolean>(true);
-
-  const patientDOB = formatDateToLocal(patient.date_of_birth);
-  const dateToday = new Date();
-  const patientAge = calculateAge(patientDOB, dateToday.toString());
 
   const handleStateChange = (selectedState: string) => {
     setState(selectedState);
@@ -93,10 +79,10 @@ const EditPatientForm: React.FC<EditPatientProps> = ({ patient }) => {
   };
 
   return (
-    <form action={editPatient}>
+    <form>
       <div className="max-w-prose rounded-md bg-gray-50 p-4">
-        <input name="id" hidden defaultValue={patient?.id}></input>
-        <div className="grid grid-cols-2 gap-8">
+        <div className="mb-4 grid grid-cols-1 gap-x-8 gap-y-4 sm:grid-cols-2">
+          <input name="id" hidden defaultValue={patient?.id}></input>
           <div className="">
             <label
               htmlFor="first_name"
@@ -137,6 +123,7 @@ const EditPatientForm: React.FC<EditPatientProps> = ({ patient }) => {
               <UserCircleIcon className="pointer-events-none absolute right-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
             </div>
           </div>
+
           <div className="">
             <label
               htmlFor="last_name"
@@ -157,7 +144,6 @@ const EditPatientForm: React.FC<EditPatientProps> = ({ patient }) => {
               <UserCircleIcon className="pointer-events-none absolute right-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
             </div>
           </div>
-
           {/* Patient Date of Birth */}
           <div className="">
             <label
@@ -178,17 +164,6 @@ const EditPatientForm: React.FC<EditPatientProps> = ({ patient }) => {
               <CalendarDaysIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
             </div>
           </div>
-          <div className="">
-            <label
-              htmlFor="patient_age"
-              className="mb-2 block text-sm font-medium"
-            >
-              Patient Age
-            </label>
-            <div className="ml-2 text-sm">
-              <div>{patientAge} years old</div>
-            </div>
-          </div>
 
           <div className="">
             <label htmlFor="phone" className="mb-2 block text-sm font-medium">
@@ -198,7 +173,6 @@ const EditPatientForm: React.FC<EditPatientProps> = ({ patient }) => {
               <PhoneInput phone={phone} setPhone={handlePhoneChange} />
             </div>
           </div>
-
           <div className="">
             <label htmlFor="email" className="mb-2 block text-sm font-medium">
               Email Address
@@ -214,51 +188,58 @@ const EditPatientForm: React.FC<EditPatientProps> = ({ patient }) => {
               ></input>
             </div>
           </div>
+        </div>
 
-          <div className="">
-            <label
-              htmlFor="address_street"
-              className="mb-2 block text-sm font-medium"
-            >
-              Street Address
-            </label>
-            <div className="relative">
-              <input
-                id="address_street"
-                name="address_street"
-                placeholder="671 Lincoln Ave"
-                type="text"
-                className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
-                value={addressStreet || ''}
-                onChange={(e) => setAddressStreet(e.target.value)}
-              ></input>
-            </div>
-          </div>
+        <div className="mb-4">
+          <label htmlFor="country" className="mb-2 block text-sm font-medium">
+            Patient Country of Residence
+          </label>
+          <CountrySelect country={country} setCountry={handleCountryChange} />
+        </div>
 
-          <div className="">
-            <label
-              htmlFor="address_unit"
-              className="mb-2 block text-sm font-medium"
-            >
-              Apartment, suite, etc.
-            </label>
-            <div className="relative">
-              <input
-                id="address_unit"
-                name="address_unit"
-                placeholder="optional"
-                type="text"
-                className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
-                value={addressUnit || ''}
-                onChange={(e) => setAddressUnit(e.target.value)}
-              ></input>
-            </div>
+        <div className="mb-4">
+          <label
+            htmlFor="address_street"
+            className="mb-2 block text-sm font-medium"
+          >
+            Street Address
+          </label>
+          <div className="relative">
+            <input
+              id="address_street"
+              name="address_street"
+              placeholder="671 Lincoln Ave"
+              type="text"
+              className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
+              value={addressStreet || ''}
+              onChange={(e) => setAddressStreet(e.target.value)}
+            ></input>
           </div>
         </div>
 
-        <div className="grid grid-cols-3 gap-8">
+        <div className="mb-4">
+          <label
+            htmlFor="address_unit"
+            className="mb-2 block text-sm font-medium"
+          >
+            Apartment, suite, etc.
+          </label>
+          <div className="relative">
+            <input
+              id="address_unit"
+              name="address_unit"
+              placeholder="optional"
+              type="text"
+              className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
+              value={addressUnit || ''}
+              onChange={(e) => setAddressUnit(e.target.value)}
+            ></input>
+          </div>
+        </div>
+
+        <div className="mb-4 grid grid-cols-1 gap-x-8 gap-y-4 sm:grid-cols-3">
           {/* City or Town */}
-          <div className="mb-4">
+          <div className="">
             <label htmlFor="city" className="mb-2 block text-sm font-medium">
               City or Town
             </label>
@@ -275,7 +256,7 @@ const EditPatientForm: React.FC<EditPatientProps> = ({ patient }) => {
             </div>
           </div>
 
-          <div className="mb-4">
+          <div className="">
             <label htmlFor="state" className="mb-2 block text-sm font-medium">
               {country === 'Canada' ? 'Province / Territory' : 'State'}
             </label>
@@ -283,14 +264,14 @@ const EditPatientForm: React.FC<EditPatientProps> = ({ patient }) => {
               {country === 'United States' ? (
                 <StateSelect state={state} setState={handleStateChange} />
               ) : (
-                <ProvinceSelect
-                  province={state}
-                  setProvince={handleStateChange}
+                <CanadaProvinceSelect
+                  state={state}
+                  setState={handleStateChange}
                 />
               )}
             </div>
           </div>
-          <div className="mb-4">
+          <div className="">
             <label htmlFor="zipcode" className="mb-2 block text-sm font-medium">
               {country === 'Canada' ? 'Postal code' : 'Zip code'}
             </label>
@@ -346,17 +327,14 @@ const EditPatientForm: React.FC<EditPatientProps> = ({ patient }) => {
         </div>
 
         <div className="mt-6 flex justify-end gap-4">
-          <Link
-            href="/dashboard/patients"
-            className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
-          >
-            Cancel
-          </Link>
-          <SubmitButton active={submitOkay}>Update Patient</SubmitButton>
+          <CancelGoBackButton />
+          <Button type="submit" formAction={formAction} active={submitOkay}>
+            {patient ? 'Update Patient' : 'Add Patient'}
+          </Button>
         </div>
       </div>
     </form>
   );
 };
 
-export default EditPatientForm;
+export default PatientForm;

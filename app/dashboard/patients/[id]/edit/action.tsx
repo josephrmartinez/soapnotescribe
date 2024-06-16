@@ -21,7 +21,7 @@ export async function editPatient(formData: FormData) {
       address_street: formData.get('address_street') as string,
       address_unit: formData.get('address_unit') as string,
       city: formData.get('city') as string,
-      state: formData.get('phone') as string,
+      state: formData.get('state') as string,
       country: formData.get('country') as string,
       zipcode: formData.get('zipcode') as string,
       allergies: formData.get('allergies') as string,
