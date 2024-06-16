@@ -40,7 +40,7 @@ export function ViewNotes({ patient_name }: { patient_name: string | null }) {
 export function NewNote({ patient_id }: { patient_id: string }) {
   return (
     <Link
-      href={`./createnote?patient=${patient_id}`}
+      href={`./newnote?patient=${patient_id}`}
       className={
         'flex h-10 w-32 items-center justify-center rounded-lg bg-teal-600 text-sm font-medium text-white shadow transition-colors hover:bg-teal-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-700 active:bg-teal-600'
       }

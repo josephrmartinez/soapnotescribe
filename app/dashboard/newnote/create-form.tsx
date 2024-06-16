@@ -10,6 +10,8 @@ import { calculateAge } from '@/app/lib/utils';
 import AppointmentTypeSelect from '@/app/ui/notes/AppointmentTypeSelect';
 import AppointmentSpecialtySelect from '@/app/ui/notes/AppointmentSpecialtySelect';
 import { PencilSquareIcon, PlusIcon } from '@heroicons/react/24/outline';
+import { useSearchParams } from 'next/navigation';
+import { fetchPatientById } from '@/app/lib/data';
 
 interface Patient {
   id: string;
@@ -58,7 +60,6 @@ const CreateNote = () => {
   const [consent, setConsent] = useState<string | null>(null);
   const [appointmentType, setAppointmentType] = useState<string>('');
   const [appointmentSpecialty, setAppointmentSpecialty] = useState<string>('');
-
   const [patientLocation, setPatientLocation] = useState<string>('');
   const [subjective, setSubjective] = useState<string | null>(null);
   const [objective, setObjective] = useState<string | null>(null);
@@ -67,6 +68,9 @@ const CreateNote = () => {
   const [doctorSignature, setDoctorSignature] = useState<string | null>(null);
   const [submitOkay, setSubmitOkay] = useState<boolean>(true);
   const [patientAgeYears, setPatientAgeYears] = useState<number | undefined>(1);
+  const [selectedPatient, setSelectedPatient] = useState<
+    PatientOption | undefined
+  >(undefined);
   const accessTokenRef = useRef<string | undefined>('');
   const userIDRef = useRef<string | undefined>('');
   const subjectiveRef = useRef<HTMLTextAreaElement | null>(null);
@@ -74,11 +78,40 @@ const CreateNote = () => {
   const assessmentRef = useRef<HTMLTextAreaElement | null>(null);
   const planRef = useRef<HTMLTextAreaElement | null>(null);
 
+  let searchParams = useSearchParams();
+  const patientIdFromUrl = searchParams.get('patient');
+  console.log('patient', patientIdFromUrl);
+
+  useEffect(() => {
+    const fetchAndSetPatient = async () => {
+      if (patientIdFromUrl) {
+        try {
+          const patient = await fetchPatientById(patientIdFromUrl);
+          if (patient) {
+            const structuredPatient = {
+              value: patient,
+              label: `${patient.last_name}, ${patient.first_name}`,
+            };
+            setSelectedPatient(structuredPatient);
+            handlePatientSelect(structuredPatient, {
+              action: 'select-option',
+              option: structuredPatient,
+            });
+          }
+        } catch (error) {
+          console.error('Error fetching patient:', error);
+        }
+      }
+    };
+    fetchAndSetPatient();
+  }, [patientIdFromUrl]);
+
   const handlePatientSelect = (
     newValue: SingleValue<PatientOption>,
     actionMeta: ActionMeta<PatientOption>,
   ) => {
     if (newValue) {
+      console.log('newValue', newValue);
       // console.log('newValue', newValue);
       setPatientId(newValue.value.id);
       setFirstName(newValue.value.first_name);
@@ -99,6 +132,10 @@ const CreateNote = () => {
     }
   };
 
+  // output: 13563ab1-720c-4ac2-805e-998de3865ae1
+  // look up patient using id value from above
+  // pass patient into handlePatienttSelect?
+
   useEffect(() => {
     if (dateOfBirth && date) {
       const age = calculateAge(dateOfBirth, date);
@@ -110,7 +147,7 @@ const CreateNote = () => {
     textareaRef: React.MutableRefObject<HTMLTextAreaElement | null>,
   ) => {
     const textarea = textareaRef.current;
-    console.log('called autoresize!', textarea);
+    // console.log('called autoresize!', textarea);
     if (textarea) {
       const minHeight = 80; // Minimum height in pixels
       textarea.style.height = 'auto'; // Reset the height
@@ -153,10 +190,11 @@ const CreateNote = () => {
       <div className="max-w-prose rounded-md bg-gray-50 p-4">
         <div className="mb-4 grid grid-cols-1  gap-4 sm:grid-cols-2 sm:gap-8">
           <div className="">
-            <label htmlFor="patient" className="mb-2 block text-sm font-medium">
-              Patient
-            </label>
-            <SelectPatient onPatientSelect={handlePatientSelect} />
+            <label className="mb-2 block text-sm font-medium">Patient</label>
+            <SelectPatient
+              onPatientSelect={handlePatientSelect}
+              selectedPatient={selectedPatient}
+            />
             <input name="patient_id" hidden defaultValue={patientId}></input>
             <input name="first_name" hidden defaultValue={firstName}></input>
             <input name="middle_name" hidden defaultValue={middleName}></input>
