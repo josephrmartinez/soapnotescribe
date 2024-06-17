@@ -50,7 +50,7 @@ export const formatTime = (timeString: string) => {
   date.setHours(hours);
   date.setMinutes(minutes);
 
-  return date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+  return date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true });
 }
 
 // export const generateYAxis = (revenue: Revenue[]) => {

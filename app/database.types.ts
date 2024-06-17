@@ -13,22 +13,26 @@ export type Database = {
         Row: {
           allergies: string | null
           appointment_date: string | null
+          appointment_specialty: string | null
           appointment_summary: string | null
           appointment_time: string | null
+          appointment_type: string | null
           audio_storage_url: string | null
           audio_transcript: string | null
           chief_complaint: string | null
           combined_text: string | null
           consent: boolean | null
           created_at: string
+          differential_diagnosis: string | null
           discharge_instructions: string | null
           doctor_signature: string | null
           feedback: string | null
           id: string
           image_urls: string[] | null
+          patient_age_years: number | null
           patient_id: string | null
-          patient_age_years: number
-          differential_diagnosis: string | null
+          patient_location: string | null
+          pdf_storage_url: string | null
           soap_assessment: string | null
           soap_objective: string | null
           soap_plan: string | null
@@ -40,21 +44,26 @@ export type Database = {
         Insert: {
           allergies?: string | null
           appointment_date?: string | null
+          appointment_specialty?: string | null
           appointment_summary?: string | null
           appointment_time?: string | null
+          appointment_type?: string | null
           audio_storage_url?: string | null
           audio_transcript?: string | null
           chief_complaint?: string | null
           combined_text?: string | null
           consent?: boolean | null
           created_at?: string
+          differential_diagnosis?: string | null
           discharge_instructions?: string | null
           doctor_signature?: string | null
           feedback?: string | null
           id?: string
           image_urls?: string[] | null
+          patient_age_years?: number | null
           patient_id?: string | null
-          second_opinion?: string | null
+          patient_location?: string | null
+          pdf_storage_url?: string | null
           soap_assessment?: string | null
           soap_objective?: string | null
           soap_plan?: string | null
@@ -66,21 +75,26 @@ export type Database = {
         Update: {
           allergies?: string | null
           appointment_date?: string | null
+          appointment_specialty?: string | null
           appointment_summary?: string | null
           appointment_time?: string | null
+          appointment_type?: string | null
           audio_storage_url?: string | null
           audio_transcript?: string | null
           chief_complaint?: string | null
           combined_text?: string | null
           consent?: boolean | null
           created_at?: string
+          differential_diagnosis?: string | null
           discharge_instructions?: string | null
           doctor_signature?: string | null
           feedback?: string | null
           id?: string
           image_urls?: string[] | null
+          patient_age_years?: number | null
           patient_id?: string | null
-          second_opinion?: string | null
+          patient_location?: string | null
+          pdf_storage_url?: string | null
           soap_assessment?: string | null
           soap_objective?: string | null
           soap_plan?: string | null
@@ -112,16 +126,20 @@ export type Database = {
           address_unit: string | null
           allergies: string | null
           city: string | null
+          country: string | null
           created_at: string
           date_of_birth: string | null
           email: string | null
           first_name: string | null
-          middle_name: string | null
+          gender: string | null
           id: string
           last_name: string | null
+          middle_name: string | null
           phone: string | null
           profile_notes: string | null
           provider: string | null
+          referral_source: string | null
+          sex: string | null
           state: string | null
           zipcode: string | null
         }
@@ -130,15 +148,20 @@ export type Database = {
           address_unit?: string | null
           allergies?: string | null
           city?: string | null
+          country?: string | null
           created_at?: string
           date_of_birth?: string | null
           email?: string | null
           first_name?: string | null
+          gender?: string | null
           id?: string
           last_name?: string | null
+          middle_name?: string | null
           phone?: string | null
           profile_notes?: string | null
           provider?: string | null
+          referral_source?: string | null
+          sex?: string | null
           state?: string | null
           zipcode?: string | null
         }
@@ -147,17 +170,43 @@ export type Database = {
           address_unit?: string | null
           allergies?: string | null
           city?: string | null
+          country?: string | null
           created_at?: string
           date_of_birth?: string | null
           email?: string | null
           first_name?: string | null
+          gender?: string | null
           id?: string
           last_name?: string | null
+          middle_name?: string | null
           phone?: string | null
           profile_notes?: string | null
           provider?: string | null
+          referral_source?: string | null
+          sex?: string | null
           state?: string | null
           zipcode?: string | null
+        }
+        Relationships: []
+      }
+      waitlist: {
+        Row: {
+          created_at: string
+          email: string | null
+          id: number
+          note: string | null
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          id?: number
+          note?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          id?: number
+          note?: string | null
         }
         Relationships: []
       }
@@ -170,6 +219,13 @@ export type Database = {
         Args: {
           user_id: string
           audio_storage_url: string
+        }
+        Returns: Record<string, unknown>
+      }
+      delete_note_pdf: {
+        Args: {
+          user_id: string
+          pdf_storage_url: string
         }
         Returns: Record<string, unknown>
       }

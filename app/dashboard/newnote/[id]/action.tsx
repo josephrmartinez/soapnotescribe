@@ -25,6 +25,9 @@ export async function updateNote(status: string, formData: FormData) {
       soap_assessment: formData.get('soap_assessment') as string,
       soap_plan: formData.get('soap_plan') as string,
       doctor_signature: formData.get('doctor_signature') as string,
+      appointment_type: formData.get('appointment_type') as string,
+      appointment_specialty: formData.get('appointment_specialty') as string,
+      patient_location: formData.get('patient_location') as string,
     })
     .eq('id', formData.get('id'))
     .select();

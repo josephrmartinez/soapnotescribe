@@ -9,6 +9,8 @@ import { getSignedAudioUrl } from '@/app/lib/data';
 import { updateNote } from './action';
 import { DeleteNoteFirstStep } from '@/app/ui/notes/buttons';
 import { calculateAge } from '@/app/lib/utils';
+import AppointmentTypeSelect from '@/app/ui/notes/AppointmentTypeSelect';
+import AppointmentSpecialtySelect from '@/app/ui/notes/AppointmentSpecialtySelect';
 
 interface CreateNoteProps {
   note: NoteWithPatient;
@@ -49,6 +51,15 @@ const EditDraftNote: React.FC<CreateNoteProps> = ({ note }) => {
   >(note?.differential_diagnosis || null);
   const [doctorSignature, setDoctorSignature] = useState<string>(
     note?.doctor_signature || '',
+  );
+  const [appointmentType, setAppointmentType] = useState<string>(
+    note.appointment_type || '',
+  );
+  const [appointmentSpecialty, setAppointmentSpecialty] = useState<string>(
+    note.appointment_specialty || '',
+  );
+  const [patientLocation, setPatientLocation] = useState<string>(
+    note.patient_location || '',
   );
 
   // Ref declarations with types
@@ -117,6 +128,16 @@ const EditDraftNote: React.FC<CreateNoteProps> = ({ note }) => {
   const saveDraft = updateNote.bind(null, 'awaiting review');
   const approveNote = updateNote.bind(null, 'approved');
 
+  const handleAppointmentTypeChange = (selectedAppointmentType: string) => {
+    setAppointmentType(selectedAppointmentType);
+  };
+
+  const handleAppointmentSpecialtyChange = (
+    selectedAppointmentSpecialty: string,
+  ) => {
+    setAppointmentSpecialty(selectedAppointmentSpecialty);
+  };
+
   return (
     <div className="w-full">
       <div className="mb-8 flex w-full">
@@ -131,35 +152,18 @@ const EditDraftNote: React.FC<CreateNoteProps> = ({ note }) => {
           </div>
 
           <div className="mb-8 grid grid-cols-2 gap-8">
-            {/* Patient First Name */}
-            <div className="">
+            {/* Patient Name */}
+            <div className="col-span-2">
               <label
                 htmlFor="first_name"
                 className="mb-2 block text-sm font-medium"
               >
-                First Name
+                Patient Name
               </label>
-              <div className="ml-2 text-sm">{note.patient.first_name}</div>
-            </div>
-            {note.patient.middle_name && (
-              <div className="">
-                <label
-                  htmlFor="middle_name"
-                  className="mb-2 block text-sm font-medium"
-                >
-                  Middle Name
-                </label>
-                <div className="ml-2 text-sm">{note.patient.middle_name}</div>
+              <div className="ml-2 text-sm">
+                {note.patient.last_name}, {note.patient.first_name}
+                {note.patient.middle_name && note.patient.middle_name}
               </div>
-            )}
-            <div className="">
-              <label
-                htmlFor="last_name"
-                className="mb-2 block text-sm font-medium"
-              >
-                Last Name
-              </label>
-              <div className="ml-2 text-sm">{note.patient.last_name}</div>
             </div>
 
             {/* Patient Date of Birth */}
@@ -245,24 +249,22 @@ const EditDraftNote: React.FC<CreateNoteProps> = ({ note }) => {
                 <div className="ml-2 text-sm">{note.patient.email}</div>
               </div>
             )}
-          </div>
 
-          {note.patient.profile_notes && (
-            <div className="mb-4">
-              <label
-                htmlFor="profilenotes"
-                className="mb-2 block text-sm font-medium"
-              >
-                Patient Profile Notes
-              </label>
+            {note.patient.profile_notes && (
+              <div className="mb-4">
+                <label
+                  htmlFor="profilenotes"
+                  className="mb-2 block text-sm font-medium"
+                >
+                  Patient Profile Notes
+                </label>
 
-              <div className="ml-2 text-sm">{note.patient.profile_notes}</div>
-            </div>
-          )}
+                <div className="ml-2 text-sm">{note.patient.profile_notes}</div>
+              </div>
+            )}
 
-          <div className="grid grid-cols-2 gap-8">
             {/* Appointment Date */}
-            <div className="mb-4">
+            <div className="">
               <label
                 htmlFor="appointment_date"
                 className="mb-2 block text-sm font-medium"
@@ -283,7 +285,7 @@ const EditDraftNote: React.FC<CreateNoteProps> = ({ note }) => {
             </div>
 
             {/* Appointment Time */}
-            <div className="mb-4">
+            <div className="">
               <label
                 htmlFor="appointment_time"
                 className="mb-2 block text-sm font-medium"
@@ -302,29 +304,55 @@ const EditDraftNote: React.FC<CreateNoteProps> = ({ note }) => {
                 ></input>
               </div>
             </div>
-          </div>
 
-          <div className="grid grid-cols-2 gap-8">
-            <div className="mb-4">
+            <div className="">
               <label
-                htmlFor="allergies"
+                htmlFor="appointment_type"
                 className="mb-2 block text-sm font-medium"
               >
-                Allergies
+                Appointment Type
+              </label>
+              <AppointmentTypeSelect
+                appointmentType={appointmentType}
+                setAppointmentType={handleAppointmentTypeChange}
+              />
+            </div>
+
+            <div className="">
+              <label
+                htmlFor="appointment_specialty"
+                className="mb-2 block text-sm font-medium"
+              >
+                Appointment Specialty
+              </label>
+              <AppointmentSpecialtySelect
+                appointmentSpecialty={appointmentSpecialty}
+                setAppointmentSpecialty={handleAppointmentSpecialtyChange}
+              />
+            </div>
+
+            <div className="">
+              <label
+                htmlFor="patient_location"
+                className="mb-2 block text-sm font-medium"
+              >
+                Patient Location
               </label>
               <div className="relative">
                 <input
-                  id="allergies"
-                  name="allergies"
+                  id="patient_location"
+                  name="patient_location"
+                  required
                   type="text"
                   className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
-                  value={allergies || ''}
-                  onChange={(e) => setAllergies(e.target.value)}
+                  value={patientLocation || ''}
+                  onChange={(e) => setPatientLocation(e.target.value)}
                 ></input>
               </div>
             </div>
+
             {/* Telemedicine Consent */}
-            <div className="mb-4">
+            <div className="">
               <label
                 htmlFor="consent"
                 className="mb-2 block text-sm font-medium"
@@ -345,6 +373,25 @@ const EditDraftNote: React.FC<CreateNoteProps> = ({ note }) => {
                 ></input>
                 <div className="text-sm">Patient consents to treatment.</div>
               </div>
+            </div>
+          </div>
+
+          <div className="mb-4">
+            <label
+              htmlFor="allergies"
+              className="mb-2 block text-sm font-medium"
+            >
+              Allergies
+            </label>
+            <div className="relative">
+              <input
+                id="allergies"
+                name="allergies"
+                type="text"
+                className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
+                value={allergies || ''}
+                onChange={(e) => setAllergies(e.target.value)}
+              ></input>
             </div>
           </div>
 

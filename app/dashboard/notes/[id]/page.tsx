@@ -20,6 +20,7 @@ import { formatDateToLocal, formatTime } from '@/app/lib/utils';
 import { Button } from '@/app/ui/button';
 import { LinkButton } from '@/app/ui/LinkButton';
 import { DeleteNoteFirstStep } from '@/app/ui/notes/buttons';
+import { calculateAge } from '@/app/lib/utils';
 
 export const metadata: Metadata = {
   title: 'Approved SOAP Note',
@@ -52,8 +53,15 @@ export default async function Page({ params }: { params: { id: string } }) {
   );
 
   const appointmentDate = formatDateToLocal(note.appointment_date);
-  const appointmentTime = formatTime(note.appointment_time);
+
+  let appointmentTime = '';
+  if (note.appointment_time) {
+    appointmentTime = formatTime(note.appointment_time);
+  }
+
   const patientDOB = formatDateToLocal(note.patient.date_of_birth);
+
+  const patientAge = calculateAge(patientDOB, appointmentDate);
 
   return (
     <main>
@@ -102,53 +110,25 @@ export default async function Page({ params }: { params: { id: string } }) {
         </div>
 
         <div className="mb-4 max-w-prose rounded-md bg-gray-50 p-4">
-          <div className="grid grid-cols-2 gap-8">
-            {/* Appointment Date */}
-            <div className="mb-4">
+          <div className="mb-8 grid grid-cols-2 gap-8">
+            {/* patient name */}
+            <div className="col-span-2">
               <label
-                htmlFor="appointment_date"
-                className="mb-2 block text-sm font-medium"
-              >
-                Appointment Date
-              </label>
-              <div id="appointment_date" className="px-2 py-2 text-sm">
-                {appointmentDate}
-              </div>
-            </div>
-
-            {/* Appointment Time */}
-            <div className="mb-4">
-              <label
-                htmlFor="appointment_time"
-                className="mb-2 block text-sm font-medium"
-              >
-                Appointment Time
-              </label>
-              <div className="relative">
-                <div id="appointment_time" className="px-2 py-2 text-sm">
-                  {note.appointment_time}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-8">
-            <div className="mb-4">
-              <label
-                htmlFor="patient"
+                htmlFor="first_name"
                 className="mb-2 block text-sm font-medium"
               >
                 Patient Name
               </label>
               <div className="relative">
                 <div id="patient" className="px-2 py-2 text-sm">
-                  {`${note.patient.first_name} ${note.patient.last_name}`}
+                  {note.patient.last_name}, {note.patient.first_name}{' '}
+                  {note.patient.middle_name && note.patient.middle_name}
                 </div>
-                {/* <UserCircleIcon className="pointer-events-none absolute right-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" /> */}
               </div>
             </div>
+
             {/* Patient Date of Birth */}
-            <div className="mb-4">
+            <div className="">
               <label
                 htmlFor="appointment_date"
                 className="mb-2 block text-sm font-medium"
@@ -161,27 +141,96 @@ export default async function Page({ params }: { params: { id: string } }) {
                 </div>
               </div>
             </div>
-          </div>
 
-          <div className="grid grid-cols-2 gap-8">
-            <div className="mb-4">
+            {/* Patient Age */}
+            <div className="">
               <label
-                htmlFor="allergies"
+                htmlFor="appointment_date"
                 className="mb-2 block text-sm font-medium"
               >
-                Allergies
+                Patient Age
               </label>
               <div className="relative">
-                <div className="px-2 py-2 text-sm">{note.allergies}</div>
+                <div id="patient_age" className="px-2 py-2 text-sm">
+                  {patientAge}
+                </div>
               </div>
             </div>
-            {/* Telemedicine Consent */}
-            <div className="mb-4">
+
+            {/* Appointment Date */}
+            <div className="">
+              <label
+                htmlFor="appointment_date"
+                className="mb-2 block text-sm font-medium"
+              >
+                Appointment Date
+              </label>
+              <div id="appointment_date" className="px-2 py-2 text-sm">
+                {appointmentDate}
+              </div>
+            </div>
+
+            {/* Appointment Time */}
+            <div className="">
+              <label
+                htmlFor="appointment_time"
+                className="mb-2 block text-sm font-medium"
+              >
+                Appointment Time
+              </label>
+              <div className="relative">
+                <div id="appointment_time" className="px-2 py-2 text-sm">
+                  {appointmentTime}
+                </div>
+              </div>
+            </div>
+
+            {/* Appointment Type */}
+            <div className="">
+              <label
+                htmlFor="appointment_type"
+                className="mb-2 block text-sm font-medium"
+              >
+                Appointment Type
+              </label>
+              <div id="appointment_type" className="px-2 py-2 text-sm">
+                {note.appointment_type}
+              </div>
+            </div>
+
+            {/* Appointment Specialty */}
+            <div className="">
+              <label
+                htmlFor="appointment_specialty"
+                className="mb-2 block text-sm font-medium"
+              >
+                Appointment Specialty
+              </label>
+              <div id="appointment_specialty" className="px-2 py-2 text-sm">
+                {note.appointment_specialty}
+              </div>
+            </div>
+
+            {/* Location */}
+            <div className="">
+              <label
+                htmlFor="appointment_location"
+                className="mb-2 block text-sm font-medium"
+              >
+                Patient Location
+              </label>
+              <div id="appointment_location" className="px-2 py-2 text-sm">
+                Patient is located in {note.patient_location}
+              </div>
+            </div>
+
+            {/* Consent */}
+            <div className="">
               <label
                 htmlFor="consent"
                 className="mb-2 block text-sm font-medium"
               >
-                Telemedicine Consent
+                Consent
               </label>
               <div className="px-2 py-2 text-sm">
                 Patient consents to treatment.
@@ -189,7 +238,21 @@ export default async function Page({ params }: { params: { id: string } }) {
             </div>
           </div>
 
-          <div className="mb-4">
+          {/* Allergies */}
+          <div className="">
+            <label
+              htmlFor="allergies"
+              className="mb-2 block text-sm font-medium"
+            >
+              Allergies
+            </label>
+            <div className="relative">
+              <div className="px-2 py-2 text-sm">{note.allergies}</div>
+            </div>
+          </div>
+
+          {/* Chief Complaint */}
+          <div className="">
             <label
               htmlFor="complaint"
               className="mb-2 block text-sm font-medium"
@@ -203,6 +266,7 @@ export default async function Page({ params }: { params: { id: string } }) {
             </div>
           </div>
 
+          {/* Subjective */}
           <div className="mb-4">
             <label
               htmlFor="subjective"
@@ -255,6 +319,7 @@ export default async function Page({ params }: { params: { id: string } }) {
               </div>
             </div>
           </div>
+
           <div className="mb-0">
             <label
               htmlFor="doctorsignature"

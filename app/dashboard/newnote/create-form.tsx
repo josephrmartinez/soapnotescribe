@@ -188,7 +188,7 @@ const CreateNote = () => {
   return (
     <form>
       <div className="max-w-prose rounded-md bg-gray-50 p-4">
-        <div className="mb-4 grid grid-cols-1  gap-4 sm:grid-cols-2 sm:gap-8">
+        <div className="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-8">
           <div className="">
             <label className="mb-2 block text-sm font-medium">Patient</label>
             <SelectPatient
@@ -314,28 +314,48 @@ const CreateNote = () => {
 
           <AudioUpload patientId={patientId} />
 
-          {/* Allergies */}
-          <div className="mb-4">
-            <label
-              htmlFor="allergies"
-              className="mb-2 block text-sm font-medium"
-            >
-              Allergies
-            </label>
-            <div className="relative">
-              <input
-                id="allergies"
-                name="allergies"
-                required
-                type="text"
-                className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
-                value={allergies || ''}
-                onChange={(e) => setAllergies(e.target.value)}
-              ></input>
-            </div>
-          </div>
-
           <div className="mb-4 grid grid-cols-2 gap-x-8 gap-y-4">
+            {/* Appointment Date */}
+            <div className="">
+              <label
+                htmlFor="appointment_date"
+                className="mb-2 block text-sm font-medium"
+              >
+                Appointment Date
+              </label>
+              <div className="relative">
+                <input
+                  id="appointment_date"
+                  name="appointment_date"
+                  required
+                  type="date"
+                  value={date}
+                  onChange={(e) => setDate(e.target.value)}
+                  className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
+                ></input>
+              </div>
+            </div>
+
+            {/* Appointment Time */}
+            <div className="">
+              <label
+                htmlFor="appointment_time"
+                className="mb-2 block text-sm font-medium"
+              >
+                Appointment Time
+              </label>
+              <div className="relative">
+                <input
+                  id="appointment_time"
+                  name="appointment_time"
+                  required
+                  type="time"
+                  value={time}
+                  onChange={(e) => setTime(e.target.value)}
+                  className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
+                ></input>
+              </div>
+            </div>
             <div className="">
               <label
                 htmlFor="appointment_type"
@@ -403,47 +423,26 @@ const CreateNote = () => {
                 <div className="text-sm">Patient consents to treatment.</div>
               </div>
             </div>
+          </div>
 
-            {/* Appointment Date */}
-            <div className="">
-              <label
-                htmlFor="appointment_date"
-                className="mb-2 block text-sm font-medium"
-              >
-                Appointment Date
-              </label>
-              <div className="relative">
-                <input
-                  id="appointment_date"
-                  name="appointment_date"
-                  required
-                  type="date"
-                  value={date}
-                  onChange={(e) => setDate(e.target.value)}
-                  className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
-                ></input>
-              </div>
-            </div>
-
-            {/* Appointment Time */}
-            <div className="">
-              <label
-                htmlFor="appointment_time"
-                className="mb-2 block text-sm font-medium"
-              >
-                Appointment Time
-              </label>
-              <div className="relative">
-                <input
-                  id="appointment_time"
-                  name="appointment_time"
-                  required
-                  type="time"
-                  value={time}
-                  onChange={(e) => setTime(e.target.value)}
-                  className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
-                ></input>
-              </div>
+          {/* Allergies */}
+          <div className="mb-4">
+            <label
+              htmlFor="allergies"
+              className="mb-2 block text-sm font-medium"
+            >
+              Allergies
+            </label>
+            <div className="relative">
+              <input
+                id="allergies"
+                name="allergies"
+                required
+                type="text"
+                className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
+                value={allergies || ''}
+                onChange={(e) => setAllergies(e.target.value)}
+              ></input>
             </div>
           </div>
 

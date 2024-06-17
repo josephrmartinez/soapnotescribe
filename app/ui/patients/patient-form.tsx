@@ -29,6 +29,7 @@ interface Patient {
   zipcode: string | null;
   allergies: string | null;
   profile_notes: string | null;
+  referral_source: string | null;
 }
 
 const PatientForm: React.FC<PatientFormProps> = ({ patient, formAction }) => {
@@ -63,6 +64,9 @@ const PatientForm: React.FC<PatientFormProps> = ({ patient, formAction }) => {
   );
   const [profileNotes, setProfileNotes] = useState<string | null>(
     patient?.profile_notes || '',
+  );
+  const [referralSource, setReferralSource] = useState<string | null>(
+    patient?.referral_source || '',
   );
   const [submitOkay, setSubmitOkay] = useState<boolean>(true);
 
@@ -303,6 +307,26 @@ const PatientForm: React.FC<PatientFormProps> = ({ patient, formAction }) => {
               className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
               value={allergies || ''}
               onChange={(e) => setAllergies(e.target.value)}
+            ></input>
+          </div>
+        </div>
+
+        <div className="mb-4">
+          <label
+            htmlFor="referral_source"
+            className="mb-2 block text-sm font-medium"
+          >
+            Referral Source
+          </label>
+          <div className="relative">
+            <input
+              id="referral_source"
+              name="referral_source"
+              type="text"
+              placeholder="optional"
+              className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
+              value={referralSource || ''}
+              onChange={(e) => setReferralSource(e.target.value)}
             ></input>
           </div>
         </div>

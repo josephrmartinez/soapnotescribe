@@ -23,6 +23,7 @@ export async function addPatient(formData: FormData) {
       country: formData.get('country') as string,
       zipcode: formData.get('zipcode') as string,
       allergies: formData.get('allergies') as string,
+      referral_souce: formData.get('referral_source') as string,
       profile_notes: formData.get('profile_notes') as string,
     })
     .select();

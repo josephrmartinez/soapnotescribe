@@ -1,25 +1,12 @@
 // import Form from '@/app/ui/appointments/edit-form';
 import Breadcrumbs from '@/app/ui/notes/breadcrumbs';
-import {
-  getSignedAudioUrl,
-  getSignedPdfUrl,
-  fetchPatientById,
-} from '@/app/lib/data';
+import { fetchPatientById } from '@/app/lib/data';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import {
-  CalendarDaysIcon,
-  BuildingOffice2Icon,
-  PencilSquareIcon,
-  DocumentDuplicateIcon,
-  TrashIcon,
-  DocumentIcon,
-} from '@heroicons/react/24/outline';
+import { PencilSquareIcon } from '@heroicons/react/24/outline';
 import { Metadata } from 'next';
-import { calculateAge, formatDateToLocal, formatTime } from '@/app/lib/utils';
-import { Button } from '@/app/ui/button';
-import { DeleteNoteFirstStep } from '@/app/ui/notes/buttons';
-import { createClient } from '@/utils/supabase/server';
+import { calculateAge, formatDateToLocal } from '@/app/lib/utils';
+import { DownloadPatientNotes } from '@/app/ui/patients/buttons';
 
 export const metadata: Metadata = {
   title: 'Patient Profile',
@@ -27,13 +14,12 @@ export const metadata: Metadata = {
 
 export default async function Page({ params }: { params: { id: string } }) {
   const id = params.id;
-  // Create and implement fetchPatientById function
   const patient = await fetchPatientById(id);
   console.log('patient data from patients/[id]:', patient);
 
-  const patientDOB = formatDateToLocal(patient.date_of_birth);
+  // const patientDOB = formatDateToLocal(patient.date_of_birth);
   const dateToday = new Date();
-  const patientAge = calculateAge(patientDOB, dateToday.toString());
+  const patientAge = calculateAge(patient.date_of_birth, dateToday.toString());
 
   return (
     <main>
@@ -78,6 +64,17 @@ export default async function Page({ params }: { params: { id: string } }) {
                 </div>
               </div>
             </div>
+
+            {/* Phone */}
+            <div className="">
+              <label htmlFor="phone" className="mb-2 block text-sm font-medium">
+                Phone Number
+              </label>
+              <div id="phone" className="px-2 py-2 text-sm">
+                {patient.phone}
+              </div>
+            </div>
+
             {/* Patient Date of Birth */}
             <div className="">
               <label
@@ -88,7 +85,7 @@ export default async function Page({ params }: { params: { id: string } }) {
               </label>
               <div className="relative">
                 <div id="patient_dob" className="px-2 py-2 text-sm">
-                  {patientDOB}
+                  {patient.date_of_birth}
                 </div>
               </div>
             </div>
@@ -102,16 +99,6 @@ export default async function Page({ params }: { params: { id: string } }) {
               </label>
               <div className="ml-2 text-sm">
                 <div>{patientAge} years old</div>
-              </div>
-            </div>
-
-            {/* Phone */}
-            <div className="">
-              <label htmlFor="phone" className="mb-2 block text-sm font-medium">
-                Phone Number
-              </label>
-              <div id="phone" className="px-2 py-2 text-sm">
-                {patient.phone}
               </div>
             </div>
 
@@ -172,6 +159,74 @@ export default async function Page({ params }: { params: { id: string } }) {
                 </div>
               </div>
             </div>
+
+            <div className="mb-4">
+              <label
+                htmlFor="referral_source"
+                className="mb-2 block text-sm font-medium"
+              >
+                Referral Source
+              </label>
+              <div className="relative">
+                <div id="referral_source" className="px-2 py-2 text-sm">
+                  {patient.referral_source}
+                </div>
+              </div>
+            </div>
+            <div className="mb-4">
+              <label
+                htmlFor="clinical_status"
+                className="mb-2 block text-sm font-medium"
+              >
+                Clinical Status
+              </label>
+              <div className="relative">
+                <div id="clinical_status" className="px-2 py-2 text-sm">
+                  Due for Annual
+                </div>
+              </div>
+            </div>
+            <div className="mb-4">
+              <label
+                htmlFor="appointment_types"
+                className="mb-2 block text-sm font-medium"
+              >
+                Appointment Types
+              </label>
+              <div className="relative">
+                <div id="appointment_types" className="px-2 py-2 text-sm">
+                  Telemedicine and / or In Person
+                </div>
+              </div>
+            </div>
+            <div className="mb-4">
+              <label
+                htmlFor="appointment_specialties"
+                className="mb-2 block text-sm font-medium"
+              >
+                Appointment Specialties Received
+              </label>
+              <div className="relative">
+                <div id="appointment_types" className="px-2 py-2 text-sm">
+                  addiction medicine, behavioral health, primary care, urgent
+                  care, wound care, IV Treatment, metabolic, HRT, aesthetics
+                </div>
+              </div>
+            </div>
+            <div className="mb-4">
+              <label
+                htmlFor="patient_notes"
+                className="mb-2 block text-sm font-medium"
+              >
+                Patient Notes
+              </label>
+              <div className="relative">
+                <div id="appointment_types" className="px-2 py-2 text-sm">
+                  Date - Appointment Type - Chief Complaint
+                </div>
+              </div>
+            </div>
+            <DownloadPatientNotes />
           </div>
         </div>
       </div>

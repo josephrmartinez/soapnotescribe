@@ -80,3 +80,17 @@ export function ViewProfile({ patient_id }: { patient_id: string }) {
     </Link>
   );
 }
+
+export function DownloadPatientNotes() {
+  return (
+    <Link
+      href={'/dashboard/patients/add'}
+      className={
+        'flex h-10 items-center rounded-lg bg-teal-600 px-4 text-sm font-medium text-white shadow transition-colors hover:bg-teal-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-700 active:bg-teal-600'
+      }
+    >
+      <DocumentPlusIcon width={22} className="mr-2" />
+      Download Patient's Notes
+    </Link>
+  );
+}
