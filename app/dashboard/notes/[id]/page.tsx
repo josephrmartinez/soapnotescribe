@@ -110,20 +110,19 @@ export default async function Page({ params }: { params: { id: string } }) {
         </div>
 
         <div className="mb-4 max-w-prose rounded-md bg-gray-50 p-4">
-          <div className="mb-8 grid grid-cols-2 gap-8">
+          <div className="mb-4 grid grid-cols-2 gap-x-8 gap-y-4">
             {/* patient name */}
             <div className="col-span-2">
               <label
-                htmlFor="first_name"
+                htmlFor="patient_name"
                 className="mb-2 block text-sm font-medium"
               >
                 Patient Name
               </label>
-              <div className="relative">
-                <div id="patient" className="px-2 py-2 text-sm">
-                  {note.patient.last_name}, {note.patient.first_name}{' '}
-                  {note.patient.middle_name && note.patient.middle_name}
-                </div>
+
+              <div id="patient_name" className="ml-2 text-sm">
+                {note.patient.last_name}, {note.patient.first_name}{' '}
+                {note.patient.middle_name && note.patient.middle_name}
               </div>
             </div>
 
@@ -136,7 +135,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                 Patient Date of Birth
               </label>
               <div className="relative">
-                <div id="patient_dob" className="px-2 py-2 text-sm">
+                <div id="patient_dob" className="ml-2 text-sm">
                   {patientDOB}
                 </div>
               </div>
@@ -150,10 +149,9 @@ export default async function Page({ params }: { params: { id: string } }) {
               >
                 Patient Age
               </label>
-              <div className="relative">
-                <div id="patient_age" className="px-2 py-2 text-sm">
-                  {patientAge}
-                </div>
+
+              <div id="patient_age" className="ml-2 text-sm">
+                {patientAge}
               </div>
             </div>
 
@@ -165,7 +163,7 @@ export default async function Page({ params }: { params: { id: string } }) {
               >
                 Appointment Date
               </label>
-              <div id="appointment_date" className="px-2 py-2 text-sm">
+              <div id="appointment_date" className="ml-2 text-sm">
                 {appointmentDate}
               </div>
             </div>
@@ -178,10 +176,8 @@ export default async function Page({ params }: { params: { id: string } }) {
               >
                 Appointment Time
               </label>
-              <div className="relative">
-                <div id="appointment_time" className="px-2 py-2 text-sm">
-                  {appointmentTime}
-                </div>
+              <div id="appointment_time" className="ml-2 text-sm">
+                {appointmentTime}
               </div>
             </div>
 
@@ -193,7 +189,7 @@ export default async function Page({ params }: { params: { id: string } }) {
               >
                 Appointment Type
               </label>
-              <div id="appointment_type" className="px-2 py-2 text-sm">
+              <div id="appointment_type" className="ml-2 text-sm">
                 {note.appointment_type}
               </div>
             </div>
@@ -206,7 +202,7 @@ export default async function Page({ params }: { params: { id: string } }) {
               >
                 Appointment Specialty
               </label>
-              <div id="appointment_specialty" className="px-2 py-2 text-sm">
+              <div id="appointment_specialty" className="ml-2 text-sm">
                 {note.appointment_specialty}
               </div>
             </div>
@@ -219,8 +215,8 @@ export default async function Page({ params }: { params: { id: string } }) {
               >
                 Patient Location
               </label>
-              <div id="appointment_location" className="px-2 py-2 text-sm">
-                Patient is located in {note.patient_location}
+              <div id="appointment_location" className="ml-2 text-sm">
+                {note.patient_location}
               </div>
             </div>
 
@@ -232,37 +228,31 @@ export default async function Page({ params }: { params: { id: string } }) {
               >
                 Consent
               </label>
-              <div className="px-2 py-2 text-sm">
-                Patient consents to treatment.
-              </div>
+              <div className="ml-2 text-sm">Patient consents to treatment.</div>
             </div>
           </div>
 
           {/* Allergies */}
-          <div className="">
+          <div className="mb-4">
             <label
               htmlFor="allergies"
               className="mb-2 block text-sm font-medium"
             >
               Allergies
             </label>
-            <div className="relative">
-              <div className="px-2 py-2 text-sm">{note.allergies}</div>
-            </div>
+            <div className="ml-2 text-sm">{note.allergies}</div>
           </div>
 
           {/* Chief Complaint */}
-          <div className="">
+          <div className="mb-4">
             <label
               htmlFor="complaint"
               className="mb-2 block text-sm font-medium"
             >
               Chief Complaint
             </label>
-            <div className="relative">
-              <div id="complaint" className="px-2 py-2 text-sm">
-                {note.chief_complaint}
-              </div>
+            <div id="complaint" className="ml-2 text-sm">
+              {note.chief_complaint}
             </div>
           </div>
 
@@ -274,10 +264,8 @@ export default async function Page({ params }: { params: { id: string } }) {
             >
               Subjective
             </label>
-            <div className="relative">
-              <div id="subjective" className="px-2 py-2 text-sm">
-                {note.soap_subjective}
-              </div>
+            <div id="subjective" className="px-2 text-sm">
+              {note.soap_subjective}
             </div>
           </div>
 
@@ -289,7 +277,7 @@ export default async function Page({ params }: { params: { id: string } }) {
               Objective
             </label>
             <div className="relative">
-              <div id="objective" className="px-2 py-2 text-sm">
+              <div id="objective" className="px-2 text-sm">
                 {note.soap_objective || ''}
               </div>
             </div>
@@ -303,7 +291,7 @@ export default async function Page({ params }: { params: { id: string } }) {
               Assessment
             </label>
             <div className="relative">
-              <div id="assessment" className="px-2 py-2 text-sm">
+              <div id="assessment" className="px-2 text-sm">
                 {note.soap_assessment || ''}
               </div>
             </div>
@@ -314,7 +302,7 @@ export default async function Page({ params }: { params: { id: string } }) {
               Plan
             </label>
             <div className="relative">
-              <div id="plan" className="px-2 py-2 text-sm">
+              <div id="plan" className="px-2 text-sm">
                 {note.soap_plan || ''}
               </div>
             </div>
@@ -328,7 +316,7 @@ export default async function Page({ params }: { params: { id: string } }) {
               Doctor Signature
             </label>
             <div className="relative">
-              <div id="doctor_signature" className="px-2 py-2 text-sm">
+              <div id="doctor_signature" className="px-2 text-sm">
                 {note.doctor_signature || ''}
               </div>
             </div>

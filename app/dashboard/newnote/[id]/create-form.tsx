@@ -151,11 +151,11 @@ const EditDraftNote: React.FC<CreateNoteProps> = ({ note }) => {
             SOAP note
           </div>
 
-          <div className="mb-8 grid grid-cols-2 gap-8">
+          <div className="mb-4 grid grid-cols-2 gap-x-8 gap-y-4">
             {/* Patient Name */}
             <div className="col-span-2">
               <label
-                htmlFor="first_name"
+                htmlFor="patient_name"
                 className="mb-2 block text-sm font-medium"
               >
                 Patient Name
