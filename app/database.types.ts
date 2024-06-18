@@ -15,7 +15,7 @@ export type Database = {
           appointment_date: string | null
           appointment_specialty: string | null
           appointment_summary: string | null
-          appointment_time: string | null
+          appointment_time: string
           appointment_type: string | null
           audio_storage_url: string | null
           audio_transcript: string | null
@@ -46,7 +46,7 @@ export type Database = {
           appointment_date?: string | null
           appointment_specialty?: string | null
           appointment_summary?: string | null
-          appointment_time?: string | null
+          appointment_time?: string
           appointment_type?: string | null
           audio_storage_url?: string | null
           audio_transcript?: string | null
@@ -77,7 +77,7 @@ export type Database = {
           appointment_date?: string | null
           appointment_specialty?: string | null
           appointment_summary?: string | null
-          appointment_time?: string | null
+          appointment_time?: string
           appointment_type?: string | null
           audio_storage_url?: string | null
           audio_transcript?: string | null

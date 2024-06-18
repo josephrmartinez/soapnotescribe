@@ -7,6 +7,8 @@ import { fetchNoteById } from '@/app/lib/data';
 export async function generateAndSavePdf(id: string) {  
   const note = await fetchNoteById(id)
 
+  const appointmentTime = formatTime(note.appointment_time);
+
 
   // Generate PDF
   const doc = new PDFDocument({ font: 'public/fonts/Inter-Regular.ttf' });
@@ -15,16 +17,23 @@ export async function generateAndSavePdf(id: string) {
   doc.registerFont('regular', 'public/fonts/Inter-Regular.ttf');
 
   doc.font('bold').text(`Patient name: `, {continued: true});
-  doc.font('regular').text(`${note.patient.last_name}, ${note.patient.first_name}`)
+  doc.font('regular').text(`${note.patient.last_name}, ${note.patient.first_name} ${note.patient.middle_name? note.patient.middle_name: ''}`)
   // doc.moveDown();
   doc.font('bold').text(`Patient date of birth: `, {continued: true});
   doc.font('regular').text(`${note.patient.date_of_birth}`);
   doc.font('bold').text(`Patient age: `, {continued: true});
   doc.font('regular').text(`${note.patient_age_years} years old`);
   doc.font('bold').text(`Appointment Date: `, {continued: true});
-  doc.font('regular').text(`${note.appointment_date}`);  doc.font('bold').text(`Appointment Time: `, {continued: true});
-  doc.font('regular').text(`${note.appointment_time}`);
-  doc.font('bold').text(`Consent: `, {continued: true});
+  doc.font('regular').text(`${note.appointment_date}`);
+  doc.font('bold').text(`Appointment Time: `, { continued: true });
+  doc.font('regular').text(`${appointmentTime}`);
+  doc.font('bold').text(`Appointment Type: `, {continued: true});
+  doc.font('regular').text(`${note.appointment_type}`);
+  doc.font('bold').text(`Appointment Specialty: `, {continued: true});
+  doc.font('regular').text(`${note.appointment_specialty}`);
+  doc.font('bold').text(`Patient is located in: `, {continued: true});
+  doc.font('regular').text(`${note.patient_location}`);
+  doc.font('bold').text(`Consent: `, { continued: true });
   doc.font('regular').text(`Patient consents to treatment`);
   doc.font('bold').text(`Allergies: `, { continued: true });
   doc.font('regular').text(`${note.allergies}`);
