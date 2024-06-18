@@ -79,18 +79,71 @@ export async function getSOAPData(noteid: string, transcript: string) {
     messages: [
       {
         role: "system",
-        content: `You are a helpful, highly-trained medical assistant. Carefully review the following TRANSCRIPT and generate a clinical SOAP note as a JSON object with the following structure:
+        content: `You are a helpful, highly-trained medical assistant. Carefully review the following TRANSCRIPT and generate a clinical SOAP note as a JSON object. The JSON object should conform to the following JSON Schema:
+
         {
-          appointment_date?: Date ("yyyy-mm-dd");
-          appointment_time?: string ("hh:mm");
-          allergies: string ("NKDA" if none);
-          chief_complaint?: string (max 50 characters, capitalize first character);
-          soap_subjective?: string;
-          soap_objective?: string;
-          soap_assessment?: string;
-          soap_plan?: string;
-          differential_diagnosis?: string;
-        } Your answer MUST begin and end with curly brackets. Do not include any leading backticks or other markers. Include as much specific information as possible from the transcript in the SOAP note. Be thorough! If you do not have the information required to provide a value in any of the fields, just return the JSON object WITHOUT those fields. For the differential_diagnosis field, analyze the entire transcript and return a differential diagnosis along with possible alternative treatment options. DO NOT ever include the patient's name, age, or gender in any of the soap_ fields. Just refer to the patient as "the patient". Your complete answer MUST begin and end with curly brackets.`
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "appointment_date": {
+              "type": "string",
+              "format": "date",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+              "description": "Date of the appointment in yyyy-mm-dd format"
+            },
+            "appointment_time": {
+              "type": "string",
+              "pattern": "^\\d{2}:\\d{2}$",
+              "description": "Time of the appointment in hh:mm format"
+            },
+            "allergies": {
+              "type": "string",
+              "description": "List of allergies, 'NKDA' if none"
+            },
+            "chief_complaint": {
+              "type": "string",
+              "maxLength": 50,
+              "description": "Chief complaint. Capitalize the first letter of  the string"
+            },
+            "soap_subjective": {
+              "type": "string",
+              "description": "Subjective information from the patient"
+            },
+            "soap_objective": {
+              "type": "string",
+              "description": "Objective observations and measurements"
+            },
+            "soap_assessment": {
+              "type": "string",
+              "description": "Assessment and diagnosis"
+            },
+            "soap_plan": {
+              "type": "string",
+              "description": "Plan for treatment"
+            },
+            "differential_diagnosis": {
+              "type": "string",
+              "description": "Possible alternative diagnoses"
+            },
+            "appointment_type": {
+              "type": "string",
+              "enum": ["telemedicine", "in person"],
+              "description": "Type of appointment: 'telemedicine' or 'in person'"
+            },
+            "appointment_specialty": {
+              "type": "string",
+              "enum": ["Addiction Medicine", "Behavioral Health", "Primary Care", "Urgent Care", "Wound Care", "IV Treatment", "Metabolic", "HRT", "Aesthetics", "Other"],
+              "description": "Specialty of the appointment"
+            },
+            "patient_location": {
+              "type": "string",
+              "description": "Location of the patient (State/Province, e.g., 'Arizona')"
+            }
+          },
+          "required": ["allergies"]
+        }
+
+        Your answer MUST begin and end with curly brackets. Do not include any leading backticks or other markers. Include as much specific information as possible from the transcript in the SOAP note. Be thorough! If you do not have the information required to provide a value in any of the fields, just return the JSON object WITHOUT those fields. For the differential_diagnosis field, analyze the entire transcript and return a differential diagnosis along with possible alternative treatment options. Your complete answer MUST begin and end with curly brackets.`
       },
       { role: "user", content: `TRANSCRIPT: ${transcript}` },
     ],
