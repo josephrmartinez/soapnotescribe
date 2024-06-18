@@ -1,12 +1,21 @@
 // import Form from '@/app/ui/appointments/edit-form';
 import Breadcrumbs from '@/app/ui/notes/breadcrumbs';
-import { fetchPatientById } from '@/app/lib/data';
+import { fetchPatientById, fetchPatientProfileById } from '@/app/lib/data';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { PencilSquareIcon } from '@heroicons/react/24/outline';
 import { Metadata } from 'next';
 import { calculateAge, formatDateToLocal } from '@/app/lib/utils';
 import { DownloadPatientNotes } from '@/app/ui/patients/buttons';
+import { ViewSOAPNote } from '@/app/ui/notes/buttons';
+
+interface NoteMetadata {
+  id: string;
+  chief_complaint: string;
+  appointment_date: string;
+  appointment_type: string;
+  appointment_specialty: string;
+}
 
 export const metadata: Metadata = {
   title: 'Patient Profile',
@@ -15,7 +24,32 @@ export const metadata: Metadata = {
 export default async function Page({ params }: { params: { id: string } }) {
   const id = params.id;
   const patient = await fetchPatientById(id);
-  console.log('patient data from patients/[id]:', patient);
+  const patientProfile = await fetchPatientProfileById(id);
+
+  //const specialtiesReceived = ...
+
+  console.log('patient profile data from patients/[id]:', patientProfile);
+
+  const specialtiesReceived = patientProfile.note.map(
+    (note: NoteMetadata) => note.appointment_specialty,
+  );
+
+  const patientNotes = patientProfile.note.map(
+    (note: NoteMetadata, index: number) => (
+      <div
+        className={`grid w-full grid-cols-3 items-center gap-4 p-2 ${index % 2 === 0 ? 'bg-gray-200' : 'bg-gray-100'}`}
+        key={note.id}
+      >
+        <div>{note.appointment_date}</div>
+        <div className="col-span-2">{note.chief_complaint}</div>
+        <div>{note.appointment_type}</div>
+        <div>{note.appointment_specialty}</div>
+        <div className="flex justify-end">
+          <ViewSOAPNote id={note.id} />
+        </div>
+      </div>
+    ),
+  );
 
   // const patientDOB = formatDateToLocal(patient.date_of_birth);
   const dateToday = new Date();
@@ -208,12 +242,11 @@ export default async function Page({ params }: { params: { id: string } }) {
               </label>
               <div className="relative">
                 <div id="appointment_types" className="px-2 py-2 text-sm">
-                  addiction medicine, behavioral health, primary care, urgent
-                  care, wound care, IV Treatment, metabolic, HRT, aesthetics
+                  {specialtiesReceived.join(', ')}
                 </div>
               </div>
             </div>
-            <div className="mb-4">
+            <div className="col-span-2 mb-4">
               <label
                 htmlFor="patient_notes"
                 className="mb-2 block text-sm font-medium"
@@ -222,7 +255,7 @@ export default async function Page({ params }: { params: { id: string } }) {
               </label>
               <div className="relative">
                 <div id="appointment_types" className="px-2 py-2 text-sm">
-                  Date - Appointment Type - Chief Complaint
+                  {patientNotes}
                 </div>
               </div>
             </div>

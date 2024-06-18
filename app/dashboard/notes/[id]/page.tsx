@@ -7,6 +7,7 @@ import {
 } from '@/app/lib/data';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import {
   CalendarDaysIcon,
   BuildingOffice2Icon,
@@ -21,6 +22,7 @@ import { Button } from '@/app/ui/button';
 import { LinkButton } from '@/app/ui/LinkButton';
 import { DeleteNoteFirstStep } from '@/app/ui/notes/buttons';
 import { calculateAge } from '@/app/lib/utils';
+import AudioPlayer from '@/app/components/AudioPlayer';
 
 export const metadata: Metadata = {
   title: 'Approved SOAP Note',
@@ -30,6 +32,11 @@ export default async function Page({ params }: { params: { id: string } }) {
   const id = params.id;
   const note = await fetchNoteById(id);
   // console.log('appointment data from appointments/[id]:', note);
+
+  if (note.status === 'awaiting review') {
+    console.log('should redirect');
+    redirect(`./${id}/edit`);
+  }
 
   // Get audio url for media player:
   const audioUrl = note.audio_storage_url
@@ -83,7 +90,7 @@ export default async function Page({ params }: { params: { id: string } }) {
           <div className="grid grid-cols-4 gap-2">
             <DeleteNoteFirstStep id={note.id} />
             <Link
-              href={`/dashboard/newnote/${note.id}`}
+              href={`/dashboard/notes/${note.id}/edit`}
               className="flex h-10 items-center justify-center rounded-lg bg-gray-100 px-2  text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200 "
             >
               <PencilSquareIcon width={20} height={20} className="mr-2" />
@@ -326,21 +333,11 @@ export default async function Page({ params }: { params: { id: string } }) {
         {audioUrl ? (
           <div>
             <div className="collapse-title text-lg font-medium">Audio</div>
-
-            {isMp3 ? (
-              <audio className="mb-6 w-full" controls>
-                <source type="audio" src={audioUrl} />
-                Your browser does not support the audio element.
-              </audio>
-            ) : (
-              <div className="mb-8">
-                <LinkButton href={audioUrl}>Download audio</LinkButton>
-              </div>
-            )}
+            <AudioPlayer audioUrl={audioUrl} />
 
             <div
               tabIndex={0}
-              className="collapse collapse-plus mb-4 rounded-md border"
+              className="collapse collapse-plus my-4 rounded-md border"
             >
               <div className="collapse-title text-lg font-medium">
                 Audio Memo

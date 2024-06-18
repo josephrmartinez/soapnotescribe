@@ -7,6 +7,8 @@ import { Note, NoteWithPatient } from './definitions';
 
 
 // UPDATE TO ALWAYS DISPLAY PROCESSING NOTES (AUDIO_TRANSCRIPT IS NULL)
+// REFACTOR TO GET ONLY NEEDED NOTES. FILTERING EARLIER.
+
 export async function fetchFilteredNotes(query: string, currentPage: number) {
   noStore()
   try {
@@ -239,6 +241,34 @@ export async function fetchPatientById(id: string) {
     }
 
     const patient = patients ? patients[0] : null;
+    return patient
+  } catch (error) {
+    console.error('Supabase Error:', error);
+    throw new Error('Failed to fetch patient data.');
+  }
+}
+
+export async function fetchPatientProfileById(id: string) {
+  // EXPERIMENTAL. noStore() allows for immediate re-render of changed appointment data, but may lead to slower load times.
+  noStore()
+  try {
+    const supabase = createClient()
+    const { data: patients, error } = await supabase
+      .from('patient')
+      .select(`*, 
+        note(id, appointment_type, chief_complaint, appointment_date, appointment_specialty)`
+      )
+      .eq('id', id);
+
+    if (error) {
+      console.error('Supabase Error:', error);
+      throw new Error('Failed to fetch patient data.');
+    }
+
+    const patient = patients ? patients[0] : null;
+
+
+
     return patient
   } catch (error) {
     console.error('Supabase Error:', error);

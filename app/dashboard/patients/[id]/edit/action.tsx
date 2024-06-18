@@ -23,7 +23,7 @@ export async function editPatient(formData: FormData) {
       country: formData.get('country') as string,
       zipcode: formData.get('zipcode') as string,
       allergies: formData.get('allergies') as string,
-      referral_souce: formData.get('referral_source') as string,
+      referral_source: formData.get('referral_source') as string,
       profile_notes: formData.get('profile_notes') as string,
     })
     .eq('id', formData.get('id'))

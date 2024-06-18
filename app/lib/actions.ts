@@ -127,7 +127,7 @@ export async function getSOAPData(noteid: string, transcript: string) {
             },
             "appointment_type": {
               "type": "string",
-              "enum": ["telemedicine", "in person"],
+              "enum": ["Telemedicine", "In Person"],
               "description": "Type of appointment: 'telemedicine' or 'in person'"
             },
             "appointment_specialty": {
