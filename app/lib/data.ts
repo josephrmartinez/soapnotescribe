@@ -9,6 +9,9 @@ import { Note, NoteWithPatient } from './definitions';
 // UPDATE TO ALWAYS DISPLAY PROCESSING NOTES (AUDIO_TRANSCRIPT IS NULL)
 // REFACTOR TO GET ONLY NEEDED NOTES. FILTERING EARLIER.
 
+
+
+
 export async function fetchFilteredNotes(query: string, currentPage: number) {
   noStore()
   try {
@@ -173,7 +176,48 @@ export const fetchUserSession = async () => {
   }
 };
 
+export async function fetchTemplates() {
+  try {
+    const supabase = createClient()
+    const { data: templates, error } = await supabase
+      .from('template')
+      .select(
+        '*'
+      )
 
+    if (error) {
+      console.error('Error fetching templates:', error);
+      return
+    }
+  return templates
+ } catch (error) {
+    console.error('Supabase Error:', error);
+    throw new Error('Failed to fetch templates data.');
+ }
+}
+
+
+export async function fetchTemplateById(id: string) {
+  noStore()
+  try {
+    const supabase = createClient()
+    const { data: templates, error } = await supabase
+      .from('template')
+      .select('*')
+      .eq('id', id);
+
+    if (error) {
+      console.error('Supabase Error:', error);
+      throw new Error('Failed to fetch template data.');
+    }
+
+    const template = templates ? templates[0] : null;
+    return template
+  } catch (error) {
+    console.error('Supabase Error:', error);
+    throw new Error('Failed to fetch template data.');
+  }
+}
 
 export async function fetchPatients() {
   noStore();

@@ -446,7 +446,7 @@ const CreateNote = () => {
             </div>
           </div>
 
-          <div className="mb-4">
+          <div className="mb-4 w-1/2">
             <label
               htmlFor="chief_complaint"
               className="mb-2 block text-sm font-medium"

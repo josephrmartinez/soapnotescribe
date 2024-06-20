@@ -189,6 +189,36 @@ export type Database = {
         }
         Relationships: []
       }
+      template: {
+        Row: {
+          chief_complaint: string | null
+          id: string
+          soap_assessment: string | null
+          soap_objective: string | null
+          soap_plan: string | null
+          soap_subjective: string | null
+          user_id: string | null
+        }
+        Insert: {
+          chief_complaint?: string | null
+          id?: string
+          soap_assessment?: string | null
+          soap_objective?: string | null
+          soap_plan?: string | null
+          soap_subjective?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          chief_complaint?: string | null
+          id?: string
+          soap_assessment?: string | null
+          soap_objective?: string | null
+          soap_plan?: string | null
+          soap_subjective?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       waitlist: {
         Row: {
           created_at: string

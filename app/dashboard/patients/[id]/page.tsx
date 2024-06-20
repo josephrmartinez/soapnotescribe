@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { PencilSquareIcon } from '@heroicons/react/24/outline';
 import { Metadata } from 'next';
 import { calculateAge, formatDateToLocal } from '@/app/lib/utils';
-import { DownloadPatientNotes } from '@/app/ui/patients/buttons';
+import { DownloadPatientNotes, NewNote } from '@/app/ui/patients/buttons';
 import { ViewSOAPNote } from '@/app/ui/notes/buttons';
 
 interface NoteMetadata {
@@ -72,14 +72,15 @@ export default async function Page({ params }: { params: { id: string } }) {
         <div className="mb-4 flex w-full items-center justify-between">
           <h1 className={`text-2xl`}>Patient Profile</h1>
 
-          <div className="">
+          <div className="grid grid-cols-2 gap-4">
             <Link
               href={`/dashboard/patients/${patient.id}/edit`}
               className="flex h-10 items-center justify-center rounded-lg bg-gray-100 px-2  text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200 "
             >
               <PencilSquareIcon width={20} height={20} className="mr-2" />
-              Edit
+              Edit Profile
             </Link>
+            <NewNote patient_id={patient.id} />
           </div>
         </div>
 

@@ -15,6 +15,14 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ audioUrl }) => {
   const [paused, setPaused] = useState<boolean>(true);
 
   useEffect(() => {
+    let playerInstance: Player | null = null;
+
+    const updateTimeHandler = () => {
+      if (playerInstance !== null) {
+        setCurrentTime(playerInstance.currentTime);
+      }
+    };
+
     const checkAndLoadAudio = async () => {
       const url = new URL(audioUrl);
       if (url.pathname.endsWith('.amr')) {
@@ -22,12 +30,11 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ audioUrl }) => {
         const res = await fetch(audioUrl);
         if (res.ok) {
           const buffer = await res.arrayBuffer();
-          const playerInstance = AMRPlayer(buffer);
+          playerInstance = AMRPlayer(buffer);
           setPlayer(playerInstance);
           setDuration(playerInstance.duration);
-          playerInstance.addEventListener('timeupdate', () => {
-            setCurrentTime(playerInstance.currentTime);
-          });
+
+          playerInstance.addEventListener('timeupdate', updateTimeHandler);
         }
       }
     };
@@ -35,6 +42,13 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ audioUrl }) => {
     if (audioUrl) {
       checkAndLoadAudio();
     }
+
+    return () => {
+      if (playerInstance) {
+        playerInstance.pause();
+        playerInstance.removeEventListener('timeupdate', updateTimeHandler);
+      }
+    };
   }, [audioUrl]);
 
   const handlePlayPause = async () => {
@@ -68,23 +82,40 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ audioUrl }) => {
   return (
     <>
       {isAMR ? (
-        <div className="flex h-16 flex-row items-center space-y-2 rounded-full bg-gray-100 px-6">
+        <div className="flex h-16 flex-row items-center rounded-full bg-gray-100 px-6">
           <div
-            className="flex w-12 cursor-pointer items-center justify-center"
+            className="flex w-12 cursor-pointer items-center justify-center align-middle"
             onClick={handlePlayPause}
           >
-            {paused ? '▶️' : '⏸️'}
+            {paused ? (
+              '▶️'
+            ) : (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                height="24px"
+                viewBox="0 0 24 24"
+                width="24px"
+                fill="#000000"
+              >
+                <path d="M0 0h24v24H0z" fill="none" />
+                <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
+              </svg>
+            )}
           </div>
-          <span className="w-24 text-sm">
-            {formatTime(currentTime)} / {formatTime(duration)}
-          </span>
+
+          <div className="mx-2 flex flex-row items-center font-mono text-sm">
+            <span className="w-[30px]">{formatTime(currentTime)}</span>
+            <span className="pl-2 pr-1">/</span>
+            <span className="w-[30px]">{formatTime(duration)}</span>
+          </div>
+
           <input
             type="range"
             min="0"
             max={duration.toString()}
             value={currentTime.toString()}
             onChange={handleSeek}
-            className="w-full cursor-pointer"
+            className="mx-2 w-full cursor-pointer accent-gray-900"
           />
         </div>
       ) : (
