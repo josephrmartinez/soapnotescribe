@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import { GeistSans } from 'geist/font/sans';
+import AudioRecorder from '@/app/components/AudioRecorder';
 
 export const metadata: Metadata = {
   title: 'Account Settings',
@@ -15,6 +16,7 @@ export default async function Page() {
       <div>
         Include differential diagnosis with SOAP note draft enable / disable
       </div>
+      <AudioRecorder />
     </div>
   );
 }

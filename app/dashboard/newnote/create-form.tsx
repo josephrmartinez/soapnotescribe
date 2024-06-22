@@ -12,6 +12,8 @@ import AppointmentSpecialtySelect from '@/app/ui/notes/AppointmentSpecialtySelec
 import { PencilSquareIcon, PlusIcon } from '@heroicons/react/24/outline';
 import { useSearchParams } from 'next/navigation';
 import { fetchPatientById } from '@/app/lib/data';
+import CreateableSelectChiefComplaint from './CreateableSelectChiefComplaint';
+import { TemplateOption } from '@/app/lib/definitions';
 
 interface Patient {
   id: string;
@@ -180,6 +182,18 @@ const CreateNote = () => {
     selectedAppointmentSpecialty: string,
   ) => {
     setAppointmentSpecialty(selectedAppointmentSpecialty);
+  };
+
+  const handleTemplateSelect = (selectedTemplate: TemplateOption) => {
+    console.log('selected template:', selectedTemplate);
+    setChiefComplaint(selectedTemplate);
+
+    if (selectedTemplate.value !== selectedTemplate.label) {
+      setSubjective(selectedTemplate.value.soap_subjective);
+      setObjective(selectedTemplate.value.soap_objective);
+      setAssessment(selectedTemplate.value.soap_assessment);
+      setPlan(selectedTemplate.value.soap_plan);
+    }
   };
 
   const submitDraftNote = createNote.bind(null, 'awaiting review');
@@ -454,7 +468,11 @@ const CreateNote = () => {
               Chief Complaint
             </label>
             <div className="relative">
-              <input
+              <CreateableSelectChiefComplaint
+                onTemplateSelect={handleTemplateSelect}
+                selectedTemplate={chiefComplaint}
+              />
+              {/* <input
                 id="chief_complaint"
                 name="chief_complaint"
                 required
@@ -462,7 +480,7 @@ const CreateNote = () => {
                 className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
                 value={chiefComplaint || ''}
                 onChange={(e) => setChiefComplaint(e.target.value)}
-              ></input>
+              ></input> */}
             </div>
           </div>
 
