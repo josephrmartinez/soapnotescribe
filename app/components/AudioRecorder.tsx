@@ -4,9 +4,9 @@ import { useState, useEffect, useRef } from 'react';
 import { Microphone, Play, Pause, Stop } from '@phosphor-icons/react';
 
 export default function AudioRecorder() {
-    const [audioUrl, setAudioUrl] = useState<string>('');
-    const [elapsedDuration, setElapsedDuration] = useState<number>(0);
-    const [totalDuration, setTotalDuration] = useState<number>(0);
+  const [audioUrl, setAudioUrl] = useState<string>('');
+  const [elapsedRecordingTime, setElapsedRecordingTime] = useState<number>(0);
+  const [totalDuration, setTotalDuration] = useState<number>(0);
   const [status, setStatus] = useState<
     'initial' | 'recording' | 'finishedRecording' | 'playing'
   >('initial');
@@ -100,13 +100,21 @@ export default function AudioRecorder() {
     <div
       className={`grid h-48 w-full max-w-prose grid-rows-4 justify-items-center rounded-md border bg-gray-50 p-4 focus:ring-2`}
     >
-      <div>{status === 'initial' ? '' : status === 'recording' ? `${elapsedDuration}` : status === 'finishedRecording' ? `0:00 / ${totalDuration}`}</div>
+      <div>
+        {status === 'initial'
+          ? ''
+          : status === 'recording'
+            ? `${elapsedRecordingTime}`
+            : status === 'finishedRecording'
+              ? `0:00 / ${totalDuration}`
+              : `${audioPlayerRef.current?.currentTime} / ${totalDuration}`}
+      </div>
       <div className="text-sm text-gray-500">
         {status === 'initial' ? 'tap to record' : ''}
       </div>
       <div>
         {status === 'initial' && (
-          <div className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full  bg-teal-600 p-2 shadow">
+          <div className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full  bg-teal-600 p-2 shadow transition-all hover:bg-teal-500">
             <Microphone
               size={32}
               color="white"
@@ -117,7 +125,7 @@ export default function AudioRecorder() {
         )}
 
         {status === 'recording' && (
-          <div className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full  bg-red-600 p-2 shadow">
+          <div className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-red-600  p-2 shadow transition-all hover:bg-red-500">
             <Stop
               size={30}
               color="white"
@@ -127,7 +135,7 @@ export default function AudioRecorder() {
           </div>
         )}
         {status === 'finishedRecording' && (
-          <div className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full  bg-teal-600 p-2 shadow">
+          <div className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full  bg-teal-600 p-2 shadow transition-all hover:bg-teal-500">
             <Play
               size={32}
               color="white"
@@ -152,12 +160,12 @@ export default function AudioRecorder() {
       {status === 'finishedRecording' || status === 'playing' ? (
         <div className="grid w-full grid-cols-2 items-center text-center">
           <div
-            className="mx-8 cursor-pointer rounded-lg border py-1 text-gray-700"
+            className="mx-8 cursor-pointer rounded-lg border py-1 text-gray-700 transition-colors hover:bg-red-500 hover:text-white"
             onClick={deleteRecording}
           >
             delete
           </div>
-          <div className="mx-8 cursor-pointer rounded-lg border py-1 text-gray-700">
+          <div className="mx-8 cursor-pointer rounded-lg border py-1 text-gray-700 transition-colors hover:bg-teal-500 hover:text-white">
             upload
           </div>
         </div>
