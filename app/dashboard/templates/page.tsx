@@ -1,7 +1,6 @@
 import { Metadata } from 'next';
 import { GeistSans } from 'geist/font/sans';
 import { PlusLinkButton } from '@/app/ui/Buttons';
-import TemplateTable from '@/app/ui/templates/templatetable';
 import { Suspense } from 'react';
 
 export const metadata: Metadata = {
@@ -16,9 +15,7 @@ export default async function Page() {
       </div>
       <PlusLinkButton href="./templates/add" text="Create Template" />
       <div className="mt-6">
-        <Suspense>
-          <TemplateTable />
-        </Suspense>
+        <Suspense></Suspense>
       </div>
     </div>
   );
