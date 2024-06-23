@@ -3,17 +3,60 @@
 import { useState, useEffect, useRef } from 'react';
 import { Microphone, Play, Pause, Stop } from '@phosphor-icons/react';
 
-export default function AudioRecorder() {
+interface AudioRecorderProps {
+  uploadAudioRecording: (blob: Blob) => Promise<void>;
+}
+
+export default function AudioRecorder({
+  uploadAudioRecording,
+}: AudioRecorderProps) {
   const [audioUrl, setAudioUrl] = useState<string>('');
-  const [elapsedRecordingTime, setElapsedRecordingTime] = useState<number>(0);
-  const [totalDuration, setTotalDuration] = useState<number>(0);
+  const [audioBlob, setAudioBlob] = useState<Blob>();
+  const [elapsedRecordingTime, setElapsedRecordingTime] = useState<string>('');
+  const [playbackTimeFormatted, setPlaybackTimeFormatted] = useState('0:00');
+  const [totalDuration, setTotalDuration] = useState<string>('0:00');
   const [status, setStatus] = useState<
-    'initial' | 'recording' | 'finishedRecording' | 'playing'
+    | 'initial'
+    | 'recording'
+    | 'finishedRecording'
+    | 'playing'
+    | 'uploading'
+    | 'uploaded'
   >('initial');
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<BlobPart[]>([]);
   const audioPlayerRef = useRef<HTMLAudioElement | null>(null);
+  const intervalIdRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    const audio = audioPlayerRef.current;
+
+    const updateTime = () => {
+      if (audio) {
+        setPlaybackTimeFormatted(formatPlaybackTime(audio.currentTime));
+      }
+    };
+
+    audio.addEventListener('timeupdate', updateTime);
+
+    return () => {
+      audio.removeEventListener('timeupdate', updateTime);
+    };
+  }, []);
+
+  const formatTime = (seconds: number) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${String(minutes).padStart(1, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
+  };
+
+  const formatPlaybackTime = (seconds: number) => {
+    const minutes = Math.floor(seconds / 60);
+    const secondsFormatted = Math.floor(seconds % 60);
+    const padZero = (num: number) => (num < 10 ? '0' + num : num);
+    return `${String(minutes).padStart(1, '0')}:${padZero(secondsFormatted)}`;
+  };
 
   useEffect(() => {
     let stream: MediaStream;
@@ -54,7 +97,16 @@ export default function AudioRecorder() {
   }, []);
 
   function startRecording() {
+    setElapsedRecordingTime('0:00');
     if (mediaRecorderRef.current) {
+      const startTime = Date.now();
+
+      intervalIdRef.current = setInterval(() => {
+        const elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
+        // console.log('elapsed seconds:', elapsedSeconds);
+        setElapsedRecordingTime(formatTime(elapsedSeconds));
+      }, 1000);
+
       audioChunksRef.current = [];
       mediaRecorderRef.current.start();
       setStatus('recording');
@@ -66,13 +118,21 @@ export default function AudioRecorder() {
   }
 
   function stopRecording() {
+    if (intervalIdRef.current) {
+      clearInterval(intervalIdRef.current);
+      intervalIdRef.current = null;
+    }
+
     if (mediaRecorderRef.current) {
       mediaRecorderRef.current.stop();
+
       const blob = new Blob(audioChunksRef.current, {
-        type: mediaRecorderRef.current?.mimeType || '',
+        type: 'audio/wav',
       });
+      setAudioBlob(blob);
       const url = URL.createObjectURL(blob);
       setAudioUrl(url);
+      setTotalDuration(elapsedRecordingTime);
       setStatus('finishedRecording');
     }
   }
@@ -93,85 +153,110 @@ export default function AudioRecorder() {
 
   function deleteRecording() {
     setAudioUrl('');
+    setAudioBlob(null);
     setStatus('initial');
   }
 
+  async function handleUpload() {
+    if (audioBlob) {
+      setStatus('uploading');
+      try {
+        await uploadAudioRecording(audioBlob);
+        setStatus('uploaded');
+      } catch (error) {
+        console.error('Upload failed:', error);
+        setStatus('finishedRecording');
+      }
+    } else {
+      console.error('No audio blob available to upload');
+    }
+  }
+
   return (
-    <div
-      className={`grid h-48 w-full max-w-prose grid-rows-4 justify-items-center rounded-md border bg-gray-50 p-4 focus:ring-2`}
-    >
-      <div>
-        {status === 'initial'
-          ? ''
-          : status === 'recording'
-            ? `${elapsedRecordingTime}`
-            : status === 'finishedRecording'
-              ? `0:00 / ${totalDuration}`
-              : `${audioPlayerRef.current?.currentTime} / ${totalDuration}`}
-      </div>
-      <div className="text-sm text-gray-500">
-        {status === 'initial' ? 'tap to record' : ''}
-      </div>
-      <div>
-        {status === 'initial' && (
-          <div className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full  bg-teal-600 p-2 shadow transition-all hover:bg-teal-500">
-            <Microphone
-              size={32}
-              color="white"
-              weight="duotone"
-              onClick={startRecording}
-            />
-          </div>
-        )}
-
-        {status === 'recording' && (
-          <div className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-red-600  p-2 shadow transition-all hover:bg-red-500">
-            <Stop
-              size={30}
-              color="white"
-              weight="duotone"
-              onClick={stopRecording}
-            />
-          </div>
-        )}
-        {status === 'finishedRecording' && (
-          <div className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full  bg-teal-600 p-2 shadow transition-all hover:bg-teal-500">
-            <Play
-              size={32}
-              color="white"
-              weight="duotone"
-              onClick={playRecording}
-            />
-          </div>
-        )}
-
-        {status === 'playing' && (
-          <div className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full  bg-teal-600 p-2 shadow">
-            <Pause
-              size={32}
-              color="white"
-              weight="duotone"
-              onClick={pauseRecording}
-            />
-          </div>
-        )}
-        <audio ref={audioPlayerRef} src={audioUrl} hidden></audio>
-      </div>
-      {status === 'finishedRecording' || status === 'playing' ? (
-        <div className="grid w-full grid-cols-2 items-center text-center">
-          <div
-            className="mx-8 cursor-pointer rounded-lg border py-1 text-gray-700 transition-colors hover:bg-red-500 hover:text-white"
-            onClick={deleteRecording}
-          >
-            delete
-          </div>
-          <div className="mx-8 cursor-pointer rounded-lg border py-1 text-gray-700 transition-colors hover:bg-teal-500 hover:text-white">
-            upload
-          </div>
+    <>
+      <div
+        className={`grid h-48 w-full max-w-prose grid-rows-4 justify-items-center rounded-md border bg-gray-50 p-4 focus:ring-2`}
+      >
+        <div>
+          {status === 'initial'
+            ? ''
+            : status === 'recording'
+              ? `${elapsedRecordingTime}`
+              : status === 'finishedRecording' || status === 'playing'
+                ? `${playbackTimeFormatted} / ${elapsedRecordingTime}`
+                : status === 'uploading'
+                  ? `uploading...`
+                  : status === 'uploaded'
+                    ? `upload complete.`
+                    : ''}
         </div>
-      ) : (
-        <div></div>
-      )}
-    </div>
+        <div className="text-sm text-gray-500">
+          {status === 'initial' ? 'tap to record' : ''}
+        </div>
+        <div>
+          {status === 'initial' && (
+            <div className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full  bg-teal-600 p-2 shadow transition-all hover:bg-teal-500 active:bg-teal-600">
+              <Microphone
+                size={32}
+                color="white"
+                weight="duotone"
+                onClick={startRecording}
+              />
+            </div>
+          )}
+
+          {status === 'recording' && (
+            <div className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-red-600  p-2 shadow transition-all hover:bg-red-500 active:bg-red-600">
+              <Stop
+                size={30}
+                color="white"
+                weight="duotone"
+                onClick={stopRecording}
+              />
+            </div>
+          )}
+          {status === 'finishedRecording' && (
+            <div className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full  bg-teal-600 p-2 shadow transition-all hover:bg-teal-500">
+              <Play
+                size={32}
+                color="white"
+                weight="duotone"
+                onClick={playRecording}
+              />
+            </div>
+          )}
+
+          {status === 'playing' && (
+            <div className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full  bg-teal-600 p-2 shadow">
+              <Pause
+                size={32}
+                color="white"
+                weight="duotone"
+                onClick={pauseRecording}
+              />
+            </div>
+          )}
+        </div>
+        {status === 'finishedRecording' || status === 'playing' ? (
+          <div className="grid w-full grid-cols-2 items-center  justify-items-center text-center">
+            <div
+              className="w-24 cursor-pointer rounded-lg border py-1 text-gray-700 transition-colors hover:bg-red-500 hover:text-white"
+              onClick={deleteRecording}
+            >
+              delete
+            </div>
+            <div
+              className="w-24 cursor-pointer rounded-lg border py-1 text-gray-700 transition-colors hover:bg-teal-500 hover:text-white"
+              onClick={handleUpload} // FUNCTION TO PASS AUDIO FILE TO PARENT COMPONENT
+            >
+              upload
+            </div>
+          </div>
+        ) : (
+          <div></div>
+        )}
+      </div>
+      <audio ref={audioPlayerRef} src={audioUrl} hidden controls></audio>
+    </>
   );
 }

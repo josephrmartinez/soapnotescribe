@@ -11,7 +11,8 @@ export async function POST(req, res) {
     console.log("incoming webhook!");
     const apptid = req.nextUrl.searchParams.get('apptid');
 
-    const prediction = await req.json();
+  const prediction = await req.json();
+  console.log("prediction", prediction)
     const transcript = prediction.output.text
         
     getSOAPData(apptid, transcript)

@@ -5,7 +5,7 @@ import * as tus from 'tus-js-client';
 import { createClient } from '@/utils/supabase/client';
 import { redirect, useRouter } from 'next/navigation';
 import { getReplicateMonoTranscript } from '@/app/lib/actions';
-import { AudioRecorder } from 'react-audio-voice-recorder';
+import AudioRecorder from '@/app/components/AudioRecorder';
 import { revalidatePath } from 'next/cache';
 
 export default function AudioUpload({ patientId }: { patientId: string }) {
@@ -18,6 +18,11 @@ export default function AudioUpload({ patientId }: { patientId: string }) {
   const accessTokenRef = useRef<string | undefined>('');
   const userIDRef = useRef<string | undefined>('');
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [component, setComponent] = useState<string>('record');
+
+  const handleComponentChange = (selectedComponent: string) => {
+    setComponent(selectedComponent);
+  };
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -179,13 +184,6 @@ export default function AudioUpload({ patientId }: { patientId: string }) {
   const uploadAudioRecording = async (blob: Blob) => {
     setIsUploading(true);
 
-    // Create and append audio player to play recorded memo in the browser
-    // const url = URL.createObjectURL(blob);
-    // const audio = document.createElement('audio');
-    // audio.src = url;
-    // audio.controls = true;
-    // document.body.appendChild(audio);
-
     // Create randomized file name for in-browser created recordings
     let fileName = 'recording-' + self.crypto.randomUUID();
 
@@ -196,56 +194,84 @@ export default function AudioUpload({ patientId }: { patientId: string }) {
   };
 
   return (
-    <div className="mb-6 grid grid-cols-1 gap-8 sm:grid-cols-2">
-      <div className="">
-        <div className="mb-2 block text-sm font-medium">Upload Audio</div>
+    <div className="mb-6">
+      <div className="mb-2 block text-sm font-medium">Audio Input</div>
+      <ComponentSelect
+        component={component}
+        setComponent={handleComponentChange}
+      />
 
-        <div
-          onDragOver={handleDragOver}
-          onDragLeave={handleDragLeave}
-          onDrop={handleDrop}
-          onClick={triggerFileInputClick}
-          role="button"
-          tabIndex={0}
-          className={`flex h-48 max-w-prose cursor-pointer flex-col items-center justify-center rounded-md border bg-gray-50 p-4 text-center text-sm text-gray-600 focus:ring-2 ${isDragging ? 'ring-2' : 'ring-0'}  `}
-        >
-          {!isUploading && !uploadComplete && (
-            <div>
-              <div className="hidden sm:block">
-                Click or drag and drop your audio file here
+      {component === 'upload' && (
+        <div className="">
+          <div
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+            onClick={triggerFileInputClick}
+            role="button"
+            tabIndex={0}
+            className={`flex h-48 cursor-pointer flex-col items-center justify-center rounded-md border bg-gray-50 p-4 text-center text-sm text-gray-600 focus:ring-2 ${isDragging ? 'ring-2' : 'ring-0'}  `}
+          >
+            {!isUploading && !uploadComplete && (
+              <div>
+                <div className="hidden sm:block">
+                  Click or drag and drop your audio file here
+                </div>
+                <div className="sm:hidden">Click to upload audio file</div>
               </div>
-              <div className="sm:hidden">Click to upload audio file</div>
-            </div>
-          )}
-          {isUploading && !uploadComplete && (
-            <div className="">
-              Audio uploading: {`${percentageUploaded}% complete`}
-            </div>
-          )}
-          {uploadComplete && <div className="">Transcribing audio...</div>}
+            )}
+            {isUploading && !uploadComplete && (
+              <div className="">
+                Audio uploading: {`${percentageUploaded}% complete`}
+              </div>
+            )}
+            {uploadComplete && <div className="">Transcribing audio...</div>}
+          </div>
+          <input
+            type="file"
+            accept="audio/*"
+            ref={fileInputRef}
+            onChange={handleFileInputChange}
+            style={{ display: 'none' }}
+          />
         </div>
-        <input
-          type="file"
-          accept="audio/*"
-          ref={fileInputRef}
-          onChange={handleFileInputChange}
-          style={{ display: 'none' }}
-        />
-      </div>
-
-      <div className="">
-        <div className="mb-2 block text-sm font-medium">Record Audio</div>
-        <AudioRecorder
-          onRecordingComplete={uploadAudioRecording}
-          audioTrackConstraints={{
-            noiseSuppression: true,
-            echoCancellation: true,
-          }}
-          downloadOnSavePress={false}
-          showVisualizer={true}
-          downloadFileExtension="webm"
-        />
-      </div>
+      )}
+      {component === 'record' && (
+        <div className="">
+          {/* <div className="mb-2 block text-sm font-medium">Record Audio</div> */}
+          <AudioRecorder uploadAudioRecording={uploadAudioRecording} />
+        </div>
+      )}
     </div>
   );
 }
+
+interface ComponentSelectProps {
+  setComponent: (selectedComponent: string) => void;
+  component: string | undefined;
+}
+
+const ComponentSelect: React.FC<ComponentSelectProps> = ({
+  setComponent,
+  component,
+}) => {
+  const handleComponentChange = (
+    event: React.ChangeEvent<HTMLSelectElement>,
+  ) => {
+    const selectedComponent = event.target.value;
+    setComponent(selectedComponent);
+  };
+
+  return (
+    <select
+      value={component}
+      name="component"
+      onChange={handleComponentChange}
+      className="text-md peer mb-4 block w-full cursor-pointer rounded-md border border-gray-200 py-2 outline-2 placeholder:text-gray-500"
+    >
+      <option value="record">Record Audio</option>
+      <option value="upload">Upload Audio</option>
+      <option value="none">No Audio</option>
+    </select>
+  );
+};

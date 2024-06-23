@@ -328,7 +328,7 @@ const CreateNote = () => {
 
           <AudioUpload patientId={patientId} />
 
-          <div className="mb-4 grid grid-cols-2 gap-x-8 gap-y-4">
+          <div className="mb-4 grid grid-cols-1 gap-x-8 gap-y-4 sm:grid-cols-2">
             {/* Appointment Date */}
             <div className="">
               <label
@@ -460,7 +460,7 @@ const CreateNote = () => {
             </div>
           </div>
 
-          <div className="mb-4 w-1/2">
+          <div className="mb-4 w-full lg:w-1/2">
             <label
               htmlFor="chief_complaint"
               className="mb-2 block text-sm font-medium"
