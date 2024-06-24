@@ -1,7 +1,6 @@
 'use client';
-import { useCallback, useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { Button } from '@/app/ui/button';
 import { GeistSans } from 'geist/font/sans';
 import { NoteWithPatient } from '@/app/lib/definitions';
@@ -18,7 +17,6 @@ interface CreateNoteProps {
 }
 
 const EditDraftNote: React.FC<CreateNoteProps> = ({ note }) => {
-  const [loading, setLoading] = useState<boolean>(true);
   const [audioUrl, setAudioUrl] = useState<string>('');
   const [chiefComplaint, setChiefComplaint] = useState<string | null>(
     note?.chief_complaint || null,
@@ -105,7 +103,6 @@ const EditDraftNote: React.FC<CreateNoteProps> = ({ note }) => {
             note.user_id,
             note.audio_storage_url,
           );
-          console.log('signed url:', url);
           setAudioUrl(url);
         } catch (error) {
           console.error('Error fetching audio url:', error);
@@ -114,8 +111,6 @@ const EditDraftNote: React.FC<CreateNoteProps> = ({ note }) => {
     };
 
     fetchAudioUrl();
-
-    console.log('note data from client CreateNotePrefilled:', note);
   }, []);
 
   // Calculate patientAgeYears based on patient dob and appointment date
