@@ -12,8 +12,8 @@ export async function generateAndSavePdf(id: string) {
   const appointmentTime = formatTime(note.appointment_time);
 
   // Resolve paths relative to the project root
-  const regularFontPath = path.resolve('public/fonts/Inter-Regular.ttf');
-  const boldFontPath = path.resolve('public/fonts/Inter-Bold.ttf');
+  const regularFontPath = path.resolve('/fonts/Inter-Regular.ttf');
+  const boldFontPath = path.resolve('/fonts/Inter-Bold.ttf');
 
   // Ensure the font files exist
   if (!fs.existsSync(regularFontPath) || !fs.existsSync(boldFontPath)) {
