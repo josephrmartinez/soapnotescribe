@@ -4,11 +4,7 @@
 // module.exports = nextConfig
 
 module.exports = {
-  experimental: {
-    outputFileTracingIncludes: {
-          '/utils/generatePdf': ['./app/ui/fonts/*'],
-        },
-  },
+  
   webpack: (config) => {
     config.resolve.fallback = { fs: false, path: false }
     return config;
