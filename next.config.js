@@ -17,7 +17,10 @@ module.exports = {
   typescript: {
     ignoreBuildErrors: true,
   },
-    experimental: {
+  experimental: {
+    outputFileTracingIncludes: {
+        '/utils/generatePdf.ts': ['./ui/fonts/*']
+      },
       missingSuspenseWithCSRBailout: false,
     }
   }

@@ -14,22 +14,19 @@ export async function generateAndSavePdf(id: string) {
   const newDir = path.resolve('../../../');
 const cwd = process.cwd();
   
-  console.log("generatePdf cwd:", __dirname);
-  console.log("newDir", newDir);
-    console.log("cwd", cwd);
+  console.log("generatePdf cwd:", __dirname); // /var/task/.next/server/chunks
+  console.log("newDir", newDir); // /
+    console.log("cwd", cwd); // /var/task
 
-  
-
-
-  try {
-    const files = fs.readdirSync(path.join(__dirname + '..'+'..'+'..'));
-    console.log('Directory Contents three levels up:');
-    files.forEach(file => {
-        console.log(file);
-    });
-} catch (error) {
-    console.error('Error reading directory:', error);
-}
+//   try {
+//     const files = fs.readdirSync(path.join(__dirname + '..'+'..'+'..'));
+//     console.log('Directory Contents three levels up:');
+//     files.forEach(file => {
+//         console.log(file);
+//     });
+// } catch (error) {
+//     console.error('Error reading directory:', error);
+// }
 
   
   try {
@@ -45,8 +42,8 @@ const cwd = process.cwd();
   // generatePdf cwd: /var/task /.next / server / chunks
   
 // Resolve paths relative to the project root
-  const regularFontPath = path.resolve('/var/task/fonts/Inter-Regular.ttf');
-  const boldFontPath = path.resolve('../../../fonts/Inter-Bold.ttf');
+  const regularFontPath = path.resolve('/fonts/Inter-Regular.ttf');
+  const boldFontPath = path.resolve('/fonts/Inter-Bold.ttf');
 
   // Ensure the font files exist
   if (!fs.existsSync(regularFontPath) || !fs.existsSync(boldFontPath)) {
@@ -54,7 +51,7 @@ const cwd = process.cwd();
   }
 
   // Generate PDF
-  const doc = new PDFDocument({"font": regularFontPath});
+  const doc = new PDFDocument({"font": 'https://www.soapnotescribe.com/fonts/Inter-Regular.ttf'});
 
   doc.registerFont('bold', boldFontPath);
   doc.registerFont('regular', regularFontPath);
