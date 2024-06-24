@@ -11,11 +11,19 @@ export async function generateAndSavePdf(id: string) {
 
   const appointmentTime = formatTime(note.appointment_time);
 
-  console.log("generatePdf cwd:",__dirname);
+  const newDir = path.resolve('../../../');
+const cwd = process.cwd();
+  
+  console.log("generatePdf cwd:", __dirname);
+  console.log("newDir", newDir);
+    console.log("cwd", cwd);
+
+  
+
 
   try {
-    const files = fs.readdirSync(__dirname);
-    console.log('Directory Contents:');
+    const files = fs.readdirSync(path.join(__dirname + '..'+'..'+'..'));
+    console.log('Directory Contents three levels up:');
     files.forEach(file => {
         console.log(file);
     });
@@ -24,10 +32,21 @@ export async function generateAndSavePdf(id: string) {
 }
 
   
+  try {
+    const files = fs.readdirSync(path.join(__dirname +'..'+'..'));
+    console.log('Directory Contents two levels up:');
+    files.forEach(file => {
+        console.log(file);
+    });
+} catch (error) {
+    console.error('Error reading directory:', error);
+}
+  
+  // generatePdf cwd: /var/task /.next / server / chunks
   
 // Resolve paths relative to the project root
-  const regularFontPath = path.resolve('./fonts/Inter-Regular.ttf');
-  const boldFontPath = path.resolve('./fonts/Inter-Bold.ttf');
+  const regularFontPath = path.resolve('/var/task/fonts/Inter-Regular.ttf');
+  const boldFontPath = path.resolve('../../../fonts/Inter-Bold.ttf');
 
   // Ensure the font files exist
   if (!fs.existsSync(regularFontPath) || !fs.existsSync(boldFontPath)) {
