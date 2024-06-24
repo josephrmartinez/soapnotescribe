@@ -11,9 +11,23 @@ export async function generateAndSavePdf(id: string) {
 
   const appointmentTime = formatTime(note.appointment_time);
 
-  // Resolve paths relative to the project root
-  const regularFontPath = path.resolve('/fonts/Inter-Regular.ttf');
-  const boldFontPath = path.resolve('/fonts/Inter-Bold.ttf');
+  console.log("generatePdf cwd:",__dirname);
+
+  try {
+    const files = fs.readdirSync(__dirname);
+    console.log('Directory Contents:');
+    files.forEach(file => {
+        console.log(file);
+    });
+} catch (error) {
+    console.error('Error reading directory:', error);
+}
+
+  
+  
+// Resolve paths relative to the project root
+  const regularFontPath = path.resolve('./fonts/Inter-Regular.ttf');
+  const boldFontPath = path.resolve('./fonts/Inter-Bold.ttf');
 
   // Ensure the font files exist
   if (!fs.existsSync(regularFontPath) || !fs.existsSync(boldFontPath)) {
@@ -21,8 +35,8 @@ export async function generateAndSavePdf(id: string) {
   }
 
   // Generate PDF
-  const doc = new PDFDocument({ font: regularFontPath });
-  
+  const doc = new PDFDocument({"font": regularFontPath});
+
   doc.registerFont('bold', boldFontPath);
   doc.registerFont('regular', regularFontPath);
 
