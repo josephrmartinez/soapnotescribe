@@ -10,9 +10,8 @@ export async function generateAndSavePdf(id: string) {
 
   const appointmentTime = formatTime(note.appointment_time);
 
-  const basePath = path.join(process.cwd(), 'public'); // Adjust this path as needed
-  const regularFontPath = path.join(basePath, 'fonts/Inter-Regular.ttf');
-  const boldFontPath = path.join(basePath, 'fonts/Inter-Bold.ttf');
+  const regularFontPath = path.join('public/fonts/Inter-Regular.ttf');
+  const boldFontPath = path.join('public/fonts/Inter-Bold.ttf');
 
   // Generate PDF
   const doc = new PDFDocument({ font: regularFontPath });
