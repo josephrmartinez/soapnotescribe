@@ -1,6 +1,6 @@
 import { createClient } from '@/utils/supabase/server';
 import PDFDocument from 'pdfkit';
-import { formatTime } from '@/app/lib/utils';
+import { formatDateToLocal, formatTime } from '@/app/lib/utils';
 import { fetchNoteById } from '@/app/lib/data';
 
 
@@ -11,10 +11,10 @@ export async function generateAndSavePdf(id: string) {
 
 
   // Generate PDF
-  const doc = new PDFDocument({ font: 'Helvetica' });
+  const doc = new PDFDocument({ font: 'app/ui/fonts/Inter-Regular.ttf' });
   
-  doc.registerFont('bold', 'Helvetica-Bold');
-  doc.registerFont('regular', 'Helvetica');
+  doc.registerFont('bold', 'app/ui/fonts/Inter-Bold.ttf');
+  doc.registerFont('regular', 'app/ui/fonts/Inter-Regular.ttf');
 
   doc.font('bold').text(`Patient name: `, {continued: true});
   doc.font('regular').text(`${note.patient.last_name}, ${note.patient.first_name} ${note.patient.middle_name? note.patient.middle_name: ''}`)
