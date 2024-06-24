@@ -1,4 +1,3 @@
-// import Form from '@/app/ui/appointments/edit-form';
 import Breadcrumbs from '@/app/ui/notes/breadcrumbs';
 import {
   fetchNoteById,
@@ -23,6 +22,7 @@ import { LinkButton } from '@/app/ui/LinkButton';
 import { DeleteNoteFirstStep } from '@/app/ui/notes/buttons';
 import { calculateAge } from '@/app/lib/utils';
 import AudioPlayer from '@/app/components/AudioPlayer';
+import { ViewPDFButton } from '@/app/ui/notes/ViewPdfButton';
 
 export const metadata: Metadata = {
   title: 'Approved SOAP Note',
@@ -31,7 +31,6 @@ export const metadata: Metadata = {
 export default async function Page({ params }: { params: { id: string } }) {
   const id = params.id;
   const note = await fetchNoteById(id);
-  // console.log('appointment data from appointments/[id]:', note);
 
   if (note.status === 'awaiting review') {
     console.log('should redirect');
@@ -43,22 +42,6 @@ export default async function Page({ params }: { params: { id: string } }) {
     ? await getSignedAudioUrl(note.user_id, note.audio_storage_url)
     : undefined;
 
-  let isMp3 = false;
-
-  if (audioUrl) {
-    const url = new URL(audioUrl);
-    if (url.pathname.endsWith('.mp3')) {
-      isMp3 = true;
-    }
-  }
-
-  const pdfUrl = await getSignedPdfUrl(
-    note.user_id,
-    note.patient.last_name,
-    note.patient.first_name,
-    note.appointment_date,
-  );
-
   const appointmentDate = formatDateToLocal(note.appointment_date);
 
   let appointmentTime = '';
@@ -69,6 +52,14 @@ export default async function Page({ params }: { params: { id: string } }) {
   const patientDOB = formatDateToLocal(note.patient.date_of_birth);
 
   const patientAge = calculateAge(patientDOB, appointmentDate);
+
+  const processedNote = {
+    ...note,
+    audioUrl,
+    appointmentDate,
+    appointmentTime,
+    patientAge,
+  };
 
   return (
     <main>
@@ -104,19 +95,14 @@ export default async function Page({ params }: { params: { id: string } }) {
               copy
             </Link>
 
-            <Link
-              href={pdfUrl ? pdfUrl : ''}
-              rel="noopener noreferrer"
-              target="_blank"
-              className="flex h-10 cursor-pointer items-center justify-center rounded-lg bg-gray-100 px-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200 "
-            >
-              <DocumentIcon width={20} height={20} className="mr-2" />
-              pdf
-            </Link>
+            <ViewPDFButton note={processedNote} />
           </div>
         </div>
 
-        <div className="mb-4 max-w-prose rounded-md bg-gray-50 p-4">
+        <div
+          id="soapnote"
+          className="mb-4 max-w-prose rounded-md bg-gray-50 p-4"
+        >
           <div className="mb-4 grid grid-cols-2 gap-x-8 gap-y-4">
             {/* patient name */}
             <div className="col-span-2">

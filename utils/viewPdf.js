@@ -1,20 +1,18 @@
-import { createClient } from '@/utils/supabase/server';
+'use client'
+
 import PDFDocument from 'pdfkit';
-import { formatDateToLocal, formatTime } from '@/app/lib/utils';
-import { fetchNoteById } from '@/app/lib/data';
+import blobStream from 'blob-stream'
 
 
-export async function generateAndSavePdf(id: string) {  
-  const note = await fetchNoteById(id)
+export default function viewPdf(note) {  
 
-  const appointmentTime = formatTime(note.appointment_time);
+  const regularFontPath = '/fonts/Inter-Regular.ttf'
+  const boldFontPath = '/fonts/Inter-Bold.ttf'
 
-
-  const regularFontPath = 'app/ui/fonts/Inter-Regular.ttf'
-  const boldFontPath = 'app/ui/fonts/Inter-Bold.ttf'
-
-  const doc = new PDFDocument({ "font": 'app/ui/fonts/Inter-Regular.ttf' });
-
+    
+  const doc = new PDFDocument({ "font": '/fonts/Inter-Regular.ttf' });
+const stream = doc.pipe(blobStream())
+    
   doc.registerFont('bold', boldFontPath);
   doc.registerFont('regular', regularFontPath);
 
@@ -28,7 +26,7 @@ export async function generateAndSavePdf(id: string) {
   doc.font('bold').text(`Appointment Date: `, {continued: true});
   doc.font('regular').text(`${note.appointment_date}`);
   doc.font('bold').text(`Appointment Time: `, { continued: true });
-  doc.font('regular').text(`${appointmentTime}`);
+  doc.font('regular').text(`${note.appointmentTime}`);
   doc.font('bold').text(`Appointment Type: `, {continued: true});
   doc.font('regular').text(`${note.appointment_type}`);
   doc.font('bold').text(`Appointment Specialty: `, {continued: true});
@@ -65,31 +63,10 @@ export async function generateAndSavePdf(id: string) {
   doc.font('bold').text(`Doctor Signature:`);
   doc.font('regular').text(`${note.doctor_signature}`); 
 
-    const pdfBuffer: Buffer[] = []
+    doc.end();
     
-     // Pipe the PDF document to the buffer
-  doc.on('data', (chunk) => pdfBuffer.push(chunk));
-  doc.on('end', async () => {
-    // Concatenate the buffer chunks into a single buffer
-    const pdfData = Buffer.concat(pdfBuffer);
-    
-    // Define the path where the PDF will be stored in Supabase Storage
-    const filePath = `${note.user_id}/${note.patient.last_name} ${note.patient.first_name}/${note.appointment_date}.pdf`;
-
-    // Initialize Supabase client
-    const supabase = createClient();
-
-    // Upload the PDF to Supabase Storage
-    const { error } = await supabase.storage.from('pdfs').upload(filePath, pdfData, { upsert: true, contentType: "application/pdf" });
-
-    if (error) {
-      console.error('Error uploading PDF to Supabase Storage:', error);
-      return;
-    }
-
-    console.log('PDF uploaded successfully');
-  });
-
-  // Finalize the PDF
-  doc.end();
+    stream.on('finish', function () {
+        const url = stream.toBlobURL('application/pdf');
+        iframe.src = url;
+    })
 }

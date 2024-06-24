@@ -29,6 +29,6 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "app/lib/placeholder-data.js",
-    "scripts/seed.js", "app/api/transcribe/route.js", "app/dashboard/notes/[id]/NotePDF.jsx", "utils/generatePdf.ts", "app/ui/patients/StateSelect.jsx"  ],
+    "scripts/seed.js", "app/api/transcribe/route.js", "app/dashboard/notes/[id]/NotePDF.jsx", "utils/generatePdf.ts", "app/ui/patients/StateSelect.jsx", "app/ui/notes/ViewPdfButton.jsx"  ],
   "exclude": ["node_modules"]
 }

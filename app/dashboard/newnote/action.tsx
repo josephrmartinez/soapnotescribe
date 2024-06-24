@@ -8,11 +8,11 @@ import { generateAndSavePdf } from '@/utils/generatePdf';
 export async function createNote(status: string, formData: FormData) {
   const supabase = createClient();
 
-  let pdfStorageUrl = '';
+  // let pdfStorageUrl = '';
 
-  if (status === 'approved') {
-    pdfStorageUrl = `${formData.get('last_name')} ${formData.get('first_name')}/${formData.get('appointment_date')}.pdf`;
-  }
+  // if (status === 'approved') {
+  //   pdfStorageUrl = `${formData.get('last_name')} ${formData.get('first_name')}/${formData.get('appointment_date')}.pdf`;
+  // }
 
   const patientAgeValue = formData.get('patient_age');
   const patientAgeYears: number = Number(patientAgeValue);
@@ -21,7 +21,6 @@ export async function createNote(status: string, formData: FormData) {
     .from('note')
     .insert({
       status: status,
-      pdf_storage_url: pdfStorageUrl as string,
       appointment_date: formData.get('appointment_date') as string,
       appointment_time: formData.get('appointment_time') as string,
       patient_id: formData.get('patient_id') as string,
@@ -45,9 +44,9 @@ export async function createNote(status: string, formData: FormData) {
   }
   if (data && data.length > 0) {
     // Generate and save pdf to Supabase storage
-    if (status === 'approved') {
-      await generateAndSavePdf(data[0].id);
-    }
+    // if (status === 'approved') {
+    //   await generateAndSavePdf(data[0].id);
+    // }
 
     revalidatePath('/dashboard/notes', 'page');
     redirect('/dashboard/notes');

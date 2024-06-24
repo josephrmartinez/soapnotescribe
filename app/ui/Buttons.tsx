@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { PlusIcon } from '@heroicons/react/24/outline';
+import { PlusIcon, DocumentIcon } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 import { useFormStatus } from 'react-dom';
 
