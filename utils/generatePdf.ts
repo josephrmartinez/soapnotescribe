@@ -2,6 +2,7 @@ import { createClient } from '@/utils/supabase/server';
 import PDFDocument from 'pdfkit';
 import { formatDateToLocal, formatTime } from '@/app/lib/utils';
 import { fetchNoteById } from '@/app/lib/data';
+import path from 'path';
 
 
 export async function generateAndSavePdf(id: string) {  
@@ -9,12 +10,15 @@ export async function generateAndSavePdf(id: string) {
 
   const appointmentTime = formatTime(note.appointment_time);
 
+  const basePath = path.join(process.cwd(), 'public'); // Adjust this path as needed
+  const regularFontPath = path.join(basePath, 'fonts/Inter-Regular.ttf');
+  const boldFontPath = path.join(basePath, 'fonts/Inter-Bold.ttf');
 
   // Generate PDF
-  const doc = new PDFDocument({ font: 'app/ui/fonts/Inter-Regular.ttf' });
+  const doc = new PDFDocument({ font: regularFontPath });
   
-  doc.registerFont('bold', 'app/ui/fonts/Inter-Bold.ttf');
-  doc.registerFont('regular', 'app/ui/fonts/Inter-Regular.ttf');
+  doc.registerFont('bold', boldFontPath);
+  doc.registerFont('regular', regularFontPath);
 
   doc.font('bold').text(`Patient name: `, {continued: true});
   doc.font('regular').text(`${note.patient.last_name}, ${note.patient.first_name} ${note.patient.middle_name? note.patient.middle_name: ''}`)
