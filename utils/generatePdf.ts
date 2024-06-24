@@ -3,6 +3,7 @@ import PDFDocument from 'pdfkit';
 import { formatDateToLocal, formatTime } from '@/app/lib/utils';
 import { fetchNoteById } from '@/app/lib/data';
 import path from 'path';
+import fs from 'fs';
 
 
 export async function generateAndSavePdf(id: string) {  
@@ -10,8 +11,14 @@ export async function generateAndSavePdf(id: string) {
 
   const appointmentTime = formatTime(note.appointment_time);
 
-  const regularFontPath = path.join('public/fonts/Inter-Regular.ttf');
-  const boldFontPath = path.join('public/fonts/Inter-Bold.ttf');
+  // Resolve paths relative to the project root
+  const regularFontPath = path.resolve('public/fonts/Inter-Regular.ttf');
+  const boldFontPath = path.resolve('public/fonts/Inter-Bold.ttf');
+
+  // Ensure the font files exist
+  if (!fs.existsSync(regularFontPath) || !fs.existsSync(boldFontPath)) {
+    throw new Error('Font files not found');
+  }
 
   // Generate PDF
   const doc = new PDFDocument({ font: regularFontPath });
