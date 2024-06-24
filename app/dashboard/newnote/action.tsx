@@ -8,8 +8,6 @@ import { generateAndSavePdf } from '@/utils/generatePdf';
 export async function createNote(status: string, formData: FormData) {
   const supabase = createClient();
 
-  console.log('formData', formData);
-
   let pdfStorageUrl = '';
 
   if (status === 'approved') {
@@ -46,7 +44,6 @@ export async function createNote(status: string, formData: FormData) {
     return;
   }
   if (data && data.length > 0) {
-    console.log('data', data[0]);
     // Generate and save pdf to Supabase storage
     if (status === 'approved') {
       await generateAndSavePdf(data[0].id);
