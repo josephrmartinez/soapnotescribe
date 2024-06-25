@@ -14,6 +14,7 @@ import { useSearchParams } from 'next/navigation';
 import { fetchPatientById } from '@/app/lib/data';
 import CreateableSelectChiefComplaint from './CreateableSelectChiefComplaint';
 import { TemplateOption } from '@/app/lib/definitions';
+import { SubmitFormButton } from '@/app/ui/Buttons';
 
 interface Patient {
   id: string;
@@ -586,17 +587,27 @@ const CreateNote = () => {
               Cancel
             </Link>
             {/* CURRENTLY UPDATING BUTTONS TO USE SAME FUNCTION, PASS STATUS PROP */}
-            <Button formAction={submitDraftNote} secondary>
+            {/* <Button formAction={submitDraftNote} secondary>
               Save Draft
-            </Button>
-            <Button
+            </Button> */}
+            <SubmitFormButton formAction={submitDraftNote} secondary active>
+              Save Draft
+            </SubmitFormButton>
+            <SubmitFormButton
+              className="col-span-2 sm:col-span-1"
+              formAction={submitApprovedNote}
+              active={doctorSignature !== null && doctorSignature.length > 5}
+            >
+              Add Note
+            </SubmitFormButton>
+            {/* <Button
               className="col-span-2 sm:col-span-1"
               type="submit"
               formAction={submitApprovedNote}
               active={doctorSignature !== null}
             >
               Add Note
-            </Button>
+            </Button> */}
           </div>
         </div>
       </div>

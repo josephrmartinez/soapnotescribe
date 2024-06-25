@@ -1,9 +1,5 @@
-import { ViewSOAPNote, ReviewDraft, PatientName } from '@/app/ui/notes/buttons';
 import { fetchPatients } from '@/app/lib/data';
-import { useEffect } from 'react';
-import { getMaxListeners } from 'events';
 import { ViewProfile, ViewNotes, NewNote, PatientNameLink } from './buttons';
-import CreateNote from '@/app/dashboard/newnote/create-form';
 
 export default async function PatientsTable({ query }: { query: string }) {
   // UPDATE TABLE TO FETCH PATIENTS WITH QUERY KEYWORD SEARCH

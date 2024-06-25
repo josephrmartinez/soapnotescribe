@@ -515,32 +515,23 @@ const EditDraftNote: React.FC<CreateNoteProps> = ({ note }) => {
               Cancel
             </Link>
             <DeleteNoteFirstStep id={note.id} />
-            {/* <Button formAction={saveDraft} secondary>
-              Save Draft
-            </Button> */}
+
             <SubmitFormButton formAction={saveDraft} active secondary>
               Save Draft
             </SubmitFormButton>
             <SubmitFormButton
               formAction={approveNote}
-              active={doctorSignature !== ''}
+              active={doctorSignature !== null && doctorSignature.length > 5}
             >
               Approve Note
             </SubmitFormButton>
-            {/* <Button
-              className="col-span-3 md:col-span-1"
-              formAction={approveNote}
-              active={doctorSignature !== ''}
-            >
-              Approve Note
-            </Button> */}
           </div>
         </div>
 
         {differentialDiagnosis && (
           <div
             tabIndex={0}
-            className="collapse collapse-plus mb-4 rounded-md  border"
+            className="collapse-plus collapse mb-4 rounded-md  border"
           >
             <div className="collapse-title text-lg font-medium text-gray-600">
               Differential Diagnosis

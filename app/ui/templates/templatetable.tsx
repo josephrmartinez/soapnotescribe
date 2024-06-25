@@ -1,9 +1,10 @@
-import Link from 'next/link';
-import { Template } from '@/app/lib/definitions';
+// import Link from 'next/link';
+// import { Template } from '@/app/lib/definitions';
 import { fetchTemplates } from '@/app/lib/data';
 
 export default async function TemplateTable() {
-  //   const userTemplates = await fetchTemplates();
+  const userTemplates = await fetchTemplates();
+  console.log('user templates', userTemplates);
 
   return (
     <div>
