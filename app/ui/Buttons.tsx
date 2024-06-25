@@ -1,7 +1,8 @@
 'use client';
-
+import { useState } from 'react';
 import Link from 'next/link';
 import { PlusIcon, DocumentIcon } from '@heroicons/react/24/outline';
+import { SpinnerGap } from '@phosphor-icons/react';
 import clsx from 'clsx';
 import { useFormStatus } from 'react-dom';
 
@@ -38,19 +39,86 @@ export function Button({
   );
 }
 
-export const SubmitButton: React.FC<ButtonProps> = ({
+// export const SubmitButton: React.FC<ButtonProps> = ({
+//   children,
+//   active,
+//   ...rest
+// }) => {
+//   const { pending } = useFormStatus();
+//   return (
+//     <button
+//       disabled={!active || pending}
+//       className={`flex h-10 items-center justify-center rounded-lg px-4 text-sm font-medium  transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-700 ${pending ? 'bg-teal-500 text-white' : active ? 'bg-teal-600 text-white hover:bg-teal-500' : 'bg-gray-200'} `}
+//       {...rest}
+//     >
+//       {pending ? <div>Loading...</div> : children}
+//     </button>
+//   );
+// };
+interface SubmitFormButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  children?: React.ReactNode;
+  active?: boolean;
+  secondary?: boolean;
+  formAction: (formData: FormData) => Promise<void>;
+}
+
+export const SubmitFormButton: React.FC<SubmitFormButtonProps> = ({
   children,
+  className,
   active,
+  secondary = false,
+  formAction,
   ...rest
 }) => {
-  const { pending } = useFormStatus();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleClick = async (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+  ) => {
+    e.preventDefault();
+    const form = e.currentTarget.closest('form');
+    if (!form) {
+      console.error('Button is not inside a form');
+      return;
+    }
+
+    const formData = new FormData(form);
+    setIsLoading(true);
+    try {
+      await formAction(formData);
+    } catch (error) {
+      console.error('Error during form action:', error);
+      setIsLoading(false);
+    }
+  };
+
   return (
     <button
-      disabled={!active || pending}
-      className={`flex h-10 items-center justify-center rounded-lg px-4 text-sm font-medium  transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-700 ${pending ? 'bg-teal-500 text-white' : active ? 'bg-teal-600 text-white hover:bg-teal-500' : 'bg-gray-300'} `}
+      type="submit" // Ensure the button is of type submit
+      disabled={!active || isLoading}
+      className={clsx(
+        'flex h-10 items-center justify-center rounded-lg px-4 text-sm font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-700',
+        {
+          'bg-gray-100 text-gray-600 hover:bg-gray-200': secondary,
+          'bg-teal-600 text-white shadow hover:bg-teal-500 active:bg-teal-600':
+            active && !secondary,
+          'cursor-not-allowed bg-gray-300 opacity-50': !active,
+        },
+        className,
+      )}
+      onClick={handleClick}
       {...rest}
     >
-      {pending ? <div>Loading...</div> : children}
+      {isLoading ? (
+        <div className="flex flex-row items-center">
+          <div
+            className={`${secondary ? 'loader-gray' : 'loader-white'} h-5`}
+          ></div>
+        </div>
+      ) : (
+        children
+      )}
     </button>
   );
 };

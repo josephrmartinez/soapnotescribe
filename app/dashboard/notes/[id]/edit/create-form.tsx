@@ -11,6 +11,7 @@ import { calculateAge } from '@/app/lib/utils';
 import AppointmentTypeSelect from '@/app/ui/notes/AppointmentTypeSelect';
 import AppointmentSpecialtySelect from '@/app/ui/notes/AppointmentSpecialtySelect';
 import AudioPlayer from '@/app/components/AudioPlayer';
+import { SubmitFormButton } from '@/app/ui/Buttons';
 
 interface CreateNoteProps {
   note: NoteWithPatient;
@@ -514,16 +515,25 @@ const EditDraftNote: React.FC<CreateNoteProps> = ({ note }) => {
               Cancel
             </Link>
             <DeleteNoteFirstStep id={note.id} />
-            <Button formAction={saveDraft} secondary>
+            {/* <Button formAction={saveDraft} secondary>
               Save Draft
-            </Button>
-            <Button
+            </Button> */}
+            <SubmitFormButton formAction={saveDraft} active secondary>
+              Save Draft
+            </SubmitFormButton>
+            <SubmitFormButton
+              formAction={approveNote}
+              active={doctorSignature !== ''}
+            >
+              Approve Note
+            </SubmitFormButton>
+            {/* <Button
               className="col-span-3 md:col-span-1"
               formAction={approveNote}
               active={doctorSignature !== ''}
             >
               Approve Note
-            </Button>
+            </Button> */}
           </div>
         </div>
 
