@@ -111,9 +111,9 @@ export const SubmitFormButton: React.FC<SubmitFormButtonProps> = ({
       {...rest}
     >
       {isLoading ? (
-        <div className="flex flex-row items-center">
+        <div className="flex h-full w-full items-center justify-center">
           <div
-            className={`${secondary ? 'loader-gray' : 'loader-white'} h-5`}
+            className={`${secondary ? 'loader-gray' : 'loader-white'} mx-auto h-5`}
           ></div>
         </div>
       ) : (
@@ -127,7 +127,7 @@ export const CancelGoBackButton = () => {
   return (
     <Link
       href="."
-      className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
+      className="flex h-10 items-center justify-center rounded-lg bg-gray-100 px-4 text-center text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
     >
       Cancel
     </Link>

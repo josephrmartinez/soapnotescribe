@@ -23,7 +23,7 @@ export default async function Page({
   const query = searchParams?.query || '';
   const currentPage = Number(searchParams?.page) || 1;
   // const totalPages = await fetchApptsPages(query);
-  const totalPages = 3;
+  const totalPages = 5;
 
   const notes = (await fetchFilteredNotes(query, currentPage)) || [];
 

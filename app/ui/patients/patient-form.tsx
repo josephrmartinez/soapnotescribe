@@ -7,10 +7,11 @@ import CountrySelect from '@/app/ui/patients/CountrySelect';
 import { CalendarDaysIcon, UserCircleIcon } from '@heroicons/react/24/outline';
 import { Button } from '@/app/ui/button';
 import { CancelGoBackButton } from '@/app/ui/Buttons';
+import { SubmitFormButton } from '@/app/ui/Buttons';
 
 interface PatientFormProps {
   patient?: Patient;
-  formAction: string | ((formData: FormData) => void) | undefined;
+  formAction: (formData: FormData) => Promise<void>;
 }
 
 interface Patient {
@@ -33,7 +34,7 @@ interface Patient {
 }
 
 const PatientForm: React.FC<PatientFormProps> = ({ patient, formAction }) => {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [firstName, setFirstName] = useState<string | null>(
     patient?.first_name || null,
   );
@@ -350,11 +351,13 @@ const PatientForm: React.FC<PatientFormProps> = ({ patient, formAction }) => {
           </div>
         </div>
 
-        <div className="mt-6 flex justify-end gap-4">
-          <CancelGoBackButton />
-          <Button type="submit" formAction={formAction} active={submitOkay}>
+        <div className="mt-6 grid grid-cols-2 justify-end gap-4 sm:grid-cols-3">
+          <div className="sm:col-start-2">
+            <CancelGoBackButton />
+          </div>
+          <SubmitFormButton formAction={formAction} active={submitOkay}>
             {patient ? 'Update Patient' : 'Add Patient'}
-          </Button>
+          </SubmitFormButton>
         </div>
       </div>
     </form>
