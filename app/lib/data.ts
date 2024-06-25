@@ -177,6 +177,7 @@ export const fetchUserSession = async () => {
 };
 
 export async function fetchTemplates() {
+  noStore()
   try {
     const supabase = createClient()
     const { data: templates, error } = await supabase

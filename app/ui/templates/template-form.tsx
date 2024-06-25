@@ -3,11 +3,11 @@
 import { useCallback, useEffect, useState, useRef } from 'react';
 import { CancelGoBackButton } from '../Buttons';
 import { Button } from '../button';
-import { SubmitButton } from '../Buttons';
+import { SubmitFormButton } from '../Buttons';
 
 interface TemplateFormProps {
   template?: Template;
-  formAction: string | ((formData: FormData) => void) | undefined;
+  formAction: (formData: FormData) => Promise<void>;
 }
 
 interface Template {
@@ -168,9 +168,9 @@ const TemplateForm: React.FC<TemplateFormProps> = ({
         <div>
           <div className="mt-6 flex justify-end gap-4">
             <CancelGoBackButton />
-            <SubmitButton active={true} formAction={formAction}>
+            <SubmitFormButton active={true} formAction={formAction}>
               {template ? 'Update Template' : 'Add Template'}
-            </SubmitButton>
+            </SubmitFormButton>
           </div>
         </div>
       </div>
