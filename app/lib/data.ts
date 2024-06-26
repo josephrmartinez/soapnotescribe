@@ -5,17 +5,15 @@ import { Database } from '../database.types';
 import { createClient } from '@/utils/supabase/server'
 import { Note, NoteWithPatient } from './definitions';
 
+const ITEMS_PER_PAGE = 6;
 
 // UPDATE TO ALWAYS DISPLAY PROCESSING NOTES (AUDIO_TRANSCRIPT IS NULL)
 // REFACTOR TO GET ONLY NEEDED NOTES. FILTERING EARLIER.
 
-
-
-
 export async function fetchFilteredNotes(query: string, currentPage: number) {
   noStore()
   try {
-    const ITEMS_PER_PAGE = 6;
+    
     const offset = (currentPage - 1) * ITEMS_PER_PAGE;
 
     const supabase = createClient()
@@ -322,6 +320,32 @@ export async function fetchPatientProfileById(id: string) {
 }
 
 
+export async function fetchNotesPages(query: string) {
+  try {
+    const supabase = createClient()
+     const { data, count, error } = await supabase
+       .from('note')
+       .select('*', { count: 'exact', head: true })
+      //  .ilike('combined_text', `%${query}%`)
+ 
+     if (error) {
+       console.error('Supabase Error:', error);
+       throw new Error('Failed to fetch appointments count.');
+     }
+     let totalPages = 1
+     if (count) {
+      totalPages = Math.ceil(count / ITEMS_PER_PAGE)
+    }
+    
+      return totalPages;
+  } catch (error) {
+     console.error('Supabase Error:', error);
+     throw new Error('Failed to fetch notes count.');
+  }
+ }
+
+
+
 // export async function fetchSimilarApptsWithEmbedding(query: string, currentPage: number) {
 //   try {
 //     // console.log("query input", query)
@@ -384,9 +408,6 @@ export async function fetchPatientProfileById(id: string) {
 //        console.error('Supabase Error:', error);
 //        throw new Error('Failed to fetch appointments count.');
 //      }
- 
-     
-     
 //      let totalPages = 1
 //      if (count) {
 //       totalPages = Math.ceil(count / ITEMS_PER_PAGE)

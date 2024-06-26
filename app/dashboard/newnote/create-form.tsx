@@ -83,7 +83,7 @@ const CreateNote = () => {
 
   let searchParams = useSearchParams();
   const patientIdFromUrl = searchParams.get('patient');
-  console.log('patient', patientIdFromUrl);
+  // console.log('patient', patientIdFromUrl);
 
   useEffect(() => {
     const fetchAndSetPatient = async () => {
@@ -114,7 +114,6 @@ const CreateNote = () => {
     actionMeta: ActionMeta<PatientOption>,
   ) => {
     if (newValue) {
-      console.log('newValue', newValue);
       // console.log('newValue', newValue);
       setPatientId(newValue.value.id);
       setFirstName(newValue.value.first_name);

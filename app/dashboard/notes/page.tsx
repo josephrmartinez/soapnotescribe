@@ -6,7 +6,7 @@ import { Suspense } from 'react';
 import { Metadata } from 'next';
 import NotesTable from './realtimetable';
 import { createClient } from '@/utils/supabase/server';
-import { fetchFilteredNotes } from '@/app/lib/data';
+import { fetchFilteredNotes, fetchNotesPages } from '@/app/lib/data';
 
 export const metadata: Metadata = {
   title: 'SOAP Notes',
@@ -22,8 +22,7 @@ export default async function Page({
 }) {
   const query = searchParams?.query || '';
   const currentPage = Number(searchParams?.page) || 1;
-  // const totalPages = await fetchApptsPages(query);
-  const totalPages = 5;
+  const totalPages = await fetchNotesPages(query);
 
   const notes = (await fetchFilteredNotes(query, currentPage)) || [];
 

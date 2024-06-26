@@ -16,7 +16,7 @@ import clsx from 'clsx';
 // Map of links to display in the side navigation.
 // Depending on the size of the application, this would be stored in a database.
 const links = [
-  { name: 'SOAP Notes', href: '/dashboard/notes', icon: ArchiveBoxIcon },
+  { name: 'All Notes', href: '/dashboard/notes', icon: ArchiveBoxIcon },
   {
     name: 'New Note',
     href: '/dashboard/newnote',
@@ -27,21 +27,21 @@ const links = [
     href: '/dashboard/templates',
     icon: DocumentDuplicateIcon,
   },
-  {
-    name: 'Protocols',
-    href: '/dashboard/protocols',
-    icon: DocumentDuplicateIcon,
-  },
+  // {
+  //   name: 'Protocols',
+  //   href: '/dashboard/protocols',
+  //   icon: DocumentDuplicateIcon,
+  // },
   {
     name: 'Patients',
     href: '/dashboard/patients',
     icon: UserGroupIcon,
   },
-  {
-    name: 'Settings',
-    href: '/dashboard/settings',
-    icon: Cog8ToothIcon,
-  },
+  // {
+  //   name: 'Settings',
+  //   href: '/dashboard/settings',
+  //   icon: Cog8ToothIcon,
+  // },
 ];
 
 export default function NavLinks() {
@@ -62,8 +62,8 @@ export default function NavLinks() {
               },
             )}
           >
-            <LinkIcon className="w-6" />
-            <p className="hidden md:block">{link.name}</p>
+            <LinkIcon className="hidden w-6 md:block" />
+            <p className="">{link.name}</p>
           </Link>
         );
       })}

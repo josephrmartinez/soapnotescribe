@@ -17,9 +17,11 @@ export default async function Page() {
       </div>
       <PlusLinkButton href="./templates/add" text="Create Template" />
       <div className="mt-6">
-        <Suspense key={'1234'} fallback={<AppointmentsTableSkeleton />}>
-          <TemplateTable />
-        </Suspense>
+        <TemplateTable />
+        {/* <Suspense
+          key={'1234'}
+          fallback={<AppointmentsTableSkeleton />}
+        ></Suspense> */}
       </div>
     </div>
   );
