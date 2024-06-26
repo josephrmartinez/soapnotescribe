@@ -144,7 +144,6 @@ export default function AudioRecorder({
     canvasCtx.clearRect(0, 0, width, height);
 
     const draw = () => {
-      console.log('drawing on canvas');
       drawVisualRef.current = requestAnimationFrame(draw);
 
       analyser.getByteFrequencyData(dataArray);
