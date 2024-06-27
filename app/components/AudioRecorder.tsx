@@ -288,17 +288,19 @@ export default function AudioRecorder({
         className={`grid h-48 w-full max-w-prose grid-rows-4 justify-items-center rounded-md border bg-gray-50 p-4 focus:ring-2`}
       >
         <div>
-          {status === 'initial'
-            ? ''
-            : status === 'recording'
-              ? `${elapsedRecordingTime}`
-              : status === 'finishedRecording' || status === 'playing'
-                ? `${playbackTimeFormatted} / ${elapsedRecordingTime}`
-                : status === 'uploading'
-                  ? `uploading...`
-                  : status === 'uploaded'
-                    ? `upload complete.`
-                    : ''}
+          {status === 'initial' ? (
+            ''
+          ) : status === 'recording' ? (
+            `${elapsedRecordingTime}`
+          ) : status === 'finishedRecording' || status === 'playing' ? (
+            `${playbackTimeFormatted} / ${elapsedRecordingTime}`
+          ) : status === 'uploading' ? (
+            <div className="loader"></div>
+          ) : status === 'uploaded' ? (
+            `upload complete.`
+          ) : (
+            ''
+          )}
         </div>
         <div className="w-3/4 text-center text-sm  text-gray-500">
           {status === 'initial' ? (

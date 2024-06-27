@@ -149,12 +149,6 @@ export function DeleteNoteFirstStep({ id }: { id: string }) {
 export function DeleteNoteConfirm({ id }: { id: string }) {
   const deleteNoteWithId = deleteNote.bind(null, id);
 
-  // call handleClick
-  // handleClick()
-  // isLoading = active
-  // ... server action
-  // handle error
-
   return (
     <form action={deleteNoteWithId}>
       <button className="flex h-10 flex-row items-center rounded-md bg-red-600 p-2 text-sm font-semibold text-white transition-all hover:bg-red-500">
