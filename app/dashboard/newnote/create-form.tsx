@@ -15,6 +15,7 @@ import { fetchPatientById } from '@/app/lib/data';
 import CreateableSelectChiefComplaint from './CreateableSelectChiefComplaint';
 import { TemplateOption } from '@/app/lib/definitions';
 import { SubmitFormButton } from '@/app/ui/Buttons';
+import { fetchNoteById } from '@/app/lib/data';
 
 interface Patient {
   id: string;
@@ -83,7 +84,8 @@ const CreateNote = () => {
 
   let searchParams = useSearchParams();
   const patientIdFromUrl = searchParams.get('patient');
-  // console.log('patient', patientIdFromUrl);
+
+  const noteRef = searchParams.get('noteRef');
 
   useEffect(() => {
     const fetchAndSetPatient = async () => {
@@ -108,6 +110,44 @@ const CreateNote = () => {
     };
     fetchAndSetPatient();
   }, [patientIdFromUrl]);
+
+  useEffect(() => {
+    const fetchAndSetNoteRef = async () => {
+      if (noteRef) {
+        try {
+          const note = await fetchNoteById(noteRef);
+          if (note) {
+            // const structuredAppointmentType = {
+            //   value: patient,
+            //   label: `${patient.last_name}, ${patient.first_name}`,
+            // };
+            // const structuredAppointmentSpecialty = {
+            //   value: patient,
+            //   label: `${patient.last_name}, ${patient.first_name}`,
+            // };
+
+            {
+              note.patient_location &&
+                setPatientLocation(note.patient_location);
+            }
+            {
+              note.allergies && setAllergies(note.allergies);
+            }
+            // setAppointmentType(note.appointment_type)
+            // setAppointmentSpecialty(note.appointment_specialty)
+            setChiefComplaint(note.chief_complaint);
+            setSubjective(note.soap_subjective);
+            setObjective(note.soap_objective);
+            setAssessment(note.soap_assessment);
+            setPlan(note.soap_plan);
+          }
+        } catch (error) {
+          console.error('Error fetching noteRef:', error);
+        }
+      }
+    };
+    fetchAndSetNoteRef();
+  }, [noteRef]);
 
   const handlePatientSelect = (
     newValue: SingleValue<PatientOption>,

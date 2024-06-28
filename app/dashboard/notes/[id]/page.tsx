@@ -33,7 +33,6 @@ export default async function Page({ params }: { params: { id: string } }) {
   const note = await fetchNoteById(id);
 
   if (note.status === 'awaiting review') {
-    console.log('should redirect');
     redirect(`./${id}/edit`);
   }
 
@@ -88,7 +87,7 @@ export default async function Page({ params }: { params: { id: string } }) {
               Edit
             </Link>
             <Link
-              href={`/dashboard/newnote/${note.id}`}
+              href={`/dashboard/newnote?patient=${note.patient_id}&noteRef=${note.id}`}
               className="flex h-10 items-center justify-center rounded-lg bg-gray-100 px-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200 "
             >
               <DocumentDuplicateIcon width={20} height={20} className="mr-2" />
