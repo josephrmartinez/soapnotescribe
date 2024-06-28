@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Logo from '../ui/logo';
 import { signup } from './action';
 import Link from 'next/link';
+import { SubmitFormButton } from '../ui/Buttons';
 
 export default function SignUpPage() {
   const [password, setPassword] = useState<string>('');
@@ -39,9 +40,9 @@ export default function SignUpPage() {
             onChange={(e) => setPasswordConfirm(e.target.value)}
           />
           <Separator />
-          <Button formAction={signup} active={submitOkay}>
+          <SubmitFormButton formAction={signup} active={submitOkay}>
             Sign up
-          </Button>
+          </SubmitFormButton>
         </form>
         <div className="mt-6 flex flex-col items-center">
           <p className="text-gray-500">Already have an account?</p>

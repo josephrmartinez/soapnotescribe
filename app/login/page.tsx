@@ -5,6 +5,7 @@ import Logo from '../ui/logo';
 import { login, AuthResult } from './action';
 import Link from 'next/link';
 import { SubmitButton } from '../ui/SubmitButton';
+import { LoginButton } from '../ui/Buttons';
 import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
@@ -27,11 +28,10 @@ export default function LoginPage() {
     const result = await login(formData);
     if (result.error) {
       setError(result.error);
+      setLoading(false);
     } else {
       router.push('/');
     }
-
-    setLoading(false);
   };
 
   return (
@@ -61,10 +61,9 @@ export default function LoginPage() {
             onChange={(e) => setPassword(e.target.value)}
           />
           <Separator />
-          <SubmitButton active={submitOkay}>
-            {loading ? 'Loading' : 'Log in'}
-          </SubmitButton>
-          {/* <SubmitFormButton formAction={login}/> */}
+          <LoginButton active={submitOkay}>
+            {loading ? <div className="loader-white"></div> : 'Log in'}
+          </LoginButton>
         </form>
         <div className="flex flex-col items-center">
           <div className="my-6 h-6 text-center font-semibold text-red-700">
