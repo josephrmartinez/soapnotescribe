@@ -1,7 +1,6 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { Button } from '@/app/ui/button';
 import SelectPatient from './SelectPatient';
 import { SingleValue, ActionMeta } from 'react-select';
 import { createNote } from './action';
@@ -13,48 +12,24 @@ import { PencilSquareIcon, PlusIcon } from '@heroicons/react/24/outline';
 import { useSearchParams } from 'next/navigation';
 import { fetchPatientById } from '@/app/lib/data';
 import CreateableSelectChiefComplaint from './CreateableSelectChiefComplaint';
-import { TemplateOption } from '@/app/lib/definitions';
+import { TemplateOption, PatientSelectOption } from '@/app/lib/definitions';
 import { SubmitFormButton } from '@/app/ui/Buttons';
 import { fetchNoteById } from '@/app/lib/data';
 
-interface Patient {
-  id: string;
-  first_name: string;
-  middle_name: string;
-  last_name: string;
-  email: string;
-  phone: string;
-  address_street: string;
-  address_unit: string;
-  city: string;
-  state: string;
-  zipcode: string;
-  provider: string;
-  date_of_birth: string;
-  allergies: string;
-  profile_notes: string;
-}
-
-interface PatientOption {
-  value: Patient;
-  label: string;
-}
-
 const CreateNote = () => {
-  const [loading, setLoading] = useState(true);
   const [patientId, setPatientId] = useState<string>('');
-  const [firstName, setFirstName] = useState<string>('');
-  const [middleName, setMiddleName] = useState<string>('');
-  const [lastName, setLastName] = useState<string>('');
-  const [dateOfBirth, setDateOfBirth] = useState<string>('');
+  const [firstName, setFirstName] = useState<string | null>('');
+  const [middleName, setMiddleName] = useState<string | null>('');
+  const [lastName, setLastName] = useState<string | null>('');
+  const [dateOfBirth, setDateOfBirth] = useState<string | null>('');
   const [phone, setPhone] = useState<string | null>('');
-  const [email, setEmail] = useState<string>('');
+  const [email, setEmail] = useState<string | null>('');
   const [addressStreet, setAddressStreet] = useState<string | null>('');
   const [addressUnit, setAddressUnit] = useState<string | null>('');
   const [city, setCity] = useState<string | null>('');
   const [state, setState] = useState<string | null>(null);
   const [zipcode, setZipcode] = useState<string | null>('');
-  const [allergies, setAllergies] = useState<string>('');
+  const [allergies, setAllergies] = useState<string | null>('');
   const [profileNotes, setProfileNotes] = useState<string | null>(null);
   const [chiefComplaint, setChiefComplaint] = useState<string | null>(null);
   const [date, setDate] = useState<string>(
@@ -73,7 +48,7 @@ const CreateNote = () => {
   const [submitOkay, setSubmitOkay] = useState<boolean>(true);
   const [patientAgeYears, setPatientAgeYears] = useState<number | undefined>(1);
   const [selectedPatient, setSelectedPatient] = useState<
-    PatientOption | undefined
+    PatientSelectOption | undefined
   >(undefined);
   const accessTokenRef = useRef<string | undefined>('');
   const userIDRef = useRef<string | undefined>('');
@@ -117,15 +92,6 @@ const CreateNote = () => {
         try {
           const note = await fetchNoteById(noteRef);
           if (note) {
-            // const structuredAppointmentType = {
-            //   value: patient,
-            //   label: `${patient.last_name}, ${patient.first_name}`,
-            // };
-            // const structuredAppointmentSpecialty = {
-            //   value: patient,
-            //   label: `${patient.last_name}, ${patient.first_name}`,
-            // };
-
             {
               note.patient_location &&
                 setPatientLocation(note.patient_location);
@@ -133,8 +99,14 @@ const CreateNote = () => {
             {
               note.allergies && setAllergies(note.allergies);
             }
-            // setAppointmentType(note.appointment_type)
-            // setAppointmentSpecialty(note.appointment_specialty)
+            {
+              note.appointment_type &&
+                setAppointmentType(note.appointment_type);
+            }
+            {
+              note.appointment_specialty &&
+                setAppointmentSpecialty(note.appointment_specialty);
+            }
             setChiefComplaint(note.chief_complaint);
             setSubjective(note.soap_subjective);
             setObjective(note.soap_objective);
@@ -150,8 +122,8 @@ const CreateNote = () => {
   }, [noteRef]);
 
   const handlePatientSelect = (
-    newValue: SingleValue<PatientOption>,
-    actionMeta: ActionMeta<PatientOption>,
+    newValue: SingleValue<PatientSelectOption>,
+    actionMeta: ActionMeta<PatientSelectOption>,
   ) => {
     if (newValue) {
       // console.log('newValue', newValue);
@@ -189,12 +161,11 @@ const CreateNote = () => {
     textareaRef: React.MutableRefObject<HTMLTextAreaElement | null>,
   ) => {
     const textarea = textareaRef.current;
-    // console.log('called autoresize!', textarea);
     if (textarea) {
-      const minHeight = 80; // Minimum height in pixels
-      textarea.style.height = 'auto'; // Reset the height
+      const minHeight = 80;
+      textarea.style.height = 'auto';
       const newHeight = Math.max(textarea.scrollHeight + 10, minHeight);
-      textarea.style.height = `${newHeight}px`; // Set the height to the greater of scrollHeight or minHeight
+      textarea.style.height = `${newHeight}px`;
     }
   };
 
@@ -226,9 +197,9 @@ const CreateNote = () => {
 
   const handleTemplateSelect = (selectedTemplate: TemplateOption) => {
     console.log('selected template:', selectedTemplate);
-    setChiefComplaint(selectedTemplate);
+    setChiefComplaint(selectedTemplate.label);
 
-    if (selectedTemplate.value !== selectedTemplate.label) {
+    if (typeof selectedTemplate.value === 'object') {
       setSubjective(selectedTemplate.value.soap_subjective);
       setObjective(selectedTemplate.value.soap_objective);
       setAssessment(selectedTemplate.value.soap_assessment);
@@ -250,9 +221,19 @@ const CreateNote = () => {
               selectedPatient={selectedPatient}
             />
             <input name="patient_id" hidden defaultValue={patientId}></input>
-            <input name="first_name" hidden defaultValue={firstName}></input>
-            <input name="middle_name" hidden defaultValue={middleName}></input>
-            <input name="last_name" hidden defaultValue={lastName}></input>
+            {firstName && (
+              <input name="first_name" hidden defaultValue={firstName}></input>
+            )}
+            {middleName && (
+              <input
+                name="middle_name"
+                hidden
+                defaultValue={middleName}
+              ></input>
+            )}
+            {lastName && (
+              <input name="last_name" hidden defaultValue={lastName}></input>
+            )}
           </div>
 
           <div className="flex flex-row items-center sm:mt-7">
@@ -512,15 +493,6 @@ const CreateNote = () => {
                 onTemplateSelect={handleTemplateSelect}
                 selectedTemplate={chiefComplaint}
               />
-              {/* <input
-                id="chief_complaint"
-                name="chief_complaint"
-                required
-                type="text"
-                className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
-                value={chiefComplaint || ''}
-                onChange={(e) => setChiefComplaint(e.target.value)}
-              ></input> */}
             </div>
           </div>
 
@@ -625,10 +597,6 @@ const CreateNote = () => {
             >
               Cancel
             </Link>
-            {/* CURRENTLY UPDATING BUTTONS TO USE SAME FUNCTION, PASS STATUS PROP */}
-            {/* <Button formAction={submitDraftNote} secondary>
-              Save Draft
-            </Button> */}
             <SubmitFormButton formAction={submitDraftNote} secondary active>
               Save Draft
             </SubmitFormButton>
@@ -639,14 +607,6 @@ const CreateNote = () => {
             >
               Add Note
             </SubmitFormButton>
-            {/* <Button
-              className="col-span-2 sm:col-span-1"
-              type="submit"
-              formAction={submitApprovedNote}
-              active={doctorSignature !== null}
-            >
-              Add Note
-            </Button> */}
           </div>
         </div>
       </div>
@@ -655,79 +615,3 @@ const CreateNote = () => {
 };
 
 export default CreateNote;
-
-// const supabase = createClient();
-// const router = useRouter();
-
-// useEffect(() => {
-//   const fetchUser = async () => {
-//     const { data, error } = await supabase.auth.getSession();
-//     if (error) {
-//       console.error(error);
-//     } else {
-//       userIDRef.current = data.session?.user.id;
-//       accessTokenRef.current = data.session?.access_token;
-//     }
-//   };
-
-//   fetchUser();
-// }, []);
-
-// const submitNote = async (event: React.FormEvent<HTMLFormElement>) => {
-//   event.preventDefault();
-
-//   try {
-//     setLoading(true);
-//     const { error, data } = await supabase.from('notes').insert({
-//       status: 'approved',
-//       appointment_date: date,
-//       user_id: userIDRef.current,
-//       appointment_time: time,
-//       patient_id: patientId,
-//       allergies: allergies,
-//       consent: consent,
-//       chief_complaint: chiefComplaint,
-//       soap_objective: objective,
-//       soap_subjective: subjective,
-//       soap_assessment: assessment,
-//       soap_plan: plan,
-//       doctor_signature: signature,
-//     });
-//     if (error) throw error;
-//     router.push('/dashboard/notes');
-//   } catch (error) {
-//     console.error('Error creating the appointment:', error);
-//   } finally {
-//     setLoading(false);
-//   }
-// };
-
-// const submitNoteDraft = async (
-//   event: React.MouseEvent<HTMLButtonElement>,
-// ): Promise<void> => {
-//   // event.preventDefault();
-
-//   try {
-//     setLoading(true);
-//     const { error, data } = await supabase.from('notes').insert({
-//       status: 'awaiting review',
-//       appointment_date: date,
-//       appointment_time: time,
-//       patient_id: patientId,
-//       allergies: allergies,
-//       consent: consent,
-//       chief_complaint: chiefComplaint,
-//       soap_objective: objective,
-//       soap_subjective: subjective,
-//       soap_assessment: assessment,
-//       soap_plan: plan,
-//       doctor_signature: signature,
-//     });
-//     if (error) throw error;
-//     router.push('/dashboard/notes');
-//   } catch (error) {
-//     console.error('Error creating the appointment draft:', error);
-//   } finally {
-//     setLoading(false);
-//   }
-// };

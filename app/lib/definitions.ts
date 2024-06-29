@@ -4,10 +4,39 @@ export type Note = Database['public']['Tables']['note']['Row'];
 
 export type Patient = Database['public']['Tables']['patient']['Row'];
 
+export type PatientOption = {
+  value: Patient;
+  label: string;
+}
+
+export interface PatientSelect {
+  id: string;
+  first_name: string;
+  middle_name: string;
+  last_name: string;
+  email: string;
+  phone: string;
+  address_street: string;
+  address_unit: string;
+  city: string;
+  state: string;
+  country: string;
+  zipcode: string;
+  provider: string;
+  date_of_birth: string;
+  allergies: string;
+  profile_notes: string;
+}
+
+export interface PatientSelectOption {
+  value: PatientSelect;
+  label: string;
+}
+
 export type Template = Database['public']['Tables']['template']['Row'];
 
 export interface TemplateOption {
-  value: Template;
+  value: string | Template;
   label: string;
 }
 
