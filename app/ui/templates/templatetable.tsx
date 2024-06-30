@@ -4,6 +4,7 @@ import { fetchTemplates } from '@/app/lib/data';
 
 export default async function TemplateTable() {
   const userTemplates = await fetchTemplates();
+  console.log('templates:', userTemplates);
 
   return (
     <div>

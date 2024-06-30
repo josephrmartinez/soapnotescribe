@@ -36,7 +36,7 @@ export interface PatientSelectOption {
 export type Template = Database['public']['Tables']['template']['Row'];
 
 export interface TemplateOption {
-  value: string | Template;
+  value: Template | string;
   label: string;
 }
 

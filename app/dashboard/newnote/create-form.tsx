@@ -50,6 +50,9 @@ const CreateNote = () => {
   const [selectedPatient, setSelectedPatient] = useState<
     PatientSelectOption | undefined
   >(undefined);
+  const [selectedTemplate, setSelectedTemplate] = useState<
+    TemplateOption | undefined
+  >(undefined);
   const accessTokenRef = useRef<string | undefined>('');
   const userIDRef = useRef<string | undefined>('');
   const subjectiveRef = useRef<HTMLTextAreaElement | null>(null);
@@ -146,10 +149,6 @@ const CreateNote = () => {
     }
   };
 
-  // output: 13563ab1-720c-4ac2-805e-998de3865ae1
-  // look up patient using id value from above
-  // pass patient into handlePatienttSelect?
-
   useEffect(() => {
     if (dateOfBirth && date) {
       const age = calculateAge(dateOfBirth, date);
@@ -195,8 +194,10 @@ const CreateNote = () => {
     setAppointmentSpecialty(selectedAppointmentSpecialty);
   };
 
-  const handleTemplateSelect = (selectedTemplate: TemplateOption) => {
-    console.log('selected template:', selectedTemplate);
+  const handleTemplateSelect = (
+    selectedTemplate: TemplateOption,
+    actionMeta: ActionMeta<TemplateOption>,
+  ) => {
     setChiefComplaint(selectedTemplate.label);
 
     if (typeof selectedTemplate.value === 'object') {
@@ -404,6 +405,7 @@ const CreateNote = () => {
               />
             </div>
 
+            {/* appointment specialty */}
             <div className="">
               <label
                 htmlFor="appointment_specialty"
@@ -417,6 +419,7 @@ const CreateNote = () => {
               />
             </div>
 
+            {/* patient location */}
             <div className="">
               <label
                 htmlFor="patient_location"
@@ -437,6 +440,7 @@ const CreateNote = () => {
               </div>
             </div>
 
+            {/* consent */}
             <div className="">
               <label
                 htmlFor="consent"
@@ -491,7 +495,7 @@ const CreateNote = () => {
             <div className="relative">
               <CreateableSelectChiefComplaint
                 onTemplateSelect={handleTemplateSelect}
-                selectedTemplate={chiefComplaint}
+                selectedTemplate={selectedTemplate}
               />
             </div>
           </div>
