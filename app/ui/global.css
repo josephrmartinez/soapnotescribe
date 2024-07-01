@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  .fademask {
+      -webkit-mask-image: linear-gradient(to bottom, black 70%, transparent 95%);
+      mask-image: linear-gradient(to bottom, black 70%, transparent 95%);
+    }
+}
+
 input[type='number'] {
   -moz-appearance: textfield;
   appearance: textfield;
