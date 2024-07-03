@@ -7,6 +7,7 @@
     "update-types": "npx supabase gen types typescript --project-id \"grjecfvldxcnvhmjpvmu\" --schema public > app/database.types.ts"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.24.3",
     "@heroicons/react": "^2.0.18",
     "@phosphor-icons/react": "^2.0.15",
     "@react-pdf/renderer": "^3.4.4",

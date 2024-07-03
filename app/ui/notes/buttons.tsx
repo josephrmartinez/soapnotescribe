@@ -9,7 +9,7 @@ import {
   ShareIcon,
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
-import { deleteNote } from '@/app/lib/actions';
+import { deleteNote } from '@/app/lib/data';
 
 export function CreateAppointment() {
   return (

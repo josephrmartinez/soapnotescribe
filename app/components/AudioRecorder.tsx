@@ -111,7 +111,7 @@ export default function AudioRecorder({
     const audioCtx = new AudioContext();
     const analyser = audioCtx.createAnalyser();
 
-    analyser.minDecibels = -90;
+    analyser.minDecibels = -85;
     analyser.maxDecibels = -10;
     analyser.smoothingTimeConstant = 0.85;
     if (!streamRef.current) {
@@ -137,8 +137,12 @@ export default function AudioRecorder({
     const width = canvas.width;
     const height = canvas.height;
 
-    analyser.fftSize = 256;
+    analyser.fftSize = 16384;
+    // analyser.fftSize = 256;
+    // analyser.fftSize = 64;
+
     const bufferLength = analyser.frequencyBinCount;
+
     const dataArray = new Uint8Array(bufferLength);
 
     canvasCtx.clearRect(0, 0, width, height);
@@ -147,6 +151,17 @@ export default function AudioRecorder({
       drawVisualRef.current = requestAnimationFrame(draw);
 
       analyser.getByteFrequencyData(dataArray);
+
+      // console.log(dataArray);
+
+      // const avgDec =
+      //   dataArray.reduce((prevValue, currentValue) => {
+      //     return prevValue + currentValue;
+      //   }, 0) / dataArray.length;
+
+      // console.log(avgDec);
+
+      // analyser.getByteTimeDomainData(dataArray)
 
       canvasCtx.clearRect(0, 0, width, height);
 

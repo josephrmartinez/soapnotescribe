@@ -4,6 +4,7 @@ import { unstable_noStore as noStore, revalidatePath  } from 'next/cache';
 import { Database } from '../database.types';
 import { createClient } from '@/utils/supabase/server'
 import { Note, NoteWithPatient } from './definitions';
+import { redirect } from 'next/navigation';
 
 const ITEMS_PER_PAGE = 6;
 
@@ -320,6 +321,25 @@ export async function fetchPatientProfileById(id: string) {
 }
 
 
+export async function deleteNote(id: string) {
+  const supabase = createClient();
+
+  const { error } = await supabase
+    .from('note')
+    .delete()
+    .eq('id', id);
+
+  if (error) {
+    console.error('Error deleting note from Supabase:', error);
+    throw new Error('Failed to delete the note.');
+  }
+
+  console.log('Note deleted successfully');
+  revalidatePath('/dashboard/notes');
+  redirect('/dashboard/notes'); 
+}
+
+
 export async function fetchNotesPages(query: string) {
   try {
     const supabase = createClient()
@@ -343,80 +363,3 @@ export async function fetchNotesPages(query: string) {
      throw new Error('Failed to fetch notes count.');
   }
  }
-
-
-
-// export async function fetchSimilarApptsWithEmbedding(query: string, currentPage: number) {
-//   try {
-//     // console.log("query input", query)
-//     // const offset = (currentPage - 1) * ITEMS_PER_PAGE;
-
-//     const supabase = createClient()
-
-//     // CREATE EMBEDDING OF QUERY USING API CALL TO text-embedding-3-small	
-//     const embedding = await embed(query);
-
-//     // RUN SUPABASE EDGE FUNCTION 'MATCH_DOCUMENTS'
-//     const { data: documents, error } = await supabase.rpc('match_documents', {
-//       query_embedding: embedding, // Pass the embedding you want to compare
-//       match_threshold: 0.2, // Choose an appropriate threshold for your data
-//       match_count: 6, // Choose the max number of matches
-//     })
-
-//     if (error) {
-//       console.error('Supabase Error:', error);
-//       throw new Error('Failed to fetch appointments data.');
-//     }
-//     return documents;
-//   } catch (error) {
-//     console.error('Supabase Error:', error);
-//     throw new Error('Failed to fetch appointments data.');
-//   }
-// }
-
-
-// export const getContext = async (
-//   message: string,
-// ): Promise<Context[]> => {
-//   // Get the embeddings of the input message
-//   const embedding = await embed(message);
-
-//   const supabase = createClient()
-
-
-//   // RUN SUPABASE EDGE FUNCTION 'MATCH_DOCUMENTS'
-//   const { data: documents, error } = await supabase.rpc('match_appointments_advocatechat', {
-//     query_embedding: embedding, // Pass the embedding you want to compare
-//     match_threshold: 0.36, // Choose an appropriate threshold for your data
-//     match_count: 3, // Choose the max number of matches
-//   })
-  
-//   return documents;
-// };
-
-
-
-// export async function fetchApptsPages(query: string) {
-//   try {
-//     const supabase = createClient()
-//      const { data, count, error } = await supabase
-//        .from('appointments')
-//        .select('*', { count: 'exact', head: true })
-//        .ilike('combined_text', `%${query}%`)
- 
-//      if (error) {
-//        console.error('Supabase Error:', error);
-//        throw new Error('Failed to fetch appointments count.');
-//      }
-//      let totalPages = 1
-//      if (count) {
-//       totalPages = Math.ceil(count / ITEMS_PER_PAGE)
-//     }
-    
-//       return totalPages;
-//   } catch (error) {
-//      console.error('Supabase Error:', error);
-//      throw new Error('Failed to fetch appointments count.');
-//   }
-//  }
-
