@@ -3,7 +3,7 @@ import { getSOAPData } from "@/app/lib/actions";
 
 export async function GET(req) {
     console.log("GETing webhook route");
-    console.log("apptid:", req.nextUrl.searchParams.get('apptid'))
+    // console.log("apptid:", req.nextUrl.searchParams.get('apptid'))
     return NextResponse.json({ message: "GET" }, { status: 200 });
   }
 
@@ -13,6 +13,7 @@ export async function POST(req, res) {
 
   const prediction = await req.json();
   console.log("prediction", prediction)
+  console.log("replicate transcript:", prediction.output.text)
     const transcript = prediction.output.text
         
     getSOAPData(apptid, transcript)
