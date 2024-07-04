@@ -139,8 +139,6 @@ export function TableRowSkeleton() {
   );
 }
 
-
-
 export function InvoicesMobileSkeleton() {
   return (
     <div className="mb-2 w-full rounded-md bg-white p-4">
@@ -224,7 +222,7 @@ export function AppointmentsTableRowSkeleton() {
     <tr className="w-full border-b border-gray-100 last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg">
       {/* Date */}
       <td className="relative overflow-hidden whitespace-nowrap py-3 pl-6 pr-3">
-          <div className="h-6 w-14 rounded bg-gray-100"></div>
+        <div className="h-6 w-14 rounded bg-gray-100"></div>
       </td>
       {/* Clinic */}
       <td className="whitespace-nowrap px-3 py-3">
@@ -241,10 +239,10 @@ export function AppointmentsTableRowSkeleton() {
       <td className="whitespace-nowrap px-3 py-3">
         <div className="h-6 w-16 rounded bg-white"></div>
       </td>
-      
+
       {/* Actions */}
       <td className="whitespace-nowrap py-3 pl-6 pr-3">
-          <div className="h-[38px] w-[72px] rounded bg-gray-100"></div>
+        <div className="h-[38px] w-[72px] rounded bg-gray-100"></div>
       </td>
     </tr>
   );
@@ -278,13 +276,8 @@ export function AppointmentsTableSkeleton() {
                 <th scope="col" className="px-3 py-5 font-medium">
                   Appointment Title
                 </th>
-                <th scope="col" className="px-3 py-5 font-medium">
-                   
-                </th>
-                <th
-                  scope="col"
-                  className="relative py-3 pl-6 pr-3"
-                >
+                <th scope="col" className="px-3 py-5 font-medium"></th>
+                <th scope="col" className="relative py-3 pl-6 pr-3">
                   <span className="sr-only">Edit</span>
                 </th>
               </tr>

@@ -9,7 +9,7 @@ import { SubmitFormButton } from '../ui/Buttons';
 export default function SignUpPage() {
   const [password, setPassword] = useState<string>('');
   const [passwordConfirm, setPasswordConfirm] = useState<string>('');
-  const submitOkay = password !== '' && password === passwordConfirm;
+  const submitOkay = password.length > 6 && password === passwordConfirm;
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-between bg-gray-50 p-24">
@@ -27,6 +27,7 @@ export default function SignUpPage() {
             name="password"
             type="password"
             required
+            minLength={7}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
