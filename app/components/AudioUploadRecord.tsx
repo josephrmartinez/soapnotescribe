@@ -1,53 +1,3 @@
-// <AudioRecorder uploadAudioRecording={uploadAudioRecording} />;
-// const uploadAudioRecording = async (blob: Blob) => {
-//   setIsUploading(true);
-
-//   // Create randomized file name for in-browser created recordings
-//   let fileName = 'recording-' + self.crypto.randomUUID();
-
-//   const file = new File([blob], fileName);
-
-//   await uploadFile('audiofiles', fileName, file);
-//   setIsUploading(false);
-// };
-
-//   return (
-//     <div className="">
-//           <div
-//             onDragOver={handleDragOver}
-//             onDragLeave={handleDragLeave}
-//             onDrop={handleDrop}
-//             onClick={triggerFileInputClick}
-//             role="button"
-//             tabIndex={0}
-//             className={`flex h-48 cursor-pointer flex-col items-center justify-center rounded-md border bg-gray-50 p-4 text-center text-sm text-gray-600 focus:ring-2 ${isDragging ? 'ring-2' : 'ring-0'}  `}
-//           >
-//             {!isUploading && !uploadComplete && (
-//               <div>
-//                 <div className="hidden sm:block">
-//                   Click or drag and drop your audio file here
-//                 </div>
-//                 <div className="sm:hidden">Click to upload audio file</div>
-//               </div>
-//             )}
-//             {isUploading && !uploadComplete && (
-//               <div className="">
-//                 Audio uploading: {`${percentageUploaded}% complete`}
-//               </div>
-//             )}
-//             {uploadComplete && <div className="">Transcribing audio...</div>}
-//           </div>
-//           <input
-//             type="file"
-//             accept="audio/*"
-//             ref={fileInputRef}
-//             onChange={handleFileInputChange}
-//             style={{ display: 'none' }}
-//           />
-//     </div>
-//   );
-// }
-
 'use client';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
@@ -58,6 +8,7 @@ import { redirect, useRouter } from 'next/navigation';
 import { getReplicateMonoTranscript } from '@/app/lib/actions';
 import { revalidatePath } from 'next/cache';
 import clsx from 'clsx';
+import { AMRPlayer, Player } from 'web-amr';
 
 export default function AudioUploadRecord({
   patientId,
@@ -73,6 +24,10 @@ export default function AudioUploadRecord({
   const accessTokenRef = useRef<string | undefined>('');
   const userIDRef = useRef<string | undefined>('');
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // amr player
+  const [isAMR, setIsAMR] = useState<boolean>(false);
+  const [player, setPlayer] = useState<Player | null>(null);
 
   // recorder state
   const [audioUrl, setAudioUrl] = useState<string>('');
@@ -148,20 +103,75 @@ export default function AudioUploadRecord({
     }
   };
 
-  function handleAudioFileInput(file: File) {
-    setAudioFile(file);
+  useEffect(() => {
+    console.log('running useEffect');
+    if (audioFile?.type !== 'audio/amr') return;
 
+    let playerInstance: Player | null = null;
+
+    const updateTimeHandler = () => {
+      if (playerInstance !== null) {
+        setPlaybackTimeFormatted(formatTime(playerInstance.currentTime));
+      }
+    };
+
+    const checkAndLoadAudio = async () => {
+      setIsAMR(true);
+      const res = await fetch(audioUrl);
+      if (res.ok) {
+        const buffer = await res.arrayBuffer();
+        playerInstance = AMRPlayer(buffer);
+        setPlayer(playerInstance);
+
+        setElapsedRecordingTime(formatTime(playerInstance.duration));
+
+        playerInstance.addEventListener('timeupdate', updateTimeHandler);
+      }
+    };
+
+    if (audioUrl) {
+      checkAndLoadAudio();
+    }
+
+    return () => {
+      if (playerInstance) {
+        playerInstance.pause();
+        playerInstance.removeEventListener('timeupdate', updateTimeHandler);
+      }
+    };
+  }, [audioFile]);
+
+  async function handleAudioFileInput(file: File) {
     // Create and set a url for audio player
     const url = URL.createObjectURL(file);
     setAudioUrl(url);
 
+    setAudioFile(file);
+
+    // if (file.type === 'audio/amr') {
+    //   let playerInstance: Player | null = null;
+
+    //   setIsAMR(true);
+    //   const res = await fetch(url);
+    //   if (res.ok) {
+    //     const buffer = await res.arrayBuffer();
+    //     playerInstance = AMRPlayer(buffer);
+    //     setPlayer(playerInstance);
+    //     // setDuration(playerInstance.duration);
+
+    //     // playerInstance.addEventListener('timeupdate', updateTimeHandler);
+    //   }
+    // }
+
     // Pass along metadata to audioPlayer(Ref)
-    if (audioPlayerRef.current !== null) {
+    if (file.type !== 'audio/amr' && audioPlayerRef.current) {
       audioPlayerRef.current.addEventListener('loadedmetadata', () => {
-        console.log(audioPlayerRef.current.duration); // Duration is now available
+        // Duration is now available
         // Pass along metadata to audioPlayer(Ref)
         // For example, setting total duration somewhere in your state or props
-        setElapsedRecordingTime(formatTime(audioPlayerRef.current.duration));
+        setElapsedRecordingTime(
+          formatTime(audioPlayerRef.current?.duration || 0),
+        );
       });
     }
 
@@ -491,14 +501,20 @@ export default function AudioUploadRecord({
   }
 
   function playRecording() {
-    if (audioPlayerRef.current) {
+    if (isAMR) {
+      player?.play();
+      setStatus('playing');
+    } else if (audioPlayerRef.current) {
       audioPlayerRef.current.play();
       setStatus('playing');
     }
   }
 
   function pauseRecording() {
-    if (audioPlayerRef.current) {
+    if (isAMR) {
+      player?.pause();
+      setStatus('audioAvailable');
+    } else if (audioPlayerRef.current) {
       audioPlayerRef.current.pause();
       setStatus('audioAvailable');
     }
@@ -508,6 +524,8 @@ export default function AudioUploadRecord({
     setAudioUrl('');
     setAudioBlob(null);
     setAudioFile(null);
+    setPlayer(null);
+    setIsAMR(false);
 
     // clean up mediaRecorder
     if (mediaRecorderRef.current) {
@@ -536,7 +554,13 @@ export default function AudioUploadRecord({
 
   const handleRangeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newTime = Number(event.target.value);
-    if (audioPlayerRef.current) {
+
+    if (isAMR) {
+      if (player) {
+        player.fastSeek(newTime);
+        setPlaybackTimeFormatted(formatPlaybackTime(newTime));
+      }
+    } else if (audioPlayerRef.current) {
       audioPlayerRef.current.currentTime = newTime;
       setPlaybackTimeFormatted(formatPlaybackTime(newTime));
     }
@@ -609,8 +633,12 @@ export default function AudioUploadRecord({
             <input
               type="range"
               min="0"
-              max={audioPlayerRef.current?.duration}
-              value={audioPlayerRef.current?.currentTime}
+              max={isAMR ? player?.duration : audioPlayerRef.current?.duration}
+              value={
+                isAMR
+                  ? player?.currentTime
+                  : audioPlayerRef.current?.currentTime
+              }
               onChange={handleRangeChange}
               className="mx-2 w-full cursor-pointer accent-gray-600"
             />
