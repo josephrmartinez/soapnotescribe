@@ -15,7 +15,7 @@ import CreateableSelectChiefComplaint from './CreateableSelectChiefComplaint';
 import { TemplateOption, PatientSelectOption } from '@/app/lib/definitions';
 import { SubmitFormButton } from '@/app/ui/Buttons';
 import { fetchNoteById } from '@/app/lib/data';
-import AudioUploadRecord from '@/app/components/AudioUploadRecord';
+// import AudioUploadRecord from '@/app/components/AudioUploadRecord';
 
 const CreateNote = () => {
   const [patientId, setPatientId] = useState<string>('');
