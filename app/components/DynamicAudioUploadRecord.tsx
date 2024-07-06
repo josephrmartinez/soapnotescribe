@@ -5,6 +5,10 @@ const AudioUploadRecord = dynamic(() => import('./AudioUploadRecord'), {
   ssr: false,
 });
 
-export default function DynamicAudioUploadRecord() {
-  return <AudioUploadRecord patientId="123" />;
+export default function DynamicAudioUploadRecord({
+  patientId,
+}: {
+  patientId: string;
+}) {
+  return <AudioUploadRecord patientId={patientId} />;
 }

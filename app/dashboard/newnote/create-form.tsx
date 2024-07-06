@@ -14,9 +14,7 @@ import CreateableSelectChiefComplaint from './CreateableSelectChiefComplaint';
 import { TemplateOption, PatientSelectOption } from '@/app/lib/definitions';
 import { SubmitFormButton } from '@/app/ui/Buttons';
 import { fetchNoteById } from '@/app/lib/data';
-// import AudioUploadRecord from '@/app/components/AudioUploadRecord';
-// import AudioUpload from '../audionote/AudioUpload';
-import AudioUpload from '@/app/components/AudioUpload';
+import DynamicAudioUploadRecord from '@/app/components/DynamicAudioUploadRecord';
 
 const CreateNote = () => {
   const [patientId, setPatientId] = useState<string>('');
@@ -350,11 +348,10 @@ const CreateNote = () => {
             </div>
           )}
 
-          <AudioUpload patientId={patientId} />
-          {/* <div className="mb-6">
+          <div className="mb-6">
             <div className="mb-2 block text-sm font-medium">Audio Input</div>
-            <AudioUploadRecord patientId={patientId} />
-          </div> */}
+            <DynamicAudioUploadRecord patientId={patientId} />
+          </div>
 
           <div className="mb-4 grid grid-cols-1 gap-x-8 gap-y-4 sm:grid-cols-2">
             {/* Appointment Date */}

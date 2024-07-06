@@ -8,16 +8,13 @@ import { useRouter } from 'next/navigation';
 import { getReplicateMonoTranscript } from '@/app/lib/actions';
 import { revalidatePath } from 'next/cache';
 import clsx from 'clsx';
-import dynamic from 'next/dynamic';
 import { AMRPlayer, Player } from 'web-amr';
 
 interface AudioUploadRecordProps {
   patientId: string;
 }
 
-const AudioUploadRecord: React.FC<AudioUploadRecordProps> = ({
-  patientId = '123',
-}) => {
+const AudioUploadRecord: React.FC<AudioUploadRecordProps> = ({ patientId }) => {
   const [uploadComplete, setUploadComplete] = useState<boolean>(false);
   const [percentageUploaded, setPercentageUploaded] = useState(0);
   const [isDragging, setIsDragging] = useState<boolean>(false);
