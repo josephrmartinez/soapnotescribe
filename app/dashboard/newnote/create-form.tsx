@@ -349,11 +349,11 @@ const CreateNote = () => {
             </div>
           )}
 
-          {/* <AudioUpload patientId={patientId} /> */}
-          <div className="mb-6">
+          <AudioUpload patientId={patientId} />
+          {/* <div className="mb-6">
             <div className="mb-2 block text-sm font-medium">Audio Input</div>
             <AudioUploadRecord patientId={patientId} />
-          </div>
+          </div> */}
 
           <div className="mb-4 grid grid-cols-1 gap-x-8 gap-y-4 sm:grid-cols-2">
             {/* Appointment Date */}
