@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { Microphone, Play, Pause, Stop } from '@phosphor-icons/react';
 import * as tus from 'tus-js-client';
 import { createClient } from '@/utils/supabase/client';
-import { redirect, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { getReplicateMonoTranscript } from '@/app/lib/actions';
 import { revalidatePath } from 'next/cache';
 import clsx from 'clsx';
@@ -15,7 +15,6 @@ interface AudioUploadRecordProps {
 }
 
 const AudioUploadRecord: React.FC<AudioUploadRecordProps> = ({ patientId }) => {
-  // file upload state
   const [uploadComplete, setUploadComplete] = useState<boolean>(false);
   const [percentageUploaded, setPercentageUploaded] = useState(0);
   const [isDragging, setIsDragging] = useState<boolean>(false);
@@ -24,12 +23,8 @@ const AudioUploadRecord: React.FC<AudioUploadRecordProps> = ({ patientId }) => {
   const accessTokenRef = useRef<string | undefined>('');
   const userIDRef = useRef<string | undefined>('');
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  // amr player
   const [isAMR, setIsAMR] = useState<boolean>(false);
   const [player, setPlayer] = useState<Player | null>(null);
-
-  // recorder state
   const [audioUrl, setAudioUrl] = useState<string>('');
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
   const [audioFile, setAudioFile] = useState<File | null>(null);
@@ -87,7 +82,6 @@ const AudioUploadRecord: React.FC<AudioUploadRecordProps> = ({ patientId }) => {
     e: React.ChangeEvent<HTMLInputElement>,
   ) => {
     if (e.target.files && e.target.files.length > 0) {
-      // await handleAudioFile(e.target.files[0]);
       handleAudioFileInput(e.target.files[0]);
     }
   };

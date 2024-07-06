@@ -4,7 +4,6 @@ import Link from 'next/link';
 import SelectPatient from './SelectPatient';
 import { SingleValue, ActionMeta } from 'react-select';
 import { createNote } from './action';
-import AudioUpload from '../audionote/AudioUpload';
 import { calculateAge } from '@/app/lib/utils';
 import AppointmentTypeSelect from '@/app/ui/notes/AppointmentTypeSelect';
 import AppointmentSpecialtySelect from '@/app/ui/notes/AppointmentSpecialtySelect';
@@ -16,6 +15,8 @@ import { TemplateOption, PatientSelectOption } from '@/app/lib/definitions';
 import { SubmitFormButton } from '@/app/ui/Buttons';
 import { fetchNoteById } from '@/app/lib/data';
 // import AudioUploadRecord from '@/app/components/AudioUploadRecord';
+// import AudioUpload from '../audionote/AudioUpload';
+import AudioUpload from '@/app/components/AudioUpload';
 
 const CreateNote = () => {
   const [patientId, setPatientId] = useState<string>('');
