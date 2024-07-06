@@ -1,14 +1,18 @@
 {
   "compilerOptions": {
     "target": "ES2017", //was es5
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "useUnknownInCatchVariables": false,
     "strict": true,
     "noEmit": true,
     "esModuleInterop": true,
-    "module": "ES2015", //was esnext
+    "module": "esnext", //was esnext
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
@@ -20,7 +24,9 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": [
+        "./*"
+      ]
     }
   },
   "include": [
@@ -28,6 +34,10 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "app/api/replicate-webhook/route.js", "app/ui/notes/ViewPdfButton.jsx"  ],
-  "exclude": ["node_modules"]
+    "app/api/replicate-webhook/route.js",
+    "app/ui/notes/ViewPdfButton.jsx"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }
