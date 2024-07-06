@@ -10,11 +10,11 @@ import { revalidatePath } from 'next/cache';
 import clsx from 'clsx';
 import { AMRPlayer, Player } from 'web-amr';
 
-export default function AudioUploadRecord({
-  patientId,
-}: {
+interface AudioUploadRecordProps {
   patientId: string;
-}) {
+}
+
+const AudioUploadRecord: React.FC<AudioUploadRecordProps> = ({ patientId }) => {
   // file upload state
   const [uploadComplete, setUploadComplete] = useState<boolean>(false);
   const [percentageUploaded, setPercentageUploaded] = useState(0);
@@ -720,4 +720,6 @@ export default function AudioUploadRecord({
       <audio ref={audioPlayerRef} src={audioUrl} hidden controls></audio>
     </>
   );
-}
+};
+
+export default AudioUploadRecord;
