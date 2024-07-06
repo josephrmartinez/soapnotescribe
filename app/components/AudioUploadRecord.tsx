@@ -595,10 +595,10 @@ const AudioUploadRecord: React.FC<AudioUploadRecordProps> = ({ patientId }) => {
         <div>
           {status === 'initial' ? (
             <>
-              <div className="hidden sm:block">
+              <div className="hidden text-sm font-medium text-gray-700 sm:block">
                 Drag and drop or click in this area to upload an audio file.
               </div>
-              <div className="sm:hidden">
+              <div className="text-sm font-medium text-gray-700 sm:hidden">
                 Click in this area to upload an audio file.
               </div>
             </>
@@ -614,9 +614,9 @@ const AudioUploadRecord: React.FC<AudioUploadRecordProps> = ({ patientId }) => {
             ''
           )}
         </div>
-        <div className="w-3/4 text-center text-sm  text-gray-500">
+        <div className="w-5/6 text-center text-sm  text-gray-500">
           {status === 'initial' ? (
-            'Tap icon to record new audio.'
+            'Tap icon below to record new audio.'
           ) : status === 'recording' ? (
             <canvas
               id="visualizer"
@@ -635,7 +635,7 @@ const AudioUploadRecord: React.FC<AudioUploadRecordProps> = ({ patientId }) => {
                   : audioPlayerRef.current?.currentTime
               }
               onChange={handleRangeChange}
-              className="mx-2 w-full cursor-pointer accent-gray-600"
+              className="w-full cursor-pointer accent-gray-600"
             />
           ) : (
             ''
@@ -686,15 +686,15 @@ const AudioUploadRecord: React.FC<AudioUploadRecordProps> = ({ patientId }) => {
           )}
         </div>
         {status === 'audioAvailable' || status === 'playing' ? (
-          <div className="grid w-full grid-cols-2 items-center  justify-items-center text-center">
+          <div className="grid w-full grid-cols-2 items-center justify-items-center text-center">
             <div
-              className="w-24 cursor-pointer rounded-lg border py-1 text-gray-700 transition-colors hover:bg-red-500 hover:text-white"
+              className="mr-4 w-24 cursor-pointer rounded-lg border py-1 text-gray-700 transition-colors hover:bg-red-500 hover:text-white sm:mr-0"
               onClick={deleteRecording}
             >
               delete
             </div>
             <div
-              className="w-24 cursor-pointer rounded-lg border py-1 text-gray-700 transition-colors hover:bg-teal-500 hover:text-white"
+              className="ml-4 w-24 cursor-pointer rounded-lg border py-1 text-gray-700 transition-colors hover:bg-teal-500 hover:text-white sm:ml-0"
               onClick={handleUploadClick}
             >
               upload
