@@ -590,9 +590,10 @@ export default function AudioUploadRecord({
         onClick={triggerFileInputClick}
         tabIndex={0}
         className={clsx(
-          `grid h-48 w-full max-w-prose grid-rows-4 justify-items-center rounded-md border-2 border-dotted bg-white p-4`,
+          `grid h-48 w-full max-w-prose grid-rows-4 justify-items-center rounded-md border-2 border-dotted  bg-white p-4`,
           {
             'cursor-pointer': status === 'initial',
+            'border-gray-300': !isDragging,
             'border-blue-600': isDragging,
           },
         )}
@@ -680,7 +681,7 @@ export default function AudioUploadRecord({
           )}
 
           {status === 'playing' && (
-            <div className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full  bg-teal-600 p-2 shadow">
+            <div className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full  bg-teal-600 p-2 shadow hover:bg-teal-500">
               <Pause
                 size={32}
                 color="white"
