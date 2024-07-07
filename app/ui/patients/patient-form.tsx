@@ -266,13 +266,13 @@ const PatientForm: React.FC<PatientFormProps> = ({ patient, formAction }) => {
               {country === 'Canada' ? 'Province / Territory' : 'State'}
             </label>
             <div className="relative">
-              {country === 'United States' ? (
-                <StateSelect state={state} setState={handleStateChange} />
-              ) : (
+              {country === 'Canada' ? (
                 <CanadaProvinceSelect
                   state={state}
                   setState={handleStateChange}
                 />
+              ) : (
+                <StateSelect state={state} setState={handleStateChange} />
               )}
             </div>
           </div>
