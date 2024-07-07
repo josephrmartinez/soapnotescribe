@@ -56,14 +56,14 @@ export default function NavLinks() {
             key={link.name}
             href={link.href}
             className={clsx(
-              'flex h-[48px] grow items-center justify-center gap-2 rounded-md border border-gray-100 p-3 text-sm font-medium hover:bg-sky-100 hover:text-teal-600 md:flex-none md:justify-start md:p-2 md:px-3',
+              'flex h-[48px] grow items-center justify-center gap-2 rounded-md border border-gray-100 text-sm font-medium hover:bg-sky-100 hover:text-teal-600 sm:p-3 md:flex-none md:justify-start md:p-2 md:px-3',
               {
                 'bg-sky-100 text-teal-600': pathname.includes(link.href),
               },
             )}
           >
             <LinkIcon className="hidden w-6 md:block" />
-            <p className="">{link.name}</p>
+            <p className="whitespace-nowrap text-xs sm:text-sm">{link.name}</p>
           </Link>
         );
       })}

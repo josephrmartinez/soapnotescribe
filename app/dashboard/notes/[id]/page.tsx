@@ -64,9 +64,9 @@ export default async function Page({ params }: { params: { id: string } }) {
     <main>
       <Breadcrumbs
         breadcrumbs={[
-          { label: 'SOAP Notes', href: '/dashboard/notes' },
+          { label: 'Notes', href: '/dashboard/notes' },
           {
-            label: `${appointmentDate} with ${note.patient.first_name} ${note.patient.last_name}`,
+            label: `Approved Note`,
             href: `/dashboard/notes/${id}`,
             active: true,
           },
@@ -74,30 +74,6 @@ export default async function Page({ params }: { params: { id: string } }) {
       />
 
       <div className="max-w-prose">
-        <div className="mb-4 flex w-full items-center justify-between">
-          <h1 className={`text-2xl`}>Approved SOAP Note</h1>
-
-          <div className="grid grid-cols-4 gap-2">
-            <DeleteNoteFirstStep id={note.id} />
-            <Link
-              href={`/dashboard/notes/${note.id}/edit`}
-              className="flex h-10 items-center justify-center rounded-lg bg-gray-100 px-2  text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200 "
-            >
-              <PencilSquareIcon width={20} height={20} className="mr-2" />
-              Edit
-            </Link>
-            <Link
-              href={`/dashboard/newnote?patient=${note.patient_id}&noteRef=${note.id}`}
-              className="flex h-10 items-center justify-center rounded-lg bg-gray-100 px-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200 "
-            >
-              <DocumentDuplicateIcon width={20} height={20} className="mr-2" />
-              copy
-            </Link>
-
-            <ViewPDFButton note={processedNote} />
-          </div>
-        </div>
-
         <div
           id="soapnote"
           className="mb-4 max-w-prose rounded-md bg-gray-50 p-4"
@@ -313,6 +289,25 @@ export default async function Page({ params }: { params: { id: string } }) {
               </div>
             </div>
           </div>
+        </div>
+        <div className="grid grid-cols-4 gap-2">
+          <DeleteNoteFirstStep id={note.id} />
+          <Link
+            href={`/dashboard/notes/${note.id}/edit`}
+            className="flex h-10 items-center justify-center rounded-lg bg-gray-100 px-2  text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200 "
+          >
+            <PencilSquareIcon width={20} height={20} className="mr-2" />
+            Edit
+          </Link>
+          <Link
+            href={`/dashboard/newnote?patient=${note.patient_id}&noteRef=${note.id}`}
+            className="flex h-10 items-center justify-center rounded-lg bg-gray-100 px-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200 "
+          >
+            <DocumentDuplicateIcon width={20} height={20} className="mr-2" />
+            copy
+          </Link>
+
+          <ViewPDFButton note={processedNote} />
         </div>
 
         {audioUrl ? (

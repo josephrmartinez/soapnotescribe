@@ -9,7 +9,7 @@ import { createClient } from '@/utils/supabase/server';
 import { fetchFilteredNotes, fetchNotesPages } from '@/app/lib/data';
 
 export const metadata: Metadata = {
-  title: 'SOAP Notes',
+  title: 'Notes',
 };
 
 export default async function Page({
@@ -31,7 +31,7 @@ export default async function Page({
   return (
     <div className="w-full">
       <div className="mb-8 flex w-full">
-        <h1 className={`${GeistSans.className} text-2xl`}>SOAP Notes</h1>
+        <h1 className={`${GeistSans.className} text-2xl`}>Notes</h1>
       </div>
       <Search placeholder="Search notes..." />
       <Suspense

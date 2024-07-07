@@ -1,6 +1,8 @@
 import { Metadata } from 'next';
 import { fetchNoteById } from '@/app/lib/data';
 import EditDraftNote from './create-form';
+import Breadcrumbs from '@/app/ui/notes/breadcrumbs';
+
 export const metadata: Metadata = {
   title: 'Review Draft',
 };
@@ -12,6 +14,16 @@ export default async function Page({ params }: { params: { id: string } }) {
 
   return (
     <div>
+      <Breadcrumbs
+        breadcrumbs={[
+          { label: 'Notes', href: '/dashboard/notes' },
+          {
+            label: `Review Draft`,
+            href: `/dashboard/notes/${id}/edit`,
+            active: true,
+          },
+        ]}
+      />
       <EditDraftNote note={note} />
     </div>
   );

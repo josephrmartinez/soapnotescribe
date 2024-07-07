@@ -137,16 +137,16 @@ const EditDraftNote: React.FC<CreateNoteProps> = ({ note }) => {
 
   return (
     <div className="w-full">
-      <div className="mb-8 flex w-full">
+      {/* <div className="mb-8 flex w-full">
         <h1 className={`${GeistSans.className} text-2xl`}>Review Draft</h1>
-      </div>
+      </div> */}
       <form className="max-w-prose">
         <input name="id" hidden defaultValue={note?.id}></input>
 
         <div className="mb-8 max-w-prose rounded-md bg-gray-50 p-4">
-          <div className="mb-8 text-lg font-medium text-gray-800">
+          {/* <div className="mb-8 text-lg font-medium text-gray-800">
             SOAP note
-          </div>
+          </div> */}
 
           <div className="mb-4 grid grid-cols-1 gap-x-8 gap-y-4 sm:grid-cols-2">
             {/* Patient Name */}
@@ -519,8 +519,10 @@ const EditDraftNote: React.FC<CreateNoteProps> = ({ note }) => {
             <SubmitFormButton formAction={saveDraft} active secondary>
               Save Draft
             </SubmitFormButton>
+
             <SubmitFormButton
               formAction={approveNote}
+              className="col-span-3 md:col-span-1"
               active={doctorSignature !== null && doctorSignature.length > 5}
             >
               Approve Note

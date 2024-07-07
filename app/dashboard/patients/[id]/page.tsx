@@ -69,8 +69,8 @@ export default async function Page({ params }: { params: { id: string } }) {
       />
 
       <div className="max-w-prose">
-        <div className="mb-4 flex w-full items-center justify-between">
-          <h1 className={`text-2xl`}>Patient Profile</h1>
+        <div className="mb-4 flex w-full">
+          {/* <h1 className="mb-4 text-2xl sm:mb-0">Patient Profile</h1> */}
 
           <div className="grid grid-cols-2 gap-4">
             <Link
@@ -247,21 +247,23 @@ export default async function Page({ params }: { params: { id: string } }) {
                 </div>
               </div>
             </div>
-            <div className="col-span-2 mb-4">
-              <label
-                htmlFor="patient_notes"
-                className="mb-2 block text-sm font-medium"
-              >
-                Patient Notes
-              </label>
-              <div className="relative">
-                <div id="appointment_types" className="px-2 py-2 text-sm">
-                  {patientNotes}
+            {patientNotes.length > 1 && (
+              <div className="col-span-2 mb-4">
+                <label
+                  htmlFor="patient_notes"
+                  className="mb-2 block text-sm font-medium"
+                >
+                  Patient Notes
+                </label>
+                <div className="relative">
+                  <div id="appointment_types" className="px-2 py-2 text-sm">
+                    {patientNotes}
+                  </div>
                 </div>
               </div>
-            </div>
-            <DownloadPatientNotes />
+            )}
           </div>
+          {patientNotes.length > 1 && <DownloadPatientNotes />}
         </div>
       </div>
     </main>
