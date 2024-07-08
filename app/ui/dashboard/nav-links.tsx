@@ -37,11 +37,11 @@ const links = [
     href: '/dashboard/patients',
     icon: UserGroupIcon,
   },
-  // {
-  //   name: 'Settings',
-  //   href: '/dashboard/settings',
-  //   icon: Cog8ToothIcon,
-  // },
+  {
+    name: 'Settings',
+    href: '/dashboard/settings',
+    icon: Cog8ToothIcon,
+  },
 ];
 
 export default function NavLinks() {
@@ -62,8 +62,10 @@ export default function NavLinks() {
               },
             )}
           >
-            <LinkIcon className="hidden w-6 md:block" />
-            <p className="whitespace-nowrap text-xs sm:text-sm">{link.name}</p>
+            <LinkIcon className="w-6 " />
+            <p className="text-md hidden whitespace-nowrap md:block">
+              {link.name}
+            </p>
           </Link>
         );
       })}

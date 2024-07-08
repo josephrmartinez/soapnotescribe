@@ -1,43 +1,59 @@
 'use client';
 
-import { useState } from 'react';
-
-interface ListItem {
-  id: number;
-  name: string;
-  default: boolean;
-}
+import { useState, useEffect } from 'react';
+import { updateUserSettings } from '../lib/data';
 
 interface ListGeneratorProps {
   listName: string;
-  listItems?: ListItem[];
+  defaultItem: string;
+  listItems?: string[];
+  fieldName: string;
+  userId: string;
 }
 
 const ListGenerator: React.FC<ListGeneratorProps> = ({
   listName,
   listItems,
+  defaultItem,
+  fieldName,
+  userId,
 }) => {
-  const [items, setItems] = useState<ListItem[]>(listItems || []);
+  const [items, setItems] = useState<string[]>(listItems || []);
+  const [defaultOption, setDefaultOption] = useState<string>(defaultItem);
   const [inputValue, setInputValue] = useState<string>('');
 
-  let nextId = items.length + 1;
+  useEffect(() => {
+    const payload = {
+      [fieldName]: items,
+      [`${fieldName}_default`]: defaultOption,
+    };
 
-  function handleDeleteItem(id: number) {
-    setItems(items.filter((item) => item.id !== id));
+    updateUserSettings(payload, userId);
+  }, [items, defaultOption]);
+
+  function handleDeleteItem(index: number) {
+    setItems((prevItems) => {
+      const newItems = prevItems.filter((_, i) => i !== index);
+
+      if (prevItems[index] === defaultOption) {
+        setDefaultOption(newItems[0]);
+      }
+
+      return newItems;
+    });
   }
 
   function handleAddItem() {
-    const newItem: ListItem = {
-      id: nextId++,
-      name: inputValue,
-      default: false,
-    };
+    const newItem = inputValue;
+    if (items.includes(newItem)) {
+      return;
+    }
     setItems([...items, newItem]);
     setInputValue('');
   }
 
-  function handleSetDefault(id: number) {
-    setItems(items.map((item) => ({ ...item, default: item.id === id })));
+  function handleSetDefault(index: number) {
+    setDefaultOption(items[index]);
   }
 
   function handleInputKeyDown(e: React.KeyboardEvent) {
@@ -49,26 +65,28 @@ const ListGenerator: React.FC<ListGeneratorProps> = ({
 
   return (
     <div>
-      <div className="mb-2 text-xl font-semibold">{listName}</div>
-      <ul className="w-96 list-disc">
-        {items.map((item) => (
-          <li key={item.id} className="grid list-disc grid-cols-3 gap-6">
-            <div className="text-lg">{item.name}</div>
+      <div className="mb-4 text-xl font-medium text-teal-700 underline underline-offset-8">
+        {listName}
+      </div>
+      <ul className="ml-4 w-96">
+        {items.map((item, index) => (
+          <li key={index} className="my-2 grid grid-cols-3 gap-6">
+            <div className="font-semibold">{item}</div>
             <div>
-              {item.default ? (
-                <div className="font-semibold text-gray-800">default</div>
+              {item == defaultOption ? (
+                <div className="font-semibold text-teal-800">default</div>
               ) : (
                 <div
-                  className="cursor-pointer text-gray-800"
-                  onClick={() => handleSetDefault(item.id)}
+                  className="cursor-pointer text-gray-800 transition-all hover:text-teal-800"
+                  onClick={() => handleSetDefault(index)}
                 >
                   make default
                 </div>
               )}
             </div>
             <div
-              className="cursor-pointer text-gray-800"
-              onClick={() => handleDeleteItem(item.id)}
+              className="cursor-pointer text-gray-800 transition-all hover:text-red-600"
+              onClick={() => handleDeleteItem(index)}
             >
               delete
             </div>
@@ -78,7 +96,7 @@ const ListGenerator: React.FC<ListGeneratorProps> = ({
       <div className="flex items-center">
         <input
           type="text"
-          className="rounded-lg border border-gray-600"
+          className="ml-2 h-8 w-32 rounded border border-gray-400"
           placeholder={`add item`}
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}

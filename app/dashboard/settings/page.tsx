@@ -1,30 +1,45 @@
 import { Metadata } from 'next';
 import { GeistSans } from 'geist/font/sans';
 import ListGenerator from '@/app/components/ListGenerator';
+import { fetchUserSettings } from '@/app/lib/data';
 
 export const metadata: Metadata = {
   title: 'Settings',
 };
 
-export default function Page() {
+export default async function Page() {
+  const userSettings = await fetchUserSettings();
+
+  // userSettings =
+  //   {
+  //   appointment_types: [ 'Telemedicine', 'In Person' ],
+  //   appointment_types_default: 'Telemedicine',
+  //   appointment_specialties: [ 'Primary Care', 'Urgent Care' ],
+  //   appointment_specialties_default: 'Primary Care',
+  //   user_id: '6e6d2d8f-2200-4ae3-8335-f88d72c23eb9'
+  // }
+
   return (
     <div className="w-full">
       <div className="mb-8 flex w-full flex-col">
         <h1 className={`${GeistSans.className} text-2xl`}>Settings</h1>
         <div className="flex flex-col">
+          <div className="h-12"></div>
+
           <ListGenerator
             listName="Appointment Types"
-            listItems={[
-              { id: 1, name: 'Telemedicine', default: true },
-              { id: 2, name: 'In Person', default: false },
-            ]}
+            fieldName="appointment_types"
+            listItems={userSettings.appointment_types}
+            defaultItem={userSettings.appointment_types_default}
+            userId={userSettings.user_id}
           />
+          <div className="h-12"></div>
           <ListGenerator
             listName="Appointment Specialties"
-            listItems={[
-              { id: 1, name: 'Urgent Care', default: true },
-              { id: 2, name: 'Primary Care', default: false },
-            ]}
+            fieldName="appointment_specialties"
+            listItems={userSettings.appointment_specialties}
+            defaultItem={userSettings.appointment_specialties_default}
+            userId={userSettings.user_id}
           />
         </div>
       </div>

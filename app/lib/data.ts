@@ -311,14 +311,45 @@ export async function fetchPatientProfileById(id: string) {
 
     const patient = patients ? patients[0] : null;
 
-
-
     return patient
   } catch (error) {
     console.error('Supabase Error:', error);
     throw new Error('Failed to fetch patient data.');
   }
 }
+
+export async function fetchUserSettings() {
+  try {
+    const supabase = createClient()
+    const { data: settings, error } = await supabase
+      .from('user_settings')
+      .select('*')
+
+    if (error) {
+      console.error('Error fetching user settings:', error);
+      return
+    }
+    return settings[0];
+ } catch (error) {
+    console.error('Supabase Error:', error);
+    throw new Error('Failed to fetch user settings data.');
+ }
+}
+export async function updateUserSettings(payload: any, userId: string) {
+  
+  const supabase = createClient()
+  const { error }  = await supabase
+      .from('user_settings')
+      .update(payload)
+      .eq('user_id', userId)
+
+  if (error) {
+    console.log("Error updating user settings:", error);
+  }
+  }
+  
+
+
 
 
 export async function deleteNote(id: string) {

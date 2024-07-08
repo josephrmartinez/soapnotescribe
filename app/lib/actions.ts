@@ -79,7 +79,7 @@ export async function getSOAPData(noteid: string, transcript: string) {
             },
             "allergies": {
               "type": "string",
-              "description": "List of allergies, 'NKDA' if none"
+              "description": "Drug allergies, 'NKDA' if none"
             },
             "chief_complaint": {
               "type": "string",
@@ -120,8 +120,7 @@ export async function getSOAPData(noteid: string, transcript: string) {
               "type": "string",
               "description": "Location of the patient (State/Province, e.g., 'Arizona')"
             }
-          },
-          "required": ["allergies"]
+          }
         }
 
         Your answer MUST begin and end with curly brackets. Do not include any leading backticks or other markers. ALL LISTS SHOULD BE UNORDERED. NO NUMBERED LISTS. Include as much specific information as possible from the transcript in the SOAP note. Be thorough! If you do not have the information required to provide a value in any of the fields, just return the JSON object WITHOUT those fields. For the differential_diagnosis field, analyze the entire transcript and return a differential diagnosis along with possible alternative treatment options. Your complete answer MUST begin and end with curly brackets.`
