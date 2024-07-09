@@ -12,6 +12,7 @@ import AppointmentTypeSelect from '@/app/ui/notes/AppointmentTypeSelect';
 import AppointmentSpecialtySelect from '@/app/ui/notes/AppointmentSpecialtySelect';
 import AudioPlayer from '@/app/components/AudioPlayer';
 import { SubmitFormButton } from '@/app/ui/Buttons';
+import { fetchUserSettings } from '@/app/lib/data';
 
 interface CreateNoteProps {
   note: NoteWithPatient;
@@ -55,9 +56,13 @@ const EditDraftNote: React.FC<CreateNoteProps> = ({ note }) => {
   const [appointmentType, setAppointmentType] = useState<string>(
     note.appointment_type || '',
   );
+  const [appointmentTypes, setAppointmentTypes] = useState<string[]>([]);
   const [appointmentSpecialty, setAppointmentSpecialty] = useState<string>(
     note.appointment_specialty || '',
   );
+  const [appointmentSpecialties, setAppointmentSpecialties] = useState<
+    string[]
+  >([]);
   const [patientLocation, setPatientLocation] = useState<string>(
     note.patient_location || '',
   );
@@ -95,6 +100,16 @@ const EditDraftNote: React.FC<CreateNoteProps> = ({ note }) => {
   useEffect(() => {
     autoResizeTextarea(planRef);
   }, [plan]);
+
+  // On mount: get user settings to pass values to select components
+  useEffect(() => {
+    const getUserSettings = async () => {
+      const userSettings = await fetchUserSettings();
+      setAppointmentTypes(userSettings.appointment_types);
+      setAppointmentSpecialties(userSettings.appointment_specialties);
+    };
+    getUserSettings();
+  }, []);
 
   useEffect(() => {
     const fetchAudioUrl = async () => {
@@ -311,6 +326,7 @@ const EditDraftNote: React.FC<CreateNoteProps> = ({ note }) => {
               </label>
               <AppointmentTypeSelect
                 appointmentType={appointmentType}
+                appointmentTypes={appointmentTypes}
                 setAppointmentType={handleAppointmentTypeChange}
               />
             </div>
@@ -324,6 +340,7 @@ const EditDraftNote: React.FC<CreateNoteProps> = ({ note }) => {
               </label>
               <AppointmentSpecialtySelect
                 appointmentSpecialty={appointmentSpecialty}
+                appointmentSpecialties={appointmentSpecialties}
                 setAppointmentSpecialty={handleAppointmentSpecialtyChange}
               />
             </div>
@@ -533,7 +550,7 @@ const EditDraftNote: React.FC<CreateNoteProps> = ({ note }) => {
         {differentialDiagnosis && (
           <div
             tabIndex={0}
-            className="collapse-plus collapse mb-4 rounded-md  border"
+            className="collapse collapse-plus mb-4 rounded-md  border"
           >
             <div className="collapse-title text-lg font-medium text-gray-600">
               Differential Diagnosis

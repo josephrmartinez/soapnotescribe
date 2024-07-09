@@ -12,8 +12,8 @@ export async function POST(req, res) {
     const apptid = req.nextUrl.searchParams.get('apptid');
 
   const prediction = await req.json();
-  console.log("prediction", prediction)
-  console.log("replicate transcript:", prediction.output.text)
+  // console.log("prediction", prediction)
+  // console.log("replicate transcript:", prediction.output.text)
     const transcript = prediction.output.text
         
     getSOAPData(apptid, transcript)

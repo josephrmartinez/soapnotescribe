@@ -3,6 +3,8 @@
 import { unstable_noStore as noStore, revalidatePath  } from 'next/cache';
 import { Database } from '../database.types';
 import { createClient } from '@/utils/supabase/server'
+import { createClient as createClientJS } from "@supabase/supabase-js";
+
 import { Note, NoteWithPatient } from './definitions';
 import { redirect } from 'next/navigation';
 
@@ -330,12 +332,39 @@ export async function fetchUserSettings() {
       console.error('Error fetching user settings:', error);
       return
     }
+    
     return settings[0];
  } catch (error) {
     console.error('Supabase Error:', error);
     throw new Error('Failed to fetch user settings data.');
  }
 }
+
+export async function fetchUserSettingsWithSK(noteid:string) {
+  noStore();
+
+  let userId = (await fetchNoteById(noteid)).user_id
+
+  try {
+    const supabase = createClientJS(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_KEY!)
+    const { data: settings, error } = await supabase
+      .from('user_settings')
+      .select('*')
+    .eq('user_id', userId)
+
+    if (error) {
+      console.error('Error fetching user settings:', error);
+      return
+    }
+    
+    return settings[0];
+ } catch (error) {
+    console.error('Supabase Error:', error);
+    throw new Error('Failed to fetch user settings data.');
+ }
+}
+
+
 export async function updateUserSettings(payload: any, userId: string) {
   noStore()
   const supabase = createClient()

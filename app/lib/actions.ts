@@ -5,6 +5,9 @@ import OpenAI from "openai"
 import Anthropic from '@anthropic-ai/sdk';
 import { createClient as createClientJS } from "@supabase/supabase-js";
 import { ChatCompletionMessageParam } from "openai/resources/index.mjs";
+import { fetchUserSettings, fetchUserSettingsWithSK } from "./data";
+import { createClient } from '@/utils/supabase/server'
+
 
 function assertIsTextBlock(value: unknown): asserts value is Anthropic.TextBlock {
   if (typeof value === "object" && value && !value.hasOwnProperty("text")) throw new Error('Expected text block');
@@ -56,9 +59,12 @@ export async function getReplicateMonoTranscript(url: string, apptid: string) {
 
 
 export async function getSOAPData(noteid: string, transcript: string) {
-  const openai = new OpenAI({apiKey: process.env.OPENAI_API_KEY })
-  
   console.log("Running getSOAPData")
+  
+
+  const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+  
+  
 
   const systemContentString:string = `You are a helpful, highly-trained medical assistant. Carefully review the following TRANSCRIPT and generate a clinical SOAP note as a JSON object. The JSON object should conform to the following JSON Schema:
 
@@ -108,12 +114,12 @@ export async function getSOAPData(noteid: string, transcript: string) {
             },
             "appointment_type?": {
               "type": "string",
-              "enum": ["Telemedicine", "In Person"],
+              "enum": ["Telemedicine", "In Person" ],
               "description": "Type of appointment. Only return a value for this field if appointment type is clear."
             },
             "appointment_specialty?": {
               "type": "string",
-              "enum": ["Addiction Medicine", "Behavioral Health", "Primary Care", "Urgent Care", "Wound Care", "IV Treatment", "Metabolic", "HRT", "Aesthetics", "Other"],
+              "enum": ["Urgent Care", "Primary Care"],
               "description": "Specialty of the appointment. Only return a value for this field if appointment specialty is clear."
             },
             "patient_location?": {
@@ -126,6 +132,7 @@ export async function getSOAPData(noteid: string, transcript: string) {
         Your answer MUST begin and end with curly brackets. Do not include any leading backticks or other markers. ALL LISTS SHOULD BE UNORDERED. NO NUMBERED LISTS. Include as much specific information as possible from the transcript in the SOAP note. Be thorough! If you do not have the information required to provide a value in any of the fields, just return the JSON object WITHOUT those fields. Do not return a field with an empty string or an "unknown" value. For the differential_diagnosis field, analyze the entire transcript and return a differential diagnosis along with possible alternative treatment options. Your complete answer MUST begin and end with curly brackets.`
   const userContentString:string = `Give me a thorough SOAP note from the following transcript. Return your response as a JSON object. TRANSCRIPT: ${transcript}`
   
+  console.log("system content string:", systemContentString)
 
   try {
   // const completion = await openai.chat.completions.create({
