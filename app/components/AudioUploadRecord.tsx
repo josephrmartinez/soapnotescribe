@@ -203,8 +203,10 @@ const AudioUploadRecord: React.FC<AudioUploadRecordProps> = ({ patientId }) => {
   const handleAudioBlob = async (blob: Blob) => {
     if (!blob) return;
     try {
-      let fileName = 'recording-' + self.crypto.randomUUID();
-      const file = new File([blob], fileName);
+      const mimeType = blob.type;
+      const extension = mimeType.split('/')[1];
+      const fileName = `recording-${self.crypto.randomUUID()}.${extension}`;
+      const file = new File([blob], fileName, { type: mimeType });
       await uploadFile('audiofiles', fileName, file);
     } catch (error) {
       console.error('Error uploading file:', error);
@@ -215,7 +217,8 @@ const AudioUploadRecord: React.FC<AudioUploadRecordProps> = ({ patientId }) => {
   async function handleAudioFile(file: File | null) {
     if (!file) return;
     try {
-      let fileName = 'recording-' + self.crypto.randomUUID();
+      const extension = file.name.split('.').pop(); // Get the file extension
+      const fileName = `recording-${self.crypto.randomUUID()}.${extension}`;
       await uploadFile('audiofiles', fileName, file);
     } catch (error) {
       console.error('Error uploading file:', error);

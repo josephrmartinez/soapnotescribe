@@ -5,8 +5,7 @@ import OpenAI from "openai"
 import Anthropic from '@anthropic-ai/sdk';
 import { createClient as createClientJS } from "@supabase/supabase-js";
 import { ChatCompletionMessageParam } from "openai/resources/index.mjs";
-import { fetchUserSettings, fetchUserSettingsWithSK } from "./data";
-import { createClient } from '@/utils/supabase/server'
+
 
 
 function assertIsTextBlock(value: unknown): asserts value is Anthropic.TextBlock {
