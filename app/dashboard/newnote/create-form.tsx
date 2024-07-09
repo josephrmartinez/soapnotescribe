@@ -79,7 +79,6 @@ const CreateNote = () => {
   useEffect(() => {
     const getUserSettings = async () => {
       const userSettings = await fetchUserSettings();
-      console.log('user settings', userSettings);
       setAppointmentTypes(userSettings.appointment_types);
       setAppointmentType(userSettings.appointment_types_default);
       setAppointmentSpecialties(userSettings.appointment_specialties);
@@ -117,6 +116,7 @@ const CreateNote = () => {
       if (noteRef) {
         try {
           const note = await fetchNoteById(noteRef);
+          console.log('note from noteRef:', note);
           if (note) {
             {
               note.patient_location &&
@@ -133,7 +133,13 @@ const CreateNote = () => {
               note.appointment_specialty &&
                 setAppointmentSpecialty(note.appointment_specialty);
             }
-            setChiefComplaint(note.chief_complaint);
+            {
+              note.chief_complaint &&
+                setSelectedTemplate({
+                  value: note.chief_complaint,
+                  label: note.chief_complaint,
+                });
+            }
             setSubjective(note.soap_subjective);
             setObjective(note.soap_objective);
             setAssessment(note.soap_assessment);
@@ -219,10 +225,10 @@ const CreateNote = () => {
 
   const handleTemplateSelect = (
     selectedTemplate: TemplateOption,
-    actionMeta: ActionMeta<TemplateOption>,
+    actionMeta?: ActionMeta<TemplateOption>,
   ) => {
-    setChiefComplaint(selectedTemplate.label);
-
+    // setChiefComplaint(selectedTemplate.label);
+    console.log(selectedTemplate);
     if (typeof selectedTemplate.value === 'object') {
       setSubjective(selectedTemplate.value.soap_subjective);
       setObjective(selectedTemplate.value.soap_objective);
