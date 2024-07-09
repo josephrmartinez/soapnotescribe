@@ -319,6 +319,7 @@ export async function fetchPatientProfileById(id: string) {
 }
 
 export async function fetchUserSettings() {
+  noStore();
   try {
     const supabase = createClient()
     const { data: settings, error } = await supabase
@@ -336,7 +337,7 @@ export async function fetchUserSettings() {
  }
 }
 export async function updateUserSettings(payload: any, userId: string) {
-  
+  noStore()
   const supabase = createClient()
   const { error }  = await supabase
       .from('user_settings')

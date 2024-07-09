@@ -9,15 +9,7 @@ export const metadata: Metadata = {
 
 export default async function Page() {
   const userSettings = await fetchUserSettings();
-
-  // userSettings =
-  //   {
-  //   appointment_types: [ 'Telemedicine', 'In Person' ],
-  //   appointment_types_default: 'Telemedicine',
-  //   appointment_specialties: [ 'Primary Care', 'Urgent Care' ],
-  //   appointment_specialties_default: 'Primary Care',
-  //   user_id: '6e6d2d8f-2200-4ae3-8335-f88d72c23eb9'
-  // }
+  console.log('userSettings:', userSettings);
 
   return (
     <div className="w-full">

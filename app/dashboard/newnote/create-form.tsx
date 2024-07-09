@@ -9,7 +9,11 @@ import AppointmentTypeSelect from '@/app/ui/notes/AppointmentTypeSelect';
 import AppointmentSpecialtySelect from '@/app/ui/notes/AppointmentSpecialtySelect';
 import { PencilSquareIcon, PlusIcon } from '@heroicons/react/24/outline';
 import { useSearchParams } from 'next/navigation';
-import { fetchPatientById } from '@/app/lib/data';
+import {
+  fetchPatientById,
+  fetchUserSession,
+  fetchUserSettings,
+} from '@/app/lib/data';
 import CreateableSelectChiefComplaint from './CreateableSelectChiefComplaint';
 import { TemplateOption, PatientSelectOption } from '@/app/lib/definitions';
 import { SubmitFormButton } from '@/app/ui/Buttons';
@@ -38,7 +42,13 @@ const CreateNote = () => {
   const [time, setTime] = useState<string>('');
   const [consent, setConsent] = useState<string | null>(null);
   const [appointmentType, setAppointmentType] = useState<string>('');
+  const [appointmentTypes, setAppointmentTypes] = useState<string[]>([]);
+
   const [appointmentSpecialty, setAppointmentSpecialty] = useState<string>('');
+  const [appointmentSpecialties, setAppointmentSpecialties] = useState<
+    string[]
+  >([]);
+
   const [patientLocation, setPatientLocation] = useState<string>('');
   const [subjective, setSubjective] = useState<string | null>(null);
   const [objective, setObjective] = useState<string | null>(null);
@@ -64,6 +74,19 @@ const CreateNote = () => {
   const patientIdFromUrl = searchParams.get('patient');
 
   const noteRef = searchParams.get('noteRef');
+
+  // On mount: get user settings to pass values to select components
+  useEffect(() => {
+    const getUserSettings = async () => {
+      const userSettings = await fetchUserSettings();
+      console.log('user settings', userSettings);
+      setAppointmentTypes(userSettings.appointment_types);
+      setAppointmentType(userSettings.appointment_types_default);
+      setAppointmentSpecialties(userSettings.appointment_specialties);
+      setAppointmentSpecialty(userSettings.appointment_specialties_default);
+    };
+    getUserSettings();
+  }, []);
 
   useEffect(() => {
     const fetchAndSetPatient = async () => {
@@ -403,6 +426,7 @@ const CreateNote = () => {
                 Appointment Type
               </label>
               <AppointmentTypeSelect
+                appointmentTypes={appointmentTypes}
                 appointmentType={appointmentType}
                 setAppointmentType={handleAppointmentTypeChange}
               />
@@ -418,6 +442,7 @@ const CreateNote = () => {
               </label>
               <AppointmentSpecialtySelect
                 appointmentSpecialty={appointmentSpecialty}
+                appointmentSpecialties={appointmentSpecialties}
                 setAppointmentSpecialty={handleAppointmentSpecialtyChange}
               />
             </div>

@@ -28,6 +28,8 @@ const ListGenerator: React.FC<ListGeneratorProps> = ({
       [`${fieldName}_default`]: defaultOption,
     };
 
+    console.log('calling useEffect with payload:', payload);
+
     updateUserSettings(payload, userId);
   }, [items, defaultOption]);
 
@@ -102,9 +104,6 @@ const ListGenerator: React.FC<ListGeneratorProps> = ({
           onChange={(e) => setInputValue(e.target.value)}
           onKeyDown={(e) => handleInputKeyDown(e)}
         ></input>
-        {/* <button className="mx-4 flex w-4" onClick={handleAddItem}>
-          add
-        </button> */}
       </div>
     </div>
   );

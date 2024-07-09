@@ -77,9 +77,9 @@ export async function getSOAPData(noteid: string, transcript: string) {
               "pattern": "^\\d{2}:\\d{2}$",
               "description": "Time of the appointment in hh:mm format"
             },
-            "allergies": {
+            "allergies?": {
               "type": "string",
-              "description": "Drug allergies, 'NKDA' if none"
+              "description": "Drug allergies. Only return a value for this field if drug allergies are mentioned."
             },
             "chief_complaint": {
               "type": "string",
@@ -106,24 +106,24 @@ export async function getSOAPData(noteid: string, transcript: string) {
               "type": "string",
               "description": "Differential diagnosis. Narrative format or UNORDERED list."
             },
-            "appointment_type": {
+            "appointment_type?": {
               "type": "string",
               "enum": ["Telemedicine", "In Person"],
-              "description": "Type of appointment: 'Telemedicine' or 'In Person'"
+              "description": "Type of appointment. Only return a value for this field if appointment type is clear."
             },
-            "appointment_specialty": {
+            "appointment_specialty?": {
               "type": "string",
               "enum": ["Addiction Medicine", "Behavioral Health", "Primary Care", "Urgent Care", "Wound Care", "IV Treatment", "Metabolic", "HRT", "Aesthetics", "Other"],
-              "description": "Specialty of the appointment"
+              "description": "Specialty of the appointment. Only return a value for this field if appointment specialty is clear."
             },
-            "patient_location": {
+            "patient_location?": {
               "type": "string",
-              "description": "Location of the patient (State/Province, e.g., 'Arizona')"
+              "description": "Location of the patient (State/Province, e.g., 'Arizona'). Only return a value for this field if the patient location is clearly mentioned."
             }
           }
         }
 
-        Your answer MUST begin and end with curly brackets. Do not include any leading backticks or other markers. ALL LISTS SHOULD BE UNORDERED. NO NUMBERED LISTS. Include as much specific information as possible from the transcript in the SOAP note. Be thorough! If you do not have the information required to provide a value in any of the fields, just return the JSON object WITHOUT those fields. For the differential_diagnosis field, analyze the entire transcript and return a differential diagnosis along with possible alternative treatment options. Your complete answer MUST begin and end with curly brackets.`
+        Your answer MUST begin and end with curly brackets. Do not include any leading backticks or other markers. ALL LISTS SHOULD BE UNORDERED. NO NUMBERED LISTS. Include as much specific information as possible from the transcript in the SOAP note. Be thorough! If you do not have the information required to provide a value in any of the fields, just return the JSON object WITHOUT those fields. Do not return a field with an empty string or an "unknown" value. For the differential_diagnosis field, analyze the entire transcript and return a differential diagnosis along with possible alternative treatment options. Your complete answer MUST begin and end with curly brackets.`
   const userContentString:string = `Give me a thorough SOAP note from the following transcript. Return your response as a JSON object. TRANSCRIPT: ${transcript}`
   
 

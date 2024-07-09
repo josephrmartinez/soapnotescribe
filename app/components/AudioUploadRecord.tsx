@@ -9,6 +9,7 @@ import { getReplicateMonoTranscript } from '@/app/lib/actions';
 import { revalidatePath } from 'next/cache';
 import clsx from 'clsx';
 import { AMRPlayer, Player } from 'web-amr';
+import { fetchPatientProfileById, fetchUserSettings } from '../lib/data';
 
 interface AudioUploadRecordProps {
   patientId: string;
@@ -279,7 +280,17 @@ const AudioUploadRecord: React.FC<AudioUploadRecordProps> = ({ patientId }) => {
   }
 
   async function createNote(audio_storage_url: string, temp_audio_url: string) {
+    // fetch default appointment type
+    // fetch default appointment specialties
+    // fetch default patient location (patient state)
+    // fetch default patient (drug) allergies (send to AI model first?)
+
+    const patientProfile = await fetchPatientProfileById(patientId);
+    const userSettings = await fetchUserSettings();
+
     console.log('calling createNote');
+    console.log(patientProfile, userSettings);
+
     try {
       const { error, data } = await supabase
         .from('note')
@@ -288,6 +299,10 @@ const AudioUploadRecord: React.FC<AudioUploadRecordProps> = ({ patientId }) => {
           audio_storage_url,
           temp_audio_url,
           patient_id: patientId,
+          allergies: patientProfile.allergies,
+          patient_location: patientProfile.state,
+          appointment_type: userSettings.appointment_type_default,
+          appointment_specialty: userSettings.appointment_specialties_default,
         })
         .select();
 
