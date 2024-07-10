@@ -32,6 +32,7 @@ export async function getReplicateMonoTranscript(url: string, apptid: string) {
       webhookUrl = process.env.DEV_REPLICATE_WEBHOOK;
   }
   console.log("webhook url:", webhookUrl)
+  console.log("audio url passed to replicate:", url)
 
   try {
     // Prediction may take longer than 30 seconds

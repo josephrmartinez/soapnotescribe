@@ -291,8 +291,8 @@ const AudioUploadRecord: React.FC<AudioUploadRecordProps> = ({ patientId }) => {
     const patientProfile = await fetchPatientProfileById(patientId);
     const userSettings = await fetchUserSettings();
 
-    console.log('calling createNote');
-    console.log(patientProfile, userSettings);
+    // console.log('calling createNote');
+    // console.log(patientProfile, userSettings);
 
     try {
       const { error, data } = await supabase
