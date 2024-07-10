@@ -4,8 +4,6 @@ import Replicate from "replicate";
 import OpenAI from "openai"
 import Anthropic from '@anthropic-ai/sdk';
 import { createClient as createClientJS } from "@supabase/supabase-js";
-import { fetchUserSettings, } from "./data";
-import { getUserSettingsFromNoteId } from "./data";
 
 
 function assertIsTextBlock(value: unknown): asserts value is Anthropic.TextBlock {
@@ -60,9 +58,12 @@ export async function getReplicateMonoTranscript(url: string, apptid: string) {
 
 export async function getSOAPData(noteid: string, transcript: string, transcriptionTime: string) {
 
-  const userSettings = await getUserSettingsFromNoteId(noteid)
-  const appointmentTypes = JSON.stringify(userSettings.appointment_types);
-  const appointmentSpecialties = JSON.stringify(userSettings.appointment_specialties);
+  // const userSettings = await getUserSettingsFromNoteId(noteid)
+  // const appointmentTypes = JSON.stringify(userSettings.appointment_types);
+  // const appointmentSpecialties = JSON.stringify(userSettings.appointment_specialties);
+
+  const appointmentTypes = "['In Person', 'Telemedicine']"
+  const appointmentSpecialties = "['Urgent Care', 'Primary Care']"
 
 
   const systemContentString:string = `You are a helpful, highly-trained medical assistant. Carefully review the following TRANSCRIPT and generate a clinical SOAP note as a JSON object. The JSON object should conform to the following JSON Schema:
