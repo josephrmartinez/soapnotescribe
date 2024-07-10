@@ -127,10 +127,10 @@ export async function getSOAPData(noteid: string, transcript: string, transcript
           }
         }
 
-        Your answer MUST begin and end with curly brackets. Do not include any leading backticks or other markers. ALL LISTS SHOULD BE UNORDERED. NO NUMBERED LISTS. Include as much specific information as possible from the transcript in the SOAP note. Be thorough! If you do not have the information required to provide a value in any of the fields, just return the JSON object WITHOUT those fields. Do not return a field with an empty string or an "unknown" value. For the differential_diagnosis field, analyze the entire transcript and return a differential diagnosis along with possible alternative treatment options. Your complete answer MUST begin and end with curly brackets.`
+        Your answer MUST begin and end with curly brackets. Do not include any leading backticks or other markers. ALL LISTS SHOULD BE UNORDERED AND STYLED WITH A SIMPLE DASH. NO NUMBERED LISTS. Include as much specific information as possible from the transcript in the SOAP note. Be thorough! If you do not have the information required to provide a value in any of the fields, just return the JSON object WITHOUT those fields. Do not return a field with an empty string or an "unknown" value. For the differential_diagnosis field, analyze the entire transcript and return a differential diagnosis along with possible alternative treatment options. Your complete answer MUST begin and end with curly brackets.`
   const userContentString:string = `Give me a thorough SOAP note from the following transcript. Return your response as a JSON object. TRANSCRIPT: ${transcript}`
   
-  console.log("system content string:", systemContentString)
+  // console.log("system content string:", systemContentString)
 
   try {
   // const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
@@ -215,6 +215,7 @@ const transcriptionCost = Number((0.000725 * Number(transcriptionTime)).toFixed(
 
   try {
     // Assumes 100% success rate returning object in correct format
+    console.log("completion obj to parse:", completion)
     const completionObject = JSON.parse(completion);
 
     const { data, error, status } = await supabase

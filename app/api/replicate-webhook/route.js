@@ -12,6 +12,7 @@ export async function POST(req, res) {
     const apptid = req.nextUrl.searchParams.get('apptid');
 
   const prediction = await req.json();
+  console.log("replicate prediction:", prediction)
   const transcript = prediction.output.text;
   const transcriptionTime = prediction.metrics.predict_time;
   
