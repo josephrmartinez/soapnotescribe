@@ -341,10 +341,54 @@ export async function fetchUserSettings() {
 }
 
 
+  // const userSettings = getUserSettingsFromNoteId(noteId)
+
+export async function getUserSettingsFromNoteId(noteId:string) {
+  noStore();
+  try {
+      // Using service key:
+      const supabase = createClientJS(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_KEY!)
+    const { data: userIdData, error: userIdError } = await supabase
+      .from('note')
+      .select('user_id')
+      .eq('id', noteId)
+      .single();
+
+    if (userIdError) {
+      console.error('Error fetching user ID:', userIdError);
+      throw userIdError;
+    }
+
+    const userId = userIdData?.user_id;
+    if (!userId) {
+      console.error('User ID not found for note ID:', noteId);
+      return null;
+    }
+    
+    const { data: settingsData, error: settingsError } = await supabase
+      .from('user_settings')
+      .select('*')
+      .eq('user_id', userId)
+      .single();
+    
+    if (settingsError) {
+      console.error('Error fetching user settings:', settingsError);
+      throw settingsError;
+    }
+
+    
+    return settingsData;
+
+ } catch (error) {
+    console.error('Supabase Error:', error);
+    throw new Error('Failed to fetch user settings data.');
+ }
+}
 
 
 export async function updateUserSettings(payload: any, userId: string) {
-  noStore()
+  noStore();
+  console.log("calling updateUserSettings with payload:", payload);
   const supabase = createClient()
   const { error }  = await supabase
       .from('user_settings')

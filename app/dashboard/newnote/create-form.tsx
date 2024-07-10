@@ -116,7 +116,7 @@ const CreateNote = () => {
       if (noteRef) {
         try {
           const note = await fetchNoteById(noteRef);
-          console.log('note from noteRef:', note);
+          // console.log('note from noteRef:', note);
           if (note) {
             {
               note.patient_location &&

@@ -38,20 +38,3 @@ export default async function Page() {
     </div>
   );
 }
-
-// <div>Appointment Types:</div>
-//           <li>Telemedicine</li>
-//           <li>In Person</li>
-//           <div>
-//             <div>Appointment Specialties:</div>
-//             <li value="Addiction Medicine">Addiction Medicine</li>
-//             <li value="Behavioral Health">Behavioral Health</li>
-//             <li value="Primary Care">Primary Care</li>
-//             <li value="Urgent Care">Urgent Care</li>
-//             <li value="Wound Care">Wound Care</li>
-//             <li value="IV Treatment">IV Treatment</li>
-//             <li value="Metabolic">Metabolic</li>
-//             <li value="HRT">HRT</li>
-//             <li value="Aesthetics">Aesthetics</li>
-//             <li value="Other">Other</li>
-//             <input type="text" placeholder="add specialty"></input>

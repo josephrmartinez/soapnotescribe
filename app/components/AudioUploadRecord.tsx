@@ -256,7 +256,7 @@ const AudioUploadRecord: React.FC<AudioUploadRecordProps> = ({ patientId }) => {
           setUploadComplete(true);
           try {
             const signedUrl = await getDownloadUrl(fileName);
-            console.log('signedUrl:', signedUrl);
+            // console.log('signedUrl:', signedUrl);
 
             // Check if signedUrl is defined before setting the state
             if (signedUrl !== undefined) {

@@ -4,8 +4,8 @@ import Replicate from "replicate";
 import OpenAI from "openai"
 import Anthropic from '@anthropic-ai/sdk';
 import { createClient as createClientJS } from "@supabase/supabase-js";
-import { ChatCompletionMessageParam } from "openai/resources/index.mjs";
-
+import { fetchUserSettings, } from "./data";
+import { getUserSettingsFromNoteId } from "./data";
 
 
 function assertIsTextBlock(value: unknown): asserts value is Anthropic.TextBlock {
@@ -57,13 +57,12 @@ export async function getReplicateMonoTranscript(url: string, apptid: string) {
 }
 
 
-export async function getSOAPData(noteid: string, transcript: string) {
-  console.log("Running getSOAPData")
-  
+export async function getSOAPData(noteid: string, transcript: string, transcriptionTime: string) {
 
-  const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
-  
-  
+  const userSettings = await getUserSettingsFromNoteId(noteid)
+  const appointmentTypes = JSON.stringify(userSettings.appointment_types);
+  const appointmentSpecialties = JSON.stringify(userSettings.appointment_specialties);
+
 
   const systemContentString:string = `You are a helpful, highly-trained medical assistant. Carefully review the following TRANSCRIPT and generate a clinical SOAP note as a JSON object. The JSON object should conform to the following JSON Schema:
 
@@ -113,12 +112,12 @@ export async function getSOAPData(noteid: string, transcript: string) {
             },
             "appointment_type?": {
               "type": "string",
-              "enum": ["Telemedicine", "In Person" ],
+              "enum": ${appointmentTypes},
               "description": "Type of appointment. Only return a value for this field if appointment type is clear."
             },
             "appointment_specialty?": {
               "type": "string",
-              "enum": ["Urgent Care", "Primary Care"],
+              "enum": ${appointmentSpecialties},
               "description": "Specialty of the appointment. Only return a value for this field if appointment specialty is clear."
             },
             "patient_location?": {
@@ -134,6 +133,8 @@ export async function getSOAPData(noteid: string, transcript: string) {
   console.log("system content string:", systemContentString)
 
   try {
+  // const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+
   // const completion = await openai.chat.completions.create({
   //   messages: [
   //     {
@@ -171,19 +172,19 @@ export async function getSOAPData(noteid: string, transcript: string) {
 
 
     assertIsTextBlock(anthropicResponse.content[0]);
-    console.log("anthropic response:", anthropicResponse.content[0].text)
+    // console.log("anthropic response:", anthropicResponse.content[0].text)
 
     const anthropicCompletionString = anthropicResponse.content[0].text
 
 
     const anthropicInputTokens = anthropicResponse.usage.input_tokens
     const anthropicOutputTokens = anthropicResponse.usage.output_tokens
-    const anthropicCost = ((anthropicInputTokens / 1000 * 0.003) + (anthropicOutputTokens / 1000 * 0.015)).toFixed(3) //claude-3-5-sonnet-20240620
+    const analysisCost:string = ((anthropicInputTokens / 1000 * 0.003) + (anthropicOutputTokens / 1000 * 0.015)).toFixed(3) //claude-3-5-sonnet-20240620
 
-    console.log("anthropic cost:", anthropicCost)
+    // console.log("anthropic cost:", anthropicCost)
 
-      updateNoteWithSOAPData(noteid, transcript, anthropicCompletionString);
-
+      updateNoteWithSOAPData(noteid, transcript, transcriptionTime, anthropicCompletionString, analysisCost);
+    
   // updateNoteWithSOAPData(noteid, transcript, completionString);
 
   } catch (error){
@@ -193,14 +194,24 @@ export async function getSOAPData(noteid: string, transcript: string) {
 }
 
 
-// Update the appointment table row with the summary and feedback
-async function updateNoteWithSOAPData(noteid: string, transcript: string, completion: string){
+// Update the appointment table row with the structured data
+async function updateNoteWithSOAPData(noteid: string, transcript: string, transcriptionTime:string, completion: string, analysisCost:string){
   console.log("Running updateNoteWithSOAPData");
+
+
+  const formattedAnalysisCost = parseFloat(analysisCost);
+
+  // Replicate pricing for model running on Nvidia A40 (Large) GPU hardware, which costs $0.000725 per second.
+const transcriptionCost = Number((0.000725 * Number(transcriptionTime)).toFixed(6));
+   
+
+  console.log("transcriptionCost:", transcriptionCost)
+  console.log("formattedAnalysisCost", formattedAnalysisCost)
+  console.log("transcriptionTime", transcriptionTime)
 
   // Using service key to update appointment row
   const supabase = createClientJS(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_KEY!)
   
-  // const supabase = createClient()
 
   try {
     // Assumes 100% success rate returning object in correct format
@@ -211,6 +222,9 @@ async function updateNoteWithSOAPData(noteid: string, transcript: string, comple
       .update({
         status: "awaiting review",
         audio_transcript: transcript,
+        transcription_time: transcriptionTime,
+        transcription_cost: transcriptionCost,
+        analysis_cost: formattedAnalysisCost,
         ...completionObject
       })
       .eq('id', noteid)
@@ -220,8 +234,8 @@ if (error) {
     }
 
     if (data) {
-      console.log('Note updated successfully.');
-      console.log('Updated note data status:', status);
+      console.log('Note updated successfully.', data);
+      // console.log('Updated note data status:', status);
     } else {
       throw new Error('No data returned from the update operation.');
     }

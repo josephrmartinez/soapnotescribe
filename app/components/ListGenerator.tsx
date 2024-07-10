@@ -28,8 +28,6 @@ const ListGenerator: React.FC<ListGeneratorProps> = ({
       [`${fieldName}_default`]: defaultOption,
     };
 
-    console.log('calling useEffect with payload:', payload);
-
     updateUserSettings(payload, userId);
   }, [items, defaultOption]);
 
@@ -73,7 +71,7 @@ const ListGenerator: React.FC<ListGeneratorProps> = ({
       <ul className="ml-4 w-96">
         {items.map((item, index) => (
           <li key={index} className="my-2 grid grid-cols-3 gap-6">
-            <div className="font-semibold">{item}</div>
+            <div className="font-semibold text-gray-700">{item}</div>
             <div>
               {item == defaultOption ? (
                 <div className="font-semibold text-teal-800">default</div>
