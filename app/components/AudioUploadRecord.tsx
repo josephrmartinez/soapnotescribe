@@ -177,7 +177,7 @@ const AudioUploadRecord: React.FC<AudioUploadRecordProps> = ({ patientId }) => {
   async function getDownloadUrl(fileName: string) {
     const { data, error } = await supabase.storage
       .from('audiofiles')
-      .createSignedUrl(`${userIDRef.current}/${fileName}`, 600);
+      .createSignedUrl(`${userIDRef.current}/${fileName}`, 1200);
     return data?.signedUrl;
   }
 
@@ -256,7 +256,7 @@ const AudioUploadRecord: React.FC<AudioUploadRecordProps> = ({ patientId }) => {
           setUploadComplete(true);
           try {
             const signedUrl = await getDownloadUrl(fileName);
-            // console.log('signedUrl:', signedUrl);
+            console.log('signedUrl:', signedUrl);
 
             // Check if signedUrl is defined before setting the state
             if (signedUrl !== undefined) {
