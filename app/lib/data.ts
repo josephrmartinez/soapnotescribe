@@ -245,6 +245,30 @@ try {
 }
 
 
+export async function fetchPatientsWithQuery(query:string) {
+  noStore();
+try {
+    const supabase = createClient()
+    const { data: patients, error } = await supabase
+      .from('patient')
+      .select(
+        'id, first_name, middle_name, last_name'
+      )
+      .or(`first_name.ilike.%${query}%,middle_name.ilike.%${query}%,last_name.ilike.%${query}%`)
+      .order('last_name', { ascending: true })
+
+    if (error) {
+      console.error('Error fetching patients:', error);
+      return
+    }
+  return patients
+ } catch (error) {
+    console.error('Supabase Error:', error);
+    throw new Error('Failed to fetch paients data.');
+ }
+}
+
+
 export async function fetchPatientCount() {
 try {
     const supabase = createClient()
