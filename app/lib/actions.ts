@@ -56,7 +56,7 @@ export async function getSOAPData(noteid: string, transcript: string, transcript
   // const userSettings = await getUserSettingsFromNoteId(noteid)
   // const appointmentTypes = JSON.stringify(userSettings.appointment_types);
   // const appointmentSpecialties = JSON.stringify(userSettings.appointment_specialties);
-
+  console.log("calling getSOAPData:", transcript)
   const appointmentTypes = "['In Person', 'Telemedicine']"
   const appointmentSpecialties = "['Urgent Care', 'Primary Care']"
 
