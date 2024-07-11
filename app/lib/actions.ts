@@ -58,7 +58,6 @@ export async function getSOAPData(noteid: string, transcript: string, transcript
   const appointmentTypes = "['In Person', 'Telemedicine']"
   const appointmentSpecialties = "['Urgent Care', 'Primary Care']"
 
-
   const systemContentString:string = `You are a helpful, highly-trained medical assistant. Carefully review the following TRANSCRIPT and generate a clinical SOAP note as a JSON object. The JSON object should conform to the following JSON Schema:
 
         {
@@ -128,7 +127,91 @@ export async function getSOAPData(noteid: string, transcript: string, transcript
   // console.log("system content string:", systemContentString)
 
   try {
-  // const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+    const anthropicResponse = await anthropic.messages.create({
+      model: "claude-3-5-sonnet-20240620",
+      max_tokens: 4096,
+      system: systemContentString,
+      messages: [
+        {
+          "role": "user",
+          "content": userContentString
+        }
+      ]
+    })
+
+    console.log("anthropic response:", anthropicResponse)
+
+
+    assertIsTextBlock(anthropicResponse.content[0]);
+
+    const anthropicCompletionString = anthropicResponse.content[0].text
+
+
+    const anthropicInputTokens = anthropicResponse.usage.input_tokens
+    const anthropicOutputTokens = anthropicResponse.usage.output_tokens
+    const analysisCost:string = ((anthropicInputTokens / 1000 * 0.003) + (anthropicOutputTokens / 1000 * 0.015)).toFixed(3) //claude-3-5-sonnet-20240620
+
+    console.log("anthropic cost:", analysisCost)
+
+     updateNoteWithSOAPData(noteid, transcript, transcriptionTime, anthropicCompletionString, analysisCost);
+    
+  } catch (error){
+    console.log("Error getting completion data:", error)
+  }
+  
+}
+
+
+// Update the appointment table row with the structured data
+async function updateNoteWithSOAPData(noteid: string, transcript: string, transcriptionTime:string, completion: string, analysisCost:string){
+  console.log("Running updateNoteWithSOAPData");
+
+  const formattedAnalysisCost = parseFloat(analysisCost);
+  // Replicate pricing for model running on Nvidia A40 (Large) GPU hardware, which costs $0.000725 per second.
+  const transcriptionCost = Number((0.000725 * Number(transcriptionTime)).toFixed(6));
+   
+  
+  const supabase = createClientJS(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_KEY!)
+
+  try {
+    // Assumes 100% success rate returning object in correct format
+    const completionObject = JSON.parse(completion);
+
+    console.log("Attempting to update note using noteid.")
+    const { data, error, status } = await supabase
+      .from('note')
+      .update({
+        status: "awaiting review",
+        audio_transcript: transcript,
+        transcription_time: transcriptionTime,
+        transcription_cost: transcriptionCost,
+        analysis_cost: formattedAnalysisCost,
+        ...completionObject
+      })
+      .eq('id', noteid)
+      .select();
+    
+    if (error) {
+      console.log("Error updating Supabase table:", error)
+      // throw new Error(`Error updating note in Supabase: ${error.message}`);
+    }
+    
+    if (!data || !Array.isArray(data)) {
+      console.error('Update operation did not affect any rows or returned no data.');
+      return;
+    }
+
+    console.log('Note updated successfully!', data);
+  } catch (error) {
+    console.error('Error updating note:', error);
+    throw new Error(error)
+  }
+}
+
+
+
+
+// const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
 
   // const completion = await openai.chat.completions.create({
   //   messages: [
@@ -151,92 +234,3 @@ export async function getSOAPData(noteid: string, transcript: string, transcript
 
   //   console.log("openai completionString", completionString);
   //   console.log("openai cost:", openAICost);
-
-
-    const anthropicResponse = await anthropic.messages.create({
-      model: "claude-3-5-sonnet-20240620",
-      max_tokens: 4096,
-      system: systemContentString,
-      messages: [
-        {
-          "role": "user",
-          "content": userContentString
-        }
-      ]
-    })
-
-
-    assertIsTextBlock(anthropicResponse.content[0]);
-    // console.log("anthropic response:", anthropicResponse.content[0].text)
-
-    const anthropicCompletionString = anthropicResponse.content[0].text
-
-
-    const anthropicInputTokens = anthropicResponse.usage.input_tokens
-    const anthropicOutputTokens = anthropicResponse.usage.output_tokens
-    const analysisCost:string = ((anthropicInputTokens / 1000 * 0.003) + (anthropicOutputTokens / 1000 * 0.015)).toFixed(3) //claude-3-5-sonnet-20240620
-
-    // console.log("anthropic cost:", anthropicCost)
-
-     updateNoteWithSOAPData(noteid, transcript, transcriptionTime, anthropicCompletionString, analysisCost);
-    
-  // updateNoteWithSOAPData(noteid, transcript, completionString);
-
-  } catch (error){
-    console.log("Error getting completion data:", error)
-  }
-  
-}
-
-
-// Update the appointment table row with the structured data
-async function updateNoteWithSOAPData(noteid: string, transcript: string, transcriptionTime:string, completion: string, analysisCost:string){
-  console.log("Running updateNoteWithSOAPData");
-
-  const formattedAnalysisCost = parseFloat(analysisCost);
-  // Replicate pricing for model running on Nvidia A40 (Large) GPU hardware, which costs $0.000725 per second.
-  const transcriptionCost = Number((0.000725 * Number(transcriptionTime)).toFixed(6));
-   
-  // console.log("transcriptionCost:", transcriptionCost)
-  // console.log("formattedAnalysisCost", formattedAnalysisCost)
-  // console.log("transcriptionTime", transcriptionTime)  
-  
-  const supabase = createClientJS(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_KEY!)
-
-  try {
-    // Assumes 100% success rate returning object in correct format
-    const completionObject = JSON.parse(completion);
-
-    console.log("Attempting to update note using noteid.")
-    const { data, error, status } = await supabase
-      .from('note')
-      .update({
-        status: "awaiting review",
-        audio_transcript: transcript,
-        transcription_time: transcriptionTime,
-        transcription_cost: transcriptionCost,
-        analysis_cost: formattedAnalysisCost,
-        ...completionObject
-      })
-      .eq('id', noteid)
-      // .select();
-    
-    if (error) {
-      console.log("Error updating Supabase table:", error)
-      // throw new Error(`Error updating note in Supabase: ${error.message}`);
-    }
-    
-    if (!data || !Array.isArray(data)) {
-      console.error('Update operation did not affect any rows or returned no data.');
-      return;
-    }
-
-    console.log('Note updated successfully!');
-  } catch (error) {
-    console.error('Error updating note:', error);
-    throw new Error(error)
-  }
-}
-
-
-
