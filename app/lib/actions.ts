@@ -199,7 +199,7 @@ async function updateNoteWithSOAPData(noteid: string, transcript: string, transc
   const formattedAnalysisCost = parseFloat(analysisCost);
 
   // Replicate pricing for model running on Nvidia A40 (Large) GPU hardware, which costs $0.000725 per second.
-const transcriptionCost = Number((0.000725 * Number(transcriptionTime)).toFixed(6));
+  const transcriptionCost = Number((0.000725 * Number(transcriptionTime)).toFixed(6));
    
 
   console.log("transcriptionCost:", transcriptionCost)
@@ -230,11 +230,12 @@ const transcriptionCost = Number((0.000725 * Number(transcriptionTime)).toFixed(
     console.log("Supabase resp", data, error, status)
     
     if (error) {
-      throw new Error(`Error updating note in Supabase: ${error.message}`);
+      console.log("Error updating Supabase table:", error)
+      // throw new Error(`Error updating note in Supabase: ${error.message}`);
     }
 
     if (data) {
-      console.log('Note updated successfully.', data);
+      console.log('Note updated successfully!');
       // console.log('Updated note data status:', status);
     } else {
       throw new Error('No data returned from the update operation.');
