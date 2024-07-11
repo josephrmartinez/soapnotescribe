@@ -27,5 +27,5 @@ export async function POST(req, res) {
     getSOAPData(apptid, transcript, transcriptionTime)
 
     
-    return NextResponse.json({ message: "POST" }, { status: 200 });
+    return NextResponse.json({ message: "POST success!" }, { status: 200 });
   }
