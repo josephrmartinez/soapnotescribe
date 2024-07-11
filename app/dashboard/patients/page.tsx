@@ -7,6 +7,11 @@ import { Suspense } from 'react';
 import { Metadata } from 'next';
 import PatientsTable from '@/app/ui/patients/table';
 import { PlusIcon } from '@heroicons/react/24/outline';
+import Pagination from '@/app/ui/notes/pagination';
+import {
+  fetchPatientsWithQuery,
+  countPatientPagesWithQuery,
+} from '@/app/lib/data';
 
 export const metadata: Metadata = {
   title: 'SOAP Notes',
@@ -17,9 +22,19 @@ export default async function Page({
 }: {
   searchParams?: {
     query?: string;
+    page?: string;
   };
 }) {
   const query = searchParams?.query || '';
+  const currentPage = Number(searchParams?.page) || 1;
+  const totalPages = await countPatientPagesWithQuery(query);
+  const patients = (await fetchPatientsWithQuery(query, currentPage)) || [];
+
+  // const query = searchParams?.query || '';
+  // const currentPage = Number(searchParams?.page) || 1;
+  // const totalPages = await fetchNotesPages(query);
+
+  // const notes = (await fetchFilteredNotes(query, currentPage)) || [];
 
   // Add function to search total number of patients under provider. If 0, display onboarding note
 
@@ -35,11 +50,11 @@ export default async function Page({
       </div>
 
       <Suspense key={query} fallback={<AppointmentsTableSkeleton />}>
-        <PatientsTable query={query} />
+        <PatientsTable patients={patients} />
       </Suspense>
-      {/* <div className="mt-5 flex w-full justify-center">
+      <div className="mt-5 flex w-full justify-center">
         <Pagination totalPages={totalPages} />
-      </div> */}
+      </div>
     </div>
   );
 }

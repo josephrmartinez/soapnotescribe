@@ -1,14 +1,13 @@
 import { fetchPatients } from '@/app/lib/data';
 import { fetchPatientsWithQuery } from '@/app/lib/data';
 import { ViewProfile, ViewNotes, NewNote, PatientNameLink } from './buttons';
+import { PatientForTable } from '@/app/lib/definitions';
 
-export default async function PatientsTable({ query }: { query: string }) {
-  // UPDATE TABLE TO FETCH PATIENTS WITH QUERY KEYWORD SEARCH
-
-  // CURRENT IMPLEMENTATION FETCHES ALL PATIENTS. QUERY SEARCH NOT ENABLED
-  // const patients = await fetchPatients();
-  const patients = await fetchPatientsWithQuery(query);
-
+export default async function PatientsTable({
+  patients,
+}: {
+  patients: PatientForTable[];
+}) {
   return (
     <div className="mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">

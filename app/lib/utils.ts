@@ -1,4 +1,4 @@
-import { Revenue } from './definitions';
+// import { Revenue } from './definitions';
 
 export function calculateAge(patientDOB: string, appointmentDate: string) {
     const dob = new Date(patientDOB);

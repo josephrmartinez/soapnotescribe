@@ -5,7 +5,7 @@ import { Database } from '../database.types';
 import { createClient } from '@/utils/supabase/server'
 import { createClient as createClientJS } from "@supabase/supabase-js";
 
-import { Note, NoteWithPatient } from './definitions';
+import { Note, NoteWithPatient, PatientForTable } from './definitions';
 import { redirect } from 'next/navigation';
 
 const ITEMS_PER_PAGE = 6;
@@ -245,8 +245,9 @@ try {
 }
 
 
-export async function fetchPatientsWithQuery(query:string) {
+export async function fetchPatientsWithQuery(query:string, currentPage: number) {
   noStore();
+  const offset = (currentPage - 1) * ITEMS_PER_PAGE;
 try {
     const supabase = createClient()
     const { data: patients, error } = await supabase
@@ -261,7 +262,43 @@ try {
       console.error('Error fetching patients:', error);
       return
     }
-  return patients
+  // return patients as PatientForTable[]
+
+  const paginatedPatients = patients.slice(offset, offset + ITEMS_PER_PAGE);
+  return paginatedPatients as PatientForTable[];
+  
+ } catch (error) {
+    console.error('Supabase Error:', error);
+    throw new Error('Failed to fetch paients data.');
+ }
+}
+
+
+export async function countPatientPagesWithQuery(query:string) {
+  noStore();
+  
+try {
+    const supabase = createClient()
+    const { count: totalPatients, error: countError } = await supabase
+      .from('patient')
+      .select(
+        'id', { count: 'exact', head: true}
+      )
+      .or(`first_name.ilike.%${query}%,middle_name.ilike.%${query}%,last_name.ilike.%${query}%`)
+
+    if (countError) {
+      console.error('Error counting patients:', countError);
+      return
+    }
+  
+  let pages:number = 0
+  if (totalPatients) {
+      pages = Math.ceil(totalPatients / ITEMS_PER_PAGE)
+    }
+    
+      return pages;
+  
+  
  } catch (error) {
     console.error('Supabase Error:', error);
     throw new Error('Failed to fetch paients data.');

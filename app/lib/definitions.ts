@@ -4,6 +4,14 @@ export type Note = Database['public']['Tables']['note']['Row'];
 
 export type Patient = Database['public']['Tables']['patient']['Row'];
 
+
+export interface PatientForTable {
+  id: string;
+  first_name: string;
+  middle_name: string;
+  last_name: string;
+}
+
 export type PatientOption = {
   value: Patient;
   label: string;
