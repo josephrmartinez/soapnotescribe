@@ -8,7 +8,15 @@ export async function GET(req) {
   }
 
 export async function POST(req, res) {
-    console.log("incoming webhook!");
+  console.log("incoming webhook!");
+  
+  // let secret = process.env.REPLICATE_SIGNING_KEY;
+  // const isValid = validateWebhook(req.clone(), secret);
+  // console.log("replicate isValid:", isValid);
+  // console.log("req.secret:", req.secret)
+  // console.log("env secret", secret)
+
+
     const apptid = req.nextUrl.searchParams.get('apptid');
 
   const prediction = await req.json();

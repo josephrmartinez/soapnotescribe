@@ -19,6 +19,7 @@ export async function getReplicateMonoTranscript(url: string, apptid: string) {
   auth: process.env.REPLICATE_API_TOKEN,
 });
   
+  console.log("replicate client:", replicate)
   const startTime = new Date()
   console.log("running getReplicateMonoTranscript", startTime);
 
@@ -30,6 +31,7 @@ export async function getReplicateMonoTranscript(url: string, apptid: string) {
       webhookUrl = process.env.DEV_REPLICATE_WEBHOOK;
   }
   console.log("webhook url:", webhookUrl)
+  console.log("apptid param", apptid)
   console.log("audio url passed to replicate:", url)
 
   try {
