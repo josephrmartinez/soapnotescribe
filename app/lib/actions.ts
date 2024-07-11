@@ -195,9 +195,7 @@ export async function getSOAPData(noteid: string, transcript: string, transcript
 async function updateNoteWithSOAPData(noteid: string, transcript: string, transcriptionTime:string, completion: string, analysisCost:string){
   console.log("Running updateNoteWithSOAPData");
 
-
   const formattedAnalysisCost = parseFloat(analysisCost);
-
   // Replicate pricing for model running on Nvidia A40 (Large) GPU hardware, which costs $0.000725 per second.
   const transcriptionCost = Number((0.000725 * Number(transcriptionTime)).toFixed(6));
    
@@ -207,6 +205,11 @@ async function updateNoteWithSOAPData(noteid: string, transcript: string, transc
   console.log("transcriptionTime", transcriptionTime)
 
   // Using service key to update appointment row
+  let s_url = process.env.SUPABASE_URL
+  let s_serv = process.env.SUPABASE_SERVICE_KEY
+  console.log("s url:", s_url);
+  console.log("s serv:", s_serv);
+  
   const supabase = createClientJS(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_KEY!)
   
 
@@ -215,6 +218,7 @@ async function updateNoteWithSOAPData(noteid: string, transcript: string, transc
     console.log("completion obj to parse:", completion)
     const completionObject = JSON.parse(completion);
 
+    console.log("Attempting to update note using noteid.")
     const { data, error, status } = await supabase
       .from('note')
       .update({
@@ -233,16 +237,16 @@ async function updateNoteWithSOAPData(noteid: string, transcript: string, transc
       console.log("Error updating Supabase table:", error)
       // throw new Error(`Error updating note in Supabase: ${error.message}`);
     }
-
-    if (data) {
-      console.log('Note updated successfully!');
-      // console.log('Updated note data status:', status);
-    } else {
-      throw new Error('No data returned from the update operation.');
+    
+    if (!data || !Array.isArray(data) || data.length === 0) {
+      console.error('Update operation did not affect any rows or returned no data.');
+      return;
     }
- } catch (error) {
+
+    console.log('Note updated successfully!');
+  } catch (error) {
     console.error('Error updating note:', error);
- }
+  }
 }
 
 
