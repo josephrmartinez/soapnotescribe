@@ -199,10 +199,9 @@ async function updateNoteWithSOAPData(noteid: string, transcript: string, transc
   // Replicate pricing for model running on Nvidia A40 (Large) GPU hardware, which costs $0.000725 per second.
   const transcriptionCost = Number((0.000725 * Number(transcriptionTime)).toFixed(6));
    
-
-  console.log("transcriptionCost:", transcriptionCost)
-  console.log("formattedAnalysisCost", formattedAnalysisCost)
-  console.log("transcriptionTime", transcriptionTime)
+  // console.log("transcriptionCost:", transcriptionCost)
+  // console.log("formattedAnalysisCost", formattedAnalysisCost)
+  // console.log("transcriptionTime", transcriptionTime)
 
   // Using service key to update appointment row
   let s_url = process.env.SUPABASE_URL
@@ -211,7 +210,7 @@ async function updateNoteWithSOAPData(noteid: string, transcript: string, transc
   console.log("s serv:", s_serv);
   
   const supabase = createClientJS(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_KEY!)
-  
+  console.log("supabase client:", supabase)
 
   try {
     // Assumes 100% success rate returning object in correct format
