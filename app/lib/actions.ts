@@ -20,13 +20,9 @@ export async function getReplicateMonoTranscript(url: string, apptid: string) {
   auth: process.env.REPLICATE_API_TOKEN,
 });
   
-    const webhookUrl = process.env.NODE_ENV === 'production' ? process.env.PROD_REPLICATE_WEBHOOK : process.env.DEV_REPLICATE_WEBHOOK;
+  const webhookUrl = process.env.NODE_ENV === 'production' ? process.env.PROD_REPLICATE_WEBHOOK : process.env.DEV_REPLICATE_WEBHOOK;
 
   console.log(`Running getReplicateMonoTranscript at ${new Date().toISOString()}`);
-  console.log(`Webhook URL: ${webhookUrl}`);
-  console.log(`ApptID parameter: ${apptid}`);
-  console.log(`Audio URL passed to Replicate: ${url}`);
-  console.log("replicate client:", replicate)
   
   try {
     // Prediction may take longer than 30 seconds
@@ -57,7 +53,8 @@ export async function getSOAPData(noteid: string, transcript: string, transcript
   // const userSettings = await getUserSettingsFromNoteId(noteid)
   // const appointmentTypes = JSON.stringify(userSettings.appointment_types);
   // const appointmentSpecialties = JSON.stringify(userSettings.appointment_specialties);
-  console.log("calling getSOAPData:", transcript)
+  console.log("calling getSOAPData")
+
   const appointmentTypes = "['In Person', 'Telemedicine']"
   const appointmentSpecialties = "['Urgent Care', 'Primary Care']"
 
@@ -181,8 +178,8 @@ export async function getSOAPData(noteid: string, transcript: string, transcript
 
     // console.log("anthropic cost:", anthropicCost)
 
-     const updatedNote = await updateNoteWithSOAPData(noteid, transcript, transcriptionTime, anthropicCompletionString, analysisCost);
-    console.log("updated note:", updatedNote)
+     updateNoteWithSOAPData(noteid, transcript, transcriptionTime, anthropicCompletionString, analysisCost);
+    
   // updateNoteWithSOAPData(noteid, transcript, completionString);
 
   } catch (error){
@@ -202,20 +199,12 @@ async function updateNoteWithSOAPData(noteid: string, transcript: string, transc
    
   // console.log("transcriptionCost:", transcriptionCost)
   // console.log("formattedAnalysisCost", formattedAnalysisCost)
-  // console.log("transcriptionTime", transcriptionTime)
-
-  // Using service key to update appointment row
-  let s_url = process.env.SUPABASE_URL
-  let s_serv = process.env.SUPABASE_SERVICE_KEY
-  console.log("s url:", s_url);
-  console.log("s serv:", s_serv);
+  // console.log("transcriptionTime", transcriptionTime)  
   
   const supabase = createClientJS(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_KEY!)
-  console.log("supabase client:", supabase)
 
   try {
     // Assumes 100% success rate returning object in correct format
-    console.log("completion obj to parse:", completion)
     const completionObject = JSON.parse(completion);
 
     console.log("Attempting to update note using noteid.")
@@ -231,7 +220,6 @@ async function updateNoteWithSOAPData(noteid: string, transcript: string, transc
       })
       .eq('id', noteid)
       // .select();
-    console.log("Supabase resp", data, error, status)
     
     if (error) {
       console.log("Error updating Supabase table:", error)
