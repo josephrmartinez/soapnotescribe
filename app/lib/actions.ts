@@ -19,24 +19,17 @@ export async function getReplicateMonoTranscript(url: string, apptid: string) {
   auth: process.env.REPLICATE_API_TOKEN,
 });
   
+    const webhookUrl = process.env.NODE_ENV === 'production' ? process.env.PROD_REPLICATE_WEBHOOK : process.env.DEV_REPLICATE_WEBHOOK;
+
+  console.log(`Running getReplicateMonoTranscript at ${new Date().toISOString()}`);
+  console.log(`Webhook URL: ${webhookUrl}`);
+  console.log(`ApptID parameter: ${apptid}`);
+  console.log(`Audio URL passed to Replicate: ${url}`);
   console.log("replicate client:", replicate)
-  const startTime = new Date()
-  console.log("running getReplicateMonoTranscript", startTime);
-
-  let webhookUrl;
-
-  if (process.env.NODE_ENV === 'production') {
-      webhookUrl = process.env.PROD_REPLICATE_WEBHOOK;
-  } else {
-      webhookUrl = process.env.DEV_REPLICATE_WEBHOOK;
-  }
-  console.log("webhook url:", webhookUrl)
-  console.log("apptid param", apptid)
-  console.log("audio url passed to replicate:", url)
-
+  
   try {
     // Prediction may take longer than 30 seconds
-  replicate.predictions.create(
+    await replicate.predictions.create(
     {
       version: "3ab86df6c8f54c11309d4d1f930ac292bad43ace52d10c80d87eb258b3c9f79c",
       input: {
@@ -49,11 +42,11 @@ export async function getReplicateMonoTranscript(url: string, apptid: string) {
       },
       webhook: `${webhookUrl}?apptid=${apptid}`,
       webhook_events_filter: ["completed"]
-    });
+      });
+    console.log("Replicate prediction request sent successfully.")
   
 } catch (error) {
-  console.error("Error in getTranscript:", error);
-  // Handle error appropriately
+  console.error("Error sending Replicate response:", error);
 }
 }
 
