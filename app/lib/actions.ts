@@ -12,8 +12,6 @@ function assertIsTextBlock(value: unknown): asserts value is Anthropic.TextBlock
 }
 
 
-const anthropic = new Anthropic({apiKey: process.env.ANTHROPIC_API_KEY })
-
 
 export async function getReplicateMonoTranscript(url: string, apptid: string) {
   const replicate = new Replicate({
@@ -127,6 +125,12 @@ export async function getSOAPData(noteid: string, transcript: string, transcript
   // console.log("system content string:", systemContentString)
 
   try {
+    const apiKey = process.env.ANTHROPIC_API_KEY;
+    if (!apiKey) {
+      throw new Error('ANThROPIC_API_KEY is not set in environment variables.');
+    }
+
+    const anthropic = new Anthropic({ apiKey });
     const anthropicResponse = await anthropic.messages.create({
       model: "claude-3-5-sonnet-20240620",
       max_tokens: 4096,
@@ -141,11 +145,9 @@ export async function getSOAPData(noteid: string, transcript: string, transcript
 
     console.log("anthropic response:", anthropicResponse)
 
-
     assertIsTextBlock(anthropicResponse.content[0]);
 
     const anthropicCompletionString = anthropicResponse.content[0].text
-
 
     const anthropicInputTokens = anthropicResponse.usage.input_tokens
     const anthropicOutputTokens = anthropicResponse.usage.output_tokens
@@ -153,7 +155,7 @@ export async function getSOAPData(noteid: string, transcript: string, transcript
 
     console.log("anthropic cost:", analysisCost)
 
-     updateNoteWithSOAPData(noteid, transcript, transcriptionTime, anthropicCompletionString, analysisCost);
+    await updateNoteWithSOAPData(noteid, transcript, transcriptionTime, anthropicCompletionString, analysisCost);
     
   } catch (error){
     console.log("Error getting completion data:", error)
