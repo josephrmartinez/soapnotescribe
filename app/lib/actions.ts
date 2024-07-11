@@ -4,6 +4,7 @@ import Replicate from "replicate";
 import OpenAI from "openai"
 import Anthropic from '@anthropic-ai/sdk';
 import { createClient as createClientJS } from "@supabase/supabase-js";
+import { note } from "pdfkit";
 
 
 function assertIsTextBlock(value: unknown): asserts value is Anthropic.TextBlock {
@@ -222,14 +223,14 @@ async function updateNoteWithSOAPData(noteid: string, transcript: string, transc
       .from('note')
       .update({
         status: "awaiting review",
-        audio_transcript: transcript,
-        transcription_time: transcriptionTime,
-        transcription_cost: transcriptionCost,
-        analysis_cost: formattedAnalysisCost,
-        ...completionObject
+        // audio_transcript: transcript,
+        // transcription_time: transcriptionTime,
+        // transcription_cost: transcriptionCost,
+        // analysis_cost: formattedAnalysisCost,
+        // ...completionObject
       })
       .eq('id', noteid)
-      .select()
+      .select();
     console.log("Supabase resp", data, error, status)
     
     if (error) {
