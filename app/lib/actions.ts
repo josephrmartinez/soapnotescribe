@@ -30,7 +30,7 @@ export async function getReplicateMonoTranscript(url: string, apptid: string) {
   
   try {
     // Prediction may take longer than 30 seconds
-    replicate.predictions.create(
+    const response = await replicate.predictions.create(
     {
       version: "3ab86df6c8f54c11309d4d1f930ac292bad43ace52d10c80d87eb258b3c9f79c",
       input: {
@@ -44,7 +44,7 @@ export async function getReplicateMonoTranscript(url: string, apptid: string) {
       webhook: `${webhookUrl}?apptid=${apptid}`,
       webhook_events_filter: ["completed"]
       });
-    // console.log("Replicate prediction request acknowledged:", response);
+    console.log("Replicate prediction request acknowledged:", response);
   
 } catch (error) {
   console.error("Error sending Replicate response:", error);
@@ -181,8 +181,8 @@ export async function getSOAPData(noteid: string, transcript: string, transcript
 
     // console.log("anthropic cost:", anthropicCost)
 
-      updateNoteWithSOAPData(noteid, transcript, transcriptionTime, anthropicCompletionString, analysisCost);
-    
+     const updatedNote = await updateNoteWithSOAPData(noteid, transcript, transcriptionTime, anthropicCompletionString, analysisCost);
+    console.log("updated note:", updatedNote)
   // updateNoteWithSOAPData(noteid, transcript, completionString);
 
   } catch (error){
@@ -230,7 +230,7 @@ async function updateNoteWithSOAPData(noteid: string, transcript: string, transc
         // ...completionObject
       })
       .eq('id', noteid)
-      .select();
+      // .select();
     console.log("Supabase resp", data, error, status)
     
     if (error) {
@@ -238,7 +238,7 @@ async function updateNoteWithSOAPData(noteid: string, transcript: string, transc
       // throw new Error(`Error updating note in Supabase: ${error.message}`);
     }
     
-    if (!data || !Array.isArray(data) || data.length === 0) {
+    if (!data || !Array.isArray(data)) {
       console.error('Update operation did not affect any rows or returned no data.');
       return;
     }
@@ -246,6 +246,7 @@ async function updateNoteWithSOAPData(noteid: string, transcript: string, transc
     console.log('Note updated successfully!');
   } catch (error) {
     console.error('Error updating note:', error);
+    throw new Error(error)
   }
 }
 
