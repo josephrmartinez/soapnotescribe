@@ -227,7 +227,9 @@ const transcriptionCost = Number((0.000725 * Number(transcriptionTime)).toFixed(
       })
       .eq('id', noteid)
       .select()
-if (error) {
+    console.log("Supabase resp", data, error, status)
+    
+    if (error) {
       throw new Error(`Error updating note in Supabase: ${error.message}`);
     }
 
