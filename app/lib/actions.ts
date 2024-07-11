@@ -223,11 +223,11 @@ async function updateNoteWithSOAPData(noteid: string, transcript: string, transc
       .from('note')
       .update({
         status: "awaiting review",
-        // audio_transcript: transcript,
-        // transcription_time: transcriptionTime,
-        // transcription_cost: transcriptionCost,
-        // analysis_cost: formattedAnalysisCost,
-        // ...completionObject
+        audio_transcript: transcript,
+        transcription_time: transcriptionTime,
+        transcription_cost: transcriptionCost,
+        analysis_cost: formattedAnalysisCost,
+        ...completionObject
       })
       .eq('id', noteid)
       // .select();
