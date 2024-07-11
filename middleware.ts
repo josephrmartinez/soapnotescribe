@@ -3,7 +3,7 @@ import { updateSession } from '@/utils/supabase/middleware'
 
 
 export async function middleware(request: NextRequest) {
-  console.log("running root middleware")
+  // console.log("running root middleware")
 
   return await updateSession(request)
   
