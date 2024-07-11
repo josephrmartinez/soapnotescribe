@@ -17,7 +17,7 @@ export async function POST(req, res) {
     const transcript = prediction.output.text;
     const transcriptionTime = prediction.metrics.predict_time;
     
-    await getSOAPData(noteid, transcript, transcriptionTime)
+    getSOAPData(noteid, transcript, transcriptionTime)
     
     return NextResponse.json({ message: "POST success!" }, { status: 200 });
   }

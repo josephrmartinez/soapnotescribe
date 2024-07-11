@@ -30,7 +30,7 @@ export async function getReplicateMonoTranscript(url: string, apptid: string) {
   
   try {
     // Prediction may take longer than 30 seconds
-    const response = await replicate.predictions.create(
+    replicate.predictions.create(
     {
       version: "3ab86df6c8f54c11309d4d1f930ac292bad43ace52d10c80d87eb258b3c9f79c",
       input: {
@@ -44,7 +44,7 @@ export async function getReplicateMonoTranscript(url: string, apptid: string) {
       webhook: `${webhookUrl}?apptid=${apptid}`,
       webhook_events_filter: ["completed"]
       });
-    console.log("Replicate prediction request acknowledged:", response);
+    // console.log("Replicate prediction request acknowledged:", response);
   
 } catch (error) {
   console.error("Error sending Replicate response:", error);
