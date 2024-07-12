@@ -1,5 +1,6 @@
 import {
   PencilIcon,
+  PencilSquareIcon,
   PlusIcon,
   TrashIcon,
   ArrowRightIcon,
@@ -10,7 +11,6 @@ import {
   UserIcon,
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
-import { deleteNote } from '@/app/lib/actions';
 
 export function AddPatientButton() {
   return (
@@ -26,26 +26,50 @@ export function AddPatientButton() {
   );
 }
 
+// export function ViewNotes({ patient_name }: { patient_name: string | null }) {
+//   return (
+//     <Link
+//       href={`./notes?query=${patient_name}`}
+//       className={`nowrap flex w-24 rounded-md p-2 text-sm font-semibold text-teal-700 underline  underline-offset-4 transition-colors hover:bg-gray-100`}
+//     >
+//       <div>view notes</div>
+//     </Link>
+//   );
+// }
+
 export function ViewNotes({ patient_name }: { patient_name: string | null }) {
   return (
     <Link
       href={`./notes?query=${patient_name}`}
-      className={`nowrap flex w-24 rounded-md p-2 text-sm font-semibold text-teal-700 underline  underline-offset-4 transition-colors hover:bg-gray-100`}
+      className={`flex whitespace-nowrap rounded-md  border-gray-200 p-2 text-sm font-medium text-teal-700 transition-colors hover:bg-gray-100`}
     >
-      <div>view notes</div>
+      <ArchiveBoxIcon width={22} className="mr-2" />
+      <div>View Notes</div>
     </Link>
   );
 }
+
+// export function NewNote({ patient_id }: { patient_id: string }) {
+//   return (
+//     <Link
+//       href={`/dashboard/newnote?patient=${patient_id}`}
+//       className={
+//         'flex h-10 w-32 items-center justify-center rounded-lg bg-teal-600 text-sm font-medium text-white shadow transition-colors hover:bg-teal-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-700 active:bg-teal-600'
+//       }
+//     >
+//       <PlusIcon width={22} className="mr-2" />
+//       New Note
+//     </Link>
+//   );
+// }
 
 export function NewNote({ patient_id }: { patient_id: string }) {
   return (
     <Link
       href={`/dashboard/newnote?patient=${patient_id}`}
-      className={
-        'flex h-10 w-32 items-center justify-center rounded-lg bg-teal-600 text-sm font-medium text-white shadow transition-colors hover:bg-teal-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-700 active:bg-teal-600'
-      }
+      className={`flex whitespace-nowrap rounded-md  border-gray-200 p-2 text-sm font-medium text-teal-700 transition-colors hover:bg-gray-100`}
     >
-      <PlusIcon width={22} className="mr-2" />
+      <PencilSquareIcon width={22} className="mr-2" />
       New Note
     </Link>
   );
@@ -74,9 +98,9 @@ export function ViewProfile({ patient_id }: { patient_id: string }) {
   return (
     <Link
       href={`/dashboard/patients/${patient_id}`}
-      className={`nowrap flex w-24 rounded-md p-2 text-sm font-semibold text-teal-700 underline  underline-offset-4 transition-colors hover:bg-gray-100`}
+      className={`nowrap flex w-24 rounded-md p-2 text-sm font-medium text-teal-700 underline  underline-offset-8 transition-colors hover:bg-gray-100`}
     >
-      view profile
+      View Profile
     </Link>
   );
 }

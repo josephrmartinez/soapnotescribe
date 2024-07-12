@@ -1,5 +1,3 @@
-import { fetchPatients } from '@/app/lib/data';
-import { fetchPatientsWithQuery } from '@/app/lib/data';
 import { ViewProfile, ViewNotes, NewNote, PatientNameLink } from './buttons';
 import { PatientForTable } from '@/app/lib/definitions';
 
@@ -24,18 +22,17 @@ export default async function PatientsTable({
                     first_name={patient.first_name}
                     last_name={patient.last_name}
                   />
-
-                  <ViewNotes
-                    patient_name={`${patient.first_name} ${patient.last_name}`}
-                  />
-                </div>
-                <div className="flex w-full items-center justify-between">
-                  <div>
-                    <ViewProfile patient_id={patient.id} />
-                  </div>
                   <div className="flex justify-end gap-2">
                     <NewNote patient_id={patient.id} />
                   </div>
+                </div>
+
+                <div className="flex w-full items-center justify-between">
+                  {/* <ViewProfile patient_id={patient.id} /> */}
+                  <div></div>
+                  <ViewNotes
+                    patient_name={`${patient.first_name} ${patient.last_name}`}
+                  />
                 </div>
               </div>
             ))}
@@ -44,28 +41,28 @@ export default async function PatientsTable({
             <table className="hidden min-w-full text-gray-900 md:table">
               <thead className="sticky top-0 w-full rounded-lg text-left text-sm font-normal">
                 <tr className="sticky top-0 w-full bg-gray-50 ">
-                  <th scope="col" className="px-4 py-5 font-medium">
-                    Patient Name
+                  <th scope="col" className="px-4 py-0 font-medium">
+                    {/* Patient Name */}
                   </th>
-                  <th scope="col" className="px-3 py-5 font-medium">
-                    Patient Profile
+                  <th scope="col" className="px-3 py-0 font-medium">
+                    {/* Patient Profile */}
                   </th>
-                  <th scope="col" className="px-3 py-5 font-medium">
-                    View Notes
+                  <th scope="col" className="px-3 py-0 font-medium">
+                    {/* View Notes */}
                   </th>
-                  <th scope="col" className="px-3 py-5 font-medium">
-                    Create Note
+                  <th scope="col" className="px-3 py-0 font-medium">
+                    {/* Create Note */}
                   </th>
                 </tr>
               </thead>
-              <tbody className=" bg-white">
+              <tbody className="w-full bg-white">
                 {patients?.map((patient) => (
                   <tr
                     key={patient.id}
-                    className="h-16 w-full border-b text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
+                    className=" h-16 w-full  border-b text-sm"
                   >
-                    <td className="whitespace-nowrap py-3 pl-6 pr-3">
-                      <div>
+                    <td>
+                      <div className="whitespace-nowrap">
                         <PatientNameLink
                           patient_id={patient.id}
                           first_name={patient.first_name}
@@ -74,16 +71,20 @@ export default async function PatientsTable({
                       </div>
                     </td>
 
-                    <td className="whitespace-nowrap px-3 py-3 font-medium">
+                    <td className="">
                       <ViewProfile patient_id={patient.id} />
                     </td>
                     <td className="">
-                      <ViewNotes
-                        patient_name={`${patient.first_name} ${patient.last_name}`}
-                      />
+                      <div className="flex">
+                        <ViewNotes
+                          patient_name={`${patient.first_name} ${patient.last_name}`}
+                        />
+                      </div>
                     </td>
                     <td className="">
-                      <NewNote patient_id={patient.id} />
+                      <div className="flex">
+                        <NewNote patient_id={patient.id} />
+                      </div>
                     </td>
                   </tr>
                 ))}

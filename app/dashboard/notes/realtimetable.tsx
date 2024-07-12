@@ -59,7 +59,9 @@ export default function NotesTable({ notes }: { notes: NoteWithPatient[] }) {
                 </div>
                 <div className="grid grid-cols-2 items-center gap-2">
                   <div>
-                    <p className="font-medium">{note.chief_complaint}</p>
+                    <p className="text-sm font-medium">
+                      {note.chief_complaint}
+                    </p>
                   </div>
                   <div className="flex justify-end gap-2">
                     {note.status === 'processing' && (

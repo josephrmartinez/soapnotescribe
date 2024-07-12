@@ -27,7 +27,7 @@ export default async function Page({
 }) {
   const query = searchParams?.query || '';
   const currentPage = Number(searchParams?.page) || 1;
-  const totalPages = await countPatientPagesWithQuery(query);
+  const totalPages = (await countPatientPagesWithQuery(query)) || 1;
   const patients = (await fetchPatientsWithQuery(query, currentPage)) || [];
 
   // const query = searchParams?.query || '';
