@@ -5,13 +5,14 @@ import { Database } from '../database.types';
 import { createClient } from '@/utils/supabase/server'
 import { createClient as createClientJS } from "@supabase/supabase-js";
 
-import { Note, NoteWithPatient, PatientForTable } from './definitions';
+import { Note, NoteWithPatient, PatientForTable, NoteForTable } from './definitions';
 import { redirect } from 'next/navigation';
 
 const ITEMS_PER_PAGE = 6;
 
 // UPDATE TO ALWAYS DISPLAY PROCESSING NOTES (AUDIO_TRANSCRIPT IS NULL)
 // REFACTOR TO GET ONLY NEEDED NOTES. FILTERING EARLIER.
+
 
 export async function fetchFilteredNotes(query: string, currentPage: number) {
   noStore()
@@ -27,13 +28,13 @@ export async function fetchFilteredNotes(query: string, currentPage: number) {
       chief_complaint,
       status, 
       appointment_date,
-      patient (
+      patient(
         id,
         first_name,
         middle_name,
         last_name
       )`)
-      // .ilike('audio_transcript', `%${query}%`)
+      // .or(`chief_complaint.ilike.%${query}%, status.ilike.%${query}%`)
       .order('appointment_date', { ascending: false });      
 
     if (error) {
@@ -41,8 +42,16 @@ export async function fetchFilteredNotes(query: string, currentPage: number) {
       return
     }
 
+    const notesFiltered = notes.filter(note => 
+      note.patient.first_name?.toLowerCase().includes(query.toLowerCase())
+      || note.patient.middle_name?.toLowerCase().includes(query.toLowerCase())
+      || note.patient.last_name?.toLowerCase().includes(query.toLowerCase())
+      || note.chief_complaint?.toLowerCase().includes(query.toLowerCase())
+      || note.status?.toLowerCase().includes(query.toLowerCase())
+    )
+    
     // Implement custom sorting logic: processing at top, then "awaiting review", then "approved"
-    notes.sort((a, b) => {
+    notesFiltered.sort((a, b) => {
       // Prioritize "processing" status
       if (a.status === 'processing' && b.status !== 'processing') {
         return -1;
@@ -70,12 +79,13 @@ export async function fetchFilteredNotes(query: string, currentPage: number) {
       return 0;
     });
 
-    const paginatedNotes = notes.slice(offset, offset + ITEMS_PER_PAGE);
+
+    const paginatedNotes = notesFiltered.slice(offset, offset + ITEMS_PER_PAGE);
     return paginatedNotes;
 
  } catch (error) {
     console.error('Supabase Error:', error);
-    throw new Error('Failed to fetch appointments data.');
+    throw new Error('Failed to fetch appointments data.', error);
  }
 }
 

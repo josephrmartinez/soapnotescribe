@@ -7,7 +7,11 @@ import { createNote } from './action';
 import { calculateAge } from '@/app/lib/utils';
 import AppointmentTypeSelect from '@/app/ui/notes/AppointmentTypeSelect';
 import AppointmentSpecialtySelect from '@/app/ui/notes/AppointmentSpecialtySelect';
-import { PencilSquareIcon, PlusIcon } from '@heroicons/react/24/outline';
+import {
+  PencilSquareIcon,
+  PlusIcon,
+  UserIcon,
+} from '@heroicons/react/24/outline';
 import { useSearchParams } from 'next/navigation';
 import {
   fetchPatientById,
@@ -270,18 +274,18 @@ const CreateNote = () => {
             {patientId === '' ? (
               <Link
                 href={'./patients/add'}
-                className="flex h-10 items-center rounded-lg bg-teal-600 px-4 text-sm font-medium text-white shadow transition-colors hover:bg-teal-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-700 active:bg-teal-600"
+                className="flex h-10 items-center rounded-lg border px-4 text-sm font-medium text-gray-600 transition-colors  hover:bg-teal-600 hover:text-white  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-700 active:bg-teal-600"
               >
                 <PlusIcon width={22} className="mr-2" />
-                add new patient
+                Add New Patient
               </Link>
             ) : (
               <Link
                 href={`./patients/${patientId}/edit`}
-                className="flex h-10 items-center rounded-lg bg-teal-600 px-4 text-sm font-medium text-white shadow transition-colors hover:bg-teal-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-700 active:bg-teal-600"
+                className="flex h-10 items-center rounded-lg border px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-teal-600 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-700 active:bg-teal-600"
               >
-                <PencilSquareIcon width={22} className="mr-2" />
-                <div>edit patient info</div>
+                <UserIcon width={22} className="mr-2" />
+                <div>Edit Patient Profile</div>
               </Link>
             )}
           </div>

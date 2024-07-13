@@ -17,8 +17,6 @@ import {
 } from '@heroicons/react/24/outline';
 import { Metadata } from 'next';
 import { formatDateToLocal, formatTime } from '@/app/lib/utils';
-import { Button } from '@/app/ui/button';
-import { LinkButton } from '@/app/ui/LinkButton';
 import { DeleteNoteFirstStep } from '@/app/ui/notes/buttons';
 import { calculateAge } from '@/app/lib/utils';
 import AudioPlayer from '@/app/components/AudioPlayer';
@@ -304,7 +302,7 @@ export default async function Page({ params }: { params: { id: string } }) {
             className="flex h-10 items-center justify-center rounded-lg bg-gray-100 px-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200 "
           >
             <DocumentDuplicateIcon width={20} height={20} className="mr-2" />
-            copy
+            Copy
           </Link>
 
           <ViewPDFButton note={processedNote} />

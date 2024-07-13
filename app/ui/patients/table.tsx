@@ -1,4 +1,10 @@
-import { ViewProfile, ViewNotes, NewNote, PatientNameLink } from './buttons';
+import {
+  ViewProfile,
+  ViewNotes,
+  NewNote,
+  PatientNameLink,
+  EditProfile,
+} from './buttons';
 import { PatientForTable } from '@/app/lib/definitions';
 
 export default async function PatientsTable({
@@ -22,17 +28,18 @@ export default async function PatientsTable({
                     first_name={patient.first_name}
                     last_name={patient.last_name}
                   />
-                  <div className="flex justify-end gap-2">
-                    <NewNote patient_id={patient.id} />
-                  </div>
+                  <div className="flex justify-end gap-2"></div>
                 </div>
 
                 <div className="flex w-full items-center justify-between">
-                  {/* <ViewProfile patient_id={patient.id} /> */}
-                  <div></div>
-                  <ViewNotes
-                    patient_name={`${patient.first_name} ${patient.last_name}`}
-                  />
+                  <div>
+                    <ViewNotes
+                      patient_name={`${patient.first_name} ${patient.last_name}`}
+                    />
+                  </div>
+                  <div>
+                    <NewNote patient_id={patient.id} />
+                  </div>
                 </div>
               </div>
             ))}
@@ -72,7 +79,7 @@ export default async function PatientsTable({
                     </td>
 
                     <td className="">
-                      <ViewProfile patient_id={patient.id} />
+                      <EditProfile patient_id={patient.id} />
                     </td>
                     <td className="">
                       <div className="flex">

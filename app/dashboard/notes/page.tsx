@@ -5,7 +5,6 @@ import { AppointmentsTableSkeleton } from '@/app/ui/skeletons';
 import { Suspense } from 'react';
 import { Metadata } from 'next';
 import NotesTable from './realtimetable';
-import { createClient } from '@/utils/supabase/server';
 import { fetchFilteredNotes, fetchNotesPages } from '@/app/lib/data';
 
 export const metadata: Metadata = {
@@ -25,8 +24,6 @@ export default async function Page({
   const totalPages = await fetchNotesPages(query);
 
   const notes = (await fetchFilteredNotes(query, currentPage)) || [];
-
-  // console.log('notes data:', notes);
 
   return (
     <div className="w-full">

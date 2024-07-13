@@ -52,3 +52,11 @@ export type NoteWithPatient = Omit<Database['public']['Tables']['note']['Row'], 
   patient_id: string;
   patient: Patient;
 }
+
+export interface NoteForTable {
+  id: string;
+  chief_complaint: string;
+  status: string;
+  appointment_date: string;
+  patient: PatientForTable;
+}

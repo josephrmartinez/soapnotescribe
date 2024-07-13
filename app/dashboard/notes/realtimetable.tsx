@@ -51,11 +51,13 @@ export default function NotesTable({ notes }: { notes: NoteWithPatient[] }) {
                   <div className="mb-2 flex items-center">
                     <p>{formatDateToLocal(note.appointment_date)}</p>
                   </div>
-                  <PatientName
-                    last_name={note.patient.last_name}
-                    first_name={note.patient.first_name}
-                    patient_id={note.patient.id}
-                  />
+                  <div>
+                    <PatientName
+                      last_name={note.patient.last_name}
+                      first_name={note.patient.first_name}
+                      patient_id={note.patient.id}
+                    />
+                  </div>
                 </div>
                 <div className="grid grid-cols-2 items-center gap-2">
                   <div>
