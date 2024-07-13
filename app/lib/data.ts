@@ -48,8 +48,11 @@ export async function fetchFilteredNotes(query: string, currentPage: number) {
       || note.patient.last_name?.toLowerCase().includes(query.toLowerCase())
       || note.chief_complaint?.toLowerCase().includes(query.toLowerCase())
       || note.status?.toLowerCase().includes(query.toLowerCase())
+      || (note.patient.first_name?.toLowerCase() + ' ' + note.patient.last_name?.toLowerCase()).includes(query.toLowerCase())
     )
     
+
+
     // Implement custom sorting logic: processing at top, then "awaiting review", then "approved"
     notesFiltered.sort((a, b) => {
       // Prioritize "processing" status
@@ -81,13 +84,44 @@ export async function fetchFilteredNotes(query: string, currentPage: number) {
 
 
     const paginatedNotes = notesFiltered.slice(offset, offset + ITEMS_PER_PAGE);
-    return paginatedNotes;
+    const totalCount = notesFiltered.length || 1;
+
+    let totalPages = 1
+     if (totalCount) {
+      totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE)
+    }
+
+    return { paginatedNotes, totalPages };
 
  } catch (error) {
     console.error('Supabase Error:', error);
     throw new Error('Failed to fetch appointments data.', error);
  }
 }
+
+export async function fetchNotesPages(query: string) {
+  try {
+    const supabase = createClient()
+     const { data, count, error } = await supabase
+       .from('note')
+       .select('*', { count: 'exact', head: true })
+      //  .ilike('combined_text', `%${query}%`)
+ 
+     if (error) {
+       console.error('Supabase Error:', error);
+       throw new Error('Failed to fetch appointments count.');
+     }
+     let totalPages = 1
+     if (count) {
+      totalPages = Math.ceil(count / ITEMS_PER_PAGE)
+    }
+    
+      return totalPages;
+  } catch (error) {
+     console.error('Supabase Error:', error);
+     throw new Error('Failed to fetch notes count.');
+  }
+ }
 
 
 export async function fetchNoteById(id: string) {
@@ -493,26 +527,3 @@ export async function deleteNote(id: string) {
 }
 
 
-export async function fetchNotesPages(query: string) {
-  try {
-    const supabase = createClient()
-     const { data, count, error } = await supabase
-       .from('note')
-       .select('*', { count: 'exact', head: true })
-      //  .ilike('combined_text', `%${query}%`)
- 
-     if (error) {
-       console.error('Supabase Error:', error);
-       throw new Error('Failed to fetch appointments count.');
-     }
-     let totalPages = 1
-     if (count) {
-      totalPages = Math.ceil(count / ITEMS_PER_PAGE)
-    }
-    
-      return totalPages;
-  } catch (error) {
-     console.error('Supabase Error:', error);
-     throw new Error('Failed to fetch notes count.');
-  }
- }

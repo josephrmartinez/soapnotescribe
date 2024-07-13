@@ -21,9 +21,9 @@ export default async function Page({
 }) {
   const query = searchParams?.query || '';
   const currentPage = Number(searchParams?.page) || 1;
-  const totalPages = await fetchNotesPages(query);
 
-  const notes = (await fetchFilteredNotes(query, currentPage)) || [];
+  const { paginatedNotes, totalPages = 1 } =
+    (await fetchFilteredNotes(query, currentPage)) || {};
 
   return (
     <div className="w-full">
@@ -35,7 +35,7 @@ export default async function Page({
         key={query + currentPage}
         fallback={<AppointmentsTableSkeleton />}
       >
-        <NotesTable notes={notes} />
+        <NotesTable notes={paginatedNotes} />
       </Suspense>
       <div className="mt-5 flex w-full justify-center">
         <Pagination totalPages={totalPages} />
