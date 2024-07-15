@@ -13,6 +13,7 @@ import AppointmentSpecialtySelect from '@/app/ui/notes/AppointmentSpecialtySelec
 import AudioPlayer from '@/app/components/AudioPlayer';
 import { SubmitFormButton } from '@/app/ui/Buttons';
 import { fetchUserSettings } from '@/app/lib/data';
+import { EditPatientProfile } from '@/app/ui/patients/buttons';
 
 interface CreateNoteProps {
   note: NoteWithPatient;
@@ -166,7 +167,7 @@ const EditDraftNote: React.FC<CreateNoteProps> = ({ note }) => {
 
           <div className="mb-4 grid grid-cols-1 gap-x-8 gap-y-4 sm:grid-cols-2">
             {/* Patient Name */}
-            <div className="sm:col-span-2">
+            <div className="col-span-2">
               <label
                 htmlFor="patient_name"
                 className="mb-2 block text-sm font-medium"
@@ -263,6 +264,18 @@ const EditDraftNote: React.FC<CreateNoteProps> = ({ note }) => {
               </div>
             )}
 
+            {note.patient.allergies && (
+              <div className="">
+                <label
+                  htmlFor="allergies"
+                  className="mb-2 block text-sm font-medium"
+                >
+                  Allergies
+                </label>
+                <div className="ml-2 text-sm">{note.patient.allergies}</div>
+              </div>
+            )}
+
             {note.patient.profile_notes && (
               <div className="mb-4">
                 <label
@@ -275,7 +288,13 @@ const EditDraftNote: React.FC<CreateNoteProps> = ({ note }) => {
                 <div className="ml-2 text-sm">{note.patient.profile_notes}</div>
               </div>
             )}
-
+          </div>
+          <div className="mb-4 border-b pb-6 pt-2">
+            <div className="w-48">
+              <EditPatientProfile patient_id={note.patient_id} />
+            </div>
+          </div>
+          <div className="grid grid-cols-1 gap-x-8 gap-y-4 sm:grid-cols-2">
             {/* Appointment Date */}
             <div className="">
               <label
@@ -391,7 +410,7 @@ const EditDraftNote: React.FC<CreateNoteProps> = ({ note }) => {
             </div>
           </div>
 
-          <div className="mb-4">
+          {/* <div className="mb-4">
             <label
               htmlFor="allergies"
               className="mb-2 block text-sm font-medium"
@@ -408,7 +427,7 @@ const EditDraftNote: React.FC<CreateNoteProps> = ({ note }) => {
                 onChange={(e) => setAllergies(e.target.value)}
               ></input>
             </div>
-          </div>
+          </div> */}
 
           <div className="mb-4">
             <label

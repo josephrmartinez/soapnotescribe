@@ -177,6 +177,7 @@ const CreateNote = () => {
       setEmail(newValue.value.email);
       setPhone(newValue.value.phone);
       setProfileNotes(newValue.value.profile_notes);
+      setPatientLocation(newValue.value.state);
     } else {
       console.log('No new patient value');
     }
@@ -366,6 +367,18 @@ const CreateNote = () => {
                 </div>
               </div>
             )}
+
+            {allergies && (
+              <div className="">
+                <label
+                  htmlFor="allergies"
+                  className="mb-2 block text-sm font-medium"
+                >
+                  Allergies
+                </label>
+                <div className="ml-2 text-sm">{allergies}</div>
+              </div>
+            )}
           </div>
 
           {profileNotes && (
@@ -503,7 +516,7 @@ const CreateNote = () => {
           </div>
 
           {/* Allergies */}
-          <div className="mb-4">
+          {/* <div className="mb-4">
             <label
               htmlFor="allergies"
               className="mb-2 block text-sm font-medium"
@@ -521,7 +534,7 @@ const CreateNote = () => {
                 onChange={(e) => setAllergies(e.target.value)}
               ></input>
             </div>
-          </div>
+          </div> */}
 
           <div className="mb-4 w-full lg:w-1/2">
             <label

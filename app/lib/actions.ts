@@ -4,7 +4,6 @@ import Replicate from "replicate";
 import OpenAI from "openai"
 import Anthropic from '@anthropic-ai/sdk';
 import { createClient as createClientJS } from "@supabase/supabase-js";
-import { note } from "pdfkit";
 
 
 function assertIsTextBlock(value: unknown): asserts value is Anthropic.TextBlock {

@@ -206,7 +206,7 @@ export default async function Page({ params }: { params: { id: string } }) {
             >
               Allergies
             </label>
-            <div className="ml-2 text-sm">{note.allergies}</div>
+            <div className="ml-2 text-sm">{note.patient.allergies}</div>
           </div>
 
           {/* Chief Complaint */}

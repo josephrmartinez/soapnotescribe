@@ -37,11 +37,6 @@ export async function updateNote(status: string, formData: FormData) {
     return;
   }
   if (data && data.length > 0) {
-    // Generate and save pdf to Supabase storage on final approval
-    // if (status === 'approved') {
-    //   await generateAndSavePdf(data[0].id);
-    // }
-
     revalidatePath('/dashboard/notes', 'page');
     redirect('/dashboard/notes');
   } else {
