@@ -25,7 +25,14 @@ const config: Config = {
           transform: 'translateX(100%)',
         },
       },
+      fadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
     },
+    animation: {
+        'fade-in': 'fadeIn 0.4s ease-in-out forwards',
+      },
   },
   plugins: [require('@tailwindcss/forms'), require('@tailwindcss/aspect-ratio'), require("daisyui")],
 };

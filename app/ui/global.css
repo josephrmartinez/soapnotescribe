@@ -84,3 +84,20 @@ html {
     transform: rotate(1turn)
   }
 }
+
+.fade-in-text {
+  animation: left-to-right-fade-in 0.4s ease-in;
+  -webkit-mask-repeat: no-repeat;
+}
+
+@keyframes left-to-right-fade-in {
+  0% {
+    -webkit-mask-size: 0%;
+    -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 1) 70%, rgba(0, 0, 0, 0));
+  }
+
+  100% {
+    -webkit-mask-size: 100%;
+    -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 1) 70%, rgba(0, 0, 0, 0));
+  }
+}

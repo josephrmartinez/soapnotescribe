@@ -15,7 +15,9 @@ interface AudioUploadRecordProps {
   patientId: string;
 }
 
-const AudioUploadRecord: React.FC<AudioUploadRecordProps> = ({ patientId }) => {
+const AudioUploadRecordTest: React.FC<AudioUploadRecordProps> = ({
+  patientId,
+}) => {
   const [uploadComplete, setUploadComplete] = useState<boolean>(false);
   const [percentageUploaded, setPercentageUploaded] = useState(0);
   const [isDragging, setIsDragging] = useState<boolean>(false);
@@ -32,6 +34,8 @@ const AudioUploadRecord: React.FC<AudioUploadRecordProps> = ({ patientId }) => {
   const [elapsedRecordingTime, setElapsedRecordingTime] = useState<string>('');
   const [playbackTimeFormatted, setPlaybackTimeFormatted] = useState('0:00');
   const [totalDuration, setTotalDuration] = useState<string>('0:00');
+  const [decibelArray, setDecibelArray] = useState<number[]>([]); // State to store decibel levels
+
   const [status, setStatus] = useState<
     | 'initial'
     | 'recording'
@@ -44,6 +48,7 @@ const AudioUploadRecord: React.FC<AudioUploadRecordProps> = ({ patientId }) => {
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<BlobPart[]>([]);
   const audioPlayerRef = useRef<HTMLAudioElement | null>(null);
+  const audioContextRef = useRef<AudioContext | null>(null);
   const intervalIdRef = useRef<NodeJS.Timeout | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const drawVisualRef = useRef<number | null>(null);
@@ -99,7 +104,7 @@ const AudioUploadRecord: React.FC<AudioUploadRecordProps> = ({ patientId }) => {
   };
 
   useEffect(() => {
-    console.log('running useEffect');
+    console.log('running audiofile check useEffect');
     if (audioFile?.type !== 'audio/amr') return;
 
     let playerInstance: Player | null = null;
@@ -142,21 +147,6 @@ const AudioUploadRecord: React.FC<AudioUploadRecordProps> = ({ patientId }) => {
     setAudioUrl(url);
 
     setAudioFile(file);
-
-    // if (file.type === 'audio/amr') {
-    //   let playerInstance: Player | null = null;
-
-    //   setIsAMR(true);
-    //   const res = await fetch(url);
-    //   if (res.ok) {
-    //     const buffer = await res.arrayBuffer();
-    //     playerInstance = AMRPlayer(buffer);
-    //     setPlayer(playerInstance);
-    //     // setDuration(playerInstance.duration);
-
-    //     // playerInstance.addEventListener('timeupdate', updateTimeHandler);
-    //   }
-    // }
 
     // Pass along metadata to audioPlayer(Ref)
     if (file.type !== 'audio/amr' && audioPlayerRef.current) {
@@ -328,10 +318,10 @@ const AudioUploadRecord: React.FC<AudioUploadRecordProps> = ({ patientId }) => {
   // recorder functions
   const initializeMediaRecorder = useCallback(async () => {
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-      const constraints = { audio: true };
-
       try {
-        const stream = await navigator.mediaDevices.getUserMedia(constraints);
+        const stream = await navigator.mediaDevices.getUserMedia({
+          audio: true,
+        });
         streamRef.current = stream;
         mediaRecorderRef.current = new MediaRecorder(stream);
 
@@ -404,79 +394,89 @@ const AudioUploadRecord: React.FC<AudioUploadRecordProps> = ({ patientId }) => {
 
   function visualize() {
     // Create AudioContext for visualizing audio stream
-    const audioCtx = new AudioContext();
-
-    const analyser = audioCtx.createAnalyser();
-
-    analyser.minDecibels = -85;
-    analyser.maxDecibels = -10;
+    const audioContext = new AudioContext();
+    audioContextRef.current = audioContext;
+    const analyser = audioContext.createAnalyser();
     analyser.smoothingTimeConstant = 0.85;
+    analyser.fftSize = 1024;
+
     if (!streamRef.current) {
       console.error('stream not found');
       return;
     }
 
-    const source = audioCtx.createMediaStreamSource(streamRef.current);
-    source.connect(analyser);
+    // Connect the microphone stream to the analyser node
+    const microphone = audioContext.createMediaStreamSource(streamRef.current);
+    microphone.connect(analyser);
 
-    // set up canvas context for visualizer
-    const canvas = document.getElementById('visualizer') as HTMLCanvasElement;
-    if (!canvas) {
-      console.error('Canvas element not found');
-      return;
-    }
-    const canvasCtx = canvas.getContext('2d');
-    if (!canvasCtx) {
-      console.error('Unable to get canvas Ctx');
-      return;
-    }
+    const dataArray = new Uint8Array(analyser.frequencyBinCount);
+    let callCount = 0;
+    const logInterval = 5;
 
-    const width = canvas.width;
-    const height = canvas.height;
-
-    analyser.fftSize = 16384;
-    // analyser.fftSize = 256;
-    // analyser.fftSize = 64;
-
-    const bufferLength = analyser.frequencyBinCount;
-
-    const dataArray = new Uint8Array(bufferLength);
-
-    canvasCtx.clearRect(0, 0, width, height);
-
-    const draw = () => {
-      drawVisualRef.current = requestAnimationFrame(draw);
-
+    const updateDecibelArray = () => {
       analyser.getByteFrequencyData(dataArray);
-
-      // console.log(dataArray);
-
-      const avgDec =
-        dataArray.reduce((prevValue, currentValue) => {
-          return prevValue + currentValue;
-        }, 0) / dataArray.length;
-
-      console.log(avgDec);
-
-      // analyser.getByteTimeDomainData(dataArray)
-
-      canvasCtx.clearRect(0, 0, width, height);
-
-      const barWidth = (width / bufferLength) * 4.5;
-      let x = 0;
-
-      for (let i = 0; i < bufferLength; i++) {
-        const barHeight = dataArray[i];
-
-        canvasCtx.fillStyle = 'rgb(' + (barHeight + 100) + ',50,50)';
-        canvasCtx.fillRect(x, height - barHeight / 2, barWidth, barHeight / 2);
-
-        x += barWidth + 1;
+      let values = 0;
+      for (let i = 0; i < dataArray.length; i++) {
+        values += dataArray[i];
       }
+      const average = values / dataArray.length;
+      // Convert the average amplitude to decibels
+      const decibels = 20 * Math.log10(average || 1);
+      // Normalize the decibels to a range between 0 and 1
+      const minDecibels = 2;
+      const maxDecibels = 45;
+      const normalizedDecibels = parseFloat(
+        Math.min(
+          Math.max((decibels - minDecibels) / (maxDecibels - minDecibels), 0),
+          1,
+        ).toFixed(2),
+      );
+
+      callCount++;
+      if (callCount % logInterval === 0) {
+        console.log('Normalized decibels:', normalizedDecibels);
+
+        // Update the state with the new decibel value
+        setDecibelArray((prevArray) => [...prevArray, normalizedDecibels]);
+      }
+
+      drawVisualRef.current = requestAnimationFrame(updateDecibelArray);
     };
 
-    draw();
+    updateDecibelArray();
+
+    return () => {
+      // Cleanup resources when visualization stops
+      if (drawVisualRef.current !== null) {
+        cancelAnimationFrame(drawVisualRef.current);
+      }
+      audioContext.close();
+    };
   }
+
+  // set up canvas context for visualizer
+  //   const canvas = document.getElementById('visualizer') as HTMLCanvasElement;
+  //   if (!canvas) {
+  //     console.error('Canvas element not found');
+  //     return;
+  //   }
+  //   const canvasCtx = canvas.getContext('2d');
+  //   if (!canvasCtx) {
+  //     console.error('Unable to get canvas Ctx');
+  //     return;
+  //   }
+
+  //   const width = canvas.width;
+  //   const height = canvas.height;
+
+  //   canvasCtx.clearRect(0, 0, width, height);
+
+  //   const draw = () => {
+  //     requestAnimationFrame(draw);
+  //   };
+
+  //   draw();
+  // }
 
   function handleDataAvailable(e: BlobEvent) {
     audioChunksRef.current.push(e.data);
@@ -511,6 +511,14 @@ const AudioUploadRecord: React.FC<AudioUploadRecordProps> = ({ patientId }) => {
       streamRef.current.getTracks().forEach((track) => track.stop());
       streamRef.current = null;
     }
+
+    // Close the audio context
+    if (audioContextRef.current) {
+      audioContextRef.current.close();
+      audioContextRef.current = null;
+    }
+
+    console.log('decibleArray:', decibelArray);
   }
 
   function playRecording() {
@@ -735,4 +743,4 @@ const AudioUploadRecord: React.FC<AudioUploadRecordProps> = ({ patientId }) => {
   );
 };
 
-export default AudioUploadRecord;
+export default AudioUploadRecordTest;

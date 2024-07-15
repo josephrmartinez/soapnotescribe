@@ -28,9 +28,9 @@ export function ViewSOAPNote({ id }: { id: string }) {
   return (
     <Link
       href={`/dashboard/notes/${id}`}
-      className="flex w-32 flex-row justify-center  rounded-md border border-gray-200  p-2 font-semibold text-teal-700 transition-colors hover:bg-teal-600 hover:text-white"
+      className="flex w-32 flex-row justify-center  rounded-md border border-gray-200 bg-teal-600 p-2 font-semibold  text-white transition-colors hover:bg-teal-500"
     >
-      <div className="text-sm">Approved</div>
+      <div className="text-sm">View Note</div>
     </Link>
   );
 }
@@ -73,15 +73,19 @@ export function PatientName({
   return (
     <div>
       {last_name ? (
-        <div>
-          <Link
-            href={`/dashboard/patients/${patient_id}`}
-            className={`rounded-md border border-gray-200 p-2.5 text-center text-sm font-semibold text-gray-800 transition-colors hover:bg-gray-100`}
-          >
-            {`${last_name}, ${first_name}`}
-          </Link>
-        </div>
+        <Link
+          href={`/dashboard/patients/${patient_id}`}
+          className="flex w-32 flex-row justify-center rounded-md border  p-2 text-center transition-all "
+        >
+          <div className="whitespace-nowrap text-sm font-semibold text-gray-800">{`${last_name}, ${first_name}`}</div>
+        </Link>
       ) : (
+        // <Link
+        //   href={`/dashboard/patients/${patient_id}`}
+        //   className={`rounded-md border border-gray-200  text-center text-sm font-semibold text-gray-800 transition-colors hover:bg-gray-100`}
+        // >
+        //   {`${last_name}, ${first_name}`}
+        // </Link>
         <div></div>
       )}
     </div>
@@ -94,7 +98,7 @@ export function ReviewDraft({ id }: { id: string }) {
       href={`/dashboard/notes/${id}/edit`}
       className="flex w-32 flex-row justify-center rounded-md border border-red-600 bg-red-600 p-2 text-center shadow-md transition-all hover:border-red-500 hover:bg-red-500 "
     >
-      <div className="text-sm font-semibold text-white">Draft</div>
+      <div className="text-sm font-semibold text-white">Review Draft</div>
     </Link>
   );
 }
