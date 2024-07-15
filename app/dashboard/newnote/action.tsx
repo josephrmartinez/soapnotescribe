@@ -10,6 +10,8 @@ export async function createNote(status: string, formData: FormData) {
   const patientAgeValue = formData.get('patient_age');
   const patientAgeYears: number = Number(patientAgeValue);
 
+  console.log('formData:', formData);
+
   const { error, data } = await supabase
     .from('note')
     .insert({

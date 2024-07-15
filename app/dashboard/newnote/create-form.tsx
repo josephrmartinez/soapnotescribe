@@ -23,6 +23,7 @@ import { TemplateOption, PatientSelectOption } from '@/app/lib/definitions';
 import { SubmitFormButton } from '@/app/ui/Buttons';
 import { fetchNoteById } from '@/app/lib/data';
 import DynamicAudioUploadRecord from '@/app/components/DynamicAudioUploadRecord';
+import { EditPatientProfile } from '@/app/ui/patients/buttons';
 
 const CreateNote = () => {
   const [patientId, setPatientId] = useState<string>('');
@@ -232,7 +233,7 @@ const CreateNote = () => {
     selectedTemplate: TemplateOption,
     actionMeta?: ActionMeta<TemplateOption>,
   ) => {
-    // setChiefComplaint(selectedTemplate.label);
+    setChiefComplaint(selectedTemplate.label);
     console.log(selectedTemplate);
     if (typeof selectedTemplate.value === 'object') {
       setSubjective(selectedTemplate.value.soap_subjective);
@@ -281,13 +282,7 @@ const CreateNote = () => {
                 Add New Patient
               </Link>
             ) : (
-              <Link
-                href={`./patients/${patientId}/edit`}
-                className="flex h-10 items-center rounded-lg border px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-teal-600 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-700 active:bg-teal-600"
-              >
-                <UserIcon width={22} className="mr-2" />
-                <div>Edit Patient Profile</div>
-              </Link>
+              <EditPatientProfile patient_id={patientId} />
             )}
           </div>
         </div>
@@ -549,6 +544,13 @@ const CreateNote = () => {
                 selectedTemplate={selectedTemplate}
               />
             </div>
+            {chiefComplaint && (
+              <input
+                name="chief_complaint"
+                hidden
+                defaultValue={chiefComplaint}
+              ></input>
+            )}
           </div>
 
           <div className="mb-4">
