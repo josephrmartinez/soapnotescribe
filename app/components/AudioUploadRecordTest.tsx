@@ -382,6 +382,7 @@ const AudioUploadRecordTest: React.FC<AudioUploadRecordProps> = ({
         setStatus('recording');
 
         await new Promise((resolve) => setTimeout(resolve, 100));
+
         const canvas = document.getElementById('visualizer');
         if (canvas) {
           visualize();
@@ -393,12 +394,15 @@ const AudioUploadRecordTest: React.FC<AudioUploadRecordProps> = ({
   }
 
   function visualize() {
+    let barArray: number[] = [];
+
     // Create AudioContext for visualizing audio stream
     const audioContext = new AudioContext();
     audioContextRef.current = audioContext;
     const analyser = audioContext.createAnalyser();
-    analyser.smoothingTimeConstant = 0.85;
-    analyser.fftSize = 1024;
+    // analyser.smoothingTimeConstant = 0.7;
+    const sampleCount = 512;
+    analyser.fftSize = sampleCount;
 
     if (!streamRef.current) {
       console.error('stream not found');
@@ -409,41 +413,95 @@ const AudioUploadRecordTest: React.FC<AudioUploadRecordProps> = ({
     const microphone = audioContext.createMediaStreamSource(streamRef.current);
     microphone.connect(analyser);
 
-    const dataArray = new Uint8Array(analyser.frequencyBinCount);
-    let callCount = 0;
-    const logInterval = 5;
+    const dataArray = new Float32Array(analyser.frequencyBinCount);
 
-    const updateDecibelArray = () => {
-      analyser.getByteFrequencyData(dataArray);
-      let values = 0;
+    // Connect to canvas for rendering bars
+    const canvas = document.getElementById('visualizer') as HTMLCanvasElement;
+    if (!canvas) {
+      console.error('Canvas element not found');
+      return;
+    }
+    let ctx = canvas.getContext('2d');
+    let resize = false;
+    let dpr = window.devicePixelRatio;
+
+    function canvasConfig() {
+      if (resize) {
+        resize = false;
+      }
+      canvas.width = canvas.offsetWidth * dpr;
+      canvas.height = canvas.offsetHeight * dpr;
+      ctx.lineCap = 'round';
+      ctx.lineWidth = dpr * 3;
+    }
+    canvasConfig();
+
+    let frameCount = 0;
+    const barSpace = 12;
+
+    const getBar = () => {
+      analyser.getFloatTimeDomainData(dataArray);
+
+      let max = 0;
       for (let i = 0; i < dataArray.length; i++) {
-        values += dataArray[i];
+        if (dataArray[i] > max) {
+          max = dataArray[i];
+        }
       }
-      const average = values / dataArray.length;
-      // Convert the average amplitude to decibels
-      const decibels = 20 * Math.log10(average || 1);
-      // Normalize the decibels to a range between 0 and 1
-      const minDecibels = 2;
-      const maxDecibels = 45;
-      const normalizedDecibels = parseFloat(
-        Math.min(
-          Math.max((decibels - minDecibels) / (maxDecibels - minDecibels), 0),
-          1,
-        ).toFixed(2),
-      );
+      max = Math.min(max * 10, 0.93);
+      console.log('max', max);
 
-      callCount++;
-      if (callCount % logInterval === 0) {
-        console.log('Normalized decibels:', normalizedDecibels);
+      // calculate avg instead of max? Trying to get a proxy for "volume"
+      // let avg = 0;
+      // console.log('sample', sampleCount);
+      // console.log('hey', dataArray.length);
+      // for (let i = 0; i + 1 < sampleCount; i++) {
+      //   avg += dataArray[i];
+      // }
+      // // avg = avg / sampleCount;
 
-        // Update the state with the new decibel value
-        setDecibelArray((prevArray) => [...prevArray, normalizedDecibels]);
-      }
+      // // avg = Math.min(avg * 10, 0.93);
+      // console.log('avg', avg);
 
-      drawVisualRef.current = requestAnimationFrame(updateDecibelArray);
+      barArray.push(max);
+
+      // console.log('normalized decibel:', normalizedDecibel);
+      // console.log('barArray', barArray);
     };
 
-    updateDecibelArray();
+    // prettier-ignore
+    function draw() {
+      frameCount++;
+
+      getBar();
+
+      // if (frameCount % barSpace == 0) {
+      //   getBar();
+      // }
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      ctx.strokeStyle = '#f03';
+      for (let i = 0; i < barArray.length; i++) {
+        ctx.beginPath();
+        ctx.moveTo(
+          (canvas.width + (i * barSpace) - frameCount + barSpace),
+          (canvas.height * 0.5) - (canvas.height * 0.7 * barArray[i]),
+        );
+        ctx.lineTo(
+          (canvas.width + (i * barSpace) - frameCount + barSpace),
+          (canvas.height * 0.5) + (canvas.height * 0.7 * barArray[i]),
+        );
+        ctx.stroke();
+      }
+    }
+
+    function animate() {
+      draw();
+      drawVisualRef.current = requestAnimationFrame(animate);
+    }
+
+    animate();
 
     return () => {
       // Cleanup resources when visualization stops
@@ -453,30 +511,6 @@ const AudioUploadRecordTest: React.FC<AudioUploadRecordProps> = ({
       audioContext.close();
     };
   }
-
-  // set up canvas context for visualizer
-  //   const canvas = document.getElementById('visualizer') as HTMLCanvasElement;
-  //   if (!canvas) {
-  //     console.error('Canvas element not found');
-  //     return;
-  //   }
-  //   const canvasCtx = canvas.getContext('2d');
-  //   if (!canvasCtx) {
-  //     console.error('Unable to get canvas Ctx');
-  //     return;
-  //   }
-
-  //   const width = canvas.width;
-  //   const height = canvas.height;
-
-  //   canvasCtx.clearRect(0, 0, width, height);
-
-  //   const draw = () => {
-  //     requestAnimationFrame(draw);
-  //   };
-
-  //   draw();
-  // }
 
   function handleDataAvailable(e: BlobEvent) {
     audioChunksRef.current.push(e.data);
@@ -744,3 +778,28 @@ const AudioUploadRecordTest: React.FC<AudioUploadRecordProps> = ({
 };
 
 export default AudioUploadRecordTest;
+
+// // set up canvas context for visualizer
+// const canvas = document.getElementById('visualizer') as HTMLCanvasElement;
+// if (!canvas) {
+//   console.error('Canvas element not found');
+//   return;
+// }
+// const canvasCtx = canvas.getContext('2d');
+// if (!canvasCtx) {
+//   console.error('Unable to get canvas Ctx');
+//   return;
+// }
+
+// const width = canvas.width;
+// const height = canvas.height;
+
+// canvasCtx.clearRect(0, 0, width, height);
+
+// const draw = () => {
+//   canvasCtx.fillStyle = 'rgb(50,50,50)';
+//   canvasCtx.fillRect(0, height, 10, normalizedDecibel * height);
+//   requestAnimationFrame(draw);
+// };
+
+// draw();

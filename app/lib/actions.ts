@@ -46,14 +46,7 @@ export async function getReplicateMonoTranscript(url: string, apptid: string) {
 
 
 export async function getSOAPData(noteid: string, transcript: string, transcriptionTime: string) {
-
-  // const userSettings = await getUserSettingsFromNoteId(noteid)
-  // const appointmentTypes = JSON.stringify(userSettings.appointment_types);
-  // const appointmentSpecialties = JSON.stringify(userSettings.appointment_specialties);
   console.log("calling getSOAPData")
-
-  const appointmentTypes = "['In Person', 'Telemedicine']"
-  const appointmentSpecialties = "['Urgent Care', 'Primary Care']"
 
   const systemContentString:string = `You are a helpful, highly-trained medical assistant. Carefully review the following TRANSCRIPT and generate a clinical SOAP note as a JSON object. The JSON object should conform to the following JSON Schema:
 
@@ -71,10 +64,6 @@ export async function getSOAPData(noteid: string, transcript: string, transcript
               "type": "string",
               "pattern": "^\\d{2}:\\d{2}$",
               "description": "Time of the appointment in hh:mm format"
-            },
-            "allergies?": {
-              "type": "string",
-              "description": "Drug allergies. Only return a value for this field if drug allergies are mentioned."
             },
             "chief_complaint": {
               "type": "string",
@@ -101,24 +90,14 @@ export async function getSOAPData(noteid: string, transcript: string, transcript
               "type": "string",
               "description": "Differential diagnosis. Narrative format or UNORDERED list."
             },
-            "appointment_type?": {
-              "type": "string",
-              "enum": ${appointmentTypes},
-              "description": "Type of appointment. Only return a value for this field if appointment type is clear."
-            },
-            "appointment_specialty?": {
-              "type": "string",
-              "enum": ${appointmentSpecialties},
-              "description": "Specialty of the appointment. Only return a value for this field if appointment specialty is clear."
-            },
             "patient_location?": {
               "type": "string",
-              "description": "Location of the patient (State/Province, e.g., 'Arizona'). Only return a value for this field if the patient location is clearly mentioned."
+              "description": "Location of the patient (State/Province, e.g., 'Arizona'). Only include this key if the patient location is clearly mentioned in the transcript."
             }
           }
         }
 
-        Your answer MUST begin and end with curly brackets. Do not include any leading backticks or other markers. ALL LISTS SHOULD BE UNORDERED AND STYLED WITH A SIMPLE DASH. NO NUMBERED LISTS. Include as much specific information as possible from the transcript in the SOAP note. Be thorough! If you do not have the information required to provide a value in any of the fields, just return the JSON object WITHOUT those fields. Do not return a field with an empty string or an "unknown" value. For the differential_diagnosis field, analyze the entire transcript and return a differential diagnosis along with possible alternative treatment options. Your complete answer MUST begin and end with curly brackets.`
+        Your answer MUST begin and end with curly brackets. Do not include any leading backticks or other markers. ALL LISTS SHOULD BE UNORDERED AND STYLED WITH A SIMPLE DASH. NO NUMBERED LISTS. Include as much specific information as possible from the transcript in the SOAP note. Be thorough! If you do not have the information required to provide a value in any of the fields, just return the JSON object WITHOUT those fields. Do NOT return a field with an empty string or an "unknown" value. For the differential_diagnosis field, analyze the entire transcript and return a differential diagnosis along with possible alternative treatment options. Your complete answer MUST begin and end with curly brackets.`
   const userContentString:string = `Give me a thorough SOAP note from the following transcript. Return your response as a JSON object. TRANSCRIPT: ${transcript}`
   
   // console.log("system content string:", systemContentString)
@@ -126,7 +105,7 @@ export async function getSOAPData(noteid: string, transcript: string, transcript
   try {
     const apiKey = process.env.ANTHROPIC_API_KEY;
     if (!apiKey) {
-      throw new Error('ANThROPIC_API_KEY is not set in environment variables.');
+      throw new Error('ANTHROPIC_API_KEY is not set in environment variables.');
     }
 
     const anthropic = new Anthropic({ apiKey });
@@ -210,6 +189,22 @@ async function updateNoteWithSOAPData(noteid: string, transcript: string, transc
 }
 
 
+// FOR INCLUDING USER APPOINTMENT TYPES AND SPECIALTIES WITH PROMPT:
+// const userSettings = await getUserSettingsFromNoteId(noteid)
+  // const appointmentTypes = JSON.stringify(userSettings.appointment_types);
+  // const appointmentSpecialties = JSON.stringify(userSettings.appointment_specialties);
+  // const appointmentTypes = "['In Person', 'Telemedicine']"
+  // const appointmentSpecialties = "['Urgent Care', 'Primary Care']"
+  // "appointment_type?": {
+  //             "type": "string",
+  //             "enum": ${appointmentTypes},
+  //             "description": "Type of appointment. Only include this key if appointment type is stated in the transcript."
+  //           },
+  //           "appointment_specialty?": {
+  //             "type": "string",
+  //             "enum": ${appointmentSpecialties},
+  //             "description": "Specialty of the appointment. Only include this key if appointment specialty is stated in the transcript."
+  //           },
 
 
 // const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })

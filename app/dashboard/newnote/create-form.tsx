@@ -234,7 +234,7 @@ const CreateNote = () => {
     actionMeta?: ActionMeta<TemplateOption>,
   ) => {
     setChiefComplaint(selectedTemplate.label);
-    console.log(selectedTemplate);
+    // console.log(selectedTemplate);
     if (typeof selectedTemplate.value === 'object') {
       setSubjective(selectedTemplate.value.soap_subjective);
       setObjective(selectedTemplate.value.soap_objective);
@@ -389,281 +389,280 @@ const CreateNote = () => {
             </div>
           )}
 
-          <div className="mb-6">
+          <div className="text-md mb-8 block border-b font-medium">
+            Generate Note from Audio:
+          </div>
+
+          <div className="mb-8 px-2">
             <div className="mb-2 block text-sm font-medium">Audio Input</div>
             <DynamicAudioUploadRecord patientId={patientId} />
           </div>
 
-          <div className="mb-4 grid grid-cols-1 gap-x-8 gap-y-4 sm:grid-cols-2">
-            {/* Appointment Date */}
-            <div className="">
-              <label
-                htmlFor="appointment_date"
-                className="mb-2 block text-sm font-medium"
-              >
-                Appointment Date
-              </label>
-              <div className="relative">
-                <input
-                  id="appointment_date"
-                  name="appointment_date"
-                  required
-                  type="date"
-                  value={date}
-                  onChange={(e) => setDate(e.target.value)}
-                  className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
-                ></input>
+          <div className="text-md mb-8 block border-b font-medium">
+            Write Note Manually:
+          </div>
+
+          <div className="px-2">
+            <div className=" mb-4 grid grid-cols-1 gap-x-8 gap-y-4  sm:grid-cols-2">
+              {/* Appointment Date */}
+              <div className="">
+                <label
+                  htmlFor="appointment_date"
+                  className="mb-2 block text-sm font-medium"
+                >
+                  Appointment Date
+                </label>
+                <div className="relative">
+                  <input
+                    id="appointment_date"
+                    name="appointment_date"
+                    required
+                    type="date"
+                    value={date}
+                    onChange={(e) => setDate(e.target.value)}
+                    className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
+                  ></input>
+                </div>
+              </div>
+              {/* Appointment Time */}
+              <div className="">
+                <label
+                  htmlFor="appointment_time"
+                  className="mb-2 block text-sm font-medium"
+                >
+                  Appointment Time
+                </label>
+                <div className="relative">
+                  <input
+                    id="appointment_time"
+                    name="appointment_time"
+                    required
+                    type="time"
+                    value={time}
+                    onChange={(e) => setTime(e.target.value)}
+                    className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
+                  ></input>
+                </div>
+              </div>
+              <div className="">
+                <label
+                  htmlFor="appointment_type"
+                  className="mb-2 block text-sm font-medium"
+                >
+                  Appointment Type
+                </label>
+                <AppointmentTypeSelect
+                  appointmentTypes={appointmentTypes}
+                  appointmentType={appointmentType}
+                  setAppointmentType={handleAppointmentTypeChange}
+                />
+              </div>
+              {/* appointment specialty */}
+              <div className="">
+                <label
+                  htmlFor="appointment_specialty"
+                  className="mb-2 block text-sm font-medium"
+                >
+                  Appointment Specialty
+                </label>
+                <AppointmentSpecialtySelect
+                  appointmentSpecialty={appointmentSpecialty}
+                  appointmentSpecialties={appointmentSpecialties}
+                  setAppointmentSpecialty={handleAppointmentSpecialtyChange}
+                />
+              </div>
+              {/* patient location */}
+              <div className="">
+                <label
+                  htmlFor="patient_location"
+                  className="mb-2 block text-sm font-medium"
+                >
+                  Patient Location
+                </label>
+                <div className="relative">
+                  <input
+                    id="patient_location"
+                    name="patient_location"
+                    required
+                    type="text"
+                    className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
+                    value={patientLocation || ''}
+                    onChange={(e) => setPatientLocation(e.target.value)}
+                  ></input>
+                </div>
+              </div>
+              {/* consent */}
+              <div className="">
+                <label
+                  htmlFor="consent"
+                  className="mb-2 block text-sm font-medium"
+                >
+                  Consent
+                </label>
+                <div className="relative flex h-9 flex-row items-center">
+                  <input
+                    id="consent"
+                    name="consent"
+                    required
+                    type="checkbox"
+                    value="true"
+                    // if checked, value is true. if unchecked, value is false
+                    onChange={(e) => setConsent(e.target.value)}
+                    className="peer mr-4 block h-6 w-6 cursor-pointer rounded-md border border-gray-200 text-sm outline-2 "
+                  ></input>
+                  <div className="text-sm">Patient consents to treatment.</div>
+                </div>
               </div>
             </div>
-
-            {/* Appointment Time */}
-            <div className="">
+            {/* Allergies */}
+            {/* <div className="mb-4">
               <label
-                htmlFor="appointment_time"
+                htmlFor="allergies"
                 className="mb-2 block text-sm font-medium"
               >
-                Appointment Time
+                Allergies
               </label>
               <div className="relative">
                 <input
-                  id="appointment_time"
-                  name="appointment_time"
-                  required
-                  type="time"
-                  value={time}
-                  onChange={(e) => setTime(e.target.value)}
-                  className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
-                ></input>
-              </div>
-            </div>
-            <div className="">
-              <label
-                htmlFor="appointment_type"
-                className="mb-2 block text-sm font-medium"
-              >
-                Appointment Type
-              </label>
-              <AppointmentTypeSelect
-                appointmentTypes={appointmentTypes}
-                appointmentType={appointmentType}
-                setAppointmentType={handleAppointmentTypeChange}
-              />
-            </div>
-
-            {/* appointment specialty */}
-            <div className="">
-              <label
-                htmlFor="appointment_specialty"
-                className="mb-2 block text-sm font-medium"
-              >
-                Appointment Specialty
-              </label>
-              <AppointmentSpecialtySelect
-                appointmentSpecialty={appointmentSpecialty}
-                appointmentSpecialties={appointmentSpecialties}
-                setAppointmentSpecialty={handleAppointmentSpecialtyChange}
-              />
-            </div>
-
-            {/* patient location */}
-            <div className="">
-              <label
-                htmlFor="patient_location"
-                className="mb-2 block text-sm font-medium"
-              >
-                Patient Location
-              </label>
-              <div className="relative">
-                <input
-                  id="patient_location"
-                  name="patient_location"
+                  id="allergies"
+                  name="allergies"
                   required
                   type="text"
                   className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
-                  value={patientLocation || ''}
-                  onChange={(e) => setPatientLocation(e.target.value)}
+                  value={allergies || ''}
+                  onChange={(e) => setAllergies(e.target.value)}
                 ></input>
               </div>
-            </div>
-
-            {/* consent */}
-            <div className="">
+            </div> */}
+            <div className="mb-4 w-full lg:w-1/2">
               <label
-                htmlFor="consent"
+                htmlFor="chief_complaint"
                 className="mb-2 block text-sm font-medium"
               >
-                Consent
+                Chief Complaint
               </label>
-              <div className="relative flex h-9 flex-row items-center">
+              <div className="relative">
+                <CreateableSelectChiefComplaint
+                  onTemplateSelect={handleTemplateSelect}
+                  selectedTemplate={selectedTemplate}
+                />
+              </div>
+              {chiefComplaint && (
                 <input
-                  id="consent"
-                  name="consent"
-                  required
-                  type="checkbox"
-                  value="true"
-                  // if checked, value is true. if unchecked, value is false
-                  onChange={(e) => setConsent(e.target.value)}
-                  className="peer mr-4 block h-6 w-6 cursor-pointer rounded-md border border-gray-200 text-sm outline-2 "
+                  name="chief_complaint"
+                  hidden
+                  defaultValue={chiefComplaint}
                 ></input>
-                <div className="text-sm">Patient consents to treatment.</div>
+              )}
+            </div>
+            <div className="mb-4">
+              <label
+                htmlFor="soap_subjective"
+                className="mb-2 block text-sm font-medium"
+              >
+                Subjective
+              </label>
+              <div className="relative">
+                <textarea
+                  id="soap_subjective"
+                  ref={subjectiveRef}
+                  name="soap_subjective"
+                  className="w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
+                  value={subjective || ''}
+                  onChange={(e) => setSubjective(e.target.value)}
+                ></textarea>
               </div>
             </div>
-          </div>
-
-          {/* Allergies */}
-          {/* <div className="mb-4">
-            <label
-              htmlFor="allergies"
-              className="mb-2 block text-sm font-medium"
-            >
-              Allergies
-            </label>
-            <div className="relative">
-              <input
-                id="allergies"
-                name="allergies"
-                required
-                type="text"
-                className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
-                value={allergies || ''}
-                onChange={(e) => setAllergies(e.target.value)}
-              ></input>
+            <div className="mb-4">
+              <label
+                htmlFor="soap_objective"
+                className="mb-2 block text-sm font-medium"
+              >
+                Objective
+              </label>
+              <div className="relative">
+                <textarea
+                  id="soap_objective"
+                  ref={objectiveRef}
+                  name="soap_objective"
+                  className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
+                  value={objective || ''}
+                  onChange={(e) => setObjective(e.target.value)}
+                ></textarea>
+              </div>
             </div>
-          </div> */}
-
-          <div className="mb-4 w-full lg:w-1/2">
-            <label
-              htmlFor="chief_complaint"
-              className="mb-2 block text-sm font-medium"
-            >
-              Chief Complaint
-            </label>
-            <div className="relative">
-              <CreateableSelectChiefComplaint
-                onTemplateSelect={handleTemplateSelect}
-                selectedTemplate={selectedTemplate}
-              />
+            <div className="mb-4">
+              <label
+                htmlFor="soap_assessment"
+                className="mb-2 block text-sm font-medium"
+              >
+                Assessment
+              </label>
+              <div className="relative">
+                <textarea
+                  id="soap_assessment"
+                  name="soap_assessment"
+                  ref={assessmentRef}
+                  className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
+                  value={assessment || ''}
+                  onChange={(e) => setAssessment(e.target.value)}
+                ></textarea>
+              </div>
             </div>
-            {chiefComplaint && (
-              <input
-                name="chief_complaint"
-                hidden
-                defaultValue={chiefComplaint}
-              ></input>
-            )}
-          </div>
-
-          <div className="mb-4">
-            <label
-              htmlFor="soap_subjective"
-              className="mb-2 block text-sm font-medium"
-            >
-              Subjective
-            </label>
-            <div className="relative">
-              <textarea
-                id="soap_subjective"
-                ref={subjectiveRef}
-                name="soap_subjective"
-                className="w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
-                value={subjective || ''}
-                onChange={(e) => setSubjective(e.target.value)}
-              ></textarea>
+            <div className="mb-4">
+              <label
+                htmlFor="soap_plan"
+                className="mb-2 block text-sm font-medium"
+              >
+                Plan
+              </label>
+              <div className="relative">
+                <textarea
+                  id="soap_plan"
+                  name="soap_plan"
+                  ref={planRef}
+                  className="block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
+                  value={plan || ''}
+                  onChange={(e) => setPlan(e.target.value)}
+                ></textarea>
+              </div>
             </div>
-          </div>
-
-          <div className="mb-4">
-            <label
-              htmlFor="soap_objective"
-              className="mb-2 block text-sm font-medium"
-            >
-              Objective
-            </label>
-            <div className="relative">
-              <textarea
-                id="soap_objective"
-                ref={objectiveRef}
-                name="soap_objective"
-                className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
-                value={objective || ''}
-                onChange={(e) => setObjective(e.target.value)}
-              ></textarea>
+            <div className="mb-4">
+              <label
+                htmlFor="doctor_signature"
+                className="mb-2 block text-sm font-medium"
+              >
+                Doctor Signature
+              </label>
+              <div className="relative">
+                <input
+                  id="doctor_signature"
+                  name="doctor_signature"
+                  type="text"
+                  className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
+                  value={doctorSignature || ''}
+                  onChange={(e) => setDoctorSignature(e.target.value)}
+                ></input>
+              </div>
             </div>
-          </div>
-
-          <div className="mb-4">
-            <label
-              htmlFor="soap_assessment"
-              className="mb-2 block text-sm font-medium"
-            >
-              Assessment
-            </label>
-            <div className="relative">
-              <textarea
-                id="soap_assessment"
-                name="soap_assessment"
-                ref={assessmentRef}
-                className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
-                value={assessment || ''}
-                onChange={(e) => setAssessment(e.target.value)}
-              ></textarea>
+            <div className="mt-6 grid grid-cols-2  gap-4 sm:grid-cols-3">
+              <Link
+                href="/dashboard/notes"
+                className="flex h-10 items-center justify-center rounded-lg bg-gray-100 px-4 text-center text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
+              >
+                Cancel
+              </Link>
+              <SubmitFormButton formAction={submitDraftNote} secondary active>
+                Save Draft
+              </SubmitFormButton>
+              <SubmitFormButton
+                className="col-span-2 sm:col-span-1"
+                formAction={submitApprovedNote}
+                active={doctorSignature !== null && doctorSignature.length > 5}
+              >
+                Add Note
+              </SubmitFormButton>
             </div>
-          </div>
-
-          <div className="mb-4">
-            <label
-              htmlFor="soap_plan"
-              className="mb-2 block text-sm font-medium"
-            >
-              Plan
-            </label>
-            <div className="relative">
-              <textarea
-                id="soap_plan"
-                name="soap_plan"
-                ref={planRef}
-                className="block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
-                value={plan || ''}
-                onChange={(e) => setPlan(e.target.value)}
-              ></textarea>
-            </div>
-          </div>
-          <div className="mb-4">
-            <label
-              htmlFor="doctor_signature"
-              className="mb-2 block text-sm font-medium"
-            >
-              Doctor Signature
-            </label>
-            <div className="relative">
-              <input
-                id="doctor_signature"
-                name="doctor_signature"
-                type="text"
-                className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
-                value={doctorSignature || ''}
-                onChange={(e) => setDoctorSignature(e.target.value)}
-              ></input>
-            </div>
-          </div>
-
-          <div className="mt-6 grid grid-cols-2  gap-4 sm:grid-cols-3">
-            <Link
-              href="/dashboard/notes"
-              className="flex h-10 items-center justify-center rounded-lg bg-gray-100 px-4 text-center text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
-            >
-              Cancel
-            </Link>
-            <SubmitFormButton formAction={submitDraftNote} secondary active>
-              Save Draft
-            </SubmitFormButton>
-            <SubmitFormButton
-              className="col-span-2 sm:col-span-1"
-              formAction={submitApprovedNote}
-              active={doctorSignature !== null && doctorSignature.length > 5}
-            >
-              Add Note
-            </SubmitFormButton>
           </div>
         </div>
       </div>
