@@ -15,7 +15,7 @@ interface AudioUploadRecordProps {
   patientId: string;
 }
 
-const AudioUploadRecordDemo: React.FC<AudioUploadRecordProps> = ({
+const AudioUploadRecordVolumeVis: React.FC<AudioUploadRecordProps> = ({
   patientId,
 }) => {
   const [uploadComplete, setUploadComplete] = useState<boolean>(false);
@@ -760,4 +760,4 @@ const AudioUploadRecordDemo: React.FC<AudioUploadRecordProps> = ({
   );
 };
 
-export default AudioUploadRecordDemo;
+export default AudioUploadRecordVolumeVis;

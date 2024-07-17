@@ -72,7 +72,7 @@ export async function getSOAPData(noteid: string, transcript: string, transcript
             },
             "soap_subjective": {
               "type": "string",
-              "description": "Subjective information from the patient"
+              "description": "Subjective information from the patient. DO NOT include patient name or date of birth."
             },
             "soap_objective": {
               "type": "string",
