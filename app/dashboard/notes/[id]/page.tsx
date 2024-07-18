@@ -199,15 +199,17 @@ export default async function Page({ params }: { params: { id: string } }) {
           </div>
 
           {/* Allergies */}
-          <div className="mb-4">
-            <label
-              htmlFor="allergies"
-              className="mb-2 block text-sm font-medium"
-            >
-              Allergies
-            </label>
-            <div className="ml-2 text-sm">{note.patient.allergies}</div>
-          </div>
+          {note.patient.allergies && (
+            <div className="mb-4">
+              <label
+                htmlFor="allergies"
+                className="mb-2 block text-sm font-medium"
+              >
+                Allergies
+              </label>
+              <div className="ml-2 text-sm">{note.patient.allergies}</div>
+            </div>
+          )}
 
           {/* Chief Complaint */}
           <div className="mb-4">
@@ -230,7 +232,7 @@ export default async function Page({ params }: { params: { id: string } }) {
             >
               Subjective
             </label>
-            <div id="subjective" className="px-2 text-sm">
+            <div id="subjective" className="whitespace-pre-wrap px-2  text-sm">
               {note.soap_subjective}
             </div>
           </div>
@@ -243,7 +245,7 @@ export default async function Page({ params }: { params: { id: string } }) {
               Objective
             </label>
             <div className="relative">
-              <div id="objective" className="px-2 text-sm">
+              <div id="objective" className="whitespace-pre-wrap px-2 text-sm">
                 {note.soap_objective || ''}
               </div>
             </div>
@@ -257,18 +259,21 @@ export default async function Page({ params }: { params: { id: string } }) {
               Assessment
             </label>
             <div className="relative">
-              <div id="assessment" className="px-2 text-sm">
+              <div id="assessment" className="whitespace-pre-wrap px-2 text-sm">
                 {note.soap_assessment || ''}
               </div>
             </div>
           </div>
 
           <div className="mb-4">
-            <label htmlFor="plan" className="mb-2 block text-sm font-medium">
+            <label
+              htmlFor="plan"
+              className="mb-2 block whitespace-pre-wrap text-sm font-medium"
+            >
               Plan
             </label>
             <div className="relative">
-              <div id="plan" className="px-2 text-sm">
+              <div id="plan" className="whitespace-pre-wrap px-2 text-sm">
                 {note.soap_plan || ''}
               </div>
             </div>

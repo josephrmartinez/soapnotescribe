@@ -152,6 +152,8 @@ const EditDraftNote: React.FC<CreateNoteProps> = ({ note }) => {
     setAppointmentSpecialty(selectedAppointmentSpecialty);
   };
 
+  console.log(note.differential_diagnosis);
+
   return (
     <div className="w-full">
       {/* <div className="mb-8 flex w-full">
@@ -576,7 +578,9 @@ const EditDraftNote: React.FC<CreateNoteProps> = ({ note }) => {
               Differential Diagnosis
             </div>
             <div className="collapse-content">
-              <p className="text-sm">{differentialDiagnosis}</p>
+              <div className="whitespace-pre-wrap text-sm">
+                {differentialDiagnosis}
+              </div>
               <p className="mt-6 text-center text-xs italic text-gray-700">
                 This differential diagnosis is for reference only and will not
                 be included with the approved SOAP note.

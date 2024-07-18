@@ -28,29 +28,47 @@ export default async function Page() {
   }
 
   return (
-    <main className="bg-gray-50 p-2">
+    <main className="bg-gray-50 ">
       <Header />
 
       {/* Mobile view */}
-      <div className="mx-auto mb-12 grid justify-items-center md:hidden">
-        <div className="mx-auto mt-16 px-6 text-center text-3xl font-semibold text-teal-700">
+      <div className="mx-auto grid justify-items-center  bg-gray-50 md:hidden">
+        <div className="mt-12 w-full px-4 text-left text-3xl font-semibold text-teal-700">
           <p>Streamline your</p>
           <p>clinical charting.</p>
         </div>
-        <div className="my-6 text-left text-xl text-gray-500">
-          <p>Go from audio memo</p>
-          <p>or appointment recording</p>
-          <p>to structured SOAP note</p>
-          <p>in seconds.</p>
+        <div className=" grid grid-cols-3 px-4">
+          <div className="col-span-2 my-6 text-left text-lg text-gray-600">
+            <p>Go from audio memo</p>
+            <p>or appointment recording</p>
+            <p>to structured SOAP note</p>
+            <p>
+              in <span className="underline underline-offset-4">seconds</span>.
+            </p>
+          </div>
+          <div className="flex items-center">
+            <Image
+              src="/hipaa.svg"
+              width={160}
+              height={160}
+              alt="HIPAA compliant"
+              className=""
+            ></Image>
+          </div>
         </div>
-        <Image
-          alt="soapscribe demo"
-          width={1000}
-          height={1000}
-          src="/soapnotescribedemo.gif"
-          unoptimized={true}
-          className="mb-6 rounded-lg shadow-lg"
-        ></Image>
+        <div className="my-2"></div>
+        <div className="flex w-full items-center justify-center bg-[#B30A2A43]">
+          <Image
+            alt="soapscribe demo"
+            width={300}
+            height={300}
+            src="/demo-mobile.gif"
+            unoptimized={true}
+            className="my-8 rounded-lg shadow-lg"
+          ></Image>
+        </div>
+        <div className="my-4"></div>
+
         <div className="mx-auto my-4 flex flex-row items-center justify-center pb-4 align-middle">
           {/* <Link
             href="/signup"
@@ -71,17 +89,15 @@ export default async function Page() {
             join waitlist
           </Link>
         </div>
-        <Image
-          src="/hipaa.svg"
-          width={160}
-          height={160}
-          alt="HIPAA compliant"
-          className="pb-6"
-        ></Image>
-        <div className="mx-auto flex w-11/12 flex-col items-center"></div>
-        <div className="mx-auto mt-2 px-6 text-center text-2xl font-semibold text-gray-600">
-          <p>Type less and create SOAP notes faster with soapnotescribe:</p>
+
+        <div className="mt-2 w-full px-14 text-left text-3xl font-semibold text-gray-500">
+          <p>Chart</p>
+          <p>
+            <span className="underline underline-offset-4">faster</span> with
+          </p>
+          <p>soapnotescribe:</p>
         </div>
+
         <div className="mx-auto my-12 grid max-w-screen-lg gap-8 px-8 md:mt-8 md:grid-cols-3">
           <UseStep
             icon={<MicrophoneIcon />}
@@ -102,7 +118,7 @@ export default async function Page() {
           />
         </div>
 
-        <div className="mb-8 flex flex-col items-center">
+        {/* <div className="mb-8 flex flex-col items-center">
           <div className="mx-auto mt-4 px-6 text-center text-3xl font-semibold text-teal-700">
             <p>More than just</p>
             <p>simple transcription:</p>
@@ -115,14 +131,25 @@ export default async function Page() {
               <li>easily share discharge instructions</li>
             </ul>
           </div>
-        </div>
+        </div> */}
 
-        <Link
-          href="/waitlist"
-          className="mx-auto w-32 rounded-full bg-teal-600 py-3 text-center font-bold text-white shadow-md hover:bg-teal-500 hover:text-white"
-        >
-          join waitlist
-        </Link>
+        <div className="flex w-full items-center justify-center bg-[#B30A2A43]">
+          <Image
+            alt="soapscribe mobile screenshot"
+            width={300}
+            height={300}
+            src="/screenshot-mobile.webp"
+            className="my-8 rounded-lg shadow-lg"
+          ></Image>
+        </div>
+        <div className="flex w-full bg-[#B30A2A43] pb-12 pt-4">
+          <Link
+            href="/waitlist"
+            className="mx-auto w-32 rounded-full bg-teal-600 py-3 text-center font-bold text-white shadow-lg hover:bg-teal-500 hover:text-white"
+          >
+            join waitlist
+          </Link>
+        </div>
 
         {/* <div
           id="plan"
@@ -199,7 +226,7 @@ export default async function Page() {
             alt="soapnotescribe demo"
             width={1000}
             height={1000}
-            src="/soapnotescribedemo.gif"
+            src="/demo-desktop.gif"
             unoptimized={true}
             className="rounded-lg shadow-lg"
           ></Image>

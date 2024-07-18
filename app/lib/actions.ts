@@ -76,7 +76,7 @@ export async function getSOAPData(noteid: string, transcript: string, transcript
             },
             "soap_objective": {
               "type": "string",
-              "description": "Objective observations and measurements. Narrative format or UNORDERED list."
+              "description": "Objective observations and measurements. Narrative format or UNORDERED list. DO NOT include patient name or date of birth."
             },
             "soap_assessment": {
               "type": "string",
