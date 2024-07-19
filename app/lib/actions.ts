@@ -103,12 +103,13 @@ export async function getAnalysisAnthropic(noteid: string, transcript: string, t
   // console.log("system content string:", systemContentString)
 
   try {
-    const apiKey = process.env.ANTHROPIC_API_KEY;
+    const apiKey = process.env['ANTHROPIC_API_KEY'];
     if (!apiKey) {
       throw new Error('ANTHROPIC_API_KEY is not set in environment variables.');
     }
 
     const anthropic = new Anthropic({ apiKey });
+    
     const anthropicResponse = await anthropic.messages.create({
       model: "claude-3-5-sonnet-20240620",
       max_tokens: 4096,
