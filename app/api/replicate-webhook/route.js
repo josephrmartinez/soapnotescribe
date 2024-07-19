@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getSOAPData } from "@/app/lib/actions";
+import { getAnalysisOpenAI, getAnalysisAnthropic, getSOAPData } from "@/app/lib/actions";
 
 export async function GET(req) {
     console.log("GETing webhook route");
@@ -17,7 +17,7 @@ export async function POST(req, res) {
     const transcript = prediction.output.text;
     const transcriptionTime = prediction.metrics.predict_time;
     
-    await getSOAPData(noteid, transcript, transcriptionTime);
+    await getAnalysisOpenAI(noteid, transcript, transcriptionTime);
     
     return NextResponse.json({ message: "POST success!" }, { status: 200 });
   }
