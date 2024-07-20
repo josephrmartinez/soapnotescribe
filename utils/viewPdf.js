@@ -36,7 +36,7 @@ const stream = doc.pipe(blobStream())
   doc.font('bold').text(`Consent: `, { continued: true });
   doc.font('regular').text(`Patient consents to treatment`);
   doc.font('bold').text(`Allergies: `, { continued: true });
-  doc.font('regular').text(`${note.allergies}`);
+  doc.font('regular').text(`${note.patient.allergies}`);
   doc.moveDown();
   doc.moveDown();
   doc.moveTo(0 + 50, doc.y)

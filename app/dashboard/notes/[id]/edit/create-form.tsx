@@ -36,7 +36,6 @@ const EditDraftNote: React.FC<CreateNoteProps> = ({ note }) => {
   const [patientAgeYears, setPatientAgeYears] = useState<number>(
     note?.patient_age_years || 0,
   );
-  const [allergies, setAllergies] = useState<string>(note?.allergies || '');
   const [consent, setConsent] = useState<boolean | null>(note?.consent || null);
   const [subjective, setSubjective] = useState<string | null>(
     note?.soap_subjective || null,

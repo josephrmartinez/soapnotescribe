@@ -5,50 +5,7 @@ import OpenAI from "openai"
 import Anthropic from '@anthropic-ai/sdk';
 import { createClient as createClientJS } from "@supabase/supabase-js";
 
-
-function assertIsTextBlock(value: unknown): asserts value is Anthropic.TextBlock {
-  if (typeof value === "object" && value && !value.hasOwnProperty("text")) throw new Error('Expected text block');
-}
-
-
-
-export async function getReplicateMonoTranscript(url: string, apptid: string) {
-  const replicate = new Replicate({
-  auth: process.env.REPLICATE_API_TOKEN,
-});
-  
-  const webhookUrl = process.env.NODE_ENV === 'production' ? process.env.PROD_REPLICATE_WEBHOOK : process.env.DEV_REPLICATE_WEBHOOK;
-
-  console.log(`Running getReplicateMonoTranscript at ${new Date().toISOString()}`);
-  
-  try {
-    // Prediction may take longer than 30 seconds
-    const response = await replicate.predictions.create(
-    {
-      version: "3ab86df6c8f54c11309d4d1f930ac292bad43ace52d10c80d87eb258b3c9f79c",
-      input: {
-        task: "transcribe",
-        audio: url,
-        language: "None",
-        timestamp: "chunk",
-        batch_size: 64,
-        diarise_audio: false
-      },
-      webhook: `${webhookUrl}?apptid=${apptid}`,
-      webhook_events_filter: ["completed"]
-      });
-    console.log("Replicate prediction request acknowledged:", response);
-  
-} catch (error) {
-  console.error("Error sending Replicate response:", error);
-}
-}
-
-
-export async function getAnalysisAnthropic(noteid: string, transcript: string, transcriptionTime: string) {
-  console.log("calling getSOAPData")
-
-  const systemContentString:string = `You are a helpful, highly-trained medical assistant. Carefully review the following TRANSCRIPT and generate a clinical SOAP note as a JSON object. The JSON object should conform to the following JSON Schema:
+const systemContentString:string = `You are a helpful, highly-trained medical assistant. Carefully review the following TRANSCRIPT and generate a clinical SOAP note as a JSON object. The JSON object should conform to the following JSON Schema:
 
         {
           "$schema": "http://json-schema.org/draft-07/schema#",
@@ -80,7 +37,7 @@ export async function getAnalysisAnthropic(noteid: string, transcript: string, t
             },
             "soap_assessment": {
               "type": "string",
-              "description": "Assessment and diagnosis. Narrative format or UNORDERED list."
+              "description": "Assessment and diagnosis. Narrative format or UNORDERED list. NO DIFFERENTIAL DIAGNOSIS in this field."
             },
             "soap_plan": {
               "type": "string",
@@ -98,6 +55,99 @@ export async function getAnalysisAnthropic(noteid: string, transcript: string, t
         }
 
         Your answer MUST begin and end with curly brackets. Do not include any leading backticks or other markers. ALL LISTS SHOULD BE UNORDERED AND STYLED WITH A SIMPLE DASH. NO NUMBERED LISTS. Include as much specific information as possible from the transcript in the SOAP note. Be thorough! If you do not have the information required to provide a value in any of the fields, just return the JSON object WITHOUT those fields. Do NOT return a field with an empty string or an "unknown" value. For the differential_diagnosis field, analyze the entire transcript and return a differential diagnosis along with possible alternative treatment options. Your complete answer MUST begin and end with curly brackets.`
+
+function assertIsTextBlock(value: unknown): asserts value is Anthropic.TextBlock {
+  if (typeof value === "object" && value && !value.hasOwnProperty("text")) throw new Error('Expected text block');
+}
+
+
+
+export async function getReplicateMonoTranscript(url: string, apptid: string) {
+  const replicate = new Replicate({
+  auth: process.env.REPLICATE_API_TOKEN,
+});
+  
+  const webhookUrl = process.env.NODE_ENV === 'production' ? process.env.PROD_REPLICATE_WEBHOOK : process.env.DEV_REPLICATE_WEBHOOK;
+
+  // console.log(`Running getReplicateMonoTranscript at ${new Date().toISOString()}`);
+  
+  try {
+    // Prediction may take longer than 30 seconds
+    const response = await replicate.predictions.create(
+    {
+      version: "3ab86df6c8f54c11309d4d1f930ac292bad43ace52d10c80d87eb258b3c9f79c",
+      input: {
+        task: "transcribe",
+        audio: url,
+        language: "None",
+        timestamp: "chunk",
+        batch_size: 64,
+        diarise_audio: false
+      },
+      webhook: `${webhookUrl}?apptid=${apptid}`,
+      webhook_events_filter: ["completed"]
+      });
+    // console.log("Replicate prediction request acknowledged:", response);
+  
+} catch (error) {
+  console.error("Error sending Replicate response:", error);
+}
+}
+
+
+export async function getAnalysisAnthropic(noteid: string, transcript: string, transcriptionTime: string) {
+  console.log("calling getSOAPData")
+
+  // const systemContentString:string = `You are a helpful, highly-trained medical assistant. Carefully review the following TRANSCRIPT and generate a clinical SOAP note as a JSON object. The JSON object should conform to the following JSON Schema:
+
+  //       {
+  //         "$schema": "http://json-schema.org/draft-07/schema#",
+  //         "type": "object",
+  //         "properties": {
+  //           "appointment_date": {
+  //             "type": "string",
+  //             "format": "date",
+  //             "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+  //             "description": "Date of the appointment in yyyy-mm-dd format"
+  //           },
+  //           "appointment_time": {
+  //             "type": "string",
+  //             "pattern": "^\\d{2}:\\d{2}$",
+  //             "description": "Time of the appointment in hh:mm format"
+  //           },
+  //           "chief_complaint": {
+  //             "type": "string",
+  //             "maxLength": 50,
+  //             "description": "Chief complaint. Capitalize the first letter of the string"
+  //           },
+  //           "soap_subjective": {
+  //             "type": "string",
+  //             "description": "Subjective information from the patient. DO NOT include patient name or date of birth."
+  //           },
+  //           "soap_objective": {
+  //             "type": "string",
+  //             "description": "Objective observations and measurements. Narrative format or UNORDERED list. DO NOT include patient name or date of birth."
+  //           },
+  //           "soap_assessment": {
+  //             "type": "string",
+  //             "description": "Assessment and diagnosis. Narrative format or UNORDERED list."
+  //           },
+  //           "soap_plan": {
+  //             "type": "string",
+  //             "description": "Plan for treatment and patient education. Narrative format or UNORDERED list."
+  //           },
+  //           "differential_diagnosis": {
+  //             "type": "string",
+  //             "description": "Differential diagnosis. Narrative format or UNORDERED list."
+  //           },
+  //           "patient_location?": {
+  //             "type": "string",
+  //             "description": "Location of the patient (State/Province, e.g., 'Arizona'). Only include this key if the patient location is clearly mentioned in the transcript."
+  //           }
+  //         }
+  //       }
+
+  //       Your answer MUST begin and end with curly brackets. Do not include any leading backticks or other markers. ALL LISTS SHOULD BE UNORDERED AND STYLED WITH A SIMPLE DASH. NO NUMBERED LISTS. Include as much specific information as possible from the transcript in the SOAP note. Be thorough! If you do not have the information required to provide a value in any of the fields, just return the JSON object WITHOUT those fields. Do NOT return a field with an empty string or an "unknown" value. For the differential_diagnosis field, analyze the entire transcript and return a differential diagnosis along with possible alternative treatment options. Your complete answer MUST begin and end with curly brackets.`
   const userContentString:string = `Give me a thorough SOAP note from the following transcript. Return your response as a JSON object. TRANSCRIPT: ${transcript}`
   
   // console.log("system content string:", systemContentString)
@@ -146,57 +196,8 @@ export async function getAnalysisAnthropic(noteid: string, transcript: string, t
 export async function getAnalysisOpenAI(noteid: string, transcript: string, transcriptionTime: string) {
   console.log("calling getSOAPData")
 
-  const systemContentString:string = `You are a helpful, highly-trained medical assistant. Carefully review the following TRANSCRIPT and generate a clinical SOAP note as a JSON object. The JSON object should conform to the following JSON Schema:
-
-        {
-          "$schema": "http://json-schema.org/draft-07/schema#",
-          "type": "object",
-          "properties": {
-            "appointment_date": {
-              "type": "string",
-              "format": "date",
-              "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
-              "description": "Date of the appointment in yyyy-mm-dd format"
-            },
-            "appointment_time": {
-              "type": "string",
-              "pattern": "^\\d{2}:\\d{2}$",
-              "description": "Time of the appointment in hh:mm format"
-            },
-            "chief_complaint": {
-              "type": "string",
-              "maxLength": 50,
-              "description": "Chief complaint. Capitalize the first letter of the string"
-            },
-            "soap_subjective": {
-              "type": "string",
-              "description": "Subjective information from the patient. DO NOT include patient name or date of birth."
-            },
-            "soap_objective": {
-              "type": "string",
-              "description": "Objective observations and measurements. Narrative format or UNORDERED list. DO NOT include patient name or date of birth."
-            },
-            "soap_assessment": {
-              "type": "string",
-              "description": "Assessment and diagnosis. Narrative format or UNORDERED list."
-            },
-            "soap_plan": {
-              "type": "string",
-              "description": "Plan for treatment and patient education. Narrative format or UNORDERED list."
-            },
-            "differential_diagnosis": {
-              "type": "string",
-              "description": "Differential diagnosis. Narrative format or UNORDERED list."
-            },
-            "patient_location?": {
-              "type": "string",
-              "description": "Location of the patient (State/Province, e.g., 'Arizona'). Only include this key if the patient location is clearly mentioned in the transcript."
-            }
-          }
-        }
-
-        Your answer MUST begin and end with curly brackets. Do not include any leading backticks or other markers. ALL LISTS SHOULD BE UNORDERED AND STYLED WITH A SIMPLE DASH. NO NUMBERED LISTS. Include as much specific information as possible from the transcript in the SOAP note. Be thorough! If you do not have the information required to provide a value in any of the fields, just return the JSON object WITHOUT those fields. Do NOT return a field with an empty string or an "unknown" value. For the differential_diagnosis field, analyze the entire transcript and return a differential diagnosis along with possible alternative treatment options. Your complete answer MUST begin and end with curly brackets.`
-  const userContentString:string = `Give me a thorough SOAP note from the following transcript. Return your response as a JSON object. TRANSCRIPT: ${transcript}`
+  
+  const userContentString:string = `Generate a thorough SOAP note from the following transcript. Return your response as a JSON object in the specified schema. TRANSCRIPT: ${transcript}`
   
   // console.log("system content string:", systemContentString)
   

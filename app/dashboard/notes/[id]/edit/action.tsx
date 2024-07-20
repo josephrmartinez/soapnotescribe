@@ -3,7 +3,6 @@
 import { createClient } from '@/utils/supabase/server';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-import { generateAndSavePdf } from '@/utils/generatePdf';
 
 export async function updateNote(status: string, formData: FormData) {
   const supabase = createClient();

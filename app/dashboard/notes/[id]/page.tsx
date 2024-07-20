@@ -1,25 +1,16 @@
 import Breadcrumbs from '@/app/ui/notes/breadcrumbs';
-import {
-  fetchNoteById,
-  getSignedAudioUrl,
-  getSignedPdfUrl,
-} from '@/app/lib/data';
+import { fetchNoteById } from '@/app/lib/data';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import {
-  CalendarDaysIcon,
-  BuildingOffice2Icon,
   PencilSquareIcon,
   DocumentDuplicateIcon,
-  TrashIcon,
-  DocumentIcon,
 } from '@heroicons/react/24/outline';
 import { Metadata } from 'next';
 import { formatDateToLocal, formatTime } from '@/app/lib/utils';
 import { DeleteNoteFirstStep } from '@/app/ui/notes/buttons';
 import { calculateAge } from '@/app/lib/utils';
-import AudioPlayer from '@/app/components/AudioPlayer';
 import { ViewPDFButton } from '@/app/ui/notes/ViewPdfButton';
 
 export const metadata: Metadata = {
@@ -34,11 +25,6 @@ export default async function Page({ params }: { params: { id: string } }) {
     redirect(`./${id}/edit`);
   }
 
-  // Get audio url for media player:
-  const audioUrl = note.audio_storage_url
-    ? await getSignedAudioUrl(note.user_id, note.audio_storage_url)
-    : undefined;
-
   const appointmentDate = formatDateToLocal(note.appointment_date);
 
   let appointmentTime = '';
@@ -52,7 +38,6 @@ export default async function Page({ params }: { params: { id: string } }) {
 
   const processedNote = {
     ...note,
-    audioUrl,
     appointmentDate,
     appointmentTime,
     patientAge,
@@ -312,27 +297,6 @@ export default async function Page({ params }: { params: { id: string } }) {
 
           <ViewPDFButton note={processedNote} />
         </div>
-
-        {audioUrl ? (
-          <div>
-            <div className="collapse-title text-lg font-medium">Audio</div>
-            <AudioPlayer audioUrl={audioUrl} />
-
-            <div
-              tabIndex={0}
-              className="collapse collapse-plus my-4 rounded-md border"
-            >
-              <div className="collapse-title text-lg font-medium">
-                Audio Memo
-              </div>
-              <div className="collapse-content">
-                <p>{note?.audio_transcript}</p>
-              </div>
-            </div>
-          </div>
-        ) : (
-          <div></div>
-        )}
       </div>
     </main>
   );
