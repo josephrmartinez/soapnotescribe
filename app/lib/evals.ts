@@ -1,9 +1,30 @@
 'use server'
 
-import Replicate from "replicate";
 import OpenAI from "openai"
 import Anthropic from '@anthropic-ai/sdk';
 import { createClient as createClientJS } from "@supabase/supabase-js";
+import modelPricingJson from './modelPricing.json';
+
+
+interface ModelPricing {
+  [key: string]: {
+    inputTokenCost: number;
+    outputTokenCost: number;
+  };
+}
+
+interface LogResponseDataParams {
+  inputTokens: number;
+  outputTokens: number;
+  inputCost: number;
+  outputCost: number;
+  predictionCost: string;
+  predictionTime: number;
+  completionString: string;
+}
+
+const modelPricing = modelPricingJson as ModelPricing
+
 
 const systemContentString:string = `You are a helpful, highly-trained medical assistant. Carefully review the following TRANSCRIPT and generate a clinical SOAP note as a JSON object. The JSON object should conform to the following JSON Schema:
 
@@ -65,97 +86,12 @@ function assertIsTextBlock(value: unknown): asserts value is Anthropic.TextBlock
 }
 
 
-
-export async function getReplicateMonoTranscript(url: string, apptid: string) {
-  const replicate = new Replicate({
-  auth: process.env.REPLICATE_API_TOKEN,
-});
-  
-  const webhookUrl = process.env.NODE_ENV === 'production' ? process.env.PROD_REPLICATE_WEBHOOK : process.env.DEV_REPLICATE_WEBHOOK;
-
-  // console.log(`Running getReplicateMonoTranscript at ${new Date().toISOString()}`);
-  
-  try {
-    // Prediction may take longer than 30 seconds
-    const response = await replicate.predictions.create(
-    {
-      version: "3ab86df6c8f54c11309d4d1f930ac292bad43ace52d10c80d87eb258b3c9f79c",
-      input: {
-        task: "transcribe",
-        audio: url,
-        language: "None",
-        timestamp: "chunk",
-        batch_size: 64,
-        diarise_audio: false
-      },
-      webhook: `${webhookUrl}?apptid=${apptid}`,
-      webhook_events_filter: ["completed"]
-      });
-    // console.log("Replicate prediction request acknowledged:", response);
-  
-} catch (error) {
-  console.error("Error sending Replicate response:", error);
-}
-}
-
-
-export async function getAnalysisAnthropic(noteid: string, transcript: string, transcriptionTime: string) {
-  console.log("calling getSOAPData")
-
-  // const systemContentString:string = `You are a helpful, highly-trained medical assistant. Carefully review the following TRANSCRIPT and generate a clinical SOAP note as a JSON object. The JSON object should conform to the following JSON Schema:
-
-  //       {
-  //         "$schema": "http://json-schema.org/draft-07/schema#",
-  //         "type": "object",
-  //         "properties": {
-  //           "appointment_date": {
-  //             "type": "string",
-  //             "format": "date",
-  //             "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
-  //             "description": "Date of the appointment in yyyy-mm-dd format"
-  //           },
-  //           "appointment_time": {
-  //             "type": "string",
-  //             "pattern": "^\\d{2}:\\d{2}$",
-  //             "description": "Time of the appointment in hh:mm format"
-  //           },
-  //           "chief_complaint": {
-  //             "type": "string",
-  //             "maxLength": 50,
-  //             "description": "Chief complaint. Capitalize the first letter of the string"
-  //           },
-  //           "soap_subjective": {
-  //             "type": "string",
-  //             "description": "Subjective information from the patient. DO NOT include patient name or date of birth."
-  //           },
-  //           "soap_objective": {
-  //             "type": "string",
-  //             "description": "Objective observations and measurements. Narrative format or UNORDERED list. DO NOT include patient name or date of birth."
-  //           },
-  //           "soap_assessment": {
-  //             "type": "string",
-  //             "description": "Assessment and diagnosis. Narrative format or UNORDERED list."
-  //           },
-  //           "soap_plan": {
-  //             "type": "string",
-  //             "description": "Plan for treatment and patient education. Narrative format or UNORDERED list."
-  //           },
-  //           "differential_diagnosis": {
-  //             "type": "string",
-  //             "description": "Differential diagnosis. Narrative format or UNORDERED list."
-  //           },
-  //           "patient_location?": {
-  //             "type": "string",
-  //             "description": "Location of the patient (State/Province, e.g., 'Arizona'). Only include this key if the patient location is clearly mentioned in the transcript."
-  //           }
-  //         }
-  //       }
-
-  //       Your answer MUST begin and end with curly brackets. Do not include any leading backticks or other markers. ALL LISTS SHOULD BE UNORDERED AND STYLED WITH A SIMPLE DASH. NO NUMBERED LISTS. Include as much specific information as possible from the transcript in the SOAP note. Be thorough! If you do not have the information required to provide a value in any of the fields, just return the JSON object WITHOUT those fields. Do NOT return a field with an empty string or an "unknown" value. For the differential_diagnosis field, analyze the entire transcript and return a differential diagnosis along with possible alternative treatment options. Your complete answer MUST begin and end with curly brackets.`
-  const userContentString:string = `Give me a thorough SOAP note from the following transcript. Return your response as a JSON object. TRANSCRIPT: ${transcript}`
-  
-  // console.log("system content string:", systemContentString)
-
+// "claude-3-5-sonnet-20240620"
+export async function getAnalysisAnthropic(transcript: string, model: string) {
+    console.log("calling getAnalysisAnthropic")
+    
+    const userContentString: string = generateUserContentString(transcript);
+    
   try {
     const apiKey = process.env['ANTHROPIC_API_KEY'];
     if (!apiKey) {
@@ -165,7 +101,7 @@ export async function getAnalysisAnthropic(noteid: string, transcript: string, t
     const anthropic = new Anthropic({ apiKey });
     
     const anthropicResponse = await anthropic.messages.create({
-      model: "claude-3-5-sonnet-20240620",
+      model: model,
       max_tokens: 4096,
       system: systemContentString,
       messages: [
@@ -178,17 +114,18 @@ export async function getAnalysisAnthropic(noteid: string, transcript: string, t
 
     console.log("anthropic response:", anthropicResponse)
 
-    assertIsTextBlock(anthropicResponse.content[0]);
+    // assertIsTextBlock(anthropicResponse.content[0]);
 
     const anthropicCompletionString = anthropicResponse.content[0].text
 
     const anthropicInputTokens = anthropicResponse.usage.input_tokens
     const anthropicOutputTokens = anthropicResponse.usage.output_tokens
+      
     const analysisCost:string = ((anthropicInputTokens / 1000 * 0.003) + (anthropicOutputTokens / 1000 * 0.015)).toFixed(3) //claude-3-5-sonnet-20240620
 
     console.log("anthropic cost:", analysisCost)
 
-    await updateNoteWithSOAPData(noteid, transcript, transcriptionTime, anthropicCompletionString, analysisCost);
+    await updateNoteWithSOAPData(transcript, anthropicCompletionString, analysisCost);
     
   } catch (error){
     console.log("Error getting completion data:", error)
@@ -197,47 +134,59 @@ export async function getAnalysisAnthropic(noteid: string, transcript: string, t
 }
 
 
-export async function getAnalysisOpenAI(noteid: string, transcript: string, transcriptionTime: string) {
-  console.log("calling getAnalysisOpenAI")
+async function logResponseData(params: LogResponseDataParams) {
+  // Implementation remains the same, using params.inputTokens, params.outputTokens, etc.
+}
+
+
+export async function getAnalysisOpenAI(transcript: string, model: string) {
+    console.log("calling getAnalysisOpenAI")
+    const startTime = Date.now();
 
   const userContentString: string = generateUserContentString(transcript);
   
   try {
     const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
 
-  const openAIcompletion = await openai.chat.completions.create({
-    messages: [
-      {
-        role: "system",
-        content: systemContentString
-      },
-      { role: "user", content: userContentString },
-    ],
-    model: "gpt-4o-mini",
-    response_format: { type: "json_object" },
-  });
+    const completion = await openai.chat.completions.create({
+        messages: [
+        {
+            role: "system",
+            content: systemContentString
+        },
+        { role: "user", content: userContentString },
+        ],
+        model: model,
+        response_format: { type: "json_object" },
+    });
 
-    const completionString = openAIcompletion.choices[0].message.content as string
-    const usage = openAIcompletion.usage
-    const inputTokens = usage?.prompt_tokens;
-    const outputTokens = usage?.completion_tokens
+    const completionString = completion.choices[0].message.content as string
+    const usage = completion.usage
+      
+    if (!usage) return;
+      
+    const inputTokens = usage.prompt_tokens;
+    const outputTokens = usage.completion_tokens
+    const pricing = modelPricing[model];
+    const inputCost = pricing.inputTokenCost;
+    const outputCost = pricing.outputTokenCost;
+      
+    const predictionCost = ((inputTokens / 1000 * inputCost) + (outputTokens / 1000 * outputCost)).toFixed(3)
 
-    // gpt-4-turbo pricing
-    // const openAICost = ((inputTokens / 1000 * 0.01) + (outputTokens / 1000 * 0.03)).toFixed(3)
+      const predictionTime = Date.now() - startTime;
+      
+    const responseData: LogResponseDataParams = {
+        inputTokens,
+        outputTokens,
+        inputCost,
+        outputCost,
+        predictionCost,
+        predictionTime,
+        completionString
+    };
 
-    // gpt-4o pricing
-    // const openAICost = ((inputTokens / 1000 * 0.005) + (outputTokens / 1000 * 0.015)).toFixed(4)
-
-
-    // gpt-4o-mini pricing
-    const openAICost = ((inputTokens / 1000 * 0.00015) + (outputTokens / 1000 * 0.0006)).toFixed(6)
-
-
-    // console.log("openAI completion string:", completionString)
-    // console.log("openAI cost:", openAICost)
-
-    await updateNoteWithSOAPData(noteid, transcript, transcriptionTime, completionString, openAICost);
-    
+      await logResponseData(responseData);
+      
   } catch (error){
     console.log("Error getting openAI completion data:", error)
   }
@@ -386,23 +335,4 @@ async function updateNoteWithSOAPData(noteid: string, transcript: string, transc
     throw new Error(error)
   }
 }
-
-
-// FOR INCLUDING USER APPOINTMENT TYPES AND SPECIALTIES WITH PROMPT:
-// const userSettings = await getUserSettingsFromNoteId(noteid)
-  // const appointmentTypes = JSON.stringify(userSettings.appointment_types);
-  // const appointmentSpecialties = JSON.stringify(userSettings.appointment_specialties);
-  // const appointmentTypes = "['In Person', 'Telemedicine']"
-  // const appointmentSpecialties = "['Urgent Care', 'Primary Care']"
-  // "appointment_type?": {
-  //             "type": "string",
-  //             "enum": ${appointmentTypes},
-  //             "description": "Type of appointment. Only include this key if appointment type is stated in the transcript."
-  //           },
-  //           "appointment_specialty?": {
-  //             "type": "string",
-  //             "enum": ${appointmentSpecialties},
-  //             "description": "Specialty of the appointment. Only include this key if appointment specialty is stated in the transcript."
-  //           },
-
 

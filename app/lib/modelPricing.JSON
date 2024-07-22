@@ -1,0 +1,7 @@
+{
+  "gpt-4": { "inputTokenCost": 0.03, "outputTokenCost": 0.06 },
+  "gpt-4-turbo": { "inputTokenCost": 0.01, "outputTokenCost": 0.03 },
+  "gpt-4o": { "inputTokenCost": 0.005, "outputTokenCost": 0.015 },
+  "gpt-4o-mini": { "inputTokenCost": 0.00015, "outputTokenCost": 0.0006 },
+  "gpt-3.5-turbo-0125": { "inputTokenCost": 0.0005, "outputTokenCost": 0.0015 }
+}

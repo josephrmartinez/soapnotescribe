@@ -119,7 +119,7 @@ const EditDraftNote: React.FC<CreateNoteProps> = ({ note }) => {
             note.user_id,
             note.audio_storage_url,
           );
-          console.log('signed url:', url);
+          // console.log('signed url:', url);
           setAudioUrl(url);
         } catch (error) {
           console.error('Error fetching audio url:', error);
