@@ -43,42 +43,6 @@ export default function NotesTable({ notes }: { notes: NoteWithPatient[] }) {
         <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
           <div className="md:hidden">
             {notes?.map((note) => (
-              // <div
-              //   key={note.id}
-              //   className="mb-2 w-full rounded-md bg-white p-4"
-              // >
-              //   <div className="flex flex-row  justify-between pb-4">
-              //     <div className="mb-2 flex items-center text-sm font-medium">
-              //       <p>{formatDateToLocal(note.appointment_date)}</p>
-              //     </div>
-              //     <div>
-              //       <PatientName
-              //         last_name={note.patient.last_name}
-              //         first_name={note.patient.first_name}
-              //         patient_id={note.patient.id}
-              //       />
-              //     </div>
-              //   </div>
-              //   <div className="grid grid-cols-2 items-center gap-2">
-              //     <div>
-              //       <p className="text-sm font-medium">
-              //         {note.chief_complaint}
-              //       </p>
-              //     </div>
-              //     <div className="flex justify-end gap-2">
-              //       {note.status === 'processing' && (
-              //         <ProcessingSOAPNote id={note.id} />
-              //       )}
-              //       {note.status === 'approved' && (
-              //         <ViewSOAPNote id={note.id} />
-              //       )}
-              //       {note.status === 'awaiting review' && (
-              //         <ReviewDraft id={note.id} />
-              //       )}
-              //     </div>
-              //   </div>
-              // </div>
-
               <div
                 key={note.id}
                 className="mb-2 grid w-full gap-8 rounded-md bg-white p-4"
@@ -100,23 +64,24 @@ export default function NotesTable({ notes }: { notes: NoteWithPatient[] }) {
                       patient_id={note.patient.id}
                     />
                   </div>
-                  <div className=" justify-self-end">
+
+                  <div className="justify-self-end">
                     {note.status === 'processing' && (
                       <ProcessingSOAPNote id={note.id} />
                     )}
                     {note.status === 'approved' && (
                       <ViewSOAPNote id={note.id} />
                     )}
-                    {(note.status === 'awaiting review' ||
-                      note.status === 'draft') && <ReviewDraft id={note.id} />}
+                    {note.status === 'awaiting review' && (
+                      <ReviewDraft id={note.id} />
+                    )}
+                    {note.status === 'draft' && <ReviewDraft id={note.id} />}
                   </div>
                 </div>
               </div>
             ))}
           </div>
-          {/* <p className="ml-2 text-sm font-medium">
-                  {note.chief_complaint}
-                </p> */}
+
           <table className="hidden min-w-full text-gray-900 md:table">
             <thead className="rounded-lg text-left text-sm font-normal">
               <tr>
@@ -165,6 +130,7 @@ export default function NotesTable({ notes }: { notes: NoteWithPatient[] }) {
                       {note.status === 'awaiting review' && (
                         <ReviewDraft id={note.id} />
                       )}
+                      {note.status === 'draft' && <ReviewDraft id={note.id} />}
                     </div>
                   </td>
                 </tr>
