@@ -360,7 +360,7 @@ async function updateNoteWithSOAPData(noteid: string, transcript: string, transc
     const { data, error, status } = await supabase
       .from('note')
       .update({
-        status: "awaiting review",
+        status: "draft",
         audio_transcript: transcript,
         transcription_time: transcriptionTime,
         transcription_cost: transcriptionCost,
@@ -380,7 +380,7 @@ async function updateNoteWithSOAPData(noteid: string, transcript: string, transc
       return;
     }
 
-    console.log('Note updated successfully!', data);
+    // console.log('Note updated successfully!', data);
   } catch (error) {
     console.error('Error updating note:', error);
     throw new Error(error)

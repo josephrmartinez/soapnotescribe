@@ -20,7 +20,9 @@ interface LogResponseDataParams {
   outputCost: number;
   predictionCost: string;
   predictionTime: number;
-  completionString: string;
+    completionString: string;
+    model: string;
+    temperature: number;
 }
 
 const modelPricing = modelPricingJson as ModelPricing
@@ -139,7 +141,7 @@ async function logResponseData(params: LogResponseDataParams) {
 }
 
 
-export async function getAnalysisOpenAI(transcript: string, model: string) {
+export async function getAnalysisOpenAI(transcript: string, model: string, temperature: number = 1,) {
     console.log("calling getAnalysisOpenAI")
     const startTime = Date.now();
 
@@ -157,6 +159,7 @@ export async function getAnalysisOpenAI(transcript: string, model: string) {
         { role: "user", content: userContentString },
         ],
         model: model,
+        temperature: temperature,
         response_format: { type: "json_object" },
     });
 
@@ -182,7 +185,9 @@ export async function getAnalysisOpenAI(transcript: string, model: string) {
         outputCost,
         predictionCost,
         predictionTime,
-        completionString
+        completionString,
+        model,
+        temperature
     };
 
       await logResponseData(responseData);
@@ -335,4 +340,5 @@ async function updateNoteWithSOAPData(noteid: string, transcript: string, transc
     throw new Error(error)
   }
 }
+
 

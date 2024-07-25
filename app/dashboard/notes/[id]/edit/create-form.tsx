@@ -138,7 +138,7 @@ const EditDraftNote: React.FC<CreateNoteProps> = ({ note }) => {
     }
   }, [dateOfBirth, date]);
 
-  const saveDraft = updateNote.bind(null, 'awaiting review');
+  const saveDraft = updateNote.bind(null, 'draft');
   const approveNote = updateNote.bind(null, 'approved');
 
   const handleAppointmentTypeChange = (selectedAppointmentType: string) => {

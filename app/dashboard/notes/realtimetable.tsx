@@ -107,9 +107,8 @@ export default function NotesTable({ notes }: { notes: NoteWithPatient[] }) {
                     {note.status === 'approved' && (
                       <ViewSOAPNote id={note.id} />
                     )}
-                    {note.status === 'awaiting review' && (
-                      <ReviewDraft id={note.id} />
-                    )}
+                    {(note.status === 'awaiting review' ||
+                      note.status === 'draft') && <ReviewDraft id={note.id} />}
                   </div>
                 </div>
               </div>

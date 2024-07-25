@@ -243,7 +243,7 @@ const CreateNote = () => {
     }
   };
 
-  const submitDraftNote = createNote.bind(null, 'awaiting review');
+  const submitDraftNote = createNote.bind(null, 'draft');
   const submitApprovedNote = createNote.bind(null, 'approved');
 
   return (
