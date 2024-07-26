@@ -69,6 +69,13 @@ export async function fetchFilteredNotes(query: string, currentPage: number) {
         return 1;
       }
 
+      // Then prioritize "draft" status (same as above)
+      if (a.status === 'draft' && b.status !== 'draft') {
+        return -1;
+      } else if (a.status !== 'draft' && b.status === 'draft') {
+        return 1;
+      }
+
       // Finally, sort by status and then by appointment_date
       if (a.status === b.status) {
         // If both appointments have the same status, sort by appointment_date
