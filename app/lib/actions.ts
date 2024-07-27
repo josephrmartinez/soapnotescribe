@@ -5,10 +5,45 @@ import OpenAI from "openai"
 import Anthropic from '@anthropic-ai/sdk';
 import { createClient as createClientJS } from "@supabase/supabase-js";
 
-const systemContentString:string = `You are a helpful, highly-trained medical assistant. Carefully review the following TRANSCRIPT and generate a clinical SOAP note as a JSON object. The JSON object should conform to the following JSON Schema:
+const modelPricing = {
+    "gpt-4": {
+        "input_token_cost": 0.03,
+        "output_token_cost": 0.06
+    },
+    "gpt-4-turbo": {
+        "input_token_cost": 0.01,
+        "output_token_cost": 0.03
+    },
+    "gpt-4o": {
+        "input_token_cost": 0.005,
+        "output_token_cost": 0.015
+    },
+    "gpt-4o-mini": {
+        "input_token_cost": 0.00015,
+        "output_token_cost": 0.0006
+    },
+    "gpt-3.5-turbo": {
+        "input_token_cost": 0.0005,
+        "output_token_cost": 0.0015
+    },
+    "claude-3-haiku-20240307": {
+        "input_token_cost": 0.00025,
+        "output_token_cost": 0.00125
+    },
+    "claude-3-5-sonnet-20240620": {
+        "input_token_cost": 0.003,
+        "output_token_cost": 0.015
+    },
+    "claude-3-opus-20240229": {
+        "input_token_cost": 0.015,
+        "output_token_cost": 0.075
+    }
+}
 
-        {
-          "$schema": "http://json-schema.org/draft-07/schema#",
+const systemContentString:string = `You are a helpful, highly-trained medical assistant. Carefully review the following TRANSCRIPT and generate a clinical SOAP note as a JSON object.
+        Your answer MUST begin and end with curly brackets. Do not include any leading backticks or other markers. ALL LISTS SHOULD BE UNORDERED AND STYLED WITH A SIMPLE DASH. NO NUMBERED LISTS. Include as much specific information as possible from the transcript in the SOAP note. Be thorough! If you do not have the information required to provide a value in any of the fields, just return the JSON object WITHOUT those fields. Do NOT return a field with an empty string or an "unknown" value. For the differential_diagnosis field, generate a differential diagnosis along with possible alternative treatment options. Your complete answer MUST begin and end with curly brackets.`
+
+const JSON_schema = {
           "type": "object",
           "properties": {
             "appointment_date": {
@@ -47,14 +82,12 @@ const systemContentString:string = `You are a helpful, highly-trained medical as
               "type": "string",
               "description": "Differential diagnosis. Narrative format or UNORDERED list."
             },
-            "patient_location?": {
+            "patient_location": {
               "type": "string",
               "description": "Location of the patient (State/Province, e.g., 'Arizona'). Only include this key if the patient location is clearly mentioned in the transcript."
             }
           }
         }
-
-        Your answer MUST begin and end with curly brackets. Do not include any leading backticks or other markers. ALL LISTS SHOULD BE UNORDERED AND STYLED WITH A SIMPLE DASH. NO NUMBERED LISTS. Include as much specific information as possible from the transcript in the SOAP note. Be thorough! If you do not have the information required to provide a value in any of the fields, just return the JSON object WITHOUT those fields. Do NOT return a field with an empty string or an "unknown" value. For the differential_diagnosis field, generate a differential diagnosis along with possible alternative treatment options. Your complete answer MUST begin and end with curly brackets.`
 
 function generateUserContentString(transcript: string) {
     return `Generate a thorough SOAP note from the following transcript. Return your response as a JSON object in the specified schema. TRANSCRIPT: ${transcript}`
@@ -205,36 +238,42 @@ export async function getAnalysisOpenAI(noteid: string, transcript: string, tran
   try {
     const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
 
-  const openAIcompletion = await openai.chat.completions.create({
-    messages: [
-      {
-        role: "system",
-        content: systemContentString
-      },
-      { role: "user", content: userContentString },
-    ],
-    model: "gpt-4o-mini",
-    response_format: { type: "json_object" },
-  });
+    const model = "gpt-4o-mini"
 
-    const completionString = openAIcompletion.choices[0].message.content as string
+    const openAIcompletion = await openai.chat.completions.create({
+      messages: [
+        {
+          role: "system",
+          content: systemContentString
+        },
+        { role: "user", content: userContentString },
+      ],
+      model: model,
+      temperature: 1,
+      response_format: { type: "json_object" },
+      tools: [{
+        type: "function",
+        function: {
+          "name": "JSON_SOAP_note",
+          "description": "Clinical SOAP note as a JSON object",
+          "parameters": JSON_schema
+        }
+      }],
+      tool_choice: { "type": "function", "function": { "name": "JSON_SOAP_note" } }
+    });
+
+    const completionString = openAIcompletion.choices[0].message.tool_calls?.[0].function.arguments as string
     const usage = openAIcompletion.usage
-    const inputTokens = usage?.prompt_tokens;
-    const outputTokens = usage?.completion_tokens
 
-    // gpt-4-turbo pricing
-    // const openAICost = ((inputTokens / 1000 * 0.01) + (outputTokens / 1000 * 0.03)).toFixed(3)
+    if (!usage) return;
 
-    // gpt-4o pricing
-    // const openAICost = ((inputTokens / 1000 * 0.005) + (outputTokens / 1000 * 0.015)).toFixed(4)
+    const inputTokens = usage.prompt_tokens;
+    const outputTokens = usage.completion_tokens
+    const pricing = modelPricing[model]
+    const inputCost = pricing['input_token_cost']
+    const outputCost = pricing['output_token_cost']
 
-
-    // gpt-4o-mini pricing
-    const openAICost = ((inputTokens / 1000 * 0.00015) + (outputTokens / 1000 * 0.0006)).toFixed(6)
-
-
-    // console.log("openAI completion string:", completionString)
-    // console.log("openAI cost:", openAICost)
+    const openAICost = ((inputTokens / 1000 * inputCost) + (outputTokens / 1000 * outputCost)).toFixed(6)
 
     await updateNoteWithSOAPData(noteid, transcript, transcriptionTime, completionString, openAICost);
     
