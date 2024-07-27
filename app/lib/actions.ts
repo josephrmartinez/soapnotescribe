@@ -133,61 +133,11 @@ export async function getReplicateMonoTranscript(url: string, apptid: string) {
 
 
 export async function getAnalysisAnthropic(noteid: string, transcript: string, transcriptionTime: string) {
-  console.log("calling getSOAPData")
+  console.log("calling getAnalysisAnthropic")
 
-  // const systemContentString:string = `You are a helpful, highly-trained medical assistant. Carefully review the following TRANSCRIPT and generate a clinical SOAP note as a JSON object. The JSON object should conform to the following JSON Schema:
+  const userContentString: string = generateUserContentString(transcript);
 
-  //       {
-  //         "$schema": "http://json-schema.org/draft-07/schema#",
-  //         "type": "object",
-  //         "properties": {
-  //           "appointment_date": {
-  //             "type": "string",
-  //             "format": "date",
-  //             "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
-  //             "description": "Date of the appointment in yyyy-mm-dd format"
-  //           },
-  //           "appointment_time": {
-  //             "type": "string",
-  //             "pattern": "^\\d{2}:\\d{2}$",
-  //             "description": "Time of the appointment in hh:mm format"
-  //           },
-  //           "chief_complaint": {
-  //             "type": "string",
-  //             "maxLength": 50,
-  //             "description": "Chief complaint. Capitalize the first letter of the string"
-  //           },
-  //           "soap_subjective": {
-  //             "type": "string",
-  //             "description": "Subjective information from the patient. DO NOT include patient name or date of birth."
-  //           },
-  //           "soap_objective": {
-  //             "type": "string",
-  //             "description": "Objective observations and measurements. Narrative format or UNORDERED list. DO NOT include patient name or date of birth."
-  //           },
-  //           "soap_assessment": {
-  //             "type": "string",
-  //             "description": "Assessment and diagnosis. Narrative format or UNORDERED list."
-  //           },
-  //           "soap_plan": {
-  //             "type": "string",
-  //             "description": "Plan for treatment and patient education. Narrative format or UNORDERED list."
-  //           },
-  //           "differential_diagnosis": {
-  //             "type": "string",
-  //             "description": "Differential diagnosis. Narrative format or UNORDERED list."
-  //           },
-  //           "patient_location?": {
-  //             "type": "string",
-  //             "description": "Location of the patient (State/Province, e.g., 'Arizona'). Only include this key if the patient location is clearly mentioned in the transcript."
-  //           }
-  //         }
-  //       }
-
-  //       Your answer MUST begin and end with curly brackets. Do not include any leading backticks or other markers. ALL LISTS SHOULD BE UNORDERED AND STYLED WITH A SIMPLE DASH. NO NUMBERED LISTS. Include as much specific information as possible from the transcript in the SOAP note. Be thorough! If you do not have the information required to provide a value in any of the fields, just return the JSON object WITHOUT those fields. Do NOT return a field with an empty string or an "unknown" value. For the differential_diagnosis field, analyze the entire transcript and return a differential diagnosis along with possible alternative treatment options. Your complete answer MUST begin and end with curly brackets.`
-  const userContentString:string = `Give me a thorough SOAP note from the following transcript. Return your response as a JSON object. TRANSCRIPT: ${transcript}`
-  
-  // console.log("system content string:", systemContentString)
+  const model = "claude-3-5-sonnet-20240620"
 
   try {
     const apiKey = process.env['ANTHROPIC_API_KEY'];
@@ -197,8 +147,8 @@ export async function getAnalysisAnthropic(noteid: string, transcript: string, t
 
     const anthropic = new Anthropic({ apiKey });
     
-    const anthropicResponse = await anthropic.messages.create({
-      model: "claude-3-5-sonnet-20240620",
+    const response = await anthropic.messages.create({
+      model: model,
       max_tokens: 4096,
       system: systemContentString,
       messages: [
@@ -206,22 +156,39 @@ export async function getAnalysisAnthropic(noteid: string, transcript: string, t
           "role": "user",
           "content": userContentString
         }
-      ]
+      ],
+      temperature: 1,
+      tool_choice: { type: "tool", name: "JSON_SOAP_note" },
+      tools: [{
+        name: "JSON_SOAP_note",
+        description: "Clinical SOAP note as a JSON object",
+        input_schema: JSON_schema
+      }]
     })
 
-    console.log("anthropic response:", anthropicResponse)
+    console.log("anthropic response:", response)
 
-    assertIsTextBlock(anthropicResponse.content[0]);
+    const toolUseBlock = response.content[0];
 
-    const anthropicCompletionString = anthropicResponse.content[0].text
+    const soapNote = toolUseBlock.input
 
-    const anthropicInputTokens = anthropicResponse.usage.input_tokens
-    const anthropicOutputTokens = anthropicResponse.usage.output_tokens
-    const analysisCost:string = ((anthropicInputTokens / 1000 * 0.003) + (anthropicOutputTokens / 1000 * 0.015)).toFixed(3) //claude-3-5-sonnet-20240620
+    
+
+    const usage = response.usage;
+
+    if (!usage) return;
+
+    const inputTokens = usage.input_tokens;
+    const outputTokens = usage.output_tokens;
+    const pricing = modelPricing[model]
+    const inputCost = pricing['input_token_cost']
+    const outputCost = pricing['output_token_cost']
+
+    const analysisCost:string = ((inputTokens / 1000 * inputCost) + (outputTokens / 1000 * outputCost)).toFixed(3)
 
     console.log("anthropic cost:", analysisCost)
 
-    await updateNoteWithSOAPData(noteid, transcript, transcriptionTime, anthropicCompletionString, analysisCost);
+    await updateNoteWithSOAPData(noteid, transcript, transcriptionTime, soapNote, analysisCost);
     
   } catch (error){
     console.log("Error getting completion data:", error)
