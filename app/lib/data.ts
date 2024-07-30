@@ -414,7 +414,7 @@ export async function fetchPatientProfileById(id: string) {
     const { data: patients, error } = await supabase
       .from('patient')
       .select(`*, 
-        note(id, appointment_type, chief_complaint, appointment_date, appointment_specialty)`
+        note(id, appointment_type, chief_complaint, appointment_date, appointment_specialty, status)`
       )
       .eq('id', id);
 

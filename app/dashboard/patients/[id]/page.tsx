@@ -7,7 +7,7 @@ import { PencilSquareIcon } from '@heroicons/react/24/outline';
 import { Metadata } from 'next';
 import { calculateAge, formatDateToLocal } from '@/app/lib/utils';
 import { DownloadPatientNotes, NewNote } from '@/app/ui/patients/buttons';
-import { ViewSOAPNote } from '@/app/ui/notes/buttons';
+import { ViewSOAPNote, ReviewDraft } from '@/app/ui/notes/buttons';
 
 interface NoteMetadata {
   id: string;
@@ -15,6 +15,7 @@ interface NoteMetadata {
   appointment_date: string;
   appointment_type: string;
   appointment_specialty: string;
+  status: string;
 }
 
 export const metadata: Metadata = {
@@ -65,8 +66,8 @@ export default async function Page({ params }: { params: { id: string } }) {
             {note.appointment_specialty}
           </div>
           <div className="text-center font-semibold text-teal-700">
-            <ViewSOAPNote id={note.id} />
-            {/* View Note */}
+            {note.status === 'approved' && <ViewSOAPNote id={note.id} />}
+            {note.status === 'draft' && <ReviewDraft id={note.id} />}
           </div>
         </div>
         {/* mobile view */}

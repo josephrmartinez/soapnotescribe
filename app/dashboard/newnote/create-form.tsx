@@ -121,7 +121,7 @@ const CreateNote = () => {
       if (noteRef) {
         try {
           const note = await fetchNoteById(noteRef);
-          // console.log('note from noteRef:', note);
+          console.log('note from noteRef:', note);
           if (note) {
             {
               note.patient_location &&
@@ -144,6 +144,7 @@ const CreateNote = () => {
                   value: note.chief_complaint,
                   label: note.chief_complaint,
                 });
+              setChiefComplaint(note.chief_complaint);
             }
             setSubjective(note.soap_subjective);
             setObjective(note.soap_objective);
