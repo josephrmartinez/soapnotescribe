@@ -285,7 +285,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                 </div>
               </div>
             </div>
-            {patientNotes.length > 1 && (
+            {patientNotes.length > 0 && (
               <div className="col-span-2 mb-4">
                 <div className="mb-2 text-sm font-medium">
                   <label htmlFor="patient_notes" className="">
@@ -298,7 +298,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                     {patientNotes}
                   </div>
                 </div>
-                {patientNotes.length > 1 && (
+                {patientNotes.length > 0 && (
                   <div className="mb-2 cursor-pointer text-sm font-medium underline underline-offset-4 hover:text-teal-700">
                     Download all notes
                   </div>
