@@ -46,16 +46,43 @@ export default async function Page({ params }: { params: { id: string } }) {
 
   const patientNotes = patientProfile.note.map(
     (note: NoteMetadata, index: number) => (
-      <div
-        className={`grid w-full grid-cols-3 items-center gap-4 p-2 ${index % 2 === 0 ? 'bg-gray-200' : 'bg-gray-100'}`}
-        key={note.id}
-      >
-        <div>{note.appointment_date}</div>
-        <div className="col-span-2">{note.chief_complaint}</div>
-        <div>{note.appointment_type}</div>
-        <div>{note.appointment_specialty}</div>
-        <div className="flex justify-end">
-          <ViewSOAPNote id={note.id} />
+      <div key={index}>
+        {/* desktop view */}
+        <div
+          className={`my-2 hidden w-full grid-cols-4 items-center gap-4 rounded-lg border p-4 md:grid ${index % 2 === 0 ? 'bg-gray-100' : 'bg-gray-100'}`}
+          key={note.id}
+        >
+          <div className="col-span-4 font-semibold">
+            {note.appointment_date}
+          </div>
+          <div className="text-md col-span-2 font-semibold">
+            {note.chief_complaint}
+          </div>
+          <div className="text-md whitespace-nowrap text-center">
+            {note.appointment_type}
+          </div>
+          <div className="text-md whitespace-nowrap text-center">
+            {note.appointment_specialty}
+          </div>
+          <div className="text-center font-semibold text-teal-700">
+            <ViewSOAPNote id={note.id} />
+            {/* View Note */}
+          </div>
+        </div>
+        {/* mobile view */}
+        <div
+          className={`my-2 grid w-full grid-cols-2 items-center gap-4 rounded-lg border p-4 md:hidden ${index % 2 === 0 ? 'bg-gray-100' : 'bg-gray-100'}`}
+          key={note.id}
+        >
+          <div className="font-semibold">{note.appointment_date}</div>
+          <div className="text-md col-span-2 font-medium">
+            {note.chief_complaint}
+          </div>
+          <div className="text-md">{note.appointment_type}</div>
+          <div className="text-md">{note.appointment_specialty}</div>
+          <div className="">
+            <ViewSOAPNote id={note.id} />
+          </div>
         </div>
       </div>
     ),
@@ -252,30 +279,38 @@ export default async function Page({ params }: { params: { id: string } }) {
                 Appointment Specialties Received
               </label>
               <div className="relative">
-                <div id="appointment_types" className="px-2 py-2 text-sm">
+                <div id="appointment_specialties" className="px-2 py-2 text-sm">
                   {specialtiesReceived.join(', ')}
                 </div>
               </div>
             </div>
             {patientNotes.length > 1 && (
               <div className="col-span-2 mb-4">
-                <label
-                  htmlFor="patient_notes"
-                  className="mb-2 block text-sm font-medium"
-                >
-                  Patient Notes
-                </label>
+                <div className="mb-2 text-sm font-medium">
+                  <label htmlFor="patient_notes" className="">
+                    Patient Notes
+                  </label>
+                </div>
+
                 <div className="relative">
-                  <div id="appointment_types" className="px-2 py-2 text-sm">
+                  <div id="patient_notes" className=" py-2 text-sm">
                     {patientNotes}
                   </div>
                 </div>
+                {patientNotes.length > 1 && (
+                  <div className="mb-2 cursor-pointer text-sm font-medium underline underline-offset-4 hover:text-teal-700">
+                    Download all notes
+                  </div>
+                )}
               </div>
             )}
           </div>
-          {patientNotes.length > 1 && <DownloadPatientNotes />}
         </div>
       </div>
     </main>
   );
+}
+
+{
+  /* <DownloadPatientNotes /> */
 }
