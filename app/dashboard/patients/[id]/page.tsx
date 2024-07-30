@@ -30,8 +30,18 @@ export default async function Page({ params }: { params: { id: string } }) {
 
   console.log('patient profile data from patients/[id]:', patientProfile);
 
-  const specialtiesReceived = patientProfile.note.map(
-    (note: NoteMetadata) => note.appointment_specialty,
+  const specialtiesReceived = Array.from(
+    new Set(
+      patientProfile.note.map(
+        (note: NoteMetadata) => note.appointment_specialty,
+      ),
+    ),
+  );
+
+  const appointmentTypesReceived = Array.from(
+    new Set(
+      patientProfile.note.map((note: NoteMetadata) => note.appointment_type),
+    ),
   );
 
   const patientNotes = patientProfile.note.map(
@@ -230,7 +240,7 @@ export default async function Page({ params }: { params: { id: string } }) {
               </label>
               <div className="relative">
                 <div id="appointment_types" className="px-2 py-2 text-sm">
-                  Telemedicine and / or In Person
+                  {appointmentTypesReceived.join(', ')}
                 </div>
               </div>
             </div>

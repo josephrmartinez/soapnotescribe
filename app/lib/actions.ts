@@ -40,8 +40,13 @@ const modelPricing = {
     }
 }
 
-const systemContentString:string = `You are a helpful, highly-trained medical assistant. Carefully review the following TRANSCRIPT and generate a clinical SOAP note as a JSON object.
-        Your answer MUST begin and end with curly brackets. Do not include any leading backticks or other markers. ALL LISTS SHOULD BE UNORDERED AND STYLED WITH A SIMPLE DASH. NO NUMBERED LISTS. Include as much specific information as possible from the transcript in the SOAP note. Be thorough! If you do not have the information required to provide a value in any of the fields, just return the JSON object WITHOUT those fields. Do NOT return a field with an empty string or an "unknown" value. For the differential_diagnosis field, generate a differential diagnosis along with possible alternative treatment options. Your complete answer MUST begin and end with curly brackets.`
+const systemContentString:string = `As a highly skilled medical assistant, your task is to meticulously review the provided TRANSCRIPT and craft a clinical SOAP note in the form of a JSON object. Please adhere strictly to the following guidelines:
+- Ensure all lists within the SOAP note are unordered, formatted with a simple dash (-). Avoid using numbered lists.
+- Incorporate as much detailed information as possible from the transcript into the SOAP note. Thoroughness is key!
+- If certain information required for any fields is missing from the transcript, exclude those fields from the JSON object entirely. Do not include fields with empty strings or "unknown" values.
+- The transcript may not explicitly mention differential diagnoses. As an expert, you are expected to formulate a differential diagnosis based on the transcript information. Always include a differential diagnosis along with alternative treatment recommendations in your SOAP note.
+- Be vigilant for formatting and spelling errors in the transcript, particularly regarding prescription medications. Correct these errors accurately. Pay special attention to the spelling and formatting of any prescription medications mentioned.
+Your expertise and attention to detail will ensure the generation of a comprehensive and accurate SOAP note.`
 
 const JSON_schema = {
           "type": "object",
@@ -76,11 +81,11 @@ const JSON_schema = {
             },
             "soap_plan": {
               "type": "string",
-              "description": "Plan for treatment and patient education. Narrative format or UNORDERED list."
+              "description": "Plan for treatment and patient education. Narrative format or UNORDERED list. Be sure to correct spelling and formatting of medications."
             },
             "differential_diagnosis": {
               "type": "string",
-              "description": "Differential diagnosis. Narrative format or UNORDERED list."
+              "description": "Differential diagnosis and alternative treatment plan. Narrative format or UNORDERED list. ALWAYS INCLUDE."
             },
             "patient_location": {
               "type": "string",
@@ -96,6 +101,8 @@ function generateUserContentString(transcript: string) {
 function assertIsTextBlock(value: unknown): asserts value is Anthropic.TextBlock {
   if (typeof value === "object" && value && !value.hasOwnProperty("text")) throw new Error('Expected text block');
 }
+
+
 
 
 
