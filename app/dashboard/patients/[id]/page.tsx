@@ -3,11 +3,15 @@ import Breadcrumbs from '@/app/ui/notes/breadcrumbs';
 import { fetchPatientById, fetchPatientProfileById } from '@/app/lib/data';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { PencilSquareIcon } from '@heroicons/react/24/outline';
+import {
+  PencilSquareIcon,
+  ArrowDownTrayIcon,
+} from '@heroicons/react/24/outline';
 import { Metadata } from 'next';
 import { calculateAge, formatDateToLocal } from '@/app/lib/utils';
 import { DownloadPatientNotes, NewNote } from '@/app/ui/patients/buttons';
 import { ViewSOAPNote, ReviewDraft } from '@/app/ui/notes/buttons';
+import Search from '@/app/ui/search';
 
 interface NoteMetadata {
   id: string;
@@ -50,7 +54,7 @@ export default async function Page({ params }: { params: { id: string } }) {
       <div key={index}>
         {/* desktop view */}
         <div
-          className={`my-2 hidden w-full grid-cols-4 items-center gap-4 rounded-lg border p-4 md:grid ${index % 2 === 0 ? 'bg-gray-100' : 'bg-gray-100'}`}
+          className={`my-2 hidden w-full grid-cols-4 items-center gap-4 rounded-lg border bg-gray-50 p-4 text-sm md:grid`}
           key={note.id}
         >
           <div className="col-span-4 font-semibold">
@@ -221,20 +225,6 @@ export default async function Page({ params }: { params: { id: string } }) {
 
             <div className="mb-4">
               <label
-                htmlFor="profile_notes"
-                className="mb-2 block text-sm font-medium"
-              >
-                Profile Notes
-              </label>
-              <div className="relative">
-                <div id="profile_notes" className="px-2 py-2 text-sm">
-                  {patient.profile_notes}
-                </div>
-              </div>
-            </div>
-
-            <div className="mb-4">
-              <label
                 htmlFor="referral_source"
                 className="mb-2 block text-sm font-medium"
               >
@@ -246,7 +236,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                 </div>
               </div>
             </div>
-            <div className="mb-4">
+            {/* <div className="mb-4">
               <label
                 htmlFor="clinical_status"
                 className="mb-2 block text-sm font-medium"
@@ -258,7 +248,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                   Due for Annual
                 </div>
               </div>
-            </div>
+            </div> */}
             <div className="mb-4">
               <label
                 htmlFor="appointment_types"
@@ -285,27 +275,60 @@ export default async function Page({ params }: { params: { id: string } }) {
                 </div>
               </div>
             </div>
-            {patientNotes.length > 0 && (
-              <div className="col-span-2 mb-4">
-                <div className="mb-2 text-sm font-medium">
-                  <label htmlFor="patient_notes" className="">
+
+            {patient.profile_notes && (
+              <div className="mb-4">
+                <label
+                  htmlFor="profile_notes"
+                  className="mb-2 block text-sm font-medium"
+                >
+                  Profile Notes
+                </label>
+                <div className="relative">
+                  <div id="profile_notes" className="px-2 py-2 text-sm">
+                    {patient.profile_notes}
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div>
+          {patientNotes.length > 0 && (
+            <div className="">
+              <div className="mb-2 font-medium">
+                <div className="mb-2">
+                  <label
+                    htmlFor="patient_notes"
+                    className="text-md font-semibold uppercase text-gray-700"
+                  >
                     Patient Notes
                   </label>
                 </div>
 
-                <div className="relative">
-                  <div id="patient_notes" className=" py-2 text-sm">
-                    {patientNotes}
-                  </div>
+                <div className="flex flex-row items-center">
+                  <Search placeholder="Search Patient Notes..." />
+                  {patientNotes.length > 0 && (
+                    <div className="ml-4 flex h-10 cursor-pointer flex-row items-center rounded-md border px-2 transition-all hover:bg-gray-50 hover:text-teal-700">
+                      <ArrowDownTrayIcon height="22" />
+                      <div className="ml-2  text-sm font-medium">
+                        Download All Notes
+                      </div>
+                    </div>
+                  )}
                 </div>
-                {patientNotes.length > 0 && (
-                  <div className="mb-2 cursor-pointer text-sm font-medium underline underline-offset-4 hover:text-teal-700">
-                    Download all notes
-                  </div>
-                )}
               </div>
-            )}
-          </div>
+
+              <div className="max-h-80 overflow-y-auto">
+                <div className="sticky left-0 right-0 top-0 h-2 bg-gradient-to-b from-white to-transparent"></div>
+                <div id="patient_notes" className="px-2">
+                  {patientNotes}
+                </div>
+                <div className="sticky bottom-0 left-0 right-0 h-2 bg-gradient-to-t from-white to-transparent"></div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </main>

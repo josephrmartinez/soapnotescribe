@@ -38,6 +38,6 @@
     "app/ui/notes/ViewPdfButton.jsx"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules", "evals"
   ]
 }
