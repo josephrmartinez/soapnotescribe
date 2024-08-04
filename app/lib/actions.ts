@@ -42,10 +42,10 @@ const modelPricing = {
 
 const systemContentString:string = `As a highly skilled medical assistant, your task is to meticulously review the provided TRANSCRIPT and craft a clinical SOAP note in the form of a JSON object. Please adhere strictly to the following guidelines:
 - Ensure all lists within the SOAP note are unordered, formatted with a simple dash (-). Avoid using numbered lists.
-- Incorporate as much detailed information as possible from the transcript into the SOAP note. Thoroughness is key!
+- Incorporate as much detailed information as possible from the transcript into the SOAP note. Thoroughness is key, but do not make up information that is not in the transcript!
 - If certain information required for any fields is missing from the transcript, exclude those fields from the JSON object entirely. Do not include fields with empty strings or "unknown" values.
 - The transcript may not explicitly mention differential diagnoses. As an expert, you are expected to formulate a differential diagnosis based on the transcript information. Always include a differential diagnosis along with alternative treatment recommendations in your SOAP note.
-- Be vigilant for formatting and spelling errors in the transcript, particularly regarding prescription medications. Correct these errors accurately. Pay special attention to the spelling and formatting of any prescription medications mentioned.
+- Be vigilant for formatting and spelling errors in the transcript, particularly regarding prescription medications. Ensure that all prescription medications are formatted and spelled correctly.
 Your expertise and attention to detail will ensure the generation of a comprehensive and accurate SOAP note.`
 
 const JSON_schema = {
@@ -69,7 +69,7 @@ const JSON_schema = {
             },
             "soap_subjective": {
               "type": "string",
-              "description": "Subjective information from the patient. DO NOT include patient name or date of birth."
+              "description": "SOAP note subjective including any of the following: History of the present illness including onset, palliating/provoking factors, quality, region/radiation, severity/associated symptoms, and time course (OPQRST); pertinent medical, surgical, family, and social history; current medications with doses and frequency. DO NOT include patient name or date of birth."
             },
             "soap_objective": {
               "type": "string",
