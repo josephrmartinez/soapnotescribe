@@ -26,14 +26,26 @@ export const metadata: Metadata = {
   title: 'Patient Profile',
 };
 
-export default async function Page({ params }: { params: { id: string } }) {
+export default async function Page({
+  params,
+  searchParams,
+}: {
+  params: { id: string };
+  searchParams?: {
+    query?: string;
+    page?: string;
+  };
+}) {
   const id = params.id;
   const patient = await fetchPatientById(id);
   const patientProfile = await fetchPatientProfileById(id);
 
+  const query = searchParams?.query || '';
+  const currentPage = Number(searchParams?.page) || 1;
+
   //const specialtiesReceived = ...
 
-  console.log('patient profile data from patients/[id]:', patientProfile);
+  // console.log('patient profile data from patients/[id]:', patientProfile);
 
   const specialtiesReceived = Array.from(
     new Set(
@@ -49,7 +61,19 @@ export default async function Page({ params }: { params: { id: string } }) {
     ),
   );
 
-  const patientNotes = patientProfile.note.map(
+  console.log('query', query);
+  const filteredNotes = patientProfile.note.filter((note: NoteMetadata) => {
+    const queryLower = query.toLowerCase();
+    return (
+      note.chief_complaint.toLowerCase().includes(queryLower) ||
+      note.appointment_date.toLowerCase().includes(queryLower) ||
+      note.appointment_type.toLowerCase().includes(queryLower) ||
+      note.appointment_specialty.toLowerCase().includes(queryLower) ||
+      note.status.toLowerCase().includes(queryLower)
+    );
+  });
+
+  const patientNotes = filteredNotes.map(
     (note: NoteMetadata, index: number) => (
       <div key={index}>
         {/* desktop view */}
@@ -295,40 +319,38 @@ export default async function Page({ params }: { params: { id: string } }) {
         </div>
 
         <div>
-          {patientNotes.length > 0 && (
-            <div className="">
-              <div className="mb-2 font-medium">
-                <div className="mb-2">
-                  <label
-                    htmlFor="patient_notes"
-                    className="text-md font-semibold uppercase text-gray-700"
-                  >
-                    Patient Notes
-                  </label>
-                </div>
-
-                <div className="flex flex-row items-center">
-                  <Search placeholder="Search Patient Notes..." />
-                  {patientNotes.length > 0 && (
-                    <div className="ml-4 flex h-10 cursor-pointer flex-row items-center rounded-md border px-2 transition-all hover:bg-gray-50 hover:text-teal-700">
-                      <ArrowDownTrayIcon height="22" />
-                      <div className="ml-2  text-sm font-medium">
-                        Download All Notes
-                      </div>
-                    </div>
-                  )}
-                </div>
+          <div className="">
+            <div className="mb-2 font-medium">
+              <div className="mb-2">
+                <label
+                  htmlFor="patient_notes"
+                  className="text-md font-semibold uppercase text-gray-700"
+                >
+                  Patient Notes
+                </label>
               </div>
 
-              <div className="max-h-80 overflow-y-auto">
-                <div className="sticky left-0 right-0 top-0 h-2 bg-gradient-to-b from-white to-transparent"></div>
-                <div id="patient_notes" className="px-2">
-                  {patientNotes}
-                </div>
-                <div className="sticky bottom-0 left-0 right-0 h-2 bg-gradient-to-t from-white to-transparent"></div>
+              <div className="flex flex-row items-center">
+                <Search placeholder="Search Patient Notes..." />
+                {patientNotes.length > 0 && (
+                  <div className="ml-4 flex h-10 cursor-pointer flex-row items-center rounded-md border px-2 transition-all hover:bg-gray-50 hover:text-teal-700">
+                    <ArrowDownTrayIcon height="22" />
+                    <div className="ml-2  text-sm font-medium">
+                      Download All Notes
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
-          )}
+
+            <div className="max-h-80 overflow-y-auto">
+              <div className="sticky left-0 right-0 top-0 h-2 bg-gradient-to-b from-white to-transparent"></div>
+              <div id="patient_notes" className="px-2">
+                {patientNotes}
+              </div>
+              <div className="sticky bottom-0 left-0 right-0 h-2 bg-gradient-to-t from-white to-transparent"></div>
+            </div>
+          </div>
         </div>
       </div>
     </main>

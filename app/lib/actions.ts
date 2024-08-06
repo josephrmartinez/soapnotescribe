@@ -5,6 +5,8 @@ import OpenAI from "openai"
 import Anthropic from '@anthropic-ai/sdk';
 import { createClient as createClientJS } from "@supabase/supabase-js";
 
+
+
 const modelPricing = {
     "gpt-4": {
         "input_token_cost": 0.03,
