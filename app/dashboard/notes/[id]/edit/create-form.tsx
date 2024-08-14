@@ -119,7 +119,6 @@ const EditDraftNote: React.FC<CreateNoteProps> = ({ note }) => {
             note.user_id,
             note.audio_storage_url,
           );
-          // console.log('signed url:', url);
           setAudioUrl(url);
         } catch (error) {
           console.error('Error fetching audio url:', error);
@@ -150,8 +149,6 @@ const EditDraftNote: React.FC<CreateNoteProps> = ({ note }) => {
   ) => {
     setAppointmentSpecialty(selectedAppointmentSpecialty);
   };
-
-  console.log(note.differential_diagnosis);
 
   return (
     <div className="w-full">
@@ -571,7 +568,7 @@ const EditDraftNote: React.FC<CreateNoteProps> = ({ note }) => {
         {differentialDiagnosis && (
           <div
             tabIndex={0}
-            className="collapse collapse-plus mb-4 rounded-md  border"
+            className="collapse-plus collapse mb-4 rounded-md  border"
           >
             <div className="collapse-title text-lg font-medium text-gray-600">
               Differential Diagnosis

@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 export default async function Page({ params }: { params: { id: string } }) {
   const id = params.id;
   const note = await fetchNoteById(id);
-  console.log('note data from newnote/[id]/page.tsx:', note);
+  // console.log('note data from newnote/[id]/page.tsx:', note);
 
   return (
     <div>

@@ -104,7 +104,6 @@ const AudioUploadRecordVolumeVis: React.FC<AudioUploadRecordProps> = ({
   };
 
   useEffect(() => {
-    console.log('running audiofile check useEffect');
     if (audioFile?.type !== 'audio/amr') return;
 
     let playerInstance: Player | null = null;
@@ -240,13 +239,13 @@ const AudioUploadRecordVolumeVis: React.FC<AudioUploadRecordProps> = ({
         onProgress: function (bytesUploaded, bytesTotal) {
           var percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2);
           setPercentageUploaded(parseFloat(percentage));
-          console.log(bytesUploaded, bytesTotal, percentage + '%');
+          // console.log(bytesUploaded, bytesTotal, percentage + '%');
         },
         onSuccess: async function () {
           setUploadComplete(true);
           try {
             const signedUrl = await getDownloadUrl(fileName);
-            console.log('signedUrl:', signedUrl);
+            // console.log('signedUrl:', signedUrl);
 
             // Check if signedUrl is defined before setting the state
             if (signedUrl !== undefined) {
@@ -534,8 +533,6 @@ const AudioUploadRecordVolumeVis: React.FC<AudioUploadRecordProps> = ({
       audioContextRef.current.close();
       audioContextRef.current = null;
     }
-
-    console.log('decibleArray:', decibelArray);
   }
 
   function playRecording() {
@@ -653,7 +650,7 @@ const AudioUploadRecordVolumeVis: React.FC<AudioUploadRecordProps> = ({
           ) : status === 'uploading' ? (
             <div className="loader"></div>
           ) : status === 'uploaded' ? (
-            `upload complete.`
+            ''
           ) : (
             ''
           )}
@@ -681,6 +678,8 @@ const AudioUploadRecordVolumeVis: React.FC<AudioUploadRecordProps> = ({
               onChange={handleRangeChange}
               className="w-full cursor-pointer accent-gray-600"
             />
+          ) : status === 'uploading' ? (
+            <div>upload {percentageUploaded}% complete</div>
           ) : (
             ''
           )}
