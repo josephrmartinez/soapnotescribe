@@ -207,7 +207,7 @@ const AudioUploadRecordVolumeVis: React.FC<AudioUploadRecordProps> = ({
     if (!file) return;
     try {
       const extension = file.name.split('.').pop(); // Get the file extension
-      const fileName = `recording-${self.crypto.randomUUID()}.${extension}`;
+      const fileName = `audiofile-${self.crypto.randomUUID()}.${extension}`;
       await uploadFile('audiofiles', fileName, file);
     } catch (error) {
       console.error('Error uploading file:', error);

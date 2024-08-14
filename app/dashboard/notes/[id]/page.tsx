@@ -21,8 +21,12 @@ export default async function Page({ params }: { params: { id: string } }) {
   const id = params.id;
   const note = await fetchNoteById(id);
 
-  if (note.status === 'awaiting review') {
+  if (note.status === 'draft') {
     redirect(`./${id}/edit`);
+  }
+
+  if (note.status === 'processing') {
+    redirect(`./${id}/processing`);
   }
 
   const appointmentDate = formatDateToLocal(note.appointment_date);

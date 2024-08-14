@@ -408,25 +408,6 @@ const EditDraftNote: React.FC<CreateNoteProps> = ({ note }) => {
             </div>
           </div>
 
-          {/* <div className="mb-4">
-            <label
-              htmlFor="allergies"
-              className="mb-2 block text-sm font-medium"
-            >
-              Allergies
-            </label>
-            <div className="relative">
-              <input
-                id="allergies"
-                name="allergies"
-                type="text"
-                className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
-                value={allergies || ''}
-                onChange={(e) => setAllergies(e.target.value)}
-              ></input>
-            </div>
-          </div> */}
-
           <div className="mb-4">
             <label
               htmlFor="chief_complaint"
@@ -568,7 +549,7 @@ const EditDraftNote: React.FC<CreateNoteProps> = ({ note }) => {
         {differentialDiagnosis && (
           <div
             tabIndex={0}
-            className="collapse-plus collapse mb-4 rounded-md  border"
+            className="collapse collapse-plus mb-4 rounded-md  border"
           >
             <div className="collapse-title text-lg font-medium text-gray-600">
               Differential Diagnosis
@@ -597,8 +578,8 @@ const EditDraftNote: React.FC<CreateNoteProps> = ({ note }) => {
               <div className="collapse-content">
                 <p className="text-sm">{note.audio_transcript}</p>
                 <p className="mt-6 text-center text-xs italic text-gray-700">
-                  Audio transcription is for reference only and will not be
-                  included with the approved SOAP note.
+                  Audio transcription is for reference only and will be deleted
+                  once the SOAP note is approved.
                 </p>
               </div>
             </div>
