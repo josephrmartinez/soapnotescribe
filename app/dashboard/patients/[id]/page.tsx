@@ -61,11 +61,11 @@ export default async function Page({
     ),
   );
 
-  console.log('query', query);
+  // console.log('query', query);
   const filteredNotes = patientProfile.note.filter((note: NoteMetadata) => {
     const queryLower = query.toLowerCase();
     return (
-      note.chief_complaint.toLowerCase().includes(queryLower) ||
+      note.chief_complaint?.toLowerCase().includes(queryLower) ||
       note.appointment_date.toLowerCase().includes(queryLower) ||
       note.appointment_type.toLowerCase().includes(queryLower) ||
       note.appointment_specialty.toLowerCase().includes(queryLower) ||

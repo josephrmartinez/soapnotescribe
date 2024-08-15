@@ -25,7 +25,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ audioUrl }) => {
 
     const checkAndLoadAudio = async () => {
       const url = new URL(audioUrl);
-      console.log('audio url in AudioPlayer:', url);
+      // console.log('audio url in AudioPlayer:', url);
       if (url.pathname.endsWith('.amr')) {
         setIsAMR(true);
         const res = await fetch(audioUrl);
