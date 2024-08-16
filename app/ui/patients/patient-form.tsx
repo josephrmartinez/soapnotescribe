@@ -7,11 +7,16 @@ import CountrySelect from '@/app/ui/patients/CountrySelect';
 import { CalendarDaysIcon, UserCircleIcon } from '@heroicons/react/24/outline';
 import { Button } from '@/app/ui/button';
 import { CancelGoBackButton } from '@/app/ui/Buttons';
-import { SubmitFormButton } from '@/app/ui/Buttons';
+import { SubmitFormButton, AddPatientFormButton } from '@/app/ui/Buttons';
+import { EditPatientProfile } from './buttons';
+import {
+  editPatient,
+  checkForExistingPatient,
+  addPatient,
+} from '@/app/lib/data';
 
 interface PatientFormProps {
   patient?: Patient;
-  formAction: (formData: FormData) => Promise<void>;
 }
 
 interface Patient {
@@ -33,7 +38,15 @@ interface Patient {
   referral_source: string | null;
 }
 
-const PatientForm: React.FC<PatientFormProps> = ({ patient, formAction }) => {
+interface ExistingPatient {
+  id: string;
+  first_name: string | null;
+  middle_name: string | null;
+  last_name: string | null;
+  date_of_birth: string;
+}
+
+const PatientForm: React.FC<PatientFormProps> = ({ patient }) => {
   const [loading, setLoading] = useState(false);
   const [firstName, setFirstName] = useState<string | null>(
     patient?.first_name || null,
@@ -70,6 +83,10 @@ const PatientForm: React.FC<PatientFormProps> = ({ patient, formAction }) => {
     patient?.referral_source || '',
   );
   const [submitOkay, setSubmitOkay] = useState<boolean>(true);
+  const [warningOpen, setWarningOpen] = useState<boolean>(false);
+  const [existingPatients, setExistingPatients] = useState<ExistingPatient[]>(
+    [],
+  );
 
   const handleStateChange = (selectedState: string) => {
     setState(selectedState);
@@ -81,6 +98,17 @@ const PatientForm: React.FC<PatientFormProps> = ({ patient, formAction }) => {
 
   const handlePhoneChange = (phone: string) => {
     setPhone(phone);
+  };
+
+  const handleAddPatient = async (formData: FormData) => {
+    const response = await checkForExistingPatient(formData);
+
+    if (response && response.exists && response.patients) {
+      // console.log('existing patients with same name:', response.patients);
+      // console.log('open modal!');
+      setExistingPatients(response.patients);
+      setWarningOpen(true);
+    }
   };
 
   return (
@@ -352,12 +380,53 @@ const PatientForm: React.FC<PatientFormProps> = ({ patient, formAction }) => {
         </div>
 
         <div className="mt-6 grid grid-cols-2 justify-end gap-4 sm:grid-cols-3">
+          {warningOpen && (
+            <div className="col-span-2 flex flex-col sm:col-span-3">
+              <div className="text-center">
+                {existingPatients.length > 1
+                  ? 'Patients already exist with that same name:'
+                  : 'A patient already exists with that same name:'}
+              </div>
+              {existingPatients.map((patient) => (
+                <div className="my-2 flex flex-row items-center justify-between">
+                  <div className="font-semibold">
+                    {patient.first_name} {patient.last_name}
+                  </div>
+                  <div>{patient.date_of_birth}</div>
+                  <EditPatientProfile patient_id={patient.id} />
+                </div>
+              ))}
+            </div>
+          )}
           <div className="sm:col-start-2">
             <CancelGoBackButton />
           </div>
-          <SubmitFormButton formAction={formAction} active={submitOkay}>
-            {patient ? 'Update Patient' : 'Add Patient'}
-          </SubmitFormButton>
+
+          {patient ? (
+            <SubmitFormButton formAction={editPatient} active={submitOkay}>
+              Update Patient
+            </SubmitFormButton>
+          ) : (
+            <>
+              {warningOpen ? (
+                <SubmitFormButton
+                  key="continue"
+                  formAction={addPatient}
+                  active={submitOkay}
+                >
+                  Continue Adding Patient
+                </SubmitFormButton>
+              ) : (
+                <SubmitFormButton
+                  key="add"
+                  formAction={handleAddPatient}
+                  active={submitOkay}
+                >
+                  Add Patient
+                </SubmitFormButton>
+              )}
+            </>
+          )}
         </div>
       </div>
     </form>

@@ -3,8 +3,19 @@
 import { createClient } from '@/utils/supabase/server';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
+import { fetchPatientsWithSameName } from '@/app/lib/data';
 
 export async function addPatient(formData: FormData) {
+  let first_name = formData.get('first_name') as string;
+  let last_name = formData.get('last_name') as string;
+
+
+  let patientsWithSameName = await fetchPatientsWithSameName(first_name, last_name);
+  
+  if (patientsWithSameName.length > 0) {
+    console.log("A patient already exists with this same name:", patientsWithSameName)
+  }
+  
   const supabase = createClient();
 
   const { error, data } = await supabase
@@ -29,7 +40,6 @@ export async function addPatient(formData: FormData) {
     .select();
   if (error) {
     console.error('Supabase error creating or updating patient:', error);
-
     return;
   }
   if (data && data.length > 0) {

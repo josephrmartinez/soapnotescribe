@@ -295,6 +295,122 @@ try {
  }
 }
 
+export async function fetchPatientsWithSameName(first_name: string, last_name: string) {
+  try {
+    const supabase = createClient()
+    const { data: patients, error } = await supabase
+      .from('patient')
+      .select(
+        'id, first_name, middle_name, last_name, date_of_birth'
+      )
+      .eq('first_name', first_name)
+      .eq('last_name', last_name)
+
+    if (error) {
+      console.error('Error fetching patients by name:', error);
+      throw new Error('Failed to fetch patients by name data')
+    }
+  
+    return patients
+  
+ } catch (error) {
+    console.error('Supabase Error:', error);
+    throw new Error('Failed to fetch patients by name data.');
+ }
+}
+
+
+
+export async function checkForExistingPatient(formData: FormData) {
+  let first_name = formData.get('first_name') as string;
+  let last_name = formData.get('last_name') as string;
+
+
+  let patientsWithSameName = await fetchPatientsWithSameName(first_name, last_name);
+  
+  if (patientsWithSameName.length > 0) {
+    return {exists: true, patients: patientsWithSameName}
+  } else { 
+    await addPatient(formData);
+    return { exists: false }
+   }
+}
+
+export async function addPatient(formData: FormData) {
+    const supabase = createClient();
+
+  const { error, data } = await supabase
+    .from('patient')
+    .insert({
+      first_name: formData.get('first_name') as string,
+      middle_name: formData.get('middle_name') as string,
+      last_name: formData.get('last_name') as string,
+      date_of_birth: formData.get('date_of_birth') as string,
+      phone: formData.get('phone') as string,
+      email: formData.get('email') as string,
+      address_street: formData.get('address_street') as string,
+      address_unit: formData.get('address_unit') as string,
+      city: formData.get('city') as string,
+      state: formData.get('state') as string,
+      country: formData.get('country') as string,
+      zipcode: formData.get('zipcode') as string,
+      allergies: formData.get('allergies') as string,
+      referral_source: formData.get('referral_source') as string,
+      profile_notes: formData.get('profile_notes') as string,
+    })
+    .select();
+  if (error) {
+    console.error('Supabase error creating or updating patient:', error);
+    return;
+  }
+  if (data && data.length > 0) {
+    revalidatePath('/dashboard/patients', 'page');
+    redirect('/dashboard/patients');
+  } else {
+    console.error('Update successful, but data is not as expected');
+  }
+}
+
+
+export async function editPatient(formData: FormData) {
+  const supabase = createClient();
+
+  const { error, data } = await supabase
+    .from('patient')
+    .update({
+      first_name: formData.get('first_name') as string,
+      middle_name: formData.get('middle_name') as string,
+      last_name: formData.get('last_name') as string,
+      date_of_birth: formData.get('date_of_birth') as string,
+      phone: formData.get('phone') as string,
+      email: formData.get('email') as string,
+      address_street: formData.get('address_street') as string,
+      address_unit: formData.get('address_unit') as string,
+      city: formData.get('city') as string,
+      state: formData.get('state') as string,
+      country: formData.get('country') as string,
+      zipcode: formData.get('zipcode') as string,
+      allergies: formData.get('allergies') as string,
+      referral_source: formData.get('referral_source') as string,
+      profile_notes: formData.get('profile_notes') as string,
+    })
+    .eq('id', formData.get('id'))
+    .select();
+  if (error) {
+    console.error('Supabase error creating or updating patient:', error);
+
+    return;
+  }
+  if (data && data.length > 0) {
+    revalidatePath('/dashboard/patients', 'page');
+    redirect('/dashboard/patients');
+  } else {
+    // Handle the case where the update was successful but the data is not as expected
+    console.error('Update successful, but data is not as expected');
+  }
+}
+
+
 
 export async function fetchPatientsWithQuery(query:string, currentPage: number) {
   noStore();
@@ -323,6 +439,7 @@ try {
     throw new Error('Failed to fetch paients data.');
  }
 }
+
 
 
 export async function countPatientPagesWithQuery(query:string) {
