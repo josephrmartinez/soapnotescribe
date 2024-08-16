@@ -16,6 +16,7 @@ export default async function PatientsTable({
     <div className="mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">
         <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
+          {/* mobile view */}
           <div className="md:hidden">
             {patients?.map((patient) => (
               <div
@@ -28,7 +29,9 @@ export default async function PatientsTable({
                     first_name={patient.first_name}
                     last_name={patient.last_name}
                   />
-                  <div className="flex justify-end gap-2"></div>
+                  <div className="mr-2 flex justify-end gap-2 text-sm text-gray-700">
+                    {patient.date_of_birth}
+                  </div>
                 </div>
 
                 <div className="flex w-full items-center justify-between">
@@ -44,12 +47,17 @@ export default async function PatientsTable({
               </div>
             ))}
           </div>
-          <div className="max-h-[120] overflow-y-auto">
+
+          {/* desktop view */}
+          <div className="max-h-[120]">
             <table className="hidden min-w-full text-gray-900 md:table">
               <thead className="sticky top-0 w-full rounded-lg text-left text-sm font-normal">
                 <tr className="sticky top-0 w-full bg-gray-50 ">
                   <th scope="col" className="px-4 py-0 font-medium">
-                    {/* Patient Name */}
+                    Patient Name
+                  </th>
+                  <th scope="col" className="px-3 py-0 font-medium">
+                    Date of Birth
                   </th>
                   <th scope="col" className="px-3 py-0 font-medium">
                     {/* Patient Profile */}
@@ -77,8 +85,10 @@ export default async function PatientsTable({
                         />
                       </div>
                     </td>
-
-                    <td className="">
+                    <td className=" whitespace-nowrap">
+                      {patient.date_of_birth}
+                    </td>
+                    <td className="whitespace-nowrap">
                       <EditProfile patient_id={patient.id} />
                     </td>
                     <td className="">

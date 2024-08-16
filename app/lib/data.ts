@@ -304,7 +304,7 @@ try {
     const { data: patients, error } = await supabase
       .from('patient')
       .select(
-        'id, first_name, middle_name, last_name'
+        'id, first_name, middle_name, last_name, date_of_birth'
       )
       .or(`first_name.ilike.%${query}%,middle_name.ilike.%${query}%,last_name.ilike.%${query}%`)
       .order('last_name', { ascending: true })
@@ -313,7 +313,7 @@ try {
       console.error('Error fetching patients:', error);
       return
     }
-  // return patients as PatientForTable[]
+  
 
   const paginatedPatients = patients.slice(offset, offset + ITEMS_PER_PAGE);
   return paginatedPatients as PatientForTable[];
