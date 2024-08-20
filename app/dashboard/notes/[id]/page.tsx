@@ -282,7 +282,7 @@ export default async function Page({ params }: { params: { id: string } }) {
             </div>
           </div>
         </div>
-        <div className="grid grid-cols-4 gap-2">
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
           <DeleteNoteFirstStep id={note.id} />
           <Link
             href={`/dashboard/notes/${note.id}/edit`}
@@ -291,15 +291,21 @@ export default async function Page({ params }: { params: { id: string } }) {
             <PencilSquareIcon width={20} height={20} className="mr-2" />
             Edit
           </Link>
+          <ViewPDFButton note={processedNote} />
           <Link
             href={`/dashboard/newnote?patient=${note.patient_id}&noteRef=${note.id}`}
-            className="flex h-10 items-center justify-center rounded-lg bg-gray-100 px-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200 "
+            className="flex h-10  items-center justify-center whitespace-nowrap rounded-lg bg-gray-100 px-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200 "
           >
             <DocumentDuplicateIcon width={20} height={20} className="mr-2" />
-            Copy
+            Copy to New Note
           </Link>
-
-          <ViewPDFButton note={processedNote} />
+          <Link
+            href={`/dashboard/templates/add?noteRef=${note.id}`}
+            className="flex h-10 items-center justify-center whitespace-nowrap rounded-lg bg-gray-100 px-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200 "
+          >
+            <DocumentDuplicateIcon width={20} height={20} className="mr-2" />
+            Make Template
+          </Link>
         </div>
       </div>
     </main>

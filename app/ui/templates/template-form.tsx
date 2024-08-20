@@ -6,7 +6,7 @@ import { Button } from '../button';
 import { SubmitFormButton } from '../Buttons';
 
 interface TemplateFormProps {
-  template?: Template;
+  template: Template;
   formAction: (formData: FormData) => Promise<void>;
 }
 
@@ -169,7 +169,7 @@ const TemplateForm: React.FC<TemplateFormProps> = ({
           <div className="mt-6 flex justify-end gap-4">
             <CancelGoBackButton />
             <SubmitFormButton active={true} formAction={formAction}>
-              {template ? 'Update Template' : 'Add Template'}
+              {template?.id.length > 2 ? 'Update Template' : 'Add Template'}
             </SubmitFormButton>
           </div>
         </div>

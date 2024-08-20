@@ -153,10 +153,6 @@ function assertIsTextBlock(value: unknown): asserts value is Anthropic.TextBlock
   if (typeof value === "object" && value && !value.hasOwnProperty("text")) throw new Error('Expected text block');
 }
 
-
-
-
-
 export async function getReplicateMonoTranscript(url: string, apptid: string) {
   const replicate = new Replicate({
   auth: process.env.REPLICATE_API_TOKEN,
@@ -256,7 +252,7 @@ export async function getAnalysisAnthropic(noteid: string, transcript: string, t
 
 
 export async function getAnalysisOpenAI(noteid: string, transcript: string, transcriptionTime: string) {
-  console.log("calling getAnalysisOpenAI")
+  // console.log("calling getAnalysisOpenAI")
 
   const userContentString: string = generateUserContentString(transcript);
   
