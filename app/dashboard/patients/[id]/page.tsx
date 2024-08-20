@@ -160,7 +160,7 @@ export default async function Page({
                 Patient
               </label>
               <div className="relative">
-                <div id="patient" className="px-2 py-2 text-sm">
+                <div id="patient" className="px-2 text-sm">
                   {patient.first_name} {patient.middle_name} {patient.last_name}
                 </div>
               </div>
@@ -171,7 +171,7 @@ export default async function Page({
               <label htmlFor="phone" className="mb-2 block text-sm font-medium">
                 Phone Number
               </label>
-              <div id="phone" className="px-2 py-2 text-sm">
+              <div id="phone" className="px-2 text-sm">
                 {patient.phone}
               </div>
             </div>
@@ -185,7 +185,7 @@ export default async function Page({
                 Patient Date of Birth
               </label>
               <div className="relative">
-                <div id="patient_dob" className="px-2 py-2 text-sm">
+                <div id="patient_dob" className="px-2 text-sm">
                   {patient.date_of_birth}
                 </div>
               </div>
@@ -209,7 +209,7 @@ export default async function Page({
                 Email Address
               </label>
               <div className="relative">
-                <div id="email" className="px-2 py-2 text-sm">
+                <div id="email" className="px-2 text-sm">
                   {patient.email}
                 </div>
               </div>
@@ -223,7 +223,7 @@ export default async function Page({
                 Home Address
               </label>
               <div className="relative">
-                <div id="address" className="px-2 py-2 text-sm">
+                <div id="address" className="px-2 text-sm">
                   <div>{patient.address_street}</div>
                   {patient.address_unit && <div>{patient.address_unit}</div>}
                   <div>
@@ -243,7 +243,7 @@ export default async function Page({
                 Allergies
               </label>
               <div className="relative">
-                <div className="px-2 py-2 text-sm">{patient.allergies}</div>
+                <div className="px-2 text-sm">{patient.allergies}</div>
               </div>
             </div>
 
@@ -255,7 +255,7 @@ export default async function Page({
                 Referral Source
               </label>
               <div className="relative">
-                <div id="referral_source" className="px-2 py-2 text-sm">
+                <div id="referral_source" className="px-2 text-sm">
                   {patient.referral_source}
                 </div>
               </div>
@@ -281,7 +281,7 @@ export default async function Page({
                 Appointment Types
               </label>
               <div className="relative">
-                <div id="appointment_types" className="px-2 py-2 text-sm">
+                <div id="appointment_types" className="px-2 text-sm">
                   {appointmentTypesReceived.join(', ')}
                 </div>
               </div>
@@ -294,8 +294,23 @@ export default async function Page({
                 Appointment Specialties Received
               </label>
               <div className="relative">
-                <div id="appointment_specialties" className="px-2 py-2 text-sm">
+                <div id="appointment_specialties" className="px-2 text-sm">
                   {specialtiesReceived.join(', ')}
+                </div>
+              </div>
+            </div>
+
+            <div className="mb-4">
+              <label
+                htmlFor="pharmacy_name"
+                className="mb-2 block text-sm font-medium"
+              >
+                Patient Pharmacy
+              </label>
+              <div className="relative">
+                <div className="px-2  text-sm">
+                  <div>{patient.pharmacy_name}</div>
+                  <div>{patient.pharmacy_phone}</div>
                 </div>
               </div>
             </div>

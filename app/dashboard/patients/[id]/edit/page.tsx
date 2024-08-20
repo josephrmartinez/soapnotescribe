@@ -11,6 +11,7 @@ export const metadata: Metadata = {
 export default async function Page({ params }: { params: { id: string } }) {
   const id = params.id;
   const patient = await fetchPatientById(id);
+  console.log(patient);
 
   return (
     <main>

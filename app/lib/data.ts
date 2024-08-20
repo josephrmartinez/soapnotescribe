@@ -357,6 +357,8 @@ export async function addPatient(formData: FormData) {
       allergies: formData.get('allergies') as string,
       referral_source: formData.get('referral_source') as string,
       profile_notes: formData.get('profile_notes') as string,
+      pharmacy_name: formData.get('pharmacy_name') as string,
+      pharmacy_phone: formData.get('pharmacy_phone') as string,
     })
     .select();
   if (error) {
@@ -393,6 +395,8 @@ export async function editPatient(formData: FormData) {
       allergies: formData.get('allergies') as string,
       referral_source: formData.get('referral_source') as string,
       profile_notes: formData.get('profile_notes') as string,
+      pharmacy_name: formData.get('pharmacy_name') as string,
+      pharmacy_phone: formData.get('pharmacy_phone') as string,
     })
     .eq('id', formData.get('id'))
     .select();

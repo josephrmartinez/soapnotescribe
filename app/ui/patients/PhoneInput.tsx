@@ -3,11 +3,10 @@ import React, { useState, ChangeEvent } from 'react';
 interface PhoneInputProps {
   setPhone: (phone: string) => void;
   phone: string | null;
+  name: string;
 }
 
-const PhoneInput: React.FC<PhoneInputProps> = ({ phone, setPhone }) => {
-  // const [phone, setPhone] = useState<string>('');
-
+const PhoneInput: React.FC<PhoneInputProps> = ({ phone, setPhone, name }) => {
   const formatPhoneNumber = (value: string): string => {
     const numericValue = value.replace(/\D/g, '');
     const length = numericValue.length;
@@ -64,8 +63,8 @@ const PhoneInput: React.FC<PhoneInputProps> = ({ phone, setPhone }) => {
 
   return (
     <input
-      id="phone"
-      name="phone"
+      id={name}
+      name={name}
       type="text"
       placeholder="123-123-1234"
       maxLength={12}

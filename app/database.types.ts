@@ -12,6 +12,7 @@ export type Database = {
       note: {
         Row: {
           allergies: string | null
+          analysis_cost: number | null
           appointment_date: string | null
           appointment_specialty: string | null
           appointment_summary: string | null
@@ -39,10 +40,13 @@ export type Database = {
           soap_subjective: string | null
           status: string | null
           temp_audio_url: string | null
+          transcription_cost: number | null
+          transcription_time: string | null
           user_id: string
         }
         Insert: {
           allergies?: string | null
+          analysis_cost?: number | null
           appointment_date?: string | null
           appointment_specialty?: string | null
           appointment_summary?: string | null
@@ -70,10 +74,13 @@ export type Database = {
           soap_subjective?: string | null
           status?: string | null
           temp_audio_url?: string | null
+          transcription_cost?: number | null
+          transcription_time?: string | null
           user_id?: string
         }
         Update: {
           allergies?: string | null
+          analysis_cost?: number | null
           appointment_date?: string | null
           appointment_specialty?: string | null
           appointment_summary?: string | null
@@ -101,6 +108,8 @@ export type Database = {
           soap_subjective?: string | null
           status?: string | null
           temp_audio_url?: string | null
+          transcription_cost?: number | null
+          transcription_time?: string | null
           user_id?: string
         }
         Relationships: [
@@ -135,6 +144,8 @@ export type Database = {
           id: string
           last_name: string | null
           middle_name: string | null
+          pharmacy_name: string | null
+          pharmacy_phone: string | null
           phone: string | null
           profile_notes: string | null
           provider: string | null
@@ -157,6 +168,8 @@ export type Database = {
           id?: string
           last_name?: string | null
           middle_name?: string | null
+          pharmacy_name?: string | null
+          pharmacy_phone?: string | null
           phone?: string | null
           profile_notes?: string | null
           provider?: string | null
@@ -179,6 +192,8 @@ export type Database = {
           id?: string
           last_name?: string | null
           middle_name?: string | null
+          pharmacy_name?: string | null
+          pharmacy_phone?: string | null
           phone?: string | null
           profile_notes?: string | null
           provider?: string | null
@@ -218,6 +233,38 @@ export type Database = {
           user_id?: string | null
         }
         Relationships: []
+      }
+      user_settings: {
+        Row: {
+          appointment_specialties: string[] | null
+          appointment_specialties_default: string | null
+          appointment_types: string[] | null
+          appointment_types_default: string | null
+          user_id: string
+        }
+        Insert: {
+          appointment_specialties?: string[] | null
+          appointment_specialties_default?: string | null
+          appointment_types?: string[] | null
+          appointment_types_default?: string | null
+          user_id: string
+        }
+        Update: {
+          appointment_specialties?: string[] | null
+          appointment_specialties_default?: string | null
+          appointment_types?: string[] | null
+          appointment_types_default?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_settings_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       waitlist: {
         Row: {
@@ -265,6 +312,45 @@ export type Database = {
           object: string
         }
         Returns: Record<string, unknown>
+      }
+      get_notes_by_query: {
+        Args: {
+          query: string
+        }
+        Returns: {
+          allergies: string | null
+          analysis_cost: number | null
+          appointment_date: string | null
+          appointment_specialty: string | null
+          appointment_summary: string | null
+          appointment_time: string
+          appointment_type: string | null
+          audio_storage_url: string | null
+          audio_transcript: string | null
+          chief_complaint: string | null
+          combined_text: string | null
+          consent: boolean | null
+          created_at: string
+          differential_diagnosis: string | null
+          discharge_instructions: string | null
+          doctor_signature: string | null
+          feedback: string | null
+          id: string
+          image_urls: string[] | null
+          patient_age_years: number | null
+          patient_id: string | null
+          patient_location: string | null
+          pdf_storage_url: string | null
+          soap_assessment: string | null
+          soap_objective: string | null
+          soap_plan: string | null
+          soap_subjective: string | null
+          status: string | null
+          temp_audio_url: string | null
+          transcription_cost: number | null
+          transcription_time: string | null
+          user_id: string
+        }[]
       }
     }
     Enums: {

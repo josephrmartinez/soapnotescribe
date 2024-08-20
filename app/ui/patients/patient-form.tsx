@@ -117,8 +117,6 @@ const PatientForm: React.FC<PatientFormProps> = ({ patient }) => {
     const response = await checkForExistingPatient(formData);
 
     if (response && response.exists && response.patients) {
-      // console.log('existing patients with same name:', response.patients);
-      // console.log('open modal!');
       setExistingPatients(response.patients);
       setWarningOpen(true);
     }
@@ -216,7 +214,11 @@ const PatientForm: React.FC<PatientFormProps> = ({ patient }) => {
               Patient Phone Number
             </label>
             <div className="relative">
-              <PhoneInput phone={phone} setPhone={handlePhoneChange} />
+              <PhoneInput
+                phone={phone}
+                setPhone={handlePhoneChange}
+                name="patient_phone"
+              />
             </div>
           </div>
           <div className="">
@@ -403,6 +405,7 @@ const PatientForm: React.FC<PatientFormProps> = ({ patient }) => {
             </label>
             <div className="relative">
               <PhoneInput
+                name="pharmacy_phone"
                 phone={pharmacyPhone}
                 setPhone={handlePharmacyPhoneChange}
               />
