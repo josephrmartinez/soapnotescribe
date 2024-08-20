@@ -36,6 +36,8 @@ interface Patient {
   allergies: string | null;
   profile_notes: string | null;
   referral_source: string | null;
+  pharmacy_name: string | null;
+  pharmacy_phone: string | null;
 }
 
 interface ExistingPatient {
@@ -82,6 +84,13 @@ const PatientForm: React.FC<PatientFormProps> = ({ patient }) => {
   const [referralSource, setReferralSource] = useState<string | null>(
     patient?.referral_source || '',
   );
+  const [pharmacyName, setPharmacyName] = useState<string | null>(
+    patient?.pharmacy_name || '',
+  );
+  const [pharmacyPhone, setPharmacyPhone] = useState<string | null>(
+    patient?.pharmacy_phone || '',
+  );
+
   const [submitOkay, setSubmitOkay] = useState<boolean>(true);
   const [warningOpen, setWarningOpen] = useState<boolean>(false);
   const [existingPatients, setExistingPatients] = useState<ExistingPatient[]>(
@@ -98,6 +107,10 @@ const PatientForm: React.FC<PatientFormProps> = ({ patient }) => {
 
   const handlePhoneChange = (phone: string) => {
     setPhone(phone);
+  };
+
+  const handlePharmacyPhoneChange = (pharmacyPhone: string) => {
+    setPharmacyPhone(pharmacyPhone);
   };
 
   const handleAddPatient = async (formData: FormData) => {
@@ -200,7 +213,7 @@ const PatientForm: React.FC<PatientFormProps> = ({ patient }) => {
 
           <div className="">
             <label htmlFor="phone" className="mb-2 block text-sm font-medium">
-              Phone Number
+              Patient Phone Number
             </label>
             <div className="relative">
               <PhoneInput phone={phone} setPhone={handlePhoneChange} />
@@ -357,6 +370,43 @@ const PatientForm: React.FC<PatientFormProps> = ({ patient }) => {
               value={referralSource || ''}
               onChange={(e) => setReferralSource(e.target.value)}
             ></input>
+          </div>
+        </div>
+
+        <div className="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-8">
+          <div>
+            <label
+              htmlFor="pharmacy_name"
+              className="mb-2 block text-sm font-medium"
+            >
+              Patient Pharmacy
+            </label>
+            <div className="relative">
+              <input
+                id="pharmacy_name"
+                name="pharmacy_name"
+                type="text"
+                placeholder=""
+                className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
+                value={pharmacyName || ''}
+                onChange={(e) => setPharmacyName(e.target.value)}
+              ></input>
+            </div>
+          </div>
+
+          <div>
+            <label
+              htmlFor="pharmacy_name"
+              className="mb-2 block text-sm font-medium"
+            >
+              Pharmacy Phone
+            </label>
+            <div className="relative">
+              <PhoneInput
+                phone={pharmacyPhone}
+                setPhone={handlePharmacyPhoneChange}
+              />
+            </div>
           </div>
         </div>
 
