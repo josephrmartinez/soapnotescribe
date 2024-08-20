@@ -5,8 +5,6 @@ import OpenAI from "openai"
 import Anthropic from '@anthropic-ai/sdk';
 import { createClient as createClientJS } from "@supabase/supabase-js";
 
-
-
 const modelPricing = {
     "gpt-4": {
         "input_token_cost": 0.03,
@@ -42,12 +40,63 @@ const modelPricing = {
     }
 }
 
+const medications:string[] = [
+    "Aspirin",
+    "Acetaminophen",
+    "Ibuprofen",
+    "Naproxen",
+    "Flexeril",
+    "Hydrocodone",
+    "Oxycodone",
+    "Tramadol",
+    "Lidocaine",
+    "Epinephrine",
+    "Nitroglycerin",
+    "Albuterol",
+    "Prednisone",
+    "Dexamethasone",
+    "Amoxicillin",
+    "Azithromycin",
+    "Cephalexin",
+    "Ciprofloxacin",
+    "Metronidazole",
+    "Clindamycin",
+    "Lorazepam",
+    "Diazepam",
+    "Midazolam",
+    "Fentanyl",
+    "Morphine",
+    "Ondansetron",
+    "Promethazine",
+    "Diphenhydramine",
+    "Hydrocortisone",
+    "Ipratropium",
+    "Atropine",
+    "Naloxone",
+    "Flumazenil",
+    "Metoprolol",
+    "Lisinopril",
+    "Losartan",
+    "Hydrochlorothiazide",
+    "Simvastatin",
+    "Warfarin",
+    "Heparin",
+    "Insulin",
+    "Glucagon",
+    "Nitrofurantoin",
+    "Sulfamethoxazole/Trimethoprim",
+    "Chlorhexidine",
+    "Ranitidine",
+    "Omeprazole",
+    "Pantoprazole"
+]
+
 const systemContentString:string = `As a highly skilled medical assistant, your task is to meticulously review the provided TRANSCRIPT and craft a clinical SOAP note in the form of a JSON object. Please adhere strictly to the following guidelines:
 - Ensure all lists within the SOAP note are unordered, formatted with a simple dash (-). Avoid using numbered lists.
 - Incorporate as much detailed information as possible from the transcript into the SOAP note. Thoroughness is key, but do not make up information that is not in the transcript!
 - If certain information required for any fields is missing from the transcript, exclude those fields from the JSON object entirely. Do not include fields with empty strings or "unknown" values.
 - The transcript may not explicitly mention differential diagnoses. As an expert, you are expected to formulate a differential diagnosis based on the transcript information. Always include a differential diagnosis along with alternative treatment recommendations in your SOAP note.
-- Be vigilant for formatting and spelling errors in the transcript, particularly regarding prescription medications. Ensure that all prescription medications are formatted and spelled correctly.
+- Be vigilant for formatting and spelling errors in the transcript, particularly regarding prescription medications. Here is a list of common medication names: ${medications} . The transcript may include misspellings of these or other medications. Be sure to provide the correct spelling. Correct medication dosage transcriptions by standardizing the format to use a slash ("/") between different ingredient amounts. Convert verbal expressions of dosage, such as "five slash three twenty-five milligrams" or "five milligrams and three hundred twenty-five milligrams," to the format "5/325 milligrams." Ensure the correct separation of amounts and units according to standard prescription practices.
 Your expertise and attention to detail will ensure the generation of a comprehensive and accurate SOAP note.`
 
 const JSON_schema = {
@@ -259,101 +308,6 @@ export async function getAnalysisOpenAI(noteid: string, transcript: string, tran
   
 }
 
-export async function analyzeTranscript(noteid: string, transcript: string, transcriptionTime: string, model: string) {
-  console.log("calling analyzeTranscript")
-
-  const systemContentString:string = `You are a helpful, highly-trained medical assistant. Carefully review the following TRANSCRIPT and generate a clinical SOAP note as a JSON object. The JSON object should conform to the following JSON Schema:
-
-        {
-          "$schema": "http://json-schema.org/draft-07/schema#",
-          "type": "object",
-          "properties": {
-            "appointment_date": {
-              "type": "string",
-              "format": "date",
-              "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
-              "description": "Date of the appointment in yyyy-mm-dd format"
-            },
-            "appointment_time": {
-              "type": "string",
-              "pattern": "^\\d{2}:\\d{2}$",
-              "description": "Time of the appointment in hh:mm format"
-            },
-            "chief_complaint": {
-              "type": "string",
-              "maxLength": 50,
-              "description": "Chief complaint. Capitalize the first letter of the string"
-            },
-            "soap_subjective": {
-              "type": "string",
-              "description": "Subjective information from the patient. DO NOT include patient name or date of birth."
-            },
-            "soap_objective": {
-              "type": "string",
-              "description": "Objective observations and measurements. Narrative format or UNORDERED list. DO NOT include patient name or date of birth."
-            },
-            "soap_assessment": {
-              "type": "string",
-              "description": "Assessment and diagnosis. Narrative format or UNORDERED list."
-            },
-            "soap_plan": {
-              "type": "string",
-              "description": "Plan for treatment and patient education. Narrative format or UNORDERED list."
-            },
-            "differential_diagnosis": {
-              "type": "string",
-              "description": "Differential diagnosis. Narrative format or UNORDERED list."
-            },
-            "patient_location?": {
-              "type": "string",
-              "description": "Location of the patient (State/Province, e.g., 'Arizona'). Only include this key if the patient location is clearly mentioned in the transcript."
-            }
-          }
-        }
-
-        Your answer MUST begin and end with curly brackets. Do not include any leading backticks or other markers. ALL LISTS SHOULD BE UNORDERED AND STYLED WITH A SIMPLE DASH. NO NUMBERED LISTS. Include as much specific information as possible from the transcript in the SOAP note. Be thorough! If you do not have the information required to provide a value in any of the fields, just return the JSON object WITHOUT those fields. Do NOT return a field with an empty string or an "unknown" value. For the differential_diagnosis field, analyze the entire transcript and return a differential diagnosis along with possible alternative treatment options. Your complete answer MUST begin and end with curly brackets.`
-  const userContentString:string = `Give me a thorough SOAP note from the following transcript. Return your response as a JSON object. TRANSCRIPT: ${transcript}`
-  
-  // console.log("system content string:", systemContentString)
-
-  try {
-    const apiKey = process.env.ANTHROPIC_API_KEY;
-    if (!apiKey) {
-      throw new Error('ANTHROPIC_API_KEY is not set in environment variables.');
-    }
-
-    const anthropic = new Anthropic({ apiKey });
-    const anthropicResponse = await anthropic.messages.create({
-      model: "claude-3-5-sonnet-20240620",
-      max_tokens: 4096,
-      system: systemContentString,
-      messages: [
-        {
-          "role": "user",
-          "content": userContentString
-        }
-      ]
-    })
-
-    console.log("anthropic response:", anthropicResponse)
-
-    assertIsTextBlock(anthropicResponse.content[0]);
-
-    const anthropicCompletionString = anthropicResponse.content[0].text
-
-    const anthropicInputTokens = anthropicResponse.usage.input_tokens
-    const anthropicOutputTokens = anthropicResponse.usage.output_tokens
-    const analysisCost:string = ((anthropicInputTokens / 1000 * 0.003) + (anthropicOutputTokens / 1000 * 0.015)).toFixed(3) //claude-3-5-sonnet-20240620
-
-    console.log("anthropic cost:", analysisCost)
-
-    await updateNoteWithSOAPData(noteid, transcript, transcriptionTime, anthropicCompletionString, analysisCost);
-    
-  } catch (error){
-    console.log("Error getting completion data:", error)
-  }
-  
-}
 
 
 // Update the appointment table row with the structured data
@@ -421,3 +375,98 @@ async function updateNoteWithSOAPData(noteid: string, transcript: string, transc
   //           },
 
 
+// export async function analyzeTranscript(noteid: string, transcript: string, transcriptionTime: string, model: string) {
+//   console.log("calling analyzeTranscript")
+
+//   const systemContentString:string = `You are a helpful, highly-trained medical assistant. Carefully review the following TRANSCRIPT and generate a clinical SOAP note as a JSON object. The JSON object should conform to the following JSON Schema:
+
+//         {
+//           "$schema": "http://json-schema.org/draft-07/schema#",
+//           "type": "object",
+//           "properties": {
+//             "appointment_date": {
+//               "type": "string",
+//               "format": "date",
+//               "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+//               "description": "Date of the appointment in yyyy-mm-dd format"
+//             },
+//             "appointment_time": {
+//               "type": "string",
+//               "pattern": "^\\d{2}:\\d{2}$",
+//               "description": "Time of the appointment in hh:mm format"
+//             },
+//             "chief_complaint": {
+//               "type": "string",
+//               "maxLength": 50,
+//               "description": "Chief complaint. Capitalize the first letter of the string"
+//             },
+//             "soap_subjective": {
+//               "type": "string",
+//               "description": "Subjective information from the patient. DO NOT include patient name or date of birth."
+//             },
+//             "soap_objective": {
+//               "type": "string",
+//               "description": "Objective observations and measurements. Narrative format or UNORDERED list. DO NOT include patient name or date of birth."
+//             },
+//             "soap_assessment": {
+//               "type": "string",
+//               "description": "Assessment and diagnosis. Narrative format or UNORDERED list."
+//             },
+//             "soap_plan": {
+//               "type": "string",
+//               "description": "Plan for treatment and patient education. Narrative format or UNORDERED list."
+//             },
+//             "differential_diagnosis": {
+//               "type": "string",
+//               "description": "Differential diagnosis. Narrative format or UNORDERED list."
+//             },
+//             "patient_location?": {
+//               "type": "string",
+//               "description": "Location of the patient (State/Province, e.g., 'Arizona'). Only include this key if the patient location is clearly mentioned in the transcript."
+//             }
+//           }
+//         }
+
+//         Your answer MUST begin and end with curly brackets. Do not include any leading backticks or other markers. ALL LISTS SHOULD BE UNORDERED AND STYLED WITH A SIMPLE DASH. NO NUMBERED LISTS. Include as much specific information as possible from the transcript in the SOAP note. Be thorough! If you do not have the information required to provide a value in any of the fields, just return the JSON object WITHOUT those fields. Do NOT return a field with an empty string or an "unknown" value. For the differential_diagnosis field, analyze the entire transcript and return a differential diagnosis along with possible alternative treatment options. Your complete answer MUST begin and end with curly brackets.`
+//   const userContentString:string = `Give me a thorough SOAP note from the following transcript. Return your response as a JSON object. TRANSCRIPT: ${transcript}`
+  
+//   // console.log("system content string:", systemContentString)
+
+//   try {
+//     const apiKey = process.env.ANTHROPIC_API_KEY;
+//     if (!apiKey) {
+//       throw new Error('ANTHROPIC_API_KEY is not set in environment variables.');
+//     }
+
+//     const anthropic = new Anthropic({ apiKey });
+//     const anthropicResponse = await anthropic.messages.create({
+//       model: "claude-3-5-sonnet-20240620",
+//       max_tokens: 4096,
+//       system: systemContentString,
+//       messages: [
+//         {
+//           "role": "user",
+//           "content": userContentString
+//         }
+//       ]
+//     })
+
+//     console.log("anthropic response:", anthropicResponse)
+
+//     assertIsTextBlock(anthropicResponse.content[0]);
+
+//     const anthropicCompletionString = anthropicResponse.content[0].text
+
+//     const anthropicInputTokens = anthropicResponse.usage.input_tokens
+//     const anthropicOutputTokens = anthropicResponse.usage.output_tokens
+//     const analysisCost:string = ((anthropicInputTokens / 1000 * 0.003) + (anthropicOutputTokens / 1000 * 0.015)).toFixed(3) //claude-3-5-sonnet-20240620
+
+//     console.log("anthropic cost:", analysisCost)
+
+//     await updateNoteWithSOAPData(noteid, transcript, transcriptionTime, anthropicCompletionString, analysisCost);
+    
+//   } catch (error){
+//     console.log("Error getting completion data:", error)
+//   }
+  
+// }
