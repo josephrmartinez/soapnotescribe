@@ -32,6 +32,7 @@ export type Database = {
           image_urls: string[] | null
           patient_age_years: number | null
           patient_id: string | null
+          patient_instructions: string | null
           patient_location: string | null
           pdf_storage_url: string | null
           soap_assessment: string | null
@@ -66,6 +67,7 @@ export type Database = {
           image_urls?: string[] | null
           patient_age_years?: number | null
           patient_id?: string | null
+          patient_instructions?: string | null
           patient_location?: string | null
           pdf_storage_url?: string | null
           soap_assessment?: string | null
@@ -100,6 +102,7 @@ export type Database = {
           image_urls?: string[] | null
           patient_age_years?: number | null
           patient_id?: string | null
+          patient_instructions?: string | null
           patient_location?: string | null
           pdf_storage_url?: string | null
           soap_assessment?: string | null
@@ -208,6 +211,7 @@ export type Database = {
         Row: {
           chief_complaint: string | null
           id: string
+          patient_instructions: string | null
           soap_assessment: string | null
           soap_objective: string | null
           soap_plan: string | null
@@ -217,6 +221,7 @@ export type Database = {
         Insert: {
           chief_complaint?: string | null
           id?: string
+          patient_instructions?: string | null
           soap_assessment?: string | null
           soap_objective?: string | null
           soap_plan?: string | null
@@ -226,6 +231,7 @@ export type Database = {
         Update: {
           chief_complaint?: string | null
           id?: string
+          patient_instructions?: string | null
           soap_assessment?: string | null
           soap_objective?: string | null
           soap_plan?: string | null
@@ -339,6 +345,7 @@ export type Database = {
           image_urls: string[] | null
           patient_age_years: number | null
           patient_id: string | null
+          patient_instructions: string | null
           patient_location: string | null
           pdf_storage_url: string | null
           soap_assessment: string | null

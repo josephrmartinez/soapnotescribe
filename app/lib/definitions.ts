@@ -4,6 +4,8 @@ export type Note = Database['public']['Tables']['note']['Row'];
 
 export type Patient = Database['public']['Tables']['patient']['Row'];
 
+export type Template = Database['public']['Tables']['template']['Row'];
+
 
 export interface PatientForTable {
   id: string;
@@ -42,7 +44,6 @@ export interface PatientSelectOption {
   label: string;
 }
 
-export type Template = Database['public']['Tables']['template']['Row'];
 
 export interface TemplateOption {
   value: Template | string;
