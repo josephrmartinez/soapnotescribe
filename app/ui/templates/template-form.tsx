@@ -71,6 +71,7 @@ const TemplateForm: React.FC<TemplateFormProps> = ({
     autoResizeTextarea(instructionsRef);
   }, [patientInstructions]);
 
+  console.log(template);
   return (
     <form>
       <div className="max-w-prose rounded-md bg-gray-50 p-4">

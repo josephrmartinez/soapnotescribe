@@ -47,6 +47,9 @@ const EditDraftNote: React.FC<CreateNoteProps> = ({ note }) => {
     note?.soap_assessment || null,
   );
   const [plan, setPlan] = useState<string | null>(note?.soap_plan || null);
+  const [patientInstructions, setPatientInstructions] = useState<string | null>(
+    note?.patient_instructions || null,
+  );
   const [differentialDiagnosis, setDifferentialDiagnosis] = useState<
     string | null
   >(note?.differential_diagnosis || null);
@@ -72,6 +75,7 @@ const EditDraftNote: React.FC<CreateNoteProps> = ({ note }) => {
   const objectiveRef = useRef<HTMLTextAreaElement | null>(null);
   const assessmentRef = useRef<HTMLTextAreaElement | null>(null);
   const planRef = useRef<HTMLTextAreaElement | null>(null);
+  const instructionsRef = useRef<HTMLTextAreaElement | null>(null);
 
   // Refactored autoResizeTextarea function with type
   const autoResizeTextarea = (
@@ -100,6 +104,10 @@ const EditDraftNote: React.FC<CreateNoteProps> = ({ note }) => {
   useEffect(() => {
     autoResizeTextarea(planRef);
   }, [plan]);
+
+  useEffect(() => {
+    autoResizeTextarea(instructionsRef);
+  }, [patientInstructions]);
 
   // On mount: get user settings to pass values to select components
   useEffect(() => {
@@ -503,6 +511,24 @@ const EditDraftNote: React.FC<CreateNoteProps> = ({ note }) => {
               ></textarea>
             </div>
           </div>
+          <div className="mb-4">
+            <label
+              htmlFor="patient_instructions"
+              className="mb-2 block text-sm font-medium"
+            >
+              Patient Instructions
+            </label>
+            <div className="relative">
+              <textarea
+                id="patient_instructions"
+                name="patient_instructions"
+                ref={instructionsRef}
+                className="block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
+                value={patientInstructions || ''}
+                onChange={(e) => setPatientInstructions(e.target.value)}
+              ></textarea>
+            </div>
+          </div>
 
           <div className="mb-4">
             <label
@@ -549,7 +575,7 @@ const EditDraftNote: React.FC<CreateNoteProps> = ({ note }) => {
         {differentialDiagnosis && (
           <div
             tabIndex={0}
-            className="collapse collapse-plus mb-4 rounded-md  border"
+            className="collapse-plus collapse mb-4 rounded-md  border"
           >
             <div className="collapse-title text-lg font-medium text-gray-600">
               Differential Diagnosis

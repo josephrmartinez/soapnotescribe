@@ -59,6 +59,10 @@ const CreateNote = () => {
   const [objective, setObjective] = useState<string | null>(null);
   const [assessment, setAssessment] = useState<string | null>(null);
   const [plan, setPlan] = useState<string | null>(null);
+  const [patientInstructions, setPatientInstructions] = useState<string | null>(
+    null,
+  );
+
   const [doctorSignature, setDoctorSignature] = useState<string | null>(null);
   const [submitOkay, setSubmitOkay] = useState<boolean>(true);
   const [patientAgeYears, setPatientAgeYears] = useState<number | undefined>(1);
@@ -74,6 +78,7 @@ const CreateNote = () => {
   const objectiveRef = useRef<HTMLTextAreaElement | null>(null);
   const assessmentRef = useRef<HTMLTextAreaElement | null>(null);
   const planRef = useRef<HTMLTextAreaElement | null>(null);
+  const instructionsRef = useRef<HTMLTextAreaElement | null>(null);
 
   let searchParams = useSearchParams();
   const patientIdFromUrl = searchParams.get('patient');
@@ -150,6 +155,7 @@ const CreateNote = () => {
             setObjective(note.soap_objective);
             setAssessment(note.soap_assessment);
             setPlan(note.soap_plan);
+            setPatientInstructions(note.patient_instructions);
           }
         } catch (error) {
           console.error('Error fetching noteRef:', error);
@@ -220,6 +226,10 @@ const CreateNote = () => {
     autoResizeTextarea(planRef);
   }, [plan]);
 
+  useEffect(() => {
+    autoResizeTextarea(instructionsRef);
+  }, [patientInstructions]);
+
   const handleAppointmentTypeChange = (selectedAppointmentType: string) => {
     setAppointmentType(selectedAppointmentType);
   };
@@ -241,6 +251,7 @@ const CreateNote = () => {
       setObjective(selectedTemplate.value.soap_objective);
       setAssessment(selectedTemplate.value.soap_assessment);
       setPlan(selectedTemplate.value.soap_plan);
+      setPatientInstructions(selectedTemplate.value.patient_instructions);
     }
   };
 
@@ -625,6 +636,24 @@ const CreateNote = () => {
                   className="block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
                   value={plan || ''}
                   onChange={(e) => setPlan(e.target.value)}
+                ></textarea>
+              </div>
+            </div>
+            <div className="mb-4">
+              <label
+                htmlFor="patient_instructions"
+                className="mb-2 block text-sm font-medium"
+              >
+                Patient Instructions
+              </label>
+              <div className="relative">
+                <textarea
+                  id="patient_instructions"
+                  name="patient_instructions"
+                  ref={instructionsRef}
+                  className="block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
+                  value={patientInstructions || ''}
+                  onChange={(e) => setPatientInstructions(e.target.value)}
                 ></textarea>
               </div>
             </div>

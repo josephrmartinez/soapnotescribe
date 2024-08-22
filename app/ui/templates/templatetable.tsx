@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { Template } from '@/app/lib/definitions';
 
 interface TemplateTableProps {
-  userTemplates: Template[];
+  userTemplates?: Template[];
 }
 
 export default async function TemplateTable({
@@ -11,7 +11,7 @@ export default async function TemplateTable({
   return (
     <div className="grid max-w-prose grid-cols-1 gap-4  sm:grid-cols-2">
       {userTemplates?.map((template: Template) => (
-        <div className="rounded-md border">
+        <div key={template.id} className="rounded-md border">
           <Link
             href={`/dashboard/templates/${template.id}`}
             key={template.id}

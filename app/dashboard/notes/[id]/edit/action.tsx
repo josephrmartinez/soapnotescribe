@@ -23,6 +23,7 @@ export async function updateNote(status: string, formData: FormData) {
       soap_subjective: formData.get('soap_subjective') as string,
       soap_assessment: formData.get('soap_assessment') as string,
       soap_plan: formData.get('soap_plan') as string,
+      patient_instructions: formData.get('patient_instructions') as string,
       doctor_signature: formData.get('doctor_signature') as string,
       appointment_type: formData.get('appointment_type') as string,
       appointment_specialty: formData.get('appointment_specialty') as string,

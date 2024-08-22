@@ -5,7 +5,7 @@ import { Database } from '../database.types';
 import { createClient } from '@/utils/supabase/server'
 import { createClient as createClientJS } from "@supabase/supabase-js";
 
-import { Note, NoteWithPatient, PatientForTable, NoteForTable } from './definitions';
+import { Note, NoteWithPatient, PatientForTable, NoteForTable, Template } from './definitions';
 import { redirect } from 'next/navigation';
 
 const ITEMS_PER_PAGE = 6;
@@ -242,7 +242,7 @@ export async function fetchTemplates() {
       console.error('Error fetching templates:', error);
       return
     }
-  return templates
+  return templates as Template[]
  } catch (error) {
     console.error('Supabase Error:', error);
     throw new Error('Failed to fetch templates data.');
