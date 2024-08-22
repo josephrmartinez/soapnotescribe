@@ -27,6 +27,7 @@ const TemplateForm: React.FC<TemplateFormProps> = ({
     template?.soap_assessment || null,
   );
   const [plan, setPlan] = useState<string | null>(template?.soap_plan || null);
+
   const [patientInstructions, setPatientInstructions] = useState<string | null>(
     template?.patient_instructions || null,
   );
@@ -177,7 +178,7 @@ const TemplateForm: React.FC<TemplateFormProps> = ({
               name="patient_instructions"
               ref={instructionsRef}
               className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
-              value={plan || ''}
+              value={patientInstructions || ''}
               onChange={(e) => setPatientInstructions(e.target.value)}
             ></textarea>
           </div>

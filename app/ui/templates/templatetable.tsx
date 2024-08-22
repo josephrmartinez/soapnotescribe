@@ -1,11 +1,13 @@
 import Link from 'next/link';
 import { Template } from '@/app/lib/definitions';
-import { fetchTemplates } from '@/app/lib/data';
 
-export default async function TemplateTable() {
-  const userTemplates = await fetchTemplates();
-  console.log('templates:', userTemplates);
+interface TemplateTableProps {
+  userTemplates: Template[];
+}
 
+export default async function TemplateTable({
+  userTemplates,
+}: TemplateTableProps) {
   return (
     <div className="grid max-w-prose grid-cols-1 gap-4  sm:grid-cols-2">
       {userTemplates?.map((template: Template) => (
