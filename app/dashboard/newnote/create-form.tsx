@@ -690,7 +690,7 @@ const CreateNote = () => {
                 formAction={submitApprovedNote}
                 active={doctorSignature !== null && doctorSignature.length > 5}
               >
-                Add Note
+                Approve Note
               </SubmitFormButton>
             </div>
           </div>

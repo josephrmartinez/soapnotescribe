@@ -268,6 +268,22 @@ export default async function Page({ params }: { params: { id: string } }) {
             </div>
           </div>
 
+          <div className="mb-4">
+            <label
+              htmlFor="plan"
+              className="mb-2 block whitespace-pre-wrap text-sm font-medium"
+            >
+              Patient Instructions
+            </label>
+            <div className="relative">
+              <div
+                id="patient_instructions"
+                className="whitespace-pre-wrap px-2 text-sm"
+              >
+                {note.patient_instructions || ''}
+              </div>
+            </div>
+          </div>
           <div className="mb-0">
             <label
               htmlFor="doctorsignature"
