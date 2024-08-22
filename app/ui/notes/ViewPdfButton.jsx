@@ -32,6 +32,8 @@ export function ViewPDFButton({ note }) {
         { style: 'regular', text: `${note.soap_assessment}\n\n\n` },
         { style: 'bold', text: `Plan:` },
         { style: 'regular', text: `${note.soap_plan}\n\n\n` },
+        { style: 'bold', text: `Patient Instructions:` },
+        { style: 'regular', text: `${note.patient_instructions}\n\n\n` },
         { style: 'bold', text: `Doctor Signature:` },
         { style: 'regular', text: `${note.doctor_signature}` },
         
