@@ -97,6 +97,7 @@ const systemContentString:string = `As a highly skilled medical assistant, your 
 - If certain information required for any fields is missing from the transcript, exclude those fields from the JSON object entirely. Do not include fields with empty strings or "unknown" values.
 - The transcript may not explicitly mention differential diagnoses. As an expert, you are expected to formulate a differential diagnosis based on the transcript information. Always include a differential diagnosis along with alternative treatment recommendations in your SOAP note.
 - Be vigilant for formatting and spelling errors in the transcript, particularly regarding prescription medications. Here is a list of common medication names: ${medications} . The transcript may include misspellings of these or other medications. Be sure to provide the correct spelling. Correct medication dosage transcriptions by standardizing the format to use a slash ("/") between different ingredient amounts. Convert verbal expressions of dosage, such as "five slash three twenty-five milligrams" or "five milligrams and three hundred twenty-five milligrams," to the format "5/325 milligrams." Ensure the correct separation of amounts and units according to standard prescription practices.
+- Include detailed patient instructions. These are instructions that are given to the patient at the end of the appointment. 
 Your expertise and attention to detail will ensure the generation of a comprehensive and accurate SOAP note.`
 
 const JSON_schema = {
@@ -133,6 +134,10 @@ const JSON_schema = {
             "soap_plan": {
               "type": "string",
               "description": "Plan for treatment and patient education. Narrative format or UNORDERED list. Be sure to correct spelling and formatting of medications."
+            },
+            "patient_instructions": {
+              "type": "string",
+              "description": "Instructions given to the patient."
             },
             "differential_diagnosis": {
               "type": "string",
