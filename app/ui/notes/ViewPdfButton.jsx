@@ -20,7 +20,7 @@ export function ViewPDFButton({ note }) {
         { style: 'bold', text: ['Appointment Specialty: ', { text: `${note.appointment_specialty}`, style: 'regular' }] },
         { style: 'bold', text: ['Patient Location: ', { text: `${note.patient_location}`, style: 'regular' }] },
         { style: 'bold', text: ['Consent ', { text: `Patient consents to treatment`, style: 'regular' }] },
-        { style: 'bold', text: ['Allergies: ', { text: `${note.allergies || ''}\n\n\n\n`, style: 'regular' }] },
+        { style: 'bold', text: ['Allergies: ', { text: `${note.patient.allergies || ''}\n\n\n\n`, style: 'regular' }] },
         { style: 'bold', text: `Chief Complaint:` },
         { style: 'regular', text: `${note.chief_complaint}\n\n\n` },
         { style: 'bold', text: `Subjective:` },
