@@ -4,15 +4,12 @@ import { unstable_noStore as noStore, revalidatePath  } from 'next/cache';
 import { Database } from '../database.types';
 import { createClient } from '@/utils/supabase/server'
 import { createClient as createClientJS } from "@supabase/supabase-js";
-
 import { Note, NoteWithPatient, PatientForTable, NoteForTable, Template } from './definitions';
 import { redirect } from 'next/navigation';
 
 const ITEMS_PER_PAGE = 6;
 
-// UPDATE TO ALWAYS DISPLAY PROCESSING NOTES (AUDIO_TRANSCRIPT IS NULL)
-// REFACTOR TO GET ONLY NEEDED NOTES. FILTERING EARLIER.
-
+// NOTE
 
 export async function fetchFilteredNotes(query: string, currentPage: number) {
   noStore()
@@ -172,28 +169,6 @@ export async function fetchNoteById(id: string) {
   }
 }
 
-export async function getSignedPdfUrl(userId: string, patientLastName: string, patientFirstName: string, appointmentDate: string) {
-  try {
-    const supabase = createClient();
-    const filePath = `${userId}/${patientLastName} ${patientFirstName}/${appointmentDate}.pdf`;
-    console.log("file path:", filePath)
-
-    const { data, error } = await supabase.storage
-      .from('pdfs')
-      .createSignedUrl(filePath, 60);
-    if (error) {
-      console.error('Error getting pdf:', error);
-    }
-
-    const signedPdfUrl = data?.signedUrl;
-
-    return signedPdfUrl
-
-  } catch (error) {
-    console.error('Supabase Error:', error);
-    throw new Error('Failed to get signed PDF URL.');
-  }
-} 
 
 export async function getSignedAudioUrl(userId: string, audio_url:string) {
   try {
@@ -217,16 +192,27 @@ export async function getSignedAudioUrl(userId: string, audio_url:string) {
   }
 }
 
-export const fetchUserSession = async () => {
-  try {
-    const supabase = createClient()
-    const { data: { session } } = await supabase.auth.getSession();
-    return session;
-  } catch (error) {
-    console.error('Supabase Error:', error);
-    throw new Error('Failed to fetch user session.');
+
+export async function deleteNote(id: string) {
+  const supabase = createClient();
+
+  const { error } = await supabase
+    .from('note')
+    .delete()
+    .eq('id', id);
+
+  if (error) {
+    console.error('Error deleting note from Supabase:', error);
+    throw new Error('Failed to delete the note.');
   }
-};
+
+  console.log('Note deleted successfully');
+  revalidatePath('/dashboard/notes');
+  redirect('/dashboard/notes'); 
+}
+
+
+// TEMPLATES
 
 export async function fetchTemplates() {
   noStore()
@@ -271,6 +257,8 @@ export async function fetchTemplateById(id: string) {
     throw new Error('Failed to fetch template data.');
   }
 }
+
+// PATIENTS
 
 export async function fetchPatients() {
   noStore();
@@ -318,7 +306,6 @@ export async function fetchPatientsWithSameName(first_name: string, last_name: s
     throw new Error('Failed to fetch patients by name data.');
  }
 }
-
 
 
 export async function checkForExistingPatient(formData: FormData) {
@@ -373,7 +360,6 @@ export async function addPatient(formData: FormData) {
   }
 }
 
-
 export async function editPatient(formData: FormData) {
   const supabase = createClient();
 
@@ -414,8 +400,6 @@ export async function editPatient(formData: FormData) {
   }
 }
 
-
-
 export async function fetchPatientsWithQuery(query:string, currentPage: number) {
   noStore();
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -443,8 +427,6 @@ try {
     throw new Error('Failed to fetch paients data.');
  }
 }
-
-
 
 export async function countPatientPagesWithQuery(query:string) {
   noStore();
@@ -477,7 +459,6 @@ try {
  }
 }
 
-
 export async function fetchPatientCount() {
 try {
     const supabase = createClient()
@@ -500,9 +481,6 @@ try {
   }
 }
 
-export async function getPatientDOBFromNoteId(id: string) {
-  
-}
 
 export async function fetchPatientById(id: string) {
   // EXPERIMENTAL. noStore() allows for immediate re-render of changed appointment data, but may lead to slower load times.
@@ -553,6 +531,8 @@ export async function fetchPatientProfileById(id: string) {
   }
 }
 
+// USER_SETTINGS
+
 export async function fetchUserSettings() {
   noStore();
   try {
@@ -573,51 +553,6 @@ export async function fetchUserSettings() {
  }
 }
 
-
-
-// export async function getUserSettingsFromNoteId(noteId:string) {
-//   noStore();
-//   try {
-//       // Using service key:
-//       const supabase = createClientJS(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_KEY!)
-//     const { data: userIdData, error: userIdError } = await supabase
-//       .from('note')
-//       .select('user_id')
-//       .eq('id', noteId)
-//       .single();
-
-//     if (userIdError) {
-//       console.error('Error fetching user ID:', userIdError);
-//       throw userIdError;
-//     }
-
-//     const userId = userIdData?.user_id;
-//     if (!userId) {
-//       console.error('User ID not found for note ID:', noteId);
-//       return null;
-//     }
-    
-//     const { data: settingsData, error: settingsError } = await supabase
-//       .from('user_settings')
-//       .select('*')
-//       .eq('user_id', userId)
-//       .single();
-    
-//     if (settingsError) {
-//       console.error('Error fetching user settings:', settingsError);
-//       throw settingsError;
-//     }
-
-    
-//     return settingsData;
-
-//  } catch (error) {
-//     console.error('Supabase Error:', error);
-//     throw new Error('Failed to fetch user settings data.');
-//  }
-// }
-
-
 export async function updateUserSettings(payload: any, userId: string) {
   noStore();
   console.log("calling updateUserSettings with payload:", payload);
@@ -634,24 +569,16 @@ export async function updateUserSettings(payload: any, userId: string) {
   
 
 
+// AUTH / USER
 
-
-export async function deleteNote(id: string) {
-  const supabase = createClient();
-
-  const { error } = await supabase
-    .from('note')
-    .delete()
-    .eq('id', id);
-
-  if (error) {
-    console.error('Error deleting note from Supabase:', error);
-    throw new Error('Failed to delete the note.');
+export const fetchUserSession = async () => {
+  try {
+    const supabase = createClient()
+    const { data: { session } } = await supabase.auth.getSession();
+    return session;
+  } catch (error) {
+    console.error('Supabase Error:', error);
+    throw new Error('Failed to fetch user session.');
   }
-
-  console.log('Note deleted successfully');
-  revalidatePath('/dashboard/notes');
-  redirect('/dashboard/notes'); 
-}
-
+};
 
