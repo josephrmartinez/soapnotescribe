@@ -9,7 +9,6 @@ export const metadata: Metadata = {
 
 export default async function Page() {
   const userSettings = await fetchUserSettings();
-  console.log('userSettings:', userSettings);
 
   return (
     <div className="w-full">

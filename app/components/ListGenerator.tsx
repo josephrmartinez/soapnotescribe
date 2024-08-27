@@ -65,19 +65,24 @@ const ListGenerator: React.FC<ListGeneratorProps> = ({
 
   return (
     <div>
-      <div className="mb-4 text-xl font-medium text-teal-700 underline underline-offset-8">
+      <div className="mb-2 text-xl font-medium text-teal-700 underline underline-offset-8">
         {listName}
       </div>
       <ul className="ml-4 w-96">
         {items.map((item, index) => (
-          <li key={index} className="my-2 grid grid-cols-3 gap-6">
+          <li
+            key={index}
+            className="grid grid-cols-3 items-center gap-6 border-b py-2"
+          >
             <div className="font-semibold text-gray-700">{item}</div>
             <div>
               {item == defaultOption ? (
-                <div className="font-semibold text-teal-800">default</div>
+                <div className="whitespace-nowrap rounded-lg bg-gray-100 px-2 py-2  text-center text-sm font-semibold text-teal-800">
+                  default
+                </div>
               ) : (
                 <div
-                  className="cursor-pointer text-gray-800 transition-all hover:text-teal-800"
+                  className="cursor-pointer whitespace-nowrap rounded-lg px-2 py-2 text-center text-sm text-gray-800 transition-all hover:bg-gray-50 hover:text-teal-800"
                   onClick={() => handleSetDefault(index)}
                 >
                   make default
@@ -85,7 +90,7 @@ const ListGenerator: React.FC<ListGeneratorProps> = ({
               )}
             </div>
             <div
-              className="cursor-pointer text-gray-800 transition-all hover:text-red-600"
+              className="cursor-pointer text-center text-sm text-gray-800 transition-all hover:text-red-600"
               onClick={() => handleDeleteItem(index)}
             >
               delete
@@ -96,8 +101,8 @@ const ListGenerator: React.FC<ListGeneratorProps> = ({
       <div className="flex items-center">
         <input
           type="text"
-          className="ml-2 h-8 w-32 rounded border border-gray-400"
-          placeholder={`add item`}
+          className="my-2 ml-2 h-8 w-32 rounded border border-gray-400"
+          placeholder={`+ add option`}
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           onKeyDown={(e) => handleInputKeyDown(e)}
