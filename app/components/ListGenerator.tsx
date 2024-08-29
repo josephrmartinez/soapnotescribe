@@ -65,14 +65,14 @@ const ListGenerator: React.FC<ListGeneratorProps> = ({
 
   return (
     <div>
-      <div className="mb-2 text-xl font-medium text-teal-700 underline underline-offset-8">
+      <div className="mb-2 ml-2 text-lg font-semibold text-teal-700">
         {listName}
       </div>
       <ul className="ml-4 w-96">
         {items.map((item, index) => (
           <li
             key={index}
-            className="grid grid-cols-3 items-center gap-6 border-b py-2"
+            className="grid grid-cols-3 items-center gap-6 border-b py-2 last-of-type:border-none"
           >
             <div className="font-semibold text-gray-700">{item}</div>
             <div>
