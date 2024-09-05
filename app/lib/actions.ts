@@ -4,6 +4,7 @@ import Replicate from "replicate";
 import OpenAI from "openai"
 import Anthropic from '@anthropic-ai/sdk';
 import { createClient as createClientJS } from "@supabase/supabase-js";
+import { fetchTemplates } from "./data";
 
 const modelPricing = {
     "gpt-4": {
@@ -99,6 +100,24 @@ const systemContentString:string = `As a highly skilled medical assistant, your 
 - Be vigilant for formatting and spelling errors in the transcript, particularly regarding prescription medications. Here is a list of common medication names: ${medications} . The transcript may include misspellings of these or other medications. Be sure to provide the correct spelling. Correct medication dosage transcriptions by standardizing the format to use a slash ("/") between different ingredient amounts. Convert verbal expressions of dosage, such as "five slash three twenty-five milligrams" or "five milligrams and three hundred twenty-five milligrams," to the format "5/325 milligrams." Ensure the correct separation of amounts and units according to standard prescription practices.
 - Include detailed patient instructions. These are instructions that are given to the patient at the end of the appointment. 
 Your expertise and attention to detail will ensure the generation of a comprehensive and accurate SOAP note.`
+
+const systemContentStringWithTemplates:string = `As a highly skilled medical assistant, your task is to meticulously review the provided TRANSCRIPT and craft a clinical SOAP note in the form of a JSON object. Please adhere strictly to the following guidelines:
+- If the healthcare provider mentions that they want to use an existing template, select the appropriate template from the list of provided templates. Use the text from that template in your SOAP note. Be sure to accomodate any additions or alterations the provider may reqiest. Your final SOAP note should be based on the appropriate template but may have some changes if requested by the healthcare provider.
+- Ensure all lists within the SOAP note are unordered, formatted with a simple dash (-). Avoid using numbered lists.
+- Incorporate as much detailed information as possible from the transcript into the SOAP note. Thoroughness is key, but do not make up information that is not in the transcript!
+- If certain information required for any fields is missing from the transcript, exclude those fields from the JSON object entirely. Do not include fields with empty strings or "unknown" values.
+- The transcript may not explicitly mention differential diagnoses. As an expert, you are expected to formulate a differential diagnosis based on the transcript information. Always include a differential diagnosis along with alternative treatment recommendations in your SOAP note.
+- Be vigilant for formatting and spelling errors in the transcript, particularly regarding prescription medications. Here is a list of common medication names: ${medications} . The transcript may include misspellings of these or other medications. Be sure to provide the correct spelling. Correct medication dosage transcriptions by standardizing the format to use a slash ("/") between different ingredient amounts. Convert verbal expressions of dosage, such as "five slash three twenty-five milligrams" or "five milligrams and three hundred twenty-five milligrams," to the format "5/325 milligrams." Ensure the correct separation of amounts and units according to standard prescription practices.
+- Include detailed patient instructions. These are instructions that are given to the patient at the end of the appointment. 
+Your expertise and attention to detail will ensure the generation of a comprehensive and accurate SOAP note.`
+
+
+const systemContentStringToolCalling: string = `You are a highly skilled medical assistant, your task is to help a medical provider craft a clinical SOAP note in the form of a JSON object. 
+Your first step is to look at the following message from the healthcare provider and determine if they are asking you to use a preexisting template or if they have provided you with the information to write a SOAP note.
+- If they are asking you to use a template, you should use tool calling to call the fetchTemplate function.
+- If they have provided you with the information to develop a SOAP note, you should use tool calling to call the generateSOAPNote function`
+
+
 
 const JSON_schema = {
           "type": "object",
@@ -256,76 +275,77 @@ export async function getAnalysisAnthropic(noteid: string, transcript: string, t
 }
 
 
-export async function getToolCallingAnalysisOpenAI(noteid: string, transcript: string, transcriptionTime: string) {
-  // console.log("calling getToolCallingAnalysisOpenAI")
+// export async function getToolCallingAnalysisOpenAI(noteid: string, transcript: string, transcriptionTime: string) {
+//   console.log("calling getToolCallingAnalysisOpenAI with transcript:", transcript)
 
-  const userContentString: string = generateUserContentString(transcript);
+//   const userContentString: string = generateUserContentString(transcript);
   
-  try {
-    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+//   try {
+//     const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
 
-    const model = "gpt-4o-mini"
+//     const model = "gpt-4o-mini"
 
-    // Update system content string to specify that the model will need to call a function?
-    // if the transcript asks to use a template, then call the getTemplates function (use service key?)
-    // get a payload with all the template information.
-    // Send the appropriate template content to the function JSON_SOAP_note along with transcript.
-    // Error handling: if no template found, complete note with NO TEMPLATE FOUND as soap_subjective?
-    // if the transcript does not ask to use a template, then use the JSON_SOAP_note function
+//     // Update system content string to specify that the model will need to call a function?
+//     // if the transcript asks to use a template, then call the getTemplates function (use service key?)
+//     // get a payload with all the template information.
+//     // Send the appropriate template content to the function JSON_SOAP_note along with transcript.
+//     // Error handling: if no template found, complete note with NO TEMPLATE FOUND as soap_subjective?
+//     // if the transcript does not ask to use a template, then use the JSON_SOAP_note function
 
-    const openAIcompletion = await openai.chat.completions.create({
-      messages: [
-        {
-          role: "system",
-          content: systemContentString
-        },
-        { role: "user", content: userContentString },
-      ],
-      model: model,
-      temperature: 1,
-      response_format: { type: "json_object" },
-      tools: [{
-        type: "function",
-        function: {
-          "name": "fetchTemplates",
-          "description": "fetch user templates",
-          "parameters": JSON_schema
-        }
-      },
-        {
-        type: "function",
-        function: {
-          "name": "JSON_SOAP_note",
-          "description": "Clinical SOAP note as a JSON object",
-          "parameters": JSON_schema
-        }
-      }],
-      tool_choice: { "type": "function", "function": { "name": "JSON_SOAP_note" } }
-    });
+//     const openAIcompletion = await openai.chat.completions.create({
+//       messages: [
+//         {
+//           role: "system",
+//           content: systemContentString
+//         },
+//         { role: "user", content: userContentString },
+//       ],
+//       model: model,
+//       temperature: 1,
+//       response_format: { type: "json_object" },
+//       tools: [{
+//         type: "function",
+//         function: {
+//           "name": "fetchTemplates",
+//           "description": "fetch user templates. Call this whenever the user asks to use an existing template. The user may want to make additions or adjustments to the template. Call this function to get a list of all of their templates so that you can find the right one and use that to help generate a SOAP note.",
+//           "parameters": "none"
+//           }
+//         }
+//       },
+//         {
+//         type: "function",
+//         function: {
+//           "name": "JSON_SOAP_note",
+//           "description": "Clinical SOAP note as a JSON object",
+//           "parameters": JSON_schema
+//         }
+//       }],
+//       tool_choice: { "type": "function", "function": { "name": "JSON_SOAP_note" } }
+//     });
 
     
 
 
-    const completionString = openAIcompletion.choices[0].message.tool_calls?.[0].function.arguments as string
-    const usage = openAIcompletion.usage
+//     const completionString = openAIcompletion.choices[0].message.tool_calls?.[0].function.arguments as string
+//     const usage = openAIcompletion.usage
 
-    if (!usage) return;
+//     if (!usage) return;
 
-    const inputTokens = usage.prompt_tokens;
-    const outputTokens = usage.completion_tokens
-    const pricing = modelPricing[model]
-    const inputCost = pricing['input_token_cost']
-    const outputCost = pricing['output_token_cost']
+//     const inputTokens = usage.prompt_tokens;
+//     const outputTokens = usage.completion_tokens
+//     const pricing = modelPricing[model]
+//     const inputCost = pricing['input_token_cost']
+//     const outputCost = pricing['output_token_cost']
 
-    const openAICost = ((inputTokens / 1000 * inputCost) + (outputTokens / 1000 * outputCost)).toFixed(6)
+//     const openAICost = ((inputTokens / 1000 * inputCost) + (outputTokens / 1000 * outputCost)).toFixed(6)
 
-    await updateNoteWithSOAPData(noteid, transcript, transcriptionTime, completionString, openAICost);
+//     await updateNoteWithSOAPData(noteid, transcript, transcriptionTime, completionString, openAICost);
     
-  } catch (error){
-    console.log("Error getting openAI completion data:", error)
-  }
+//   } catch (error){
+//     console.log("Error getting openAI completion data:", error)
+//   }
   
-}
+// }
 
 export async function getAnalysisOpenAI(noteid: string, transcript: string, transcriptionTime: string) {
   // console.log("calling getAnalysisOpenAI")
@@ -384,6 +404,68 @@ export async function getAnalysisOpenAI(noteid: string, transcript: string, tran
   
 }
 
+export async function generateSOAPNote(noteid: string, transcript: string, transcriptionTime: string) {
+  // console.log("calling getAnalysisOpenAI")
+
+  // Pass in current userID to return user's templates
+  const userTemplates = await fetchTemplates()
+
+  const userContentString: string = generateUserContentString(transcript);
+
+  
+
+  
+  try {
+    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+
+    const model = "gpt-4o-mini"
+
+    const openAIcompletion = await openai.chat.completions.create({
+      messages: [
+        {
+          role: "system",
+          content: systemContentString
+        },
+        { role: "user", content: userContentString },
+      ],
+      model: model,
+      temperature: 1,
+      response_format: { type: "json_object" },
+      tools: [
+        {
+        type: "function",
+        function: {
+          "name": "JSON_SOAP_note",
+          "description": "Clinical SOAP note as a JSON object",
+          "parameters": JSON_schema
+        }
+      }],
+      tool_choice: { "type": "function", "function": { "name": "JSON_SOAP_note" } }
+    });
+
+    
+
+
+    const completionString = openAIcompletion.choices[0].message.tool_calls?.[0].function.arguments as string
+    const usage = openAIcompletion.usage
+
+    if (!usage) return;
+
+    const inputTokens = usage.prompt_tokens;
+    const outputTokens = usage.completion_tokens
+    const pricing = modelPricing[model]
+    const inputCost = pricing['input_token_cost']
+    const outputCost = pricing['output_token_cost']
+
+    const openAICost = ((inputTokens / 1000 * inputCost) + (outputTokens / 1000 * outputCost)).toFixed(6)
+
+    await updateNoteWithSOAPData(noteid, transcript, transcriptionTime, completionString, openAICost);
+    
+  } catch (error){
+    console.log("Error getting openAI completion data:", error)
+  }
+  
+}
 
 // Update the appointment table row with the structured data
 async function updateNoteWithSOAPData(noteid: string, transcript: string, transcriptionTime:string, completion: string, analysisCost:string){
