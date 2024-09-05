@@ -256,8 +256,8 @@ export async function getAnalysisAnthropic(noteid: string, transcript: string, t
 }
 
 
-export async function getAnalysisOpenAI(noteid: string, transcript: string, transcriptionTime: string) {
-  // console.log("calling getAnalysisOpenAI")
+export async function getToolCallingAnalysisOpenAI(noteid: string, transcript: string, transcriptionTime: string) {
+  // console.log("calling getToolCallingAnalysisOpenAI")
 
   const userContentString: string = generateUserContentString(transcript);
   
@@ -265,6 +265,13 @@ export async function getAnalysisOpenAI(noteid: string, transcript: string, tran
     const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
 
     const model = "gpt-4o-mini"
+
+    // Update system content string to specify that the model will need to call a function?
+    // if the transcript asks to use a template, then call the getTemplates function (use service key?)
+    // get a payload with all the template information.
+    // Send the appropriate template content to the function JSON_SOAP_note along with transcript.
+    // Error handling: if no template found, complete note with NO TEMPLATE FOUND as soap_subjective?
+    // if the transcript does not ask to use a template, then use the JSON_SOAP_note function
 
     const openAIcompletion = await openai.chat.completions.create({
       messages: [
@@ -280,6 +287,14 @@ export async function getAnalysisOpenAI(noteid: string, transcript: string, tran
       tools: [{
         type: "function",
         function: {
+          "name": "fetchTemplates",
+          "description": "fetch user templates",
+          "parameters": JSON_schema
+        }
+      },
+        {
+        type: "function",
+        function: {
           "name": "JSON_SOAP_note",
           "description": "Clinical SOAP note as a JSON object",
           "parameters": JSON_schema
@@ -287,6 +302,9 @@ export async function getAnalysisOpenAI(noteid: string, transcript: string, tran
       }],
       tool_choice: { "type": "function", "function": { "name": "JSON_SOAP_note" } }
     });
+
+    
+
 
     const completionString = openAIcompletion.choices[0].message.tool_calls?.[0].function.arguments as string
     const usage = openAIcompletion.usage
@@ -309,6 +327,62 @@ export async function getAnalysisOpenAI(noteid: string, transcript: string, tran
   
 }
 
+export async function getAnalysisOpenAI(noteid: string, transcript: string, transcriptionTime: string) {
+  // console.log("calling getAnalysisOpenAI")
+
+  const userContentString: string = generateUserContentString(transcript);
+  
+  try {
+    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+
+    const model = "gpt-4o-mini"
+
+    const openAIcompletion = await openai.chat.completions.create({
+      messages: [
+        {
+          role: "system",
+          content: systemContentString
+        },
+        { role: "user", content: userContentString },
+      ],
+      model: model,
+      temperature: 1,
+      response_format: { type: "json_object" },
+      tools: [
+        {
+        type: "function",
+        function: {
+          "name": "JSON_SOAP_note",
+          "description": "Clinical SOAP note as a JSON object",
+          "parameters": JSON_schema
+        }
+      }],
+      tool_choice: { "type": "function", "function": { "name": "JSON_SOAP_note" } }
+    });
+
+    
+
+
+    const completionString = openAIcompletion.choices[0].message.tool_calls?.[0].function.arguments as string
+    const usage = openAIcompletion.usage
+
+    if (!usage) return;
+
+    const inputTokens = usage.prompt_tokens;
+    const outputTokens = usage.completion_tokens
+    const pricing = modelPricing[model]
+    const inputCost = pricing['input_token_cost']
+    const outputCost = pricing['output_token_cost']
+
+    const openAICost = ((inputTokens / 1000 * inputCost) + (outputTokens / 1000 * outputCost)).toFixed(6)
+
+    await updateNoteWithSOAPData(noteid, transcript, transcriptionTime, completionString, openAICost);
+    
+  } catch (error){
+    console.log("Error getting openAI completion data:", error)
+  }
+  
+}
 
 
 // Update the appointment table row with the structured data

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getAnalysisOpenAI, getAnalysisAnthropic, getSOAPData } from "@/app/lib/actions";
+import { getAnalysisOpenAI } from "@/app/lib/actions";
 
 export async function GET(req) {
     console.log("GETing webhook route");
@@ -8,7 +8,7 @@ export async function GET(req) {
   }
 
 export async function POST(req, res) {
-  console.log("incoming webhook!");
+  // console.log("incoming webhook!");
 
     const noteid = req.nextUrl.searchParams.get('apptid');
 
