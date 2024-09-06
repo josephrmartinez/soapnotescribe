@@ -113,9 +113,9 @@ Your expertise and attention to detail will ensure the generation of a comprehen
 
 
 const systemContentStringToolCalling: string = `You are a highly skilled medical assistant, your task is to help a medical provider craft a clinical SOAP note in the form of a JSON object. 
-Your first step is to look at the following message from the healthcare provider and determine if they are asking you to use a preexisting template or if they have provided you with the information to write a SOAP note.
-- If they are asking you to use a template, you should use tool calling to call the fetchTemplate function.
-- If they have provided you with the information to develop a SOAP note, you should use tool calling to call the generateSOAPNote function`
+Your first step is to look at the following message from the healthcare provider and determine if they are asking you to use a pre-existing template or if they have provided you with the information to write a SOAP note.
+- If they are asking you to use a template, you should use tool calling to call the fetchTemplates function. This will give you the information you need to complete the SOAP note as requested.
+- If they have provided you with the information to develop a SOAP note, you should use tool calling to call the generateSOAPNote function.`
 
 
 
@@ -199,7 +199,7 @@ export async function getReplicateMonoTranscript(url: string, apptid: string) {
         batch_size: 64,
         diarise_audio: false
       },
-      webhook: `${webhookUrl}?apptid=${apptid}`,
+      webhook: `${webhookUrl}?noteId=${apptid}`,
       webhook_events_filter: ["completed"]
       });
     // console.log("Replicate prediction request acknowledged:", response);
@@ -275,77 +275,106 @@ export async function getAnalysisAnthropic(noteid: string, transcript: string, t
 }
 
 
-// export async function getToolCallingAnalysisOpenAI(noteid: string, transcript: string, transcriptionTime: string) {
-//   console.log("calling getToolCallingAnalysisOpenAI with transcript:", transcript)
+export async function getToolCallingAnalysisOpenAI(noteId: string, transcript: string, transcriptionTime: string) {
+  console.log("calling getToolCallingAnalysisOpenAI with transcript:", transcript)
 
-//   const userContentString: string = generateUserContentString(transcript);
+  // const userContentString: string = generateUserContentString(transcript);
   
-//   try {
-//     const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+  try {
+    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
 
-//     const model = "gpt-4o-mini"
+    const model = "gpt-4o-mini"
 
-//     // Update system content string to specify that the model will need to call a function?
-//     // if the transcript asks to use a template, then call the getTemplates function (use service key?)
-//     // get a payload with all the template information.
-//     // Send the appropriate template content to the function JSON_SOAP_note along with transcript.
-//     // Error handling: if no template found, complete note with NO TEMPLATE FOUND as soap_subjective?
-//     // if the transcript does not ask to use a template, then use the JSON_SOAP_note function
+    // Update system content string to specify that the model will need to call a function?
+    // if the transcript asks to use a template, then call the getTemplates function (use service key?)
+    // get a payload with all the template information.
+    // Send the appropriate template content to the function JSON_SOAP_note along with transcript.
+    // Error handling: if no template found, complete note with NO TEMPLATE FOUND as soap_subjective?
+    // if the transcript does not ask to use a template, then use the JSON_SOAP_note function
 
-//     const openAIcompletion = await openai.chat.completions.create({
-//       messages: [
-//         {
-//           role: "system",
-//           content: systemContentString
-//         },
-//         { role: "user", content: userContentString },
-//       ],
-//       model: model,
-//       temperature: 1,
-//       response_format: { type: "json_object" },
-//       tools: [{
-//         type: "function",
-//         function: {
-//           "name": "fetchTemplates",
-//           "description": "fetch user templates. Call this whenever the user asks to use an existing template. The user may want to make additions or adjustments to the template. Call this function to get a list of all of their templates so that you can find the right one and use that to help generate a SOAP note.",
-//           "parameters": "none"
-//           }
-//         }
-//       },
-//         {
-//         type: "function",
-//         function: {
-//           "name": "JSON_SOAP_note",
-//           "description": "Clinical SOAP note as a JSON object",
-//           "parameters": JSON_schema
-//         }
-//       }],
-//       tool_choice: { "type": "function", "function": { "name": "JSON_SOAP_note" } }
-//     });
+    const completion = await openai.chat.completions.create({
+      messages: [
+        {
+          role: "system",
+          content: systemContentStringToolCalling
+        },
+        { role: "user", content: `Here is the transcript: ${transcript} // Here is the noteId: ${noteId} // Here is the transcriptionTime: ${transcriptionTime}` },
+      ],
+      model: model,
+      temperature: 1,
+      response_format: { type: "json_object" },
+      tools: [{
+        type: "function",
+        function: {
+          name: "fetchUserTemplates",
+          description: "Fetch user templates. Call this whenever the user asks to use an existing template. The user may want to make additions or adjustments to the template. Call this function to get a list of all of their templates so that you can find the right one and use that to help generate a SOAP note.",
+          }
+        },
+        {
+        type: "function",
+        function: {
+          name: "generateNote",
+          description: "Generate SOAP note as a JSON object. Call this when you have sufficient data in the transcript to generate a SOAP note.",
+          parameters: { 
+            type: "object",
+            properties: {
+              noteid: {
+                type: "string",
+              },
+              transcript: {
+                type: "string",
+              },
+              transcriptionTime: {
+                type: "string",
+              },
+            },
+            required: ["noteid", "transcript", "transcriptionTime"]
+          }
+        }
+      }],
+    });
 
+
+    console.log("completion obj:", completion)
+
+    let toolCall = completion.choices[0].message.tool_calls?.[0].function.name
+    let args = completion.choices[0].message.tool_calls?.[0].function.arguments
+
+    console.log(`calling ${toolCall} with the following arguments: ${args}`)
+
+    // if (toolCall == "fetchUserTemplates") {
+      
+    // }
+    // if (toolCall == "generateNote") {
+
+    // }
+
+    // console.log("tool calls:", completion.choices[0].message.tool_calls?.[0].function.name)
+
+    // If tool_choice == fetchUserTemplates:
+    // call fetchUserTemplates
     
+    // If tool_choice == createJSONSoapNote:
+    // const completionString = openAIcompletion.choices[0].message.tool_calls?.[0].function.arguments as string
+    // const usage = openAIcompletion.usage
 
+    // if (!usage) return;
 
-//     const completionString = openAIcompletion.choices[0].message.tool_calls?.[0].function.arguments as string
-//     const usage = openAIcompletion.usage
+    // const inputTokens = usage.prompt_tokens;
+    // const outputTokens = usage.completion_tokens
+    // const pricing = modelPricing[model]
+    // const inputCost = pricing['input_token_cost']
+    // const outputCost = pricing['output_token_cost']
 
-//     if (!usage) return;
+    // const openAICost = ((inputTokens / 1000 * inputCost) + (outputTokens / 1000 * outputCost)).toFixed(6)
 
-//     const inputTokens = usage.prompt_tokens;
-//     const outputTokens = usage.completion_tokens
-//     const pricing = modelPricing[model]
-//     const inputCost = pricing['input_token_cost']
-//     const outputCost = pricing['output_token_cost']
-
-//     const openAICost = ((inputTokens / 1000 * inputCost) + (outputTokens / 1000 * outputCost)).toFixed(6)
-
-//     await updateNoteWithSOAPData(noteid, transcript, transcriptionTime, completionString, openAICost);
+    // await updateNoteWithSOAPData(noteid, transcript, transcriptionTime, completionString, openAICost);
     
-//   } catch (error){
-//     console.log("Error getting openAI completion data:", error)
-//   }
+  } catch (error){
+    console.log("Error getting openAI completion data:", error)
+  }
   
-// }
+}
 
 export async function getAnalysisOpenAI(noteid: string, transcript: string, transcriptionTime: string) {
   // console.log("calling getAnalysisOpenAI")
@@ -373,70 +402,7 @@ export async function getAnalysisOpenAI(noteid: string, transcript: string, tran
         type: "function",
         function: {
           "name": "JSON_SOAP_note",
-          "description": "Clinical SOAP note as a JSON object",
-          "parameters": JSON_schema
-        }
-      }],
-      tool_choice: { "type": "function", "function": { "name": "JSON_SOAP_note" } }
-    });
-
-    
-
-
-    const completionString = openAIcompletion.choices[0].message.tool_calls?.[0].function.arguments as string
-    const usage = openAIcompletion.usage
-
-    if (!usage) return;
-
-    const inputTokens = usage.prompt_tokens;
-    const outputTokens = usage.completion_tokens
-    const pricing = modelPricing[model]
-    const inputCost = pricing['input_token_cost']
-    const outputCost = pricing['output_token_cost']
-
-    const openAICost = ((inputTokens / 1000 * inputCost) + (outputTokens / 1000 * outputCost)).toFixed(6)
-
-    await updateNoteWithSOAPData(noteid, transcript, transcriptionTime, completionString, openAICost);
-    
-  } catch (error){
-    console.log("Error getting openAI completion data:", error)
-  }
-  
-}
-
-export async function generateSOAPNote(noteid: string, transcript: string, transcriptionTime: string) {
-  // console.log("calling getAnalysisOpenAI")
-
-  // Pass in current userID to return user's templates
-  const userTemplates = await fetchTemplates()
-
-  const userContentString: string = generateUserContentString(transcript);
-
-  
-
-  
-  try {
-    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
-
-    const model = "gpt-4o-mini"
-
-    const openAIcompletion = await openai.chat.completions.create({
-      messages: [
-        {
-          role: "system",
-          content: systemContentString
-        },
-        { role: "user", content: userContentString },
-      ],
-      model: model,
-      temperature: 1,
-      response_format: { type: "json_object" },
-      tools: [
-        {
-        type: "function",
-        function: {
-          "name": "JSON_SOAP_note",
-          "description": "Clinical SOAP note as a JSON object",
+          "description": "Create clinical SOAP note as a JSON object",
           "parameters": JSON_schema
         }
       }],
