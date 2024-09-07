@@ -353,8 +353,9 @@ export async function addPatient(formData: FormData) {
     return;
   }
   if (data && data.length > 0) {
-    revalidatePath('/dashboard/patients', 'page');
-    redirect('/dashboard/patients');
+  
+    let patientId = data[0].id;
+    redirect(`/dashboard/patients/${patientId}`);
   } else {
     console.error('Update successful, but data is not as expected');
   }

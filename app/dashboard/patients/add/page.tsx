@@ -1,6 +1,4 @@
 import PatientForm from '@/app/ui/patients/patient-form';
-import { addPatient } from './action';
-import { checkForExistingPatient, editPatient } from '@/app/lib/data';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
