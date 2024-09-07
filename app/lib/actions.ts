@@ -342,12 +342,12 @@ export async function getToolCallingAnalysisOpenAI(noteId: string, transcript: s
 
     console.log(`calling ${toolCall} with the following arguments: ${args}`)
 
-    // if (toolCall == "fetchUserTemplates") {
+    if (toolCall == "fetchUserTemplates") {
+      toolCall
+    }
+    if (toolCall == "generateNote") {
       
-    // }
-    // if (toolCall == "generateNote") {
-
-    // }
+    }
 
     // console.log("tool calls:", completion.choices[0].message.tool_calls?.[0].function.name)
 
@@ -376,7 +376,7 @@ export async function getToolCallingAnalysisOpenAI(noteId: string, transcript: s
   
 }
 
-export async function getAnalysisOpenAI(noteid: string, transcript: string, transcriptionTime: string) {
+export async function getAnalysisOpenAI(noteId: string, transcript: string, transcriptionTime: string) {
   // console.log("calling getAnalysisOpenAI")
 
   const userContentString: string = generateUserContentString(transcript);
@@ -425,7 +425,7 @@ export async function getAnalysisOpenAI(noteid: string, transcript: string, tran
 
     const openAICost = ((inputTokens / 1000 * inputCost) + (outputTokens / 1000 * outputCost)).toFixed(6)
 
-    await updateNoteWithSOAPData(noteid, transcript, transcriptionTime, completionString, openAICost);
+    await updateNoteWithSOAPData(noteId, transcript, transcriptionTime, completionString, openAICost);
     
   } catch (error){
     console.log("Error getting openAI completion data:", error)
