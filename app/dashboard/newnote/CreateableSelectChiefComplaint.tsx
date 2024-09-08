@@ -33,8 +33,8 @@ const loadOptions = async (inputValue: string) => {
 
 interface TemplateSelectProps {
   onTemplateSelect: (
-    // newValue: SingleValue<TemplateOption>,
-    selectedTemplate: TemplateOption,
+    newValue: SingleValue<TemplateOption>,
+    // selectedTemplate: TemplateOption,
     actionMeta: ActionMeta<TemplateOption>,
   ) => void;
   selectedTemplate?: TemplateOption;
@@ -50,7 +50,14 @@ const CreateableSelectChiefComplaint: React.FC<TemplateSelectProps> = ({
     value={selectedTemplate}
     placeholder="Select or type Chief Complaint..."
     loadOptions={loadOptions}
-    onChange={onTemplateSelect}
+    onChange={(newValue, actionMeta) => {
+      if (newValue) {
+        onTemplateSelect(newValue, actionMeta);
+      } else {
+        onTemplateSelect(null, actionMeta);
+      }
+    }}
+    allowCreateWhileLoading={false}
     styles={{
       input: (base) => ({
         ...base,
