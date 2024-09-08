@@ -107,7 +107,7 @@ const CreateNote = () => {
               value: patient,
               label: `${patient.last_name}, ${patient.first_name}`,
             };
-            setSelectedPatient(structuredPatient);
+
             handlePatientSelect(structuredPatient, {
               action: 'select-option',
               option: structuredPatient,
@@ -170,7 +170,7 @@ const CreateNote = () => {
     actionMeta: ActionMeta<PatientSelectOption>,
   ) => {
     if (newValue) {
-      // console.log('newValue', newValue);
+      setSelectedPatient(newValue);
       setPatientId(newValue.value.id);
       setFirstName(newValue.value.first_name);
       setMiddleName(newValue.value.middle_name);
@@ -241,17 +241,29 @@ const CreateNote = () => {
   };
 
   const handleTemplateSelect = (
-    selectedTemplate: TemplateOption,
-    actionMeta?: ActionMeta<TemplateOption>,
+    newValue: SingleValue<TemplateOption>,
+    actionMeta: ActionMeta<TemplateOption>,
   ) => {
-    setChiefComplaint(selectedTemplate.label);
-    // console.log(selectedTemplate);
-    if (typeof selectedTemplate.value === 'object') {
-      setSubjective(selectedTemplate.value.soap_subjective);
-      setObjective(selectedTemplate.value.soap_objective);
-      setAssessment(selectedTemplate.value.soap_assessment);
-      setPlan(selectedTemplate.value.soap_plan);
-      setPatientInstructions(selectedTemplate.value.patient_instructions);
+    if (newValue) {
+      // Handle the case where a value is selected
+      setChiefComplaint(newValue.label);
+
+      // Check if newValue.value is an object and contains the expected fields
+      if (typeof newValue.value === 'object') {
+        const value = newValue.value; // Type assertion
+        setSubjective(value.soap_subjective || '');
+        setObjective(value.soap_objective || '');
+        setAssessment(value.soap_assessment || '');
+        setPlan(value.soap_plan || '');
+        setPatientInstructions(value.patient_instructions || '');
+      } else {
+        // Handle the case where newValue.value is not an object or is undefined
+        setSubjective('');
+        setObjective('');
+        setAssessment('');
+        setPlan('');
+        setPatientInstructions('');
+      }
     }
   };
 
