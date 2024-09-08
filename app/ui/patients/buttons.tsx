@@ -96,10 +96,22 @@ export function EditPatientProfile({ patient_id }: { patient_id: string }) {
   return (
     <Link
       href={`/dashboard/patients/${patient_id}/edit`}
-      className="flex h-10 items-center rounded-lg border px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-teal-600 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-700 active:bg-teal-600"
+      className="flex h-10 items-center rounded-lg border px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-teal-500 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-700 active:bg-teal-600"
     >
       <UserIcon width={22} className="mr-2" />
       <div>Edit Patient Profile</div>
+    </Link>
+  );
+}
+
+export function CreateNewNote({ patient_id }: { patient_id: string }) {
+  return (
+    <Link
+      href={`/dashboard/newnote?patient=${patient_id}`}
+      className="flex h-10 items-center rounded-lg border bg-teal-600 px-4 text-sm font-medium text-white transition-colors hover:bg-teal-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-700 active:bg-teal-600"
+    >
+      <PencilSquareIcon width={22} className="mr-2" />
+      <div>Create New Note</div>
     </Link>
   );
 }

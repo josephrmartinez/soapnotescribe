@@ -333,7 +333,7 @@ export async function addPatient(formData: FormData) {
       middle_name: formData.get('middle_name') as string,
       last_name: formData.get('last_name') as string,
       date_of_birth: formData.get('date_of_birth') as string,
-      phone: formData.get('phone') as string,
+      phone: formData.get('patient_phone') as string,
       email: formData.get('email') as string,
       address_street: formData.get('address_street') as string,
       address_unit: formData.get('address_unit') as string,
@@ -364,6 +364,8 @@ export async function addPatient(formData: FormData) {
 export async function editPatient(formData: FormData) {
   const supabase = createClient();
 
+  let patientId = formData.get('id')
+
   const { error, data } = await supabase
     .from('patient')
     .update({
@@ -371,7 +373,7 @@ export async function editPatient(formData: FormData) {
       middle_name: formData.get('middle_name') as string,
       last_name: formData.get('last_name') as string,
       date_of_birth: formData.get('date_of_birth') as string,
-      phone: formData.get('phone') as string,
+      phone: formData.get('patient_phone') as string,
       email: formData.get('email') as string,
       address_street: formData.get('address_street') as string,
       address_unit: formData.get('address_unit') as string,
@@ -393,8 +395,8 @@ export async function editPatient(formData: FormData) {
     return;
   }
   if (data && data.length > 0) {
-    revalidatePath('/dashboard/patients', 'page');
-    redirect('/dashboard/patients');
+    
+    redirect(`/dashboard/patients/${patientId}`);
   } else {
     // Handle the case where the update was successful but the data is not as expected
     console.error('Update successful, but data is not as expected');

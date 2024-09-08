@@ -9,7 +9,12 @@ import {
 } from '@heroicons/react/24/outline';
 import { Metadata } from 'next';
 import { calculateAge, formatDateToLocal } from '@/app/lib/utils';
-import { DownloadPatientNotes, NewNote } from '@/app/ui/patients/buttons';
+import {
+  DownloadPatientNotes,
+  NewNote,
+  EditPatientProfile,
+  CreateNewNote,
+} from '@/app/ui/patients/buttons';
 import { ViewSOAPNote, ReviewDraft } from '@/app/ui/notes/buttons';
 import Search from '@/app/ui/search';
 
@@ -139,14 +144,8 @@ export default async function Page({
           {/* <h1 className="mb-4 text-2xl sm:mb-0">Patient Profile</h1> */}
 
           <div className="grid grid-cols-2 gap-4">
-            <Link
-              href={`/dashboard/patients/${patient.id}/edit`}
-              className="flex h-10 items-center justify-center rounded-lg bg-gray-100 px-2  text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200 "
-            >
-              <PencilSquareIcon width={20} height={20} className="mr-2" />
-              Edit Profile
-            </Link>
-            <NewNote patient_id={patient.id} />
+            <CreateNewNote patient_id={patient.id} />
+            <EditPatientProfile patient_id={patient.id} />
           </div>
         </div>
 
@@ -332,41 +331,41 @@ export default async function Page({
             )}
           </div>
         </div>
+        {patientNotes.length > 0 && (
+          <div>
+            <div className="">
+              <div className="mb-2 font-medium">
+                <div className="mb-2">
+                  <label
+                    htmlFor="patient_notes"
+                    className="text-md font-semibold uppercase text-gray-700"
+                  >
+                    Patient Notes
+                  </label>
+                </div>
 
-        <div>
-          <div className="">
-            <div className="mb-2 font-medium">
-              <div className="mb-2">
-                <label
-                  htmlFor="patient_notes"
-                  className="text-md font-semibold uppercase text-gray-700"
-                >
-                  Patient Notes
-                </label>
-              </div>
+                <div className="flex flex-row items-center">
+                  <Search placeholder="Search Patient Notes..." />
 
-              <div className="flex flex-row items-center">
-                <Search placeholder="Search Patient Notes..." />
-                {patientNotes.length > 0 && (
                   <div className="ml-4 flex h-10 cursor-pointer flex-row items-center rounded-md border px-2 transition-all hover:bg-gray-50 hover:text-teal-700">
                     <ArrowDownTrayIcon height="22" />
                     <div className="ml-2  text-sm font-medium">
                       Download All Notes
                     </div>
                   </div>
-                )}
+                </div>
               </div>
-            </div>
 
-            <div className="max-h-80 overflow-y-auto">
-              <div className="sticky left-0 right-0 top-0 h-2 bg-gradient-to-b from-white to-transparent"></div>
-              <div id="patient_notes" className="px-2">
-                {patientNotes}
+              <div className="max-h-80 overflow-y-auto">
+                <div className="sticky left-0 right-0 top-0 h-2 bg-gradient-to-b from-white to-transparent"></div>
+                <div id="patient_notes" className="px-2">
+                  {patientNotes}
+                </div>
+                <div className="sticky bottom-0 left-0 right-0 h-2 bg-gradient-to-t from-white to-transparent"></div>
               </div>
-              <div className="sticky bottom-0 left-0 right-0 h-2 bg-gradient-to-t from-white to-transparent"></div>
             </div>
           </div>
-        </div>
+        )}
       </div>
     </main>
   );
