@@ -1,4 +1,6 @@
-{
+
+
+export const modelPricing = {
     "gpt-4": {
         "input_token_cost": 0.03,
         "output_token_cost": 0.06
@@ -32,3 +34,6 @@
         "output_token_cost": 0.075
     }
 }
+
+
+export type ModelPricingKeys = keyof typeof modelPricing;

@@ -1,0 +1,7 @@
+{
+  "currentModel": "gpt-4o-mini",
+  "systemContentVersion": 3,
+  "jsonSchemaVersion": 1,
+  "temperature": 1,
+  "maxTokens": 4000
+}
