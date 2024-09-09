@@ -4,14 +4,25 @@ import Replicate from "replicate";
 import OpenAI from "openai"
 import Anthropic from '@anthropic-ai/sdk';
 import { createClient as createClientJS } from "@supabase/supabase-js";
-import { fetchTemplates } from "./data";
-import { SystemContentVersion, systemContentStrings } from "./systemContentStrings";
+import { SystemPromptVersion, systemPrompts } from "./systemPrompts";
 import { JSONSchemaVersion, JSONschemas } from "./jsonSchemas";
 import modelConfig from './modelConfig.json'
 import { modelPricing, ModelPricingKeys } from "./modelPricing";
 
 
-function generateUserContentString(transcript: string) {
+interface SOAPData {
+  noteId: string;
+  transcript: string;
+  transcriptionTime: string;
+  completionString: string;
+  llmCost: string;
+  llmModel: string;
+  llmTemperature: number;
+  jsonSchemaVersion: number;
+  systemPromptVersion: number;
+}
+
+function generateUserPrompt(transcript: string) {
     return `Generate a thorough SOAP note from the following transcript. Return your response as a JSON object in the specified schema. TRANSCRIPT: ${transcript}`
   }
 
@@ -220,15 +231,14 @@ export async function getToolCallingAnalysisOpenAI(noteId: string, transcript: s
 
 export async function getAnalysisOpenAI(noteId: string, transcript: string, transcriptionTime: string) {
   
-  const systemContentVersion = modelConfig.systemContentVersion as SystemContentVersion
-  const systemContentString = systemContentStrings[systemContentVersion]
+  const { systemPromptVersion, currentModel: llmModel, jsonSchemaVersion, llmTemperature } = modelConfig;
 
-  const model = modelConfig.currentModel
+  const systemPrompt = systemPrompts[systemPromptVersion as SystemPromptVersion] 
 
-  const userContentString: string = generateUserContentString(transcript);
+  const userPrompt: string = generateUserPrompt(transcript);
 
-  const jsonSchemaVersion = modelConfig.jsonSchemaVersion as JSONSchemaVersion
-  const JSONSchema = JSONschemas[jsonSchemaVersion]
+  const JSONSchema = JSONschemas[jsonSchemaVersion as JSONSchemaVersion]
+
 
   try {
     const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
@@ -237,12 +247,12 @@ export async function getAnalysisOpenAI(noteId: string, transcript: string, tran
       messages: [
         {
           role: "system",
-          content: systemContentString
+          content: systemPrompt
         },
-        { role: "user", content: userContentString },
+        { role: "user", content: userPrompt },
       ],
-      model: model,
-      temperature: 1,
+      model: llmModel,
+      temperature: llmTemperature,
       response_format: { type: "json_object" },
       tools: [
         {
@@ -263,13 +273,14 @@ export async function getAnalysisOpenAI(noteId: string, transcript: string, tran
 
     const inputTokens = usage.prompt_tokens;
     const outputTokens = usage.completion_tokens
-    const pricing = modelPricing[model as ModelPricingKeys]
+    const pricing = modelPricing[llmModel as ModelPricingKeys]
     const inputCost = pricing['input_token_cost']
     const outputCost = pricing['output_token_cost']
 
-    const openAICost = ((inputTokens / 1000 * inputCost) + (outputTokens / 1000 * outputCost)).toFixed(6)
+    const llmCost = ((inputTokens / 1000 * inputCost) + (outputTokens / 1000 * outputCost)).toFixed(6)
 
-    await updateNoteWithSOAPData(noteId, transcript, transcriptionTime, completionString, openAICost);
+
+    await updateNoteWithSOAPData({ noteId, transcript, transcriptionTime, completionString, llmCost, jsonSchemaVersion, systemPromptVersion, llmModel, llmTemperature });
     
   } catch (error){
     console.log("Error getting openAI completion data:", error)
@@ -277,20 +288,28 @@ export async function getAnalysisOpenAI(noteId: string, transcript: string, tran
   
 }
 
+
+
 // Update the appointment table row with the structured data
-async function updateNoteWithSOAPData(noteid: string, transcript: string, transcriptionTime:string, completion: string, analysisCost:string){
+async function updateNoteWithSOAPData(data: SOAPData) {
+  const { noteId, transcript, transcriptionTime, completionString, llmCost, systemPromptVersion, jsonSchemaVersion, llmModel, llmTemperature } = data;
+  
   console.log("Running updateNoteWithSOAPData");
 
-  const formattedAnalysisCost = parseFloat(analysisCost);
+  const formattedLlmCost = parseFloat(llmCost);
+
   // Replicate pricing for model running on Nvidia A40 (Large) GPU hardware, which costs $0.000725 per second.
+  const transcriptionModel = "vaibhavs10/incredibly-fast-whisper:3ab86df6"
   const transcriptionCost = Number((0.000725 * Number(transcriptionTime)).toFixed(6));
-   
+
+  // llm_prediction_time (text)
   
+
   const supabase = createClientJS(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_KEY!)
 
   try {
     // Assumes 100% success rate returning object in correct format
-    const completionObject = JSON.parse(completion);
+    const completionObject = JSON.parse(completionString);
 
     console.log("Attempting to update note using noteid.")
     const { data, error, status } = await supabase
@@ -300,10 +319,15 @@ async function updateNoteWithSOAPData(noteid: string, transcript: string, transc
         audio_transcript: transcript,
         transcription_time: transcriptionTime,
         transcription_cost: transcriptionCost,
-        analysis_cost: formattedAnalysisCost,
+        transcription_model: transcriptionModel,
+        llm_cost: formattedLlmCost,
+        llm_model: llmModel,
+        llm_temperature: llmTemperature,
+        system_prompt_version: systemPromptVersion,
+        json_schema_version: jsonSchemaVersion,
         ...completionObject
       })
-      .eq('id', noteid)
+      .eq('id', noteId)
       .select();
     
     if (error) {
@@ -322,6 +346,9 @@ async function updateNoteWithSOAPData(noteid: string, transcript: string, transc
     throw new Error(error)
   }
 }
+
+
+
 
 // const modelPricing = {
 //     "gpt-4": {

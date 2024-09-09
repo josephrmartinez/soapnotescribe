@@ -11,7 +11,7 @@ export const medications = [
     "Ranitidine", "Omeprazole", "Pantoprazole"
 ];
 
-export const systemContentStrings = {
+export const systemPrompts = {
     1: `As a highly skilled medical assistant, your task is to meticulously review the provided TRANSCRIPT and craft a clinical SOAP note in the form of a JSON object. Please adhere strictly to the following guidelines:
 - Ensure all lists within the SOAP note are unordered, formatted with a simple dash (-). Avoid using numbered lists.
 - Incorporate as much detailed information as possible from the transcript into the SOAP note. Thoroughness is key!
@@ -36,4 +36,4 @@ Your expertise and attention to detail will ensure the generation of a comprehen
 Your expertise and attention to detail will ensure the generation of a comprehensive and accurate SOAP note.`
 };
 
-export type SystemContentVersion = keyof typeof systemContentStrings;
+export type SystemPromptVersion = keyof typeof systemPrompts;
