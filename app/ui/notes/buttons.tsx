@@ -11,6 +11,7 @@ import {
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { deleteNote } from '@/app/lib/data';
+import { DeleteButton } from '../Buttons';
 
 export function CreateAppointment() {
   return (
@@ -152,15 +153,7 @@ export function ReviewDraft({ id }: { id: string }) {
 // }
 
 export function DeleteNoteFirstStep({ id }: { id: string }) {
-  return (
-    <Link
-      href={`/dashboard/deletenote/${id}`}
-      className="flex h-10  items-center justify-center rounded-lg bg-gray-100 px-2 text-sm font-medium text-gray-600 transition-colors hover:bg-red-500/90 hover:text-white"
-    >
-      <TrashIcon width={20} height={20} className="mr-2" />
-      Delete
-    </Link>
-  );
+  return <DeleteButton text="Delete" href={`/dashboard/deletenote/${id}`} />;
 }
 
 export function DeleteNoteConfirm({ id }: { id: string }) {
@@ -168,10 +161,7 @@ export function DeleteNoteConfirm({ id }: { id: string }) {
 
   return (
     <form action={deleteNoteWithId}>
-      <button className="flex h-10 flex-row items-center rounded-md bg-red-600 p-2 text-sm font-semibold text-white transition-all hover:bg-red-500">
-        <TrashIcon width={20} height={20} className="mr-2" />
-        Delete
-      </button>
+      <DeleteButton text="Delete" onClick={deleteNoteWithId} />
     </form>
   );
 }

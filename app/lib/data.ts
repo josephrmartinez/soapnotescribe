@@ -258,6 +258,22 @@ export async function fetchTemplateById(id: string) {
   }
 }
 
+export async function deleteTemplate(id: string) {
+  const supabase = createClient();
+
+  const { error } = await supabase
+    .from('template')
+    .delete()
+    .eq('id', id);
+
+  if (error) {
+    console.error('Error deleting template from Supabase:', error);
+    throw new Error('Failed to delete the template.');
+  }
+
+  return { success: true }; // Return success or failure
+}
+
 // PATIENTS
 
 export async function fetchPatients() {

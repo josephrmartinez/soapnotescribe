@@ -1,9 +1,8 @@
 'use client';
 
 import { useCallback, useEffect, useState, useRef } from 'react';
-import { CancelGoBackButton } from '../Buttons';
+import { CancelGoBackButton, DeleteButton, SubmitFormButton } from '../Buttons';
 import { Template } from '@/app/lib/definitions';
-import { SubmitFormButton } from '../Buttons';
 
 interface TemplateFormProps {
   template: Template;
@@ -71,7 +70,6 @@ const TemplateForm: React.FC<TemplateFormProps> = ({
     autoResizeTextarea(instructionsRef);
   }, [patientInstructions]);
 
-  console.log(template);
   return (
     <form>
       <div className="max-w-prose rounded-md bg-gray-50 p-4">
@@ -187,6 +185,12 @@ const TemplateForm: React.FC<TemplateFormProps> = ({
         <div>
           <div className="mt-6 flex justify-end gap-4">
             <CancelGoBackButton />
+            {template?.id.length > 2 && (
+              <DeleteButton
+                text="Delete Template"
+                href={`/dashboard/templates/${template.id}/delete`}
+              />
+            )}
             <SubmitFormButton active={true} formAction={formAction}>
               {template?.id.length > 2 ? 'Update Template' : 'Add Template'}
             </SubmitFormButton>
