@@ -1,8 +1,6 @@
 'use client';
 import { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
-import { Button } from '@/app/ui/button';
-import { GeistSans } from 'geist/font/sans';
 import { NoteWithPatient } from '@/app/lib/definitions';
 import { getSignedAudioUrl } from '@/app/lib/data';
 import { updateNote } from './action';
@@ -14,6 +12,7 @@ import AudioPlayer from '@/app/components/AudioPlayer';
 import { SubmitFormButton } from '@/app/ui/Buttons';
 import { fetchUserSettings } from '@/app/lib/data';
 import { EditPatientProfile } from '@/app/ui/patients/buttons';
+import CopyTextButton from '@/app/ui/buttons/CopyTextButton';
 
 interface CreateNoteProps {
   note: NoteWithPatient;
@@ -69,6 +68,7 @@ const EditDraftNote: React.FC<CreateNoteProps> = ({ note }) => {
   const [patientLocation, setPatientLocation] = useState<string>(
     note.patient_location || '',
   );
+  const [copiedId, setCopiedId] = useState<string | null>(null);
 
   // Ref declarations with types
   const subjectiveRef = useRef<HTMLTextAreaElement | null>(null);
@@ -156,6 +156,10 @@ const EditDraftNote: React.FC<CreateNoteProps> = ({ note }) => {
     selectedAppointmentSpecialty: string,
   ) => {
     setAppointmentSpecialty(selectedAppointmentSpecialty);
+  };
+
+  const handleCopy = (id: string) => {
+    setCopiedId(id);
   };
 
   return (
@@ -417,12 +421,20 @@ const EditDraftNote: React.FC<CreateNoteProps> = ({ note }) => {
           </div>
 
           <div className="mb-4">
-            <label
-              htmlFor="chief_complaint"
-              className="mb-2 block text-sm font-medium"
-            >
-              Chief Complaint
-            </label>
+            <div className="flex w-full justify-between">
+              <label
+                htmlFor="chief_complaint"
+                className="mb-2 block text-sm font-medium"
+              >
+                Chief Complaint
+              </label>
+              <CopyTextButton
+                inputText={chiefComplaint || ''}
+                buttonText="Copy Chief Complaint"
+                copied={copiedId === 'chiefComplaint'}
+                onCopy={() => handleCopy('chiefComplaint')}
+              />
+            </div>
             <div className="relative">
               <input
                 id="chief_complaint"
@@ -437,12 +449,21 @@ const EditDraftNote: React.FC<CreateNoteProps> = ({ note }) => {
           </div>
 
           <div className="mb-4">
-            <label
-              htmlFor="soap_subjective"
-              className="mb-2 block text-sm font-medium"
-            >
-              Subjective
-            </label>
+            <div className="flex w-full justify-between">
+              <label
+                htmlFor="soap_subjective"
+                className="mb-2 block text-sm font-medium"
+              >
+                Subjective
+              </label>
+              <CopyTextButton
+                inputText={subjective || ''}
+                buttonText="Copy Subjective"
+                copied={copiedId === 'subjective'}
+                onCopy={() => handleCopy('subjective')}
+              />
+            </div>
+
             <div className="relative">
               <textarea
                 id="soap_subjective"
@@ -456,12 +477,20 @@ const EditDraftNote: React.FC<CreateNoteProps> = ({ note }) => {
           </div>
 
           <div className="mb-4">
-            <label
-              htmlFor="soap_objective"
-              className="mb-2 block text-sm font-medium"
-            >
-              Objective
-            </label>
+            <div className="flex w-full justify-between">
+              <label
+                htmlFor="soap_objective"
+                className="mb-2 block text-sm font-medium"
+              >
+                Objective
+              </label>
+              <CopyTextButton
+                inputText={objective || ''}
+                buttonText="Copy Objective"
+                copied={copiedId === 'objective'}
+                onCopy={() => handleCopy('objective')}
+              />
+            </div>
             <div className="relative">
               <textarea
                 id="soap_objective"
@@ -475,12 +504,20 @@ const EditDraftNote: React.FC<CreateNoteProps> = ({ note }) => {
           </div>
 
           <div className="mb-4">
-            <label
-              htmlFor="soap_assessment"
-              className="mb-2 block text-sm font-medium"
-            >
-              Assessment
-            </label>
+            <div className="flex w-full justify-between">
+              <label
+                htmlFor="soap_assessment"
+                className="mb-2 block text-sm font-medium"
+              >
+                Assessment
+              </label>
+              <CopyTextButton
+                inputText={assessment || ''}
+                buttonText="Copy Assessment"
+                copied={copiedId === 'assessment'}
+                onCopy={() => handleCopy('assessment')}
+              />
+            </div>
             <div className="relative">
               <textarea
                 id="soap_assessment"
@@ -494,12 +531,20 @@ const EditDraftNote: React.FC<CreateNoteProps> = ({ note }) => {
           </div>
 
           <div className="mb-4">
-            <label
-              htmlFor="soap_plan"
-              className="mb-2 block text-sm font-medium"
-            >
-              Plan
-            </label>
+            <div className="flex w-full justify-between">
+              <label
+                htmlFor="soap_plan"
+                className="mb-2 block text-sm font-medium"
+              >
+                Plan
+              </label>
+              <CopyTextButton
+                inputText={plan || ''}
+                buttonText="Copy Plan"
+                copied={copiedId === 'plan'}
+                onCopy={() => handleCopy('plan')}
+              />
+            </div>
             <div className="relative">
               <textarea
                 id="soap_plan"
@@ -512,12 +557,20 @@ const EditDraftNote: React.FC<CreateNoteProps> = ({ note }) => {
             </div>
           </div>
           <div className="mb-4">
-            <label
-              htmlFor="patient_instructions"
-              className="mb-2 block text-sm font-medium"
-            >
-              Patient Instructions
-            </label>
+            <div className="flex w-full justify-between">
+              <label
+                htmlFor="patient_instructions"
+                className="mb-2 block text-sm font-medium"
+              >
+                Patient Instructions
+              </label>
+              <CopyTextButton
+                inputText={patientInstructions || ''}
+                buttonText="Copy Patient Instructions"
+                copied={copiedId === 'patientInstructions'}
+                onCopy={() => handleCopy('patientInstructions')}
+              />
+            </div>
             <div className="relative">
               <textarea
                 id="patient_instructions"
@@ -575,7 +628,7 @@ const EditDraftNote: React.FC<CreateNoteProps> = ({ note }) => {
         {differentialDiagnosis && (
           <div
             tabIndex={0}
-            className="collapse-plus collapse mb-4 rounded-md  border"
+            className="collapse collapse-plus mb-4 rounded-md  border"
           >
             <div className="collapse-title text-lg font-medium text-gray-600">
               Differential Diagnosis
