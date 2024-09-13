@@ -12,6 +12,7 @@ import { formatDateToLocal, formatTime } from '@/app/lib/utils';
 import { DeleteNoteFirstStep } from '@/app/ui/notes/buttons';
 import { calculateAge } from '@/app/lib/utils';
 import { ViewPDFButton } from '@/app/ui/notes/ViewPdfButton';
+import NoteContent from '@/app/ui/notes/NoteContent';
 
 export const metadata: Metadata = {
   title: 'Approved SOAP Note',
@@ -201,92 +202,7 @@ export default async function Page({ params }: { params: { id: string } }) {
             </div>
           )}
 
-          {/* Chief Complaint */}
-          <div className="mb-4">
-            <label
-              htmlFor="complaint"
-              className="mb-2 block text-sm font-medium"
-            >
-              Chief Complaint
-            </label>
-            <div id="complaint" className="ml-2 text-sm">
-              {note.chief_complaint}
-            </div>
-          </div>
-
-          {/* Subjective */}
-          <div className="mb-4">
-            <label
-              htmlFor="subjective"
-              className="mb-2 block text-sm font-medium"
-            >
-              Subjective
-            </label>
-            <div id="subjective" className="whitespace-pre-wrap px-2  text-sm">
-              {note.soap_subjective}
-            </div>
-          </div>
-
-          <div className="mb-4">
-            <label
-              htmlFor="objective"
-              className="mb-2 block text-sm font-medium"
-            >
-              Objective
-            </label>
-            <div className="relative">
-              <div id="objective" className="whitespace-pre-wrap px-2 text-sm">
-                {note.soap_objective || ''}
-              </div>
-            </div>
-          </div>
-
-          <div className="mb-4">
-            <label
-              htmlFor="assessment"
-              className="mb-2 block text-sm font-medium"
-            >
-              Assessment
-            </label>
-            <div className="relative">
-              <div id="assessment" className="whitespace-pre-wrap px-2 text-sm">
-                {note.soap_assessment || ''}
-              </div>
-            </div>
-          </div>
-
-          <div className="mb-4">
-            <label
-              htmlFor="plan"
-              className="mb-2 block whitespace-pre-wrap text-sm font-medium"
-            >
-              Plan
-            </label>
-            <div className="relative">
-              <div id="plan" className="whitespace-pre-wrap px-2 text-sm">
-                {note.soap_plan || ''}
-              </div>
-            </div>
-          </div>
-
-          {note.patient_instructions && (
-            <div className="mb-4">
-              <label
-                htmlFor="plan"
-                className="mb-2 block whitespace-pre-wrap text-sm font-medium"
-              >
-                Patient Instructions
-              </label>
-              <div className="relative">
-                <div
-                  id="patient_instructions"
-                  className="whitespace-pre-wrap px-2 text-sm"
-                >
-                  {note.patient_instructions || ''}
-                </div>
-              </div>
-            </div>
-          )}
+          <NoteContent note={note} />
 
           <div className="mb-0">
             <label
