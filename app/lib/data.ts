@@ -192,7 +192,9 @@ export async function getSignedAudioUrl(userId: string, audio_url:string) {
 }
 
 
-export async function deleteNote(id: string) {
+export async function deleteNote(formData: FormData) {
+  const id = formData.get('id');
+  
   const supabase = createClient();
 
   const { error } = await supabase

@@ -104,64 +104,15 @@ export function ReviewDraft({ id }: { id: string }) {
   );
 }
 
-// export function ReviewDraft({ id }: { id: string }) {
-//   return (
-//     <Link
-//       href={`/dashboard/newnote/${id}`}
-//       className="flex flex-row rounded-md bg-red-600 p-2 shadow-md transition-all hover:bg-red-500 "
-//     >
-//       <div className="text-sm font-semibold text-white ">review draft</div>
-//       <ArrowRightIcon className="h-5 text-white md:ml-4 md:mr-1" />
-//     </Link>
-//   );
-// }
-
-// export function UpdateAppointment({ id }: { id: string }) {
-//   return (
-//     <Link
-//       href={`/dashboard/appointments/${id}/edit`}
-//       className="flex h-10 w-20 flex-row rounded-md border bg-teal-600 p-2 text-gray-50 transition-colors hover:bg-teal-500"
-//     >
-//       <PencilIcon className="w-5" />
-//       <div className="ml-1 tracking-wider">edit</div>
-//     </Link>
-//   );
-// }
-
-// export function AddDocsToAppointment({ id }: { id: string }) {
-//   return (
-//     <Link
-//       href={`/dashboard/appointments/${id}/edit`}
-//       className="flex h-10 w-44 flex-row rounded-md border bg-teal-600 p-2 text-gray-50 transition-colors hover:bg-teal-500"
-//     >
-//       <DocumentPlusIcon className="w-6" />
-//       <div className="ml-1 tracking-wider">add documents</div>
-//     </Link>
-//   );
-// }
-
-// export function ShareAppointment({ id }: { id: string }) {
-//   return (
-//     <Link
-//       href={`/dashboard/appointments/${id}/share`}
-//       className="flex h-10 w-24 flex-row rounded-md border bg-teal-600 p-2 text-gray-50 transition-colors hover:bg-teal-500"
-//     >
-//       <ShareIcon className="w-6" />
-//       <div className="ml-1 tracking-wider">share</div>
-//     </Link>
-//   );
-// }
-
 export function DeleteNoteFirstStep({ id }: { id: string }) {
-  return <DeleteButton text="Delete" href={`/dashboard/deletenote/${id}`} />;
+  return <DeleteButton text="Delete" href={`/dashboard/notes/${id}/delete`} />;
 }
 
 export function DeleteNoteConfirm({ id }: { id: string }) {
-  const deleteNoteWithId = deleteNote.bind(null, id);
-
   return (
-    <form action={deleteNoteWithId}>
-      <DeleteButton text="Delete" onClick={deleteNoteWithId} />
+    <form action={deleteNote}>
+      <input type="hidden" name="id" value={id} />
+      <DeleteButton text="Delete" />
     </form>
   );
 }
