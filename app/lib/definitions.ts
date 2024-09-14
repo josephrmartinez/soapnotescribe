@@ -52,7 +52,12 @@ export interface TemplateOption {
 
 export type NoteWithPatient = Omit<Database['public']['Tables']['note']['Row'], 'patient_id'> & {
   patient_id: string;
-  patient: Patient;
+  patient: {
+    id: string;
+    first_name: string;
+    middle_name?: string;
+    last_name: string;
+  };
 }
 
 export interface NoteForTable {

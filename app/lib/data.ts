@@ -25,13 +25,12 @@ export async function fetchFilteredNotes(query: string, currentPage: number) {
       chief_complaint,
       status, 
       appointment_date,
-      patient(
+      patient (
         id,
         first_name,
         middle_name,
         last_name
       )`)
-      // .or(`chief_complaint.ilike.%${query}%, status.ilike.%${query}%`)
       .order('appointment_date', { ascending: false });      
 
     if (error) {
@@ -87,7 +86,7 @@ export async function fetchFilteredNotes(query: string, currentPage: number) {
     });
 
 
-    const paginatedNotes = notesFiltered.slice(offset, offset + ITEMS_PER_PAGE);
+    const paginatedNotes = notesFiltered.slice(offset, offset + ITEMS_PER_PAGE) || [];
     const totalCount = notesFiltered.length || 1;
 
     let totalPages = 1

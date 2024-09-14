@@ -68,7 +68,7 @@ export default function NoteContent({ note }: { note: NoteWithPatient }) {
           </label>
           <CopyTextButton
             inputText={note.soap_objective || ''}
-            buttonText="Copy Chief Complaint"
+            buttonText="Copy Objective"
             copied={copiedId === 'objective'}
             onCopy={() => handleCopy('objective')}
           />

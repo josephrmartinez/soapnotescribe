@@ -22,7 +22,7 @@ export default async function Page({
   const query = searchParams?.query || '';
   const currentPage = Number(searchParams?.page) || 1;
 
-  const { paginatedNotes, totalPages = 1 } =
+  const { paginatedNotes = [], totalPages = 1 } =
     (await fetchFilteredNotes(query, currentPage)) || {};
 
   return (
