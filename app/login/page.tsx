@@ -4,8 +4,9 @@ import React, { useState } from 'react';
 import Logo from '../ui/logo';
 import { login, AuthResult } from './action';
 import Link from 'next/link';
-import { SubmitButton } from '../ui/SubmitButton';
-import { LoginButton } from '../ui/Buttons';
+import { SubmitButton } from '../ui/buttons/SubmitButton';
+import { LoginButton } from '../ui/buttons/LoginButton';
+
 import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {

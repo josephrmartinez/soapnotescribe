@@ -20,7 +20,7 @@ import {
 } from '@/app/lib/data';
 import CreateableSelectChiefComplaint from './CreateableSelectChiefComplaint';
 import { TemplateOption, PatientSelectOption } from '@/app/lib/definitions';
-import { SubmitFormButton } from '@/app/ui/Buttons';
+import { SubmitFormButton } from '@/app/ui/buttons/SubmitFormButton';
 import { fetchNoteById } from '@/app/lib/data';
 import DynamicAudioUploadRecord from '@/app/components/DynamicAudioUploadRecord';
 import { EditPatientProfile } from '@/app/ui/patients/buttons';

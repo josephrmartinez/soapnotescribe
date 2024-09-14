@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import { GeistSans } from 'geist/font/sans';
-import { PlusLinkButton } from '@/app/ui/Buttons';
+import { PlusLinkButton } from '@/app/ui/buttons/Buttons';
 import TemplateTable from '@/app/ui/templates/templatetable';
 import { fetchTemplates } from '@/app/lib/data';
 

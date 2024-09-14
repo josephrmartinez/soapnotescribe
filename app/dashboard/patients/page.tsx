@@ -1,7 +1,6 @@
 import Search from '@/app/ui/search';
 import { GeistSans } from 'geist/font/sans';
 import { AppointmentsTableSkeleton } from '@/app/ui/skeletons';
-import { Button } from '@/app/ui/button';
 import { AddPatientButton } from '@/app/ui/patients/buttons';
 import { Suspense } from 'react';
 import { Metadata } from 'next';

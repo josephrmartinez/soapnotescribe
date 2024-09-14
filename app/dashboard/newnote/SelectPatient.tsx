@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import AsyncSelect from 'react-select/async';
 import { fetchPatients } from '@/app/lib/data';
 import { ActionMeta, SingleValue, InputActionMeta } from 'react-select';

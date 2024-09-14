@@ -1,13 +1,13 @@
 'use client';
 import { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
-import { Button } from '@/app/ui/button';
+import { Button } from '@/app/ui/buttons/Buttons';
 import { GeistSans } from 'geist/font/sans';
 import { NoteWithPatient } from '@/app/lib/definitions';
 import { getSignedAudioUrl } from '@/app/lib/data';
 import AudioPlayer from '@/app/components/AudioPlayer';
 import { DeleteNoteFirstStep } from '@/app/ui/notes/buttons';
-import { CancelGoBackButton } from '@/app/ui/Buttons';
+import { CancelGoBackButton } from '@/app/ui/buttons/Buttons';
 import { createClient } from '@/utils/supabase/client';
 import { useRouter } from 'next/navigation';
 

@@ -11,7 +11,7 @@ import {
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { deleteNote } from '@/app/lib/data';
-import { DeleteButton } from '../Buttons';
+import { DeleteButton } from '../buttons/Buttons';
 
 export function CreateAppointment() {
   return (

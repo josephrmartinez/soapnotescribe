@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import AsyncCreatableSelect from 'react-select/async-creatable';
 import { fetchTemplates } from '@/app/lib/data';
 import { ActionMeta, SingleValue, InputActionMeta } from 'react-select';

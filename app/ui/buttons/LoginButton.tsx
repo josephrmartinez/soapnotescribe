@@ -1,34 +1,35 @@
-import clsx from 'clsx';
+'use client';
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  children: React.ReactNode;
-  active?: boolean;
-  secondary?: boolean;
+import clsx from 'clsx';
+import { useFormStatus } from 'react-dom';
+
+interface LoginButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  active: boolean;
 }
 
-export function Button({
+export const LoginButton: React.FC<LoginButtonProps> = ({
   children,
+  active,
   className,
-  active = true,
-  secondary = false,
   ...rest
-}: ButtonProps) {
+}) => {
+  const { pending } = useFormStatus();
   return (
     <button
-      {...rest}
+      disabled={!active || pending}
       className={clsx(
         'flex h-10 items-center justify-center rounded-lg px-4 text-sm font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-700',
         {
-          'bg-gray-100 hover:bg-gray-200': secondary,
           'bg-teal-600 text-white shadow hover:bg-teal-500 active:bg-teal-600':
-            active && !secondary,
+            active,
           'cursor-not-allowed bg-gray-300 opacity-50': !active,
         },
         className,
       )}
-      disabled={!active}
+      {...rest}
     >
       {children}
     </button>
   );
-}
+};

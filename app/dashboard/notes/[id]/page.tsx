@@ -11,7 +11,7 @@ import { Metadata } from 'next';
 import { formatDateToLocal, formatTime } from '@/app/lib/utils';
 import { DeleteNoteFirstStep } from '@/app/ui/notes/buttons';
 import { calculateAge } from '@/app/lib/utils';
-import { ViewPDFButton } from '@/app/ui/notes/ViewPdfButton';
+import { ViewPDFButton } from '@/app/ui/buttons/ViewPdfButton';
 import NoteContent from '@/app/ui/notes/NoteContent';
 
 export const metadata: Metadata = {

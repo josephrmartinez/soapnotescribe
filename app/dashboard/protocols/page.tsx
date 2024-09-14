@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import { GeistSans } from 'geist/font/sans';
-import { Button } from '@/app/ui/button';
+import { Button } from '@/app/ui/buttons/Buttons';
 
 export const metadata: Metadata = {
   title: 'Protocols',

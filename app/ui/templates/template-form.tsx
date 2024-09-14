@@ -1,7 +1,11 @@
 'use client';
 
 import { useCallback, useEffect, useState, useRef } from 'react';
-import { CancelGoBackButton, DeleteButton, SubmitFormButton } from '../Buttons';
+import {
+  CancelGoBackButton,
+  DeleteButton,
+  SubmitFormButton,
+} from '../buttons/Buttons';
 import { Template } from '@/app/lib/definitions';
 
 interface TemplateFormProps {

@@ -9,7 +9,7 @@ import { calculateAge } from '@/app/lib/utils';
 import AppointmentTypeSelect from '@/app/ui/notes/AppointmentTypeSelect';
 import AppointmentSpecialtySelect from '@/app/ui/notes/AppointmentSpecialtySelect';
 import AudioPlayer from '@/app/components/AudioPlayer';
-import { SubmitFormButton } from '@/app/ui/Buttons';
+import { SubmitFormButton } from '@/app/ui/buttons/SubmitFormButton';
 import { fetchUserSettings } from '@/app/lib/data';
 import { EditPatientProfile } from '@/app/ui/patients/buttons';
 import CopyTextButton from '@/app/ui/buttons/CopyTextButton';

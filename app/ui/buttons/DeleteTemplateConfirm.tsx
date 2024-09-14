@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { DeleteButton } from '@/app/ui/Buttons';
+import { DeleteButton } from '@/app/ui/buttons/Buttons';
 import { deleteTemplate } from '@/app/lib/data';
 
 export function DeleteTemplateConfirm({ id }: { id: string }) {

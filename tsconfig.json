@@ -35,7 +35,7 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "app/api/replicate-webhook/route.js",
-    "app/ui/notes/ViewPdfButton.jsx"
+    "app/ui/buttons/ViewPdfButton.jsx"
 , ".archive/AudioUploadRecord.tsx", ".archive/AudioUploadRecordTest.tsx"  ],
   "exclude": [
     "node_modules", "evals"
