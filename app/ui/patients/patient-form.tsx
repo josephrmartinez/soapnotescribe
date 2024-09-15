@@ -5,12 +5,8 @@ import StateSelect from '@/app/ui/patients/StateSelect';
 import CanadaProvinceSelect from '@/app/ui/patients/CanadaProvinceSelect';
 import CountrySelect from '@/app/ui/patients/CountrySelect';
 import { CalendarDaysIcon, UserCircleIcon } from '@heroicons/react/24/outline';
-import { Button } from '@/app/ui/Button';
 import { CancelGoBackButton } from '@/app/ui/buttons/Buttons';
-import {
-  SubmitFormButton,
-  AddPatientFormButton,
-} from '@/app/ui/buttons/Buttons';
+import { SubmitFormButton } from '../buttons/SubmitFormButton';
 import { EditPatientProfile } from './buttons';
 import {
   editPatient,

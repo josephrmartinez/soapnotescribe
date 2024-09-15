@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 export default async function Page({ params }: { params: { id: string } }) {
   const id = params.id;
   const note = await fetchNoteById(id);
-  console.log('note data from page:', note);
+  // console.log('note data from page:', note);
 
   if (note.status === 'draft') {
     redirect(`./${id}/edit`);
