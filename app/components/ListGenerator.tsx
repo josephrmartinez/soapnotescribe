@@ -72,7 +72,7 @@ const ListGenerator: React.FC<ListGeneratorProps> = ({
         {items.map((item, index) => (
           <li
             key={index}
-            className="grid grid-cols-3 items-center gap-6 border-b py-2 last-of-type:border-none"
+            className="grid grid-cols-3 items-center gap-6 border-b py-2 first-of-type:border-t"
           >
             <div className="font-semibold text-gray-700">{item}</div>
             <div>
@@ -101,8 +101,8 @@ const ListGenerator: React.FC<ListGeneratorProps> = ({
       <div className="flex items-center">
         <input
           type="text"
-          className="my-2 ml-2 h-8 w-32 rounded border border-gray-400"
-          placeholder={`+ add option`}
+          className="my-2 ml-1 h-8 w-32 rounded border border-gray-400"
+          placeholder={`Add option...`}
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           onKeyDown={(e) => handleInputKeyDown(e)}
