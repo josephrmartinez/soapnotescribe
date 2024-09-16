@@ -294,7 +294,7 @@ export async function getAnalysisOpenAI(noteId: string, transcript: string, tran
 async function updateNoteWithSOAPData(data: SOAPData) {
   const { noteId, transcript, transcriptionTime, completionString, llmCost, systemPromptVersion, jsonSchemaVersion, llmModel, llmTemperature } = data;
   
-  console.log("Running updateNoteWithSOAPData");
+  console.log("Running updateNoteWithSOAPData with the following data", data);
 
   const formattedLlmCost = parseFloat(llmCost);
 
@@ -310,6 +310,7 @@ async function updateNoteWithSOAPData(data: SOAPData) {
   try {
     // Assumes 100% success rate returning object in correct format
     const completionObject = JSON.parse(completionString);
+    console.log("completionObject:", completionObject)
 
     console.log("Attempting to update note using noteid.")
     const { data, error, status } = await supabase

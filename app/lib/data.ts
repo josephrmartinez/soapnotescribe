@@ -575,7 +575,7 @@ export async function fetchUserSettings() {
 
 export async function updateUserSettings(payload: any, userId: string) {
   noStore();
-  console.log("calling updateUserSettings with payload:", payload);
+  // console.log("calling updateUserSettings with payload:", payload);
   const supabase = createClient()
   const { error }  = await supabase
       .from('user_settings')

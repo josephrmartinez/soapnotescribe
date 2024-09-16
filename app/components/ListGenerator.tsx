@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { updateUserSettings } from '../lib/data';
 
 interface ListGeneratorProps {
@@ -21,8 +21,14 @@ const ListGenerator: React.FC<ListGeneratorProps> = ({
   const [items, setItems] = useState<string[]>(listItems || []);
   const [defaultOption, setDefaultOption] = useState<string>(defaultItem);
   const [inputValue, setInputValue] = useState<string>('');
+  const hasMounted = useRef(false);
 
   useEffect(() => {
+    if (!hasMounted.current) {
+      hasMounted.current = true;
+      return;
+    }
+
     const payload = {
       [fieldName]: items,
       [`${fieldName}_default`]: defaultOption,
@@ -112,4 +118,4 @@ const ListGenerator: React.FC<ListGeneratorProps> = ({
   );
 };
 
-export default ListGenerator;
+export default React.memo(ListGenerator);

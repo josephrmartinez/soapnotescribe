@@ -679,9 +679,9 @@ const AudioUploadRecordVolumeVis: React.FC<AudioUploadRecordProps> = ({
               className="w-full cursor-pointer accent-gray-600"
             />
           ) : status === 'uploading' ? (
-            <div>upload {percentageUploaded}% complete</div>
+            <div>Upload {percentageUploaded}% complete</div>
           ) : (
-            ''
+            'Redirecting...'
           )}
         </div>
         <div>
