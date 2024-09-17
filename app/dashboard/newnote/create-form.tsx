@@ -398,20 +398,20 @@ const CreateNote = () => {
                 <div className="ml-2 text-sm">{allergies}</div>
               </div>
             )}
+
+            {profileNotes && (
+              <div className="">
+                <label
+                  htmlFor="profilenotes"
+                  className="mb-2 block text-sm font-medium"
+                >
+                  Patient Profile Notes
+                </label>
+
+                <div className="ml-2 text-sm">{profileNotes}</div>
+              </div>
+            )}
           </div>
-
-          {profileNotes && (
-            <div className="">
-              <label
-                htmlFor="profilenotes"
-                className="mb-2 block text-sm font-medium"
-              >
-                Patient Profile Notes
-              </label>
-
-              <div className="ml-2 text-sm">{profileNotes}</div>
-            </div>
-          )}
 
           <div className="text-md mb-8 block border-b font-medium">
             Generate Note from Audio:

@@ -272,18 +272,24 @@ const AudioUploadRecordVolumeVis: React.FC<AudioUploadRecordProps> = ({
   }
 
   async function createNote(audio_storage_url: string, temp_audio_url: string) {
-    // fetch default appointment type
-    // fetch default appointment specialties
-    // fetch default patient location (patient state)
-    // fetch default patient (drug) allergies (send to AI model first?)
-
-    const patientProfile = await fetchPatientProfileById(patientId);
-    const userSettings = await fetchUserSettings();
-
-    // console.log('calling createNote');
-    // console.log(patientProfile, userSettings);
-
     try {
+      // 1. Fetch necessary data from patient and user_settings tables
+      const { data: patientData, error: patientError } = await supabase
+        .from('patient')
+        .select('allergies, state')
+        .eq('id', patientId)
+        .single();
+
+      const { data: userSettings, error: settingsError } = await supabase
+        .from('user_settings')
+        .select('appointment_types_default, appointment_specialties_default')
+        .single();
+
+      if (patientError || settingsError) {
+        console.error('Error fetching data:', patientError || settingsError);
+        return;
+      }
+
       const { error, data } = await supabase
         .from('note')
         .insert({
@@ -291,8 +297,8 @@ const AudioUploadRecordVolumeVis: React.FC<AudioUploadRecordProps> = ({
           audio_storage_url,
           temp_audio_url,
           patient_id: patientId,
-          allergies: patientProfile.allergies,
-          patient_location: patientProfile.state,
+          allergies: patientData.allergies,
+          patient_location: patientData.state,
           appointment_type: userSettings.appointment_types_default,
           appointment_specialty: userSettings.appointment_specialties_default,
         })
@@ -300,6 +306,7 @@ const AudioUploadRecordVolumeVis: React.FC<AudioUploadRecordProps> = ({
 
       if (error) {
         console.error('Error inserting into Supabase table:', error);
+        return;
       }
 
       //   Call Replicate prediction with webhook

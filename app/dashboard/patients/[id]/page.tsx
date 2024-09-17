@@ -44,6 +44,7 @@ export default async function Page({
   const id = params.id;
   const patient = await fetchPatientById(id);
   const patientProfile = await fetchPatientProfileById(id);
+  console.log('patientProfile:', patientProfile);
 
   const query = searchParams?.query || '';
   const currentPage = Number(searchParams?.page) || 1;

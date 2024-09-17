@@ -42,10 +42,6 @@ export const JSONschemas = {
             "differential_diagnosis": {
                 "type": "string",
                 "description": "Differential diagnosis and alternative treatment plan. Narrative format or UNORDERED list. ALWAYS INCLUDE."
-            },
-            "patient_location": {
-                "type": "string",
-                "description": "Location of the patient (State/Province, e.g., 'Arizona'). Only include this key if the patient location is clearly mentioned in the transcript."
             }
         }
     }
